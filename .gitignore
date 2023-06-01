@@ -1,0 +1,15 @@
+﻿################################################################################
+# 此 .gitignore 文件已由 Microsoft(R) Visual Studio 自动创建。
+################################################################################
+
+/.vs
+/packages
+/commonLib/obj
+/XDC03Serial/obj
+/XDC03Debug/obj
+/XDC03_Test_Tool/obj
+/XDC01Debug/obj
+/XDC01Serial/obj
+*.log
+*.txt
+
