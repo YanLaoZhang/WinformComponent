@@ -1,4 +1,5 @@
 ﻿using XDC03SerialLib;
+using PCCommandLib;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -13,6 +14,8 @@ namespace XDC03Debug
     public partial class XDC03DebugForm : Form
     {
         private XDC03Serial serial;
+
+        private PCCommand pcCommand;
 
         public XDC03DebugForm()
         {
@@ -246,7 +249,17 @@ namespace XDC03Debug
 
         private void BtnOpenIperf3_Click(object sender, EventArgs e)
         {
-            string str_server_ip = textBoxServerIp.Text.Trim();
+            pcCommand = new PCCommand(richTextBoxPCCmd);
+            string str_error_log = "";
+            if (pcCommand.OpenIperf3(ref str_error_log) == false)
+            {
+                MessageBox.Show($"打开iPerf3失败：[{str_error_log}]");
+            }
+            comboBoxServerIp.Items.Clear();
+            foreach (string ip in pcCommand.GetLocalIPAddress())
+            {
+                comboBoxServerIp.Items.Add(ip);
+            }
         }
 
         private void BtnWiFiUpT_Click(object sender, EventArgs e)
@@ -254,7 +267,15 @@ namespace XDC03Debug
             string str_rate = "";
             string str_loss = "";
             string str_error_log = "";
-            string str_ip = textBoxServerIp.Text.Trim();
+            string str_ip = "";
+            if (comboBoxServerIp.SelectedItem != null)
+            {
+                str_ip = comboBoxServerIp.SelectedItem.ToString();
+            }
+            else
+            {
+                MessageBox.Show("请先选择服务器IP");
+            }
             string str_duration = textBoxDuration.Text.Trim();
             string str_bandwidth = textBoxBandWidth.Text.Trim();
             serial.TestWifiUpThroughput(ref str_rate, ref str_loss, ref str_error_log, str_ip, str_duration, str_bandwidth);
@@ -267,7 +288,15 @@ namespace XDC03Debug
             string str_rate = "";
             string str_loss = "";
             string str_error_log = "";
-            string str_ip = textBoxServerIp.Text.Trim();
+            string str_ip = "";
+            if (comboBoxServerIp.SelectedItem != null)
+            {
+                str_ip = comboBoxServerIp.SelectedItem.ToString();
+            }
+            else
+            {
+                MessageBox.Show("请先选择服务器IP");
+            }
             string str_duration = textBoxDuration.Text.Trim();
             string str_bandwidth = textBoxBandWidth.Text.Trim();
             serial.TestWifiDownThroughput(ref str_rate, ref str_loss, ref str_error_log, str_ip, str_duration, str_bandwidth);
@@ -277,7 +306,10 @@ namespace XDC03Debug
 
         private void BtnCloseIperf3_Click(object sender, EventArgs e)
         {
-
+            if (pcCommand != null)
+            {
+                pcCommand.CheckIperf3(true);
+            }
         }
 
         private void BtnOpenRTSP_Click(object sender, EventArgs e)

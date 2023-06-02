@@ -109,7 +109,6 @@
             this.label18 = new System.Windows.Forms.Label();
             this.textBoxDuration = new System.Windows.Forms.TextBox();
             this.label17 = new System.Windows.Forms.Label();
-            this.textBoxServerIp = new System.Windows.Forms.TextBox();
             this.label15 = new System.Windows.Forms.Label();
             this.textBoxDownLoss = new System.Windows.Forms.TextBox();
             this.label16 = new System.Windows.Forms.Label();
@@ -157,6 +156,8 @@
             this.comboBoxCurPort = new System.Windows.Forms.ComboBox();
             this.labelRefreshPort = new System.Windows.Forms.Label();
             this.BtnOpenPort = new System.Windows.Forms.Button();
+            this.richTextBoxPCCmd = new System.Windows.Forms.RichTextBox();
+            this.comboBoxServerIp = new System.Windows.Forms.ComboBox();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.groupBox3.SuspendLayout();
@@ -898,6 +899,7 @@
             // 
             // groupBox12
             // 
+            this.groupBox12.Controls.Add(this.comboBoxServerIp);
             this.groupBox12.Controls.Add(this.label21);
             this.groupBox12.Controls.Add(this.textBoxBandWidth);
             this.groupBox12.Controls.Add(this.label20);
@@ -905,7 +907,6 @@
             this.groupBox12.Controls.Add(this.label18);
             this.groupBox12.Controls.Add(this.textBoxDuration);
             this.groupBox12.Controls.Add(this.label17);
-            this.groupBox12.Controls.Add(this.textBoxServerIp);
             this.groupBox12.Controls.Add(this.label15);
             this.groupBox12.Controls.Add(this.textBoxDownLoss);
             this.groupBox12.Controls.Add(this.label16);
@@ -984,13 +985,6 @@
             this.label17.Size = new System.Drawing.Size(87, 16);
             this.label17.TabIndex = 13;
             this.label17.Text = "服务端IP：";
-            // 
-            // textBoxServerIp
-            // 
-            this.textBoxServerIp.Location = new System.Drawing.Point(318, 26);
-            this.textBoxServerIp.Name = "textBoxServerIp";
-            this.textBoxServerIp.Size = new System.Drawing.Size(146, 26);
-            this.textBoxServerIp.TabIndex = 12;
             // 
             // label15
             // 
@@ -1466,11 +1460,36 @@
             this.BtnOpenPort.UseVisualStyleBackColor = true;
             this.BtnOpenPort.Click += new System.EventHandler(this.BtnOpenPort_Click);
             // 
+            // richTextBoxPCCmd
+            // 
+            this.richTextBoxPCCmd.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.richTextBoxPCCmd.BackColor = System.Drawing.SystemColors.InfoText;
+            this.richTextBoxPCCmd.Font = new System.Drawing.Font("宋体", 9F);
+            this.richTextBoxPCCmd.ForeColor = System.Drawing.SystemColors.Info;
+            this.richTextBoxPCCmd.Location = new System.Drawing.Point(1025, 370);
+            this.richTextBoxPCCmd.Margin = new System.Windows.Forms.Padding(4);
+            this.richTextBoxPCCmd.Name = "richTextBoxPCCmd";
+            this.richTextBoxPCCmd.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.ForcedVertical;
+            this.richTextBoxPCCmd.Size = new System.Drawing.Size(90, 56);
+            this.richTextBoxPCCmd.TabIndex = 24;
+            this.richTextBoxPCCmd.Text = "";
+            this.richTextBoxPCCmd.WordWrap = false;
+            // 
+            // comboBoxServerIp
+            // 
+            this.comboBoxServerIp.FormattingEnabled = true;
+            this.comboBoxServerIp.Location = new System.Drawing.Point(318, 28);
+            this.comboBoxServerIp.Name = "comboBoxServerIp";
+            this.comboBoxServerIp.Size = new System.Drawing.Size(173, 24);
+            this.comboBoxServerIp.TabIndex = 19;
+            // 
             // XDC03DebugForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1264, 681);
+            this.Controls.Add(this.richTextBoxPCCmd);
             this.Controls.Add(this.BtnOpenPort);
             this.Controls.Add(this.labelRefreshPort);
             this.Controls.Add(this.comboBoxCurPort);
@@ -1618,7 +1637,6 @@
         private System.Windows.Forms.Label label16;
         private System.Windows.Forms.TextBox textBoxDownRate;
         private System.Windows.Forms.Button BtnWifiDownT;
-        private System.Windows.Forms.TextBox textBoxServerIp;
         private System.Windows.Forms.Label label17;
         private System.Windows.Forms.Label label18;
         private System.Windows.Forms.TextBox textBoxDuration;
@@ -1663,6 +1681,8 @@
         private System.Windows.Forms.ComboBox comboBoxCurPort;
         private System.Windows.Forms.Label labelRefreshPort;
         private System.Windows.Forms.Button BtnOpenPort;
+        private System.Windows.Forms.RichTextBox richTextBoxPCCmd;
+        private System.Windows.Forms.ComboBox comboBoxServerIp;
     }
 }
 

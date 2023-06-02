@@ -91,6 +91,8 @@ namespace XDC01SerialLib
             _serialPort = serialPort;
             _portName = portName;
             _richTextBox = richTextBox;
+            str_Receive_skybell = "";
+            _richTextBox.Text = "";
             // 绑定 DataReceived 事件处理程序
             serialPort.DataReceived += SerialPort_DataReceived;
         }
@@ -152,7 +154,10 @@ namespace XDC01SerialLib
             }
         }
 
-        // 关闭串口
+        /// <summary>
+        /// 关闭串口
+        /// </summary>
+        /// <returns></returns>
         public bool ClosePort()
         {
             try
@@ -178,7 +183,7 @@ namespace XDC01SerialLib
         /// <param name="str_receive_data">返回内容</param>
         /// <param name="endFlag">返回内容结束标识</param>
         /// <returns></returns>
-        public bool SendCMDToXDC03(string str_send_cmd, int t, Boolean Respone, ref string str_receive_data, string endFlag = ENDFLAG_1)
+        public bool SendCMDToXDC01(string str_send_cmd, int t, Boolean Respone, ref string str_receive_data, string endFlag = ENDFLAG_1)
         {
             try
             {
@@ -246,7 +251,7 @@ namespace XDC01SerialLib
             {
                 string CMD_SYS_INFO = "ubus send \"d3_sys_info\" '{}'";
                 string str_ret_value = "";
-                if (SendCMDToXDC03(CMD_SYS_INFO, 2000, true, ref str_ret_value, ENDFLAG_1) == false)
+                if (SendCMDToXDC01(CMD_SYS_INFO, 3000, true, ref str_ret_value, ENDFLAG_1) == false)
                 {
                     str_error_log = $"发送获取系统信息指令[{CMD_SYS_INFO}]失败";
                     return false;
@@ -332,6 +337,76 @@ namespace XDC01SerialLib
             }
         }
 
+        public bool GetFirmwareVersion(ref string str_fw, ref string str_error_log)
+        {
+            try
+            {
+                string CMD_GET_FW = "strings /usr/bin/d3_client | grep D3_FW_APP_VER";
+                string str_ret_value = "";
+                if (SendCMDToXDC01(CMD_GET_FW, 5000, true, ref str_ret_value, ENDFLAG_2) == false)
+                {
+                    str_error_log = $"发送获取FW版本信息指令[{CMD_GET_FW}]失败";
+                    return false;
+                }
+                string[] array = str_ret_value.Split(new string[1] { "\r\n" }, StringSplitOptions.None);
+                str_fw = array[1].Replace("D3_FW_APP_VER:", "").Trim();
+                if (!check_int_double(str_fw))
+                {
+                    str_error_log = "ver";
+                    return false;
+                }
+
+                return true;
+            }
+            catch (Exception ee)
+            {
+                str_error_log = $"GetTagNumber发生异常：[{ee.Message}]";
+                return false;
+            }
+        }
+
+        public bool mac_check(string str_0_9_A_F, int int_length)
+        {
+            try
+            {
+                string text = "(^[0-9a-fA-F][0-9a-fA-F][0-9a-fA-F][0-9a-fA-F][0-9a-fA-F][0-9a-fA-F]$)";
+                string text2 = "(^[0-9a-fA-F][0-9a-fA-F][0-9a-fA-F][0-9a-fA-F][0-9a-fA-F][0-9a-fA-F][0-9a-fA-F][0-9a-fA-F][0-9a-fA-F][0-9a-fA-F][0-9a-fA-F][0-9a-fA-F]$)";
+                string text3 = "(^[0-9a-fA-F][0-9a-fA-F]:[0-9a-fA-F][0-9a-fA-F]:[0-9a-fA-F][0-9a-fA-F]:[0-9a-fA-F][0-9a-fA-F]:[0-9a-fA-F][0-9a-fA-F]:[0-9a-fA-F][0-9a-fA-F]$)";
+                if (int_length == 6)
+                {
+                    string pattern = text;
+                    if (!Regex.IsMatch(str_0_9_A_F, pattern))
+                    {
+                        return false;
+                    }
+                }
+
+                if (int_length == 12)
+                {
+                    string pattern2 = text2;
+                    if (!Regex.IsMatch(str_0_9_A_F, pattern2))
+                    {
+                        return false;
+                    }
+                }
+
+                if (int_length == 17)
+                {
+                    string pattern3 = text3;
+                    if (!Regex.IsMatch(str_0_9_A_F, pattern3))
+                    {
+                        return false;
+                    }
+                }
+
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+        }
+
         /// <summary>
         /// 获取系统MAC地址
         /// </summary>
@@ -342,25 +417,23 @@ namespace XDC01SerialLib
         {
             try
             {
-                string CMD_SYS_MAC = "ubus send d3_sys_setting  '{\"GetMacAddr\":1}'";
+                //string CMD_SYS_MAC = "cat /sys/class/net/wlan0/address";
+                string CMD_SYS_MAC = "rtwpriv wlan0 efuse_get mac";
                 string str_ret_value = "";
-                if (SendCMDToXDC03(CMD_SYS_MAC, 2000, true, ref str_ret_value, ENDFLAG_1) == false)
+                if (SendCMDToXDC01(CMD_SYS_MAC, 5000, true, ref str_ret_value, ENDFLAG_2) == false)
                 {
                     str_error_log = $"发送获取MAC信息指令[{CMD_SYS_MAC}]失败";
                     return false;
                 }
-                string[] striparr = str_ret_value.Split(new string[] { "\r\n" }, StringSplitOptions.None);
-                string str_mac_temp = "";
-                for (int i = 0; i < striparr.Length; i++)
+                string[] array = str_ret_value.Split(new string[1] { "\r\n" }, StringSplitOptions.None);
+                string text = array[1];
+                str_mac = text.Replace("wlan0", "").Replace("efuse_get:", "").Trim();
+                if (!mac_check(str_mac, 17))
                 {
-                    if (striparr[i].Contains("Get Mac Addr ="))
-                    {
-                        str_mac_temp = striparr[i];
-                        break;
-                    }
+                    str_error_log = $"mac格式错误:[{str_mac}]";
+                    return false;
                 }
-                int int_deng = str_mac_temp.IndexOf("=");
-                str_mac = str_mac_temp.Substring(int_deng, str_mac_temp.Length - int_deng).Replace("]", "").Replace("=", "").Trim();
+
                 return true;
             }
             catch (Exception ee)
@@ -382,7 +455,7 @@ namespace XDC01SerialLib
             {
                 string CMD_SYS_IP = "ifconfig";
                 string str_ret_value = "";
-                if (SendCMDToXDC03(CMD_SYS_IP, 2000, true, ref str_ret_value, ENDFLAG_2) == false)
+                if (SendCMDToXDC01(CMD_SYS_IP, 5000, true, ref str_ret_value, ENDFLAG_2) == false)
                 {
                     str_error_log = $"发送获取IP信息指令[{CMD_SYS_IP}]失败";
                     return false;
@@ -463,7 +536,7 @@ namespace XDC01SerialLib
             {
                 string CMD_LIGHT_SENSOR = "ubus send \"d3_product_test\" '{\"Lightsensor\": \"get\" }'";
                 string str_ret_value = "";
-                if (SendCMDToXDC03(CMD_LIGHT_SENSOR, 2000, true, ref str_ret_value, ENDFLAG_1) == false)
+                if (SendCMDToXDC01(CMD_LIGHT_SENSOR, 5000, true, ref str_ret_value, ENDFLAG_1) == false)
                 {
                     str_error_log = $"发送获取亮度值信息指令[{CMD_LIGHT_SENSOR}]失败";
                     return false;
@@ -538,7 +611,7 @@ namespace XDC01SerialLib
             {
                 string CMD_GET_TAGNUMBER = "cat /mnt/diskc/test_station";
                 string str_ret_value = "";
-                if (SendCMDToXDC03(CMD_GET_TAGNUMBER, 2000, true, ref str_ret_value, ENDFLAG_2) == false)
+                if (SendCMDToXDC01(CMD_GET_TAGNUMBER, 5000, true, ref str_ret_value, ENDFLAG_2) == false)
                 {
                     str_error_log = $"发送获取工序号信息指令[{CMD_GET_TAGNUMBER}]失败";
                     return false;
@@ -580,7 +653,7 @@ namespace XDC01SerialLib
             {
                 string CMD_SET_TAGNUMBER = $"echo {str_tagNumber} > /mnt/diskc/test_station";
                 string str_ret_value = "";
-                if (SendCMDToXDC03(CMD_SET_TAGNUMBER, 2000, true, ref str_ret_value, ENDFLAG_2) == false)
+                if (SendCMDToXDC01(CMD_SET_TAGNUMBER, 5000, true, ref str_ret_value, ENDFLAG_2) == false)
                 {
                     str_error_log = $"发送写入工序号信息指令[{CMD_SET_TAGNUMBER}]失败";
                     return false;
@@ -615,30 +688,21 @@ namespace XDC01SerialLib
         {
             try
             {
-                string CMD_GET_RN = "rn=`cat /mnt/diskc/factorytest_rn` && echo \"Rn=\"$rn";
+                string CMD_GET_RN = "cat /mnt/diskc/rn";
                 string str_ret_value = "";
-                if (SendCMDToXDC03(CMD_GET_RN, 2000, true, ref str_ret_value, ENDFLAG_2) == false)
+                if (SendCMDToXDC01(CMD_GET_RN, 5000, true, ref str_ret_value, ENDFLAG_2) == false)
                 {
                     str_error_log = $"发送获取RN号信息指令[{CMD_GET_RN}]失败";
                     return false;
                 }
-                if (!str_ret_value.Contains("Rn=XDC"))
+                string[] array = str_ret_value.Split(new string[1] { "\r\n" }, StringSplitOptions.None);
+                str_rn = array[1].Replace("\r\n", "").Trim();
+                if (str_rn.ToLower().Contains("error"))
                 {
+                    str_error_log = "异常:" + str_rn;
                     return false;
                 }
-                string[] striparr = str_ret_value.Split(new string[] { "\r\n" }, StringSplitOptions.None);
-                string str_rn_temp = "";
-                for (int i = 0; i < striparr.Length; i++)
-                {
-                    if (striparr[i].Contains("Rn=XDC"))
-                    {
-                        str_rn_temp = striparr[i];
-                        break;
-                    }
-                }
-                int start = str_rn_temp.IndexOf("XDC");
-                str_rn_temp = str_rn_temp.Substring(start, 15);
-                str_rn = str_rn_temp.Replace("Rn=", "").Trim();
+
                 return true;
             }
             catch (Exception ee)
@@ -658,9 +722,9 @@ namespace XDC01SerialLib
         {
             try
             {
-                string CMD_SET_RN = $"echo {str_rn} > /mnt/diskc/factorytest_rn && ubus send d3_sys_setting  '{{\"sync_disk\":1}}'";
+                string CMD_SET_RN = $"echo {str_rn} > /mnt/diskc/rn";
                 string str_ret_value = "";
-                if (SendCMDToXDC03(CMD_SET_RN, 2000, true, ref str_ret_value, ENDFLAG_2) == false)
+                if (SendCMDToXDC01(CMD_SET_RN, 5000, true, ref str_ret_value, ENDFLAG_2) == false)
                 {
                     str_error_log = $"发送写入RN号信息指令[{CMD_SET_RN}]失败";
                     return false;
@@ -695,28 +759,15 @@ namespace XDC01SerialLib
         {
             try
             {
-                string CMD_GET_WIFI_SSID = "cat /mnt/diskb/UDF/DOORBELL.CFG | grep ESSID";
+                string CMD_GET_WIFI_SSID = "uci -c /mnt/diskc/etc/config get wireless.radio0_sta.ssid";
                 string str_ret_value = "";
-                if (SendCMDToXDC03(CMD_GET_WIFI_SSID, 2000, true, ref str_ret_value, ENDFLAG_2) == false)
+                if (SendCMDToXDC01(CMD_GET_WIFI_SSID, 5000, true, ref str_ret_value, ENDFLAG_2) == false)
                 {
                     str_error_log = $"发送获取Wifi SSID信息指令[{CMD_GET_WIFI_SSID}]失败";
                     return false;
                 }
-                if (!str_ret_value.Contains("ESSID="))
-                {
-                    return false;
-                }
-                string[] striparr = str_ret_value.Split(new string[] { "\r\n" }, StringSplitOptions.None);
-                string str_wifi_ssid_temp = "";
-                for (int i = 0; i < striparr.Length; i++)
-                {
-                    if (striparr[i].Contains("ESSID="))
-                    {
-                        str_wifi_ssid_temp = striparr[i];
-                        break;
-                    }
-                }
-                str_wifi_ssid = str_wifi_ssid_temp.Replace("ESSID=", "").Trim();
+                string[] array = str_ret_value.Split(new string[1] { "\r\n" }, StringSplitOptions.None);
+                str_wifi_ssid = array[1].Replace("\r\n", "").Trim();
                 return true;
             }
             catch (Exception ee)
@@ -736,28 +787,15 @@ namespace XDC01SerialLib
         {
             try
             {
-                string CMD_GET_WIFI_PASSWORD = "cat /mnt/diskb/UDF/DOORBELL.CFG | grep PWD";
+                string CMD_GET_WIFI_PASSWORD = "uci -c /mnt/diskc/etc/config get wireless.radio0_sta.key";
                 string str_ret_value = "";
-                if (SendCMDToXDC03(CMD_GET_WIFI_PASSWORD, 2000, true, ref str_ret_value, ENDFLAG_2) == false)
+                if (SendCMDToXDC01(CMD_GET_WIFI_PASSWORD, 5000, true, ref str_ret_value, ENDFLAG_2) == false)
                 {
                     str_error_log = $"发送获取Wifi密码信息指令[{CMD_GET_WIFI_PASSWORD}]失败";
                     return false;
                 }
-                if (!str_ret_value.Contains("PWD="))
-                {
-                    return false;
-                }
-                string[] striparr = str_ret_value.Split(new string[] { "\r\n" }, StringSplitOptions.None);
-                string str_wifi_pwd_temp = "";
-                for (int i = 0; i < striparr.Length; i++)
-                {
-                    if (striparr[i].Contains("PWD="))
-                    {
-                        str_wifi_pwd_temp = striparr[i];
-                        break;
-                    }
-                }
-                str_wifi_password = str_wifi_pwd_temp.Replace("PWD=", "").Trim();
+                string[] array = str_ret_value.Split(new string[1] { "\r\n" }, StringSplitOptions.None);
+                str_wifi_password = array[1].Replace("\r\n", "").Trim();
                 return true;
             }
             catch (Exception ee)
@@ -778,13 +816,36 @@ namespace XDC01SerialLib
         {
             try
             {
-                string CMD_SET_WIFI = $"ubus send \"d3_sys_setting\" '{{\"wifiset\": \"{str_wifi_ssid}\",\"password\":\"{str_wifi_password}\"}}'";
+                string CMD_SET_WIFI = $"uci -c /mnt/diskc/etc/config set wireless.radio0_sta.ssid='{str_wifi_ssid}'\r\nuci -c /mnt/diskc/etc/config set wireless.radio0_sta.key='{str_wifi_password}'";
                 string str_ret_value = "";
-                if (SendCMDToXDC03(CMD_SET_WIFI, 2000, true, ref str_ret_value, ENDFLAG_1) == false)
+                if (SendCMDToXDC01(CMD_SET_WIFI, 5000, true, ref str_ret_value, ENDFLAG_2) == false)
                 {
                     str_error_log = $"发送设置wifi信息指令[{CMD_SET_WIFI}]失败";
                     return false;
                 }
+
+                string CMD_SET_WIFI_SAVE = "uci -c /mnt/diskc/etc/config commit wireless";
+                if (SendCMDToXDC01(CMD_SET_WIFI_SAVE, 5000, true, ref str_ret_value, ENDFLAG_2) == false)
+                {
+                    str_error_log = $"发送设置wifi信息指令[{CMD_SET_WIFI_SAVE}]失败";
+                    return false;
+                }
+
+                string CMD_SET_WIFI_REMOVE = "rm /mnt/diskc/etc/config/wireless.crc && sync";
+                if (SendCMDToXDC01(CMD_SET_WIFI_REMOVE, 5000, true, ref str_ret_value, ENDFLAG_2) == false)
+                {
+                    str_error_log = $"发送设置wifi信息指令[{CMD_SET_WIFI_REMOVE}]失败";
+                    return false;
+                }
+                Delay(500);
+                str_ret_value = "";
+                string CMD_SET_WIFI_CHECK = "ls /mnt/diskc/etc/config";
+                if (SendCMDToXDC01(CMD_SET_WIFI_CHECK, 5000, true, ref str_ret_value, ENDFLAG_2) == false)
+                {
+                    str_error_log = $"发送设置wifi信息指令[{CMD_SET_WIFI_CHECK}]失败";
+                    return false;
+                }
+
                 Delay(500);
                 // 再次读取
                 string str_cur_wifi_ssid = "";
@@ -828,7 +889,7 @@ namespace XDC01SerialLib
             {
                 string CMD_ENTER_FACTORY_MODE = "npiReset.sh && ubus send d3_sys_setting  '{\"rebootall\":1}'";
                 string str_ret_value = "";
-                if (SendCMDToXDC03(CMD_ENTER_FACTORY_MODE, 2000, true, ref str_ret_value, ENDFLAG_1) == false)
+                if (SendCMDToXDC01(CMD_ENTER_FACTORY_MODE, 2000, true, ref str_ret_value, ENDFLAG_1) == false)
                 {
                     str_error_log = $"发送进入产测模式指令[{CMD_ENTER_FACTORY_MODE}]失败";
                     return false;
@@ -851,14 +912,67 @@ namespace XDC01SerialLib
         {
             try
             {
-                string CMD_CHECK_WIFI_MODE = "";
+                string CMD_CHECK_WIFI_MODE = "cat /mnt/diskc/etc/config/wireless";
                 string str_ret_value = "";
-                if (SendCMDToXDC03(CMD_CHECK_WIFI_MODE, 2000, true, ref str_ret_value, ENDFLAG_2) == false)
+                if (SendCMDToXDC01(CMD_CHECK_WIFI_MODE, 3000, true, ref str_ret_value, ENDFLAG_2) == false)
                 {
                     str_error_log = $"发送查询wifi模式指令[{CMD_CHECK_WIFI_MODE}]失败";
                     return false;
                 }
-                return true;
+                // STA是产测模式，AP模式是出货模式 0是开启，1是关闭
+                /*config wifi-iface 'radio0_ap'
+                    option device 'radio0'
+                    option network 'wlan'
+                    option mode 'ap'
+                    option encryption 'null'
+                    option ssid 'XDC01-00e7d'
+                    option disabled '1'
+
+                config wifi-iface 'radio0_sta'
+                    option device 'radio0'
+                    option network 'wlan'
+                    option mode 'sta'
+                    option encryption 'psk2'
+                    option ssid 'SKC1'
+                    option key '01233210'
+                    option disabled '0'
+                */
+                string[] striparr = str_ret_value.Split(new string[] { "\r\n" }, StringSplitOptions.None);
+                string str_ap_temp = "";
+                string str_sta_temp = "";
+                int index = 0;
+                while(index < striparr.Length)
+                {
+                    string cur_row = striparr[index];
+                    if (cur_row.Contains("config wifi-iface 'radio0_ap'"))
+                    {
+                        index++;
+                        while (!striparr[index].Contains("option disabled"))
+                        {
+                            index++;
+                        }
+                        str_ap_temp = striparr[index];
+                    }
+                    if (cur_row.Contains("config wifi-iface 'radio0_sta'"))
+                    {
+                        index++;
+                        while (!striparr[index].Contains("option disabled"))
+                        {
+                            index++;
+                        }
+                        str_sta_temp = striparr[index];
+                    }
+                    index++;
+                }
+                if(str_ap_temp.Contains("option disabled '1'") && str_sta_temp.Contains("option disabled '0'")) {
+                    return true;
+                }
+                if(str_ap_temp.Contains("option disabled '0'") && str_sta_temp.Contains("option disabled '1'")) {
+                    str_error_log = "wifi为出货模式";
+                    return false;
+                }
+                str_error_log = $"解析异常ap:[{str_ap_temp}],sta[{str_sta_temp}]";
+                return false;
             }
             catch (Exception e)
             {
@@ -876,11 +990,17 @@ namespace XDC01SerialLib
         {
             try
             {
-                string CMD_LS_FILE = "";
+                string CMD_LS_FILE = "ls /mnt/diskc/factory_test";
                 string str_ret_value = "";
-                if (SendCMDToXDC03(CMD_LS_FILE, 2000, true, ref str_ret_value, ENDFLAG_2) == false)
+                if (SendCMDToXDC01(CMD_LS_FILE, 5000, true, ref str_ret_value, ENDFLAG_2) == false)
                 {
                     str_error_log = $"发送检查产测模式文件指令[{CMD_LS_FILE}]失败";
+                    return false;
+                }
+
+                if (str_ret_value.Contains("No such file or directory"))
+                {
+                    str_error_log = "未找到文件/mnt/diskc/factory_test";
                     return false;
                 }
                 return true;
@@ -903,7 +1023,7 @@ namespace XDC01SerialLib
             {
                 string CMD_RESET_FACTORY = "FactoryReset.sh";
                 string str_ret_value = "";
-                if (SendCMDToXDC03(CMD_RESET_FACTORY, 2000, true, ref str_ret_value, ENDFLAG_1) == false)
+                if (SendCMDToXDC01(CMD_RESET_FACTORY, 5000, true, ref str_ret_value, ENDFLAG_1) == false)
                 {
                     str_error_log = $"发送恢复出厂设置指令[{CMD_RESET_FACTORY}]失败";
                     return false;
@@ -928,7 +1048,7 @@ namespace XDC01SerialLib
             {
                 string CMD_SET_COLOR = $"ubus send \"d3_product_test\" '{{\"button-LED\": \"{str_color}\" }}'";
                 string str_ret_value = "";
-                if (SendCMDToXDC03(CMD_SET_COLOR, 2000, true, ref str_ret_value, ENDFLAG_1) == false)
+                if (SendCMDToXDC01(CMD_SET_COLOR, 5000, true, ref str_ret_value, ENDFLAG_1) == false)
                 {
                     str_error_log = $"发送设置LED灯颜色指令[{CMD_SET_COLOR}]失败";
                     return false;
@@ -953,7 +1073,7 @@ namespace XDC01SerialLib
             {
                 string CMD_SET_PIR = $"ubus send \"d3_product_test\" '{{\"PIR\": \"{str_state}\" }}'";
                 string str_ret_value = "";
-                if (SendCMDToXDC03(CMD_SET_PIR, 2000, true, ref str_ret_value, ENDFLAG_2) == false)
+                if (SendCMDToXDC01(CMD_SET_PIR, 5000, true, ref str_ret_value, ENDFLAG_2) == false)
                 {
                     str_error_log = $"发送设置PIR指令[{CMD_SET_PIR}]失败";
                     return false;
@@ -979,7 +1099,7 @@ namespace XDC01SerialLib
             {
                 string CMD_PLAY_WAV = $"omfWavPlayer_ -n /etc/ringtone/{str_index}.wav";
                 string str_ret_value = "";
-                if (SendCMDToXDC03(CMD_PLAY_WAV, 2000, true, ref str_ret_value, ENDFLAG_2) == false)
+                if (SendCMDToXDC01(CMD_PLAY_WAV, 5000, true, ref str_ret_value, ENDFLAG_2) == false)
                 {
                     str_error_log = $"发送播放wav音频文件指令[{CMD_PLAY_WAV}]失败";
                     return false;
@@ -1004,7 +1124,7 @@ namespace XDC01SerialLib
             {
                 string CMD_OPEN_MIC = $"ubus send \"d3_product_test\" '{{\"OpenMic\":\"\"}}'";
                 string str_ret_value = "";
-                if (SendCMDToXDC03(CMD_OPEN_MIC, 2000, true, ref str_ret_value, ENDFLAG_1) == false)
+                if (SendCMDToXDC01(CMD_OPEN_MIC, 5000, true, ref str_ret_value, ENDFLAG_1) == false)
                 {
                     str_error_log = $"发送打开麦克风指令[{CMD_OPEN_MIC}]失败";
                     return false;
@@ -1029,7 +1149,7 @@ namespace XDC01SerialLib
             {
                 string CMD_CLOSE_MIC = $"ubus send \"d3_product_test\" '{{\"CloseMic\":\"\"}}'";
                 string str_ret_value = "";
-                if (SendCMDToXDC03(CMD_CLOSE_MIC, 2000, true, ref str_ret_value, ENDFLAG_1) == false)
+                if (SendCMDToXDC01(CMD_CLOSE_MIC, 5000, true, ref str_ret_value, ENDFLAG_1) == false)
                 {
                     str_error_log = $"发送关闭麦克风指令[{CMD_CLOSE_MIC}]失败";
                     return false;
@@ -1055,7 +1175,7 @@ namespace XDC01SerialLib
             {
                 string CMD_RECORD_MIC = $"omfWavRecord_ -n /tmp/audio_cap.wav -d{str_duration}";
                 string str_ret_value = "";
-                if (SendCMDToXDC03(CMD_RECORD_MIC, 2000, true, ref str_ret_value, ENDFLAG_1) == false)
+                if (SendCMDToXDC01(CMD_RECORD_MIC, 5000, true, ref str_ret_value, ENDFLAG_1) == false)
                 {
                     str_error_log = $"发送录音指令[{CMD_RECORD_MIC}]失败";
                     return false;
@@ -1080,7 +1200,7 @@ namespace XDC01SerialLib
             {
                 string CMD_TEST_RECORD = $"mic_test-openwrt.arm /tmp/audio_cap.wav";
                 string str_ret_value = "";
-                if (SendCMDToXDC03(CMD_TEST_RECORD, 2000, true, ref str_ret_value, "}") == false)
+                if (SendCMDToXDC01(CMD_TEST_RECORD, 5000, true, ref str_ret_value, "}") == false)
                 {
                     str_error_log = $"发送测试录音文件指令[{CMD_TEST_RECORD}]失败";
                     return false;
@@ -1127,7 +1247,7 @@ namespace XDC01SerialLib
             {
                 string CMD_PLAY_RECORD_WAV = $"omfWavPlayer_ -n /tmp/audio_cap.wav";
                 string str_ret_value = "";
-                if (SendCMDToXDC03(CMD_PLAY_RECORD_WAV, 2000, true, ref str_ret_value, ENDFLAG_2) == false)
+                if (SendCMDToXDC01(CMD_PLAY_RECORD_WAV, 5000, true, ref str_ret_value, ENDFLAG_2) == false)
                 {
                     str_error_log = $"发送播放录音wav文件指令[{CMD_PLAY_RECORD_WAV}]失败";
                     return false;
@@ -1158,7 +1278,7 @@ namespace XDC01SerialLib
                 // -i指定每隔多少秒生成一次性能报告
                 string CMD_IPERF3_UP = $"iperf3 -c {str_ip} -u -i1 -t{str_duration} -b {str_bandwidth} -R";
                 string str_ret_value = "";
-                if (SendCMDToXDC03(CMD_IPERF3_UP, 2000, true, ref str_ret_value, "iperf Done") == false)
+                if (SendCMDToXDC01(CMD_IPERF3_UP, 38000, true, ref str_ret_value, "iperf Done") == false)
                 {
                     str_error_log = $"发送iperf3上行吞吐量测试指令[{CMD_IPERF3_UP}]失败";
                     return false;
@@ -1228,7 +1348,7 @@ namespace XDC01SerialLib
                 // -i指定每隔多少秒生成一次性能报告
                 string CMD_IPERF3_DOWN = $"iperf3 -c {str_ip} -u -i1 -t{str_duration} -b {str_bandwidth} -R";
                 string str_ret_value = "";
-                if (SendCMDToXDC03(CMD_IPERF3_DOWN, 2000, true, ref str_ret_value, "iperf Done") == false)
+                if (SendCMDToXDC01(CMD_IPERF3_DOWN, 38000, true, ref str_ret_value, "iperf Done") == false)
                 {
                     str_error_log = $"发送iperf3下行吞吐量测试指令[{CMD_IPERF3_DOWN}]失败";
                     return false;
@@ -1292,7 +1412,7 @@ namespace XDC01SerialLib
             {
                 string CMD_OPEN_RTSP = $"omfRtspServer_ &";
                 string str_ret_value = "";
-                if (SendCMDToXDC03(CMD_OPEN_RTSP, 2000, true, ref str_ret_value, ENDFLAG_1) == false)
+                if (SendCMDToXDC01(CMD_OPEN_RTSP, 5000, true, ref str_ret_value, ENDFLAG_1) == false)
                 {
                     str_error_log = $"发送打开RTSP流指令[{CMD_OPEN_RTSP}]失败";
                     return false;
@@ -1320,7 +1440,7 @@ namespace XDC01SerialLib
                 {
                     string CMD_SWITCH_IRCUT = $"ubus send \"d3_product_test\" '{{\"IR-CUT\": \"{str_state}\" }}'";
                     string str_ret_value = "";
-                    if (SendCMDToXDC03(CMD_SWITCH_IRCUT, 2000, true, ref str_ret_value, ENDFLAG_1) == false)
+                    if (SendCMDToXDC01(CMD_SWITCH_IRCUT, 5000, true, ref str_ret_value, ENDFLAG_1) == false)
                     {
                         str_error_log = $"发送切换IR CUT指令[{CMD_SWITCH_IRCUT}]失败";
                         return false;
@@ -1352,7 +1472,7 @@ namespace XDC01SerialLib
             {
                 string CMD_SWITCH_IRLED = $"ubus send \"d3_product_test\" '{{\"IR-LED\": \"{str_state}\" }}'";
                 string str_ret_value = "";
-                if (SendCMDToXDC03(CMD_SWITCH_IRLED, 2000, true, ref str_ret_value, ENDFLAG_1) == false)
+                if (SendCMDToXDC01(CMD_SWITCH_IRLED, 5000, true, ref str_ret_value, ENDFLAG_1) == false)
                 {
                     str_error_log = $"发送切换IR LED指令[{CMD_SWITCH_IRLED}]失败";
                     return false;
@@ -1379,7 +1499,7 @@ namespace XDC01SerialLib
             {
                 string CMD_PCBA_RFTEST = $"ubus send \"d3_product_test\" '{{\"PCBA-RFTEST\":{str_index}}}'";
                 string str_ret_value = "";
-                if (SendCMDToXDC03(CMD_PCBA_RFTEST, 2000, true, ref str_ret_value, ENDFLAG_1) == false)
+                if (SendCMDToXDC01(CMD_PCBA_RFTEST, 5000, true, ref str_ret_value, ENDFLAG_1) == false)
                 {
                     str_error_log = $"发送PCBA RF TX指令[{CMD_PCBA_RFTEST}]失败";
                     return false;
@@ -1414,7 +1534,7 @@ namespace XDC01SerialLib
                 {
                     endFlag = "[RF-Send-test:rcv]";
                 }
-                if (SendCMDToXDC03(CMD_RF_MODE, 2000, true, ref str_ret_value, endFlag) == false)
+                if (SendCMDToXDC01(CMD_RF_MODE, 5000, true, ref str_ret_value, endFlag) == false)
                 {
                     str_error_log = $"发送设置RF测试模式指令[{CMD_RF_MODE}]失败";
                     return false;
@@ -1440,7 +1560,7 @@ namespace XDC01SerialLib
             {
                 string CMD_GET_SN = "cat /mnt/diskc/camera_setting.json | jsonfilter -e \"@.reg_data.cameraSn\"";
                 string str_ret_value = "";
-                if (SendCMDToXDC03(CMD_GET_SN, 2000, true, ref str_ret_value, ENDFLAG_2) == false)
+                if (SendCMDToXDC01(CMD_GET_SN, 5000, true, ref str_ret_value, ENDFLAG_2) == false)
                 {
                     str_error_log = $"发送获取SN号信息指令[{CMD_GET_SN}]失败";
                     return false;
@@ -1478,7 +1598,7 @@ namespace XDC01SerialLib
             {
                 string CMD_GET_UID = "cat /mnt/diskc/camera_setting.json | jsonfilter -e \"@.reg_data.cameraUid\"";
                 string str_ret_value = "";
-                if (SendCMDToXDC03(CMD_GET_UID, 2000, true, ref str_ret_value, ENDFLAG_2) == false)
+                if (SendCMDToXDC01(CMD_GET_UID, 5000, true, ref str_ret_value, ENDFLAG_2) == false)
                 {
                     str_error_log = $"发送获取UID信息指令[{CMD_GET_UID}]失败";
                     return false;
@@ -1517,7 +1637,7 @@ namespace XDC01SerialLib
             {
                 string CMD_SET_SN_UID = $"burn_UID_SN.sh {str_uid} {str_sn}";
                 string str_ret_value = "";
-                if (SendCMDToXDC03(CMD_SET_SN_UID, 2000, true, ref str_ret_value, ENDFLAG_1) == false)
+                if (SendCMDToXDC01(CMD_SET_SN_UID, 5000, true, ref str_ret_value, ENDFLAG_1) == false)
                 {
                     str_error_log = $"发送写入UID和SN指令[{CMD_SET_SN_UID}]失败";
                     return false;
@@ -1565,7 +1685,7 @@ namespace XDC01SerialLib
             {
                 string CMD_SET_CHARGE_MODE = $"ubus send \"d3_product_test\" '{{\"CHARGE-MODE-TEST\": {str_battery_level} }}'";
                 string str_ret_value = "";
-                if (SendCMDToXDC03(CMD_SET_CHARGE_MODE, 2000, true, ref str_ret_value, $"Enter Charge Test --> Target = {str_battery_level}") == false)
+                if (SendCMDToXDC01(CMD_SET_CHARGE_MODE, 5000, true, ref str_ret_value, $"Enter Charge Test --> Target = {str_battery_level}") == false)
                 {
                     str_error_log = $"发送设置充电模式指令[{CMD_SET_CHARGE_MODE}]失败";
                     return false;
@@ -1600,7 +1720,7 @@ namespace XDC01SerialLib
                 {
                     endFlag = "[ChargeIC Disable]";
                 }
-                if (SendCMDToXDC03(CMD_CHARGE_IC, 2000, true, ref str_ret_value, endFlag) == false)
+                if (SendCMDToXDC01(CMD_CHARGE_IC, 5000, true, ref str_ret_value, endFlag) == false)
                 {
                     str_error_log = $"发送设置IC充电指令[{CMD_CHARGE_IC}]失败";
                     return false;
@@ -1628,7 +1748,7 @@ namespace XDC01SerialLib
             {
                 string CMD_CHECK_POWER_STATUS_RTOS = $"factorytest powerstatus";
                 string str_ret_value = "";
-                if (SendCMDToXDC03(CMD_CHECK_POWER_STATUS_RTOS, 2000, true, ref str_ret_value, $"power start the normal") == false)
+                if (SendCMDToXDC01(CMD_CHECK_POWER_STATUS_RTOS, 5000, true, ref str_ret_value, $"power start the normal") == false)
                 {
                     str_error_log = $"RTOS发送查询上电情况指令[{CMD_CHECK_POWER_STATUS_RTOS}]失败";
                     return false;
@@ -1654,7 +1774,7 @@ namespace XDC01SerialLib
             {
                 string CMD_GET_RN_RTOS = $"factorytest readrn";
                 string str_ret_value = "";
-                if (SendCMDToXDC03(CMD_GET_RN_RTOS, 2000, true, ref str_ret_value, $"cmd>") == false)
+                if (SendCMDToXDC01(CMD_GET_RN_RTOS, 5000, true, ref str_ret_value, $"cmd>") == false)
                 {
                     str_error_log = $"RTOS发送读取Rn号指令[{CMD_GET_RN_RTOS}]失败";
                     return false;
@@ -1700,7 +1820,7 @@ namespace XDC01SerialLib
             {
                 string CMD_GET_TAGNUMBER_RTOS = $"factorytest read";
                 string str_ret_value = "";
-                if (SendCMDToXDC03(CMD_GET_TAGNUMBER_RTOS, 2000, true, ref str_ret_value, $"cmd>") == false)
+                if (SendCMDToXDC01(CMD_GET_TAGNUMBER_RTOS, 5000, true, ref str_ret_value, $"cmd>") == false)
                 {
                     str_error_log = $"RTOS发送读取工序号指令[{CMD_GET_TAGNUMBER_RTOS}]失败";
                     return false;
@@ -1742,7 +1862,7 @@ namespace XDC01SerialLib
             {
                 string CMD_SET_TAGNUMBER_RTOS = $"factorytest write {str_tagNumber}";
                 string str_ret_value = "";
-                if (SendCMDToXDC03(CMD_SET_TAGNUMBER_RTOS, 2000, true, ref str_ret_value, "cmd>") == false)
+                if (SendCMDToXDC01(CMD_SET_TAGNUMBER_RTOS, 5000, true, ref str_ret_value, "cmd>") == false)
                 {
                     str_error_log = $"RTOS发送写入工序号信息指令[{CMD_SET_TAGNUMBER_RTOS}]失败";
                     return false;
@@ -1776,9 +1896,9 @@ namespace XDC01SerialLib
         {
             try
             {
-                string CMD_OPEN_CAMERA = $"pccam";
+                string CMD_OPEN_CAMERA = $"usbon 1";
                 string str_ret_value = "";
-                if (SendCMDToXDC03(CMD_OPEN_CAMERA, 15000, true, ref str_ret_value, $"cmd>") == false)
+                if (SendCMDToXDC01(CMD_OPEN_CAMERA, 15000, true, ref str_ret_value, $"cmd>") == false)
                 {
                     str_error_log = $"RTOS发送打开摄像头指令[{CMD_OPEN_CAMERA}]失败";
                     return false;
@@ -1821,7 +1941,7 @@ namespace XDC01SerialLib
                 }
                 string CMD_SWITCH_IRCUT_RTOS = $"factorytest ircut-{str_state}";
                 string str_ret_value = "";
-                if (SendCMDToXDC03(CMD_SWITCH_IRCUT_RTOS, 2000, true, ref str_ret_value, "Digital Effect") == false)
+                if (SendCMDToXDC01(CMD_SWITCH_IRCUT_RTOS, 5000, true, ref str_ret_value, "Digital Effect") == false)
                 {
                     str_error_log = $"RTOS发送切换IR CUT指令[{CMD_SWITCH_IRCUT_RTOS}]失败";
                     return false;

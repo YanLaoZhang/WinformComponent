@@ -105,5 +105,11 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\PCCommand\PCCommand.csproj">
+      <Project>{fb4826b4-8b1d-4106-ae13-4fd3451205c0}</Project>
+      <Name>PCCommand</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

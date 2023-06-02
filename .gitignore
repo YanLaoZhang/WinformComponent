@@ -10,6 +10,10 @@
 /XDC03_Test_Tool/obj
 /XDC01Debug/obj
 /XDC01Serial/obj
+/XDC01_Test_Tool/obj
+/LogLib/obj
+/ConfigFileLib/obj
+/PCCommand/obj
 *.log
 *.txt
 
