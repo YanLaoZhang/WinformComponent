@@ -41,6 +41,7 @@
             this.groupBox1.Controls.Add(this.labelTime);
             this.groupBox1.Controls.Add(this.labelContent);
             this.groupBox1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.groupBox1.Font = new System.Drawing.Font("宋体", 16F);
             this.groupBox1.Location = new System.Drawing.Point(0, 0);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(466, 188);
@@ -51,10 +52,10 @@
             // labelContent
             // 
             this.labelContent.AutoSize = true;
-            this.labelContent.Font = new System.Drawing.Font("宋体", 16F);
+            this.labelContent.Font = new System.Drawing.Font("宋体", 18F);
             this.labelContent.Location = new System.Drawing.Point(12, 86);
             this.labelContent.Name = "labelContent";
-            this.labelContent.Size = new System.Drawing.Size(76, 22);
+            this.labelContent.Size = new System.Drawing.Size(82, 24);
             this.labelContent.TabIndex = 0;
             this.labelContent.Text = "label1";
             this.labelContent.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -66,10 +67,11 @@
             // labelTime
             // 
             this.labelTime.AutoSize = true;
-            this.labelTime.Font = new System.Drawing.Font("宋体", 14F);
+            this.labelTime.Font = new System.Drawing.Font("宋体", 16F);
+            this.labelTime.ForeColor = System.Drawing.SystemColors.Highlight;
             this.labelTime.Location = new System.Drawing.Point(213, 13);
             this.labelTime.Name = "labelTime";
-            this.labelTime.Size = new System.Drawing.Size(29, 19);
+            this.labelTime.Size = new System.Drawing.Size(32, 22);
             this.labelTime.TabIndex = 1;
             this.labelTime.Text = "0s";
             // 

@@ -10,6 +10,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using TestDataLib;
 using XDC01Debug;
 using XDC01SerialLib;
 
@@ -25,8 +26,11 @@ namespace XDC01_Test_Tool
         public string LogPath = System.Windows.Forms.Application.StartupPath + @"\Log_file";
 
         XDC01DebugForm XDC01DebugForm;
+        Data_information data_InfoForm;
 
         Check_Status TipsForm;
+
+        private string start_test_time = "";
 
         /// <summary>
         /// 非阻塞式等待
@@ -62,8 +66,17 @@ namespace XDC01_Test_Tool
             XDC01DebugForm = null;
         }
 
+        /// <summary>
+        /// 打开调试界面
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void toolStripButton1_Click(object sender, EventArgs e)
         {
+            if(serial != null)
+            {
+                serial.ClosePort();
+            }
             if(XDC01DebugForm == null)
             {
                 OpenXDC03DebugForm();
@@ -74,6 +87,36 @@ namespace XDC01_Test_Tool
             }
         }
 
+        private void OpenDataInfoForm()
+        {
+            data_InfoForm = new Data_information();
+            data_InfoForm.FormClosed += DataInfoForm_FormClosed;  // 订阅XDC03DebugForm的关闭事件
+            data_InfoForm.Show();
+        }
+
+        private void DataInfoForm_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            data_InfoForm = null;
+        }
+
+        /// <summary>
+        /// 查询测试记录
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void toolStripButton2_Click(object sender, EventArgs e)
+        {
+            if(data_InfoForm == null)
+            {
+                OpenDataInfoForm();
+            }
+            else
+            {
+                data_InfoForm.WindowState = FormWindowState.Normal;
+                data_InfoForm.TopMost = true;
+            }
+        }
+        
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
         {
             if(XDC01DebugForm != null)
@@ -89,8 +132,11 @@ namespace XDC01_Test_Tool
 
         private void Form1_Click(object sender, EventArgs e)
         {
-            XDC01DebugForm.TopMost = false;
-            this.TopMost = true;
+            if(XDC01DebugForm != null)
+            {
+                XDC01DebugForm.TopMost = false;
+                this.TopMost = true;
+            }
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -109,6 +155,7 @@ namespace XDC01_Test_Tool
             {
                 comboBoxCurPort.Items.Add(aa);
             }
+            comboBoxCurPort.SelectedIndex = 0;
         }
 
         private void labelRefreshPort_Click(object sender, EventArgs e)
@@ -119,6 +166,7 @@ namespace XDC01_Test_Tool
         private void InitDataGridView()
         {
             int i = 1;
+            dataGridView1.Rows.Clear();
             dataGridView1.Rows.Add(i++, "RN", "", "");
             dataGridView1.Rows.Add(i++, "固件版本", "", "");
             dataGridView1.Rows.Add(i++, "恢复产测模式", "", "");
@@ -129,41 +177,52 @@ namespace XDC01_Test_Tool
 
         private void BtnStart_Click(object sender, EventArgs e)
         {
-            RunTest();
+            try
+            {
+                BtnStart.Enabled = false;
+                toolStripButton1.Enabled = false;
+                RunTest();
+            }
+            catch (Exception)
+            {
+            }
+            finally
+            {
+                BtnStart.Enabled = true;
+                toolStripButton1.Enabled = true;
+            }
         }
 
         private void RunTest()
         {
             try
             {
+                InitDataGridView();
                 if (comboBoxCurPort.SelectedItem == null)
                 {
                     logger.ShowLog("请先选择串口号");
                     MessageBox.Show("请先选择串口号");
                     return;
                 }
-                logger.ShowLog("开始");
+                logger.ShowLog("开始切换");
+                labelResult.Text = string.Empty;
+                panelResult.BackColor = Color.White;
+                start_test_time = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+                labelTestTime.Text = "0s";
+                timerTest.Interval = 1000;
+                timerTest.Start();
+
                 serial.OpenPort();
-                int poweron_wait = 10;
-                try
-                {
-                    poweron_wait = int.Parse(ConfigFile.IniReadValue("Run_Param", "powerOn_wait", Path_ini));
-                }
-                catch (Exception ee)
-                {
+                logger.ShowLog($"串口已连接");
 
-                }
-                logger.ShowLog($"串口已连接,等待{poweron_wait}s");
-
-                Delay(poweron_wait * 1000);
+                WaitPowerON();
 
                 int i = 0;
                 ReadRN(i++);
 
                 CheckVersion(i++);
-
                 ChangeToFactoryTestMode(i++);
-
+                Delay(3000);
                 ShowPopupAndWait();
 
                 bool check1 = CheckFactoryTestFile(i++);
@@ -180,11 +239,35 @@ namespace XDC01_Test_Tool
                     labelResult.Text = "FAIL";
                     panelResult.BackColor = Color.Red;
                 }
+                SaveLocalSqliteDB();
+                timerTest.Stop();
+                logger.ShowLog($"本轮切换已完成\r\n");
             }
             catch (Exception ee)
             {
                 logger.ShowLog($"发生异常：[{ee.Message}]");
             }
+        }
+
+        private void WaitPowerON()
+        {
+            logger.ShowLog("等待机器完全开机");
+            int x = this.Location.X + (int)this.Width / 2;
+            int y = this.Location.Y + (int)this.Height / 2;
+            int poweron_wait = 10;
+            try
+            {
+                poweron_wait = int.Parse(ConfigFile.IniReadValue("Run_Param", "powerOn_wait", Path_ini));
+            }
+            catch (Exception ee)
+            {
+
+            }
+            TipsForm = new Check_Status($"等待{poweron_wait}秒，待机器完全开机", x, y);
+            TipsForm.Show();
+            logger.ShowLog($"等待{poweron_wait}s");
+            Delay(poweron_wait * 1000);
+            TipsForm.Close();
         }
 
         private void ReadRN(int dgvRowIndex)
@@ -371,6 +454,96 @@ namespace XDC01_Test_Tool
         private void RichTBScanRN_TextChanged(object sender, EventArgs e)
         {
 
+        }
+
+        /// <summary>
+        /// 保存数据至本机Sqlite数据库
+        /// </summary>
+        /// <param name="str_error_log"></param>
+        /// <returns></returns>
+        private bool SaveLocalSqliteDB()
+        {
+            try
+            {
+                // 本机数据库sqlite
+                LocalMachineDB localMachineDB = new LocalMachineDB();
+                string end_test_time = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+                string str_rn = dataGridView1.Rows[0].Cells[2].Value.ToString();
+                string str_fw = dataGridView1.Rows[1].Cells[2].Value.ToString();
+                string str_wifi_mode = dataGridView1.Rows[3].Cells[2].Value.ToString();
+                string str_test_file = dataGridView1.Rows[4].Cells[2].Value.ToString();
+                string str_test_result = labelResult.Text.ToString();
+                string db_file = Environment.CurrentDirectory + @"\Local.db";
+                string str_sql = $"INSERT INTO change_mode (rn, firmware, start_test_time, end_test_time, test_result, wifi_mode, test_file)" +
+                    $"VALUES ('{str_rn}', '{str_fw}', '{start_test_time}', '{end_test_time}', '{str_test_result}', '{str_wifi_mode}', '{str_test_file}');";
+                string str_error_log = "";
+                if (localMachineDB.SaveDataToLocal(db_file, str_sql, ref str_error_log) == false)
+                {
+                    logger.ShowLog("--- 数据保存本机Sqlite失败：" + str_error_log);
+                    return false;
+                }
+                else
+                {
+                    logger.ShowLog("--- 数据保存本机Sqlite成功");
+                    return true;
+                }
+            }
+            catch (Exception ee)
+            {
+                MessageBox.Show(ee.Message);
+                return false;
+            }
+        }
+
+        private void timerTest_Tick(object sender, EventArgs e)
+        {
+            labelTestTime.Text = (int.Parse(labelTestTime.Text.TrimEnd('s')) + 1).ToString() + "s";
+        }
+
+        private void tabControl1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (tabControl1.SelectedTab.Name == "tabPageSwitch")
+            {
+                comboBoxCurPort.SelectedItem = ConfigFile.IniReadValue("Run_Param", "port", Path_ini);
+                //serial = new XDC01Serial(serialPort1, comboBoxCurPort.SelectedItem.ToString(), RichTBSerial);
+                dataGridView1.Rows[1].Cells[1].Value = $"固件版本({ConfigFile.IniReadValue("Standard", "firmware", Path_ini)})";
+            }
+            if (tabControl1.SelectedTab.Name == "tabPageSetting") {
+                string standardFw = ConfigFile.IniReadValue("Standard", "firmware", Path_ini);
+                textBoxFirmware.Text = standardFw;
+                string poweronWait = ConfigFile.IniReadValue("Run_Param", "powerOn_wait", Path_ini);
+                string resetWait = ConfigFile.IniReadValue("Run_Param", "reset_wait", Path_ini);
+                numericUpDownPowerON.Value = Convert.ToInt32(poweronWait);
+                numericUpDownReset.Value = Convert.ToInt32(resetWait);
+            }
+        }
+
+        private void BtnSave_Click(object sender, EventArgs e)
+        {
+            ConfigFile.IniWriteValue("Standard", "firmware", textBoxFirmware.Text, Path_ini);
+            ConfigFile.IniWriteValue("Run_Param", "powerOn_wait", numericUpDownPowerON.Value.ToString(), Path_ini);
+            ConfigFile.IniWriteValue("Run_Param", "reset_wait", numericUpDownReset.Value.ToString(), Path_ini);
+            tabControl1.SelectedTab = tabPageSwitch;
+        }
+
+        private void Form1_Shown(object sender, EventArgs e)
+        {
+            BtnStart.Focus();
+        }
+
+        private void comboBoxCurPort_SelectedValueChanged(object sender, EventArgs e)
+        {
+            if (serial != null)
+            {
+                logger.ShowLog("切换串口");
+                string newPort = "";
+                if (comboBoxCurPort.SelectedItem != null)
+                {
+                    newPort = comboBoxCurPort.SelectedItem.ToString();
+                    ConfigFile.IniWriteValue("Run_Param", "port", newPort, Path_ini);
+                    serial.ChangePort(newPort);
+                }
+            }
         }
     }
 }

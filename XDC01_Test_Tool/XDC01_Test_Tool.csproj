@@ -16,7 +16,7 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
+    <DebugType>pdbonly</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>bin\Debug\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
@@ -98,6 +98,10 @@
     <ProjectReference Include="..\LogLib\LogLib.csproj">
       <Project>{d740c631-0779-4666-9a05-03e340006933}</Project>
       <Name>LogLib</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\TestDataLib\TestDataLib.csproj">
+      <Project>{d3ff1b65-1c78-438c-930f-3a9c56bee33a}</Project>
+      <Name>TestDataLib</Name>
     </ProjectReference>
     <ProjectReference Include="..\XDC01Debug\XDC01Debug.csproj">
       <Project>{5ea392e2-256e-4d4a-9907-929e748c9127}</Project>

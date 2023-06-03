@@ -135,6 +135,9 @@
             this.BtnEnterBWRTOS = new System.Windows.Forms.Button();
             this.BtnOpenCamera = new System.Windows.Forms.Button();
             this.groupBox12 = new System.Windows.Forms.GroupBox();
+            this.comboBoxUnit = new System.Windows.Forms.ComboBox();
+            this.numericUpDownBandWidth = new System.Windows.Forms.NumericUpDown();
+            this.numericUpDownDuration = new System.Windows.Forms.NumericUpDown();
             this.comboBoxServerIp = new System.Windows.Forms.ComboBox();
             this.label21 = new System.Windows.Forms.Label();
             this.label20 = new System.Windows.Forms.Label();
@@ -154,9 +157,6 @@
             this.BtnCloseIperf3 = new System.Windows.Forms.Button();
             this.BtnOpenIperf3 = new System.Windows.Forms.Button();
             this.richTextBoxPCCmd = new System.Windows.Forms.RichTextBox();
-            this.numericUpDownDuration = new System.Windows.Forms.NumericUpDown();
-            this.numericUpDownBandWidth = new System.Windows.Forms.NumericUpDown();
-            this.comboBoxUnit = new System.Windows.Forms.ComboBox();
             this.groupBox7.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.groupBox4.SuspendLayout();
@@ -173,8 +173,8 @@
             this.groupBox14.SuspendLayout();
             this.groupBox17.SuspendLayout();
             this.groupBox12.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownDuration)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownBandWidth)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownDuration)).BeginInit();
             this.SuspendLayout();
             // 
             // BtnOpenPort
@@ -207,6 +207,7 @@
             this.comboBoxCurPort.Name = "comboBoxCurPort";
             this.comboBoxCurPort.Size = new System.Drawing.Size(160, 24);
             this.comboBoxCurPort.TabIndex = 25;
+            this.comboBoxCurPort.SelectedValueChanged += new System.EventHandler(this.comboBoxCurPort_SelectedValueChanged);
             // 
             // richTextBox1
             // 
@@ -1292,6 +1293,43 @@
             this.groupBox12.TabStop = false;
             this.groupBox12.Text = "WiFi吞吐量";
             // 
+            // comboBoxUnit
+            // 
+            this.comboBoxUnit.FormattingEnabled = true;
+            this.comboBoxUnit.Items.AddRange(new object[] {
+            "K",
+            "M",
+            "G"});
+            this.comboBoxUnit.Location = new System.Drawing.Point(415, 66);
+            this.comboBoxUnit.Name = "comboBoxUnit";
+            this.comboBoxUnit.Size = new System.Drawing.Size(36, 24);
+            this.comboBoxUnit.TabIndex = 22;
+            this.comboBoxUnit.Text = "M";
+            // 
+            // numericUpDownBandWidth
+            // 
+            this.numericUpDownBandWidth.Location = new System.Drawing.Point(318, 64);
+            this.numericUpDownBandWidth.Name = "numericUpDownBandWidth";
+            this.numericUpDownBandWidth.Size = new System.Drawing.Size(75, 26);
+            this.numericUpDownBandWidth.TabIndex = 21;
+            this.numericUpDownBandWidth.Value = new decimal(new int[] {
+            10,
+            0,
+            0,
+            0});
+            // 
+            // numericUpDownDuration
+            // 
+            this.numericUpDownDuration.Location = new System.Drawing.Point(131, 64);
+            this.numericUpDownDuration.Name = "numericUpDownDuration";
+            this.numericUpDownDuration.Size = new System.Drawing.Size(67, 26);
+            this.numericUpDownDuration.TabIndex = 20;
+            this.numericUpDownDuration.Value = new decimal(new int[] {
+            10,
+            0,
+            0,
+            0});
+            // 
             // comboBoxServerIp
             // 
             this.comboBoxServerIp.FormattingEnabled = true;
@@ -1460,43 +1498,6 @@
             this.richTextBoxPCCmd.TabIndex = 47;
             this.richTextBoxPCCmd.Text = "";
             // 
-            // numericUpDownDuration
-            // 
-            this.numericUpDownDuration.Location = new System.Drawing.Point(131, 64);
-            this.numericUpDownDuration.Name = "numericUpDownDuration";
-            this.numericUpDownDuration.Size = new System.Drawing.Size(67, 26);
-            this.numericUpDownDuration.TabIndex = 20;
-            this.numericUpDownDuration.Value = new decimal(new int[] {
-            10,
-            0,
-            0,
-            0});
-            // 
-            // numericUpDownBandWidth
-            // 
-            this.numericUpDownBandWidth.Location = new System.Drawing.Point(318, 64);
-            this.numericUpDownBandWidth.Name = "numericUpDownBandWidth";
-            this.numericUpDownBandWidth.Size = new System.Drawing.Size(75, 26);
-            this.numericUpDownBandWidth.TabIndex = 21;
-            this.numericUpDownBandWidth.Value = new decimal(new int[] {
-            10,
-            0,
-            0,
-            0});
-            // 
-            // comboBoxUnit
-            // 
-            this.comboBoxUnit.FormattingEnabled = true;
-            this.comboBoxUnit.Items.AddRange(new object[] {
-            "K",
-            "M",
-            "G"});
-            this.comboBoxUnit.Location = new System.Drawing.Point(415, 66);
-            this.comboBoxUnit.Name = "comboBoxUnit";
-            this.comboBoxUnit.Size = new System.Drawing.Size(36, 24);
-            this.comboBoxUnit.TabIndex = 22;
-            this.comboBoxUnit.Text = "M";
-            // 
             // XDC01DebugForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
@@ -1561,8 +1562,8 @@
             this.groupBox17.PerformLayout();
             this.groupBox12.ResumeLayout(false);
             this.groupBox12.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownDuration)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownBandWidth)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownDuration)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 

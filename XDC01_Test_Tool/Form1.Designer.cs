@@ -35,7 +35,15 @@
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.RichTBRunningLog = new System.Windows.Forms.RichTextBox();
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
+            this.Column1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Column2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Column3 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Column4 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.labelTestTime = new System.Windows.Forms.Label();
+            this.RichTBScanRN = new System.Windows.Forms.RichTextBox();
+            this.comboBoxCurPort = new System.Windows.Forms.ComboBox();
+            this.labelRefreshPort = new System.Windows.Forms.Label();
             this.panelResult = new System.Windows.Forms.Panel();
             this.labelResult = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
@@ -43,16 +51,20 @@
             this.BtnStart = new System.Windows.Forms.Button();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.RichTBSerial = new System.Windows.Forms.RichTextBox();
+            this.tabPageSetting = new System.Windows.Forms.TabPage();
+            this.groupBox3 = new System.Windows.Forms.GroupBox();
+            this.textBoxFirmware = new System.Windows.Forms.TextBox();
+            this.label6 = new System.Windows.Forms.Label();
+            this.BtnSave = new System.Windows.Forms.Button();
+            this.numericUpDownReset = new System.Windows.Forms.NumericUpDown();
+            this.label5 = new System.Windows.Forms.Label();
+            this.numericUpDownPowerON = new System.Windows.Forms.NumericUpDown();
+            this.label4 = new System.Windows.Forms.Label();
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
             this.toolStripButton1 = new System.Windows.Forms.ToolStripButton();
+            this.toolStripButton2 = new System.Windows.Forms.ToolStripButton();
             this.serialPort1 = new System.IO.Ports.SerialPort(this.components);
-            this.labelRefreshPort = new System.Windows.Forms.Label();
-            this.comboBoxCurPort = new System.Windows.Forms.ComboBox();
-            this.RichTBScanRN = new System.Windows.Forms.RichTextBox();
-            this.Column1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Column2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Column3 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Column4 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.timerTest = new System.Windows.Forms.Timer(this.components);
             this.tabControl1.SuspendLayout();
             this.tabPageSwitch.SuspendLayout();
             this.groupBox1.SuspendLayout();
@@ -60,6 +72,10 @@
             this.panel1.SuspendLayout();
             this.panelResult.SuspendLayout();
             this.groupBox2.SuspendLayout();
+            this.tabPageSetting.SuspendLayout();
+            this.groupBox3.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownReset)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownPowerON)).BeginInit();
             this.toolStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -69,6 +85,7 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.tabControl1.Controls.Add(this.tabPageSwitch);
+            this.tabControl1.Controls.Add(this.tabPageSetting);
             this.tabControl1.Font = new System.Drawing.Font("宋体", 14F);
             this.tabControl1.Location = new System.Drawing.Point(9, 9);
             this.tabControl1.Margin = new System.Windows.Forms.Padding(0);
@@ -76,6 +93,7 @@
             this.tabControl1.SelectedIndex = 0;
             this.tabControl1.Size = new System.Drawing.Size(1246, 647);
             this.tabControl1.TabIndex = 0;
+            this.tabControl1.SelectedIndexChanged += new System.EventHandler(this.tabControl1_SelectedIndexChanged);
             // 
             // tabPageSwitch
             // 
@@ -131,10 +149,39 @@
             this.dataGridView1.Size = new System.Drawing.Size(549, 200);
             this.dataGridView1.TabIndex = 3;
             // 
+            // Column1
+            // 
+            this.Column1.HeaderText = "序号";
+            this.Column1.Name = "Column1";
+            this.Column1.ReadOnly = true;
+            this.Column1.Width = 70;
+            // 
+            // Column2
+            // 
+            this.Column2.HeaderText = "测项";
+            this.Column2.Name = "Column2";
+            this.Column2.ReadOnly = true;
+            this.Column2.Width = 200;
+            // 
+            // Column3
+            // 
+            this.Column3.HeaderText = "内容";
+            this.Column3.Name = "Column3";
+            this.Column3.ReadOnly = true;
+            this.Column3.Width = 200;
+            // 
+            // Column4
+            // 
+            this.Column4.HeaderText = "状态";
+            this.Column4.Name = "Column4";
+            this.Column4.ReadOnly = true;
+            this.Column4.Width = 70;
+            // 
             // panel1
             // 
             this.panel1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.panel1.Controls.Add(this.labelTestTime);
             this.panel1.Controls.Add(this.RichTBScanRN);
             this.panel1.Controls.Add(this.comboBoxCurPort);
             this.panel1.Controls.Add(this.labelRefreshPort);
@@ -146,6 +193,44 @@
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(1212, 62);
             this.panel1.TabIndex = 2;
+            // 
+            // labelTestTime
+            // 
+            this.labelTestTime.AutoSize = true;
+            this.labelTestTime.Location = new System.Drawing.Point(923, 23);
+            this.labelTestTime.Name = "labelTestTime";
+            this.labelTestTime.Size = new System.Drawing.Size(29, 19);
+            this.labelTestTime.TabIndex = 8;
+            this.labelTestTime.Text = "0s";
+            // 
+            // RichTBScanRN
+            // 
+            this.RichTBScanRN.Location = new System.Drawing.Point(290, 8);
+            this.RichTBScanRN.Name = "RichTBScanRN";
+            this.RichTBScanRN.Size = new System.Drawing.Size(493, 44);
+            this.RichTBScanRN.TabIndex = 7;
+            this.RichTBScanRN.Text = "";
+            this.RichTBScanRN.Visible = false;
+            this.RichTBScanRN.TextChanged += new System.EventHandler(this.RichTBScanRN_TextChanged);
+            // 
+            // comboBoxCurPort
+            // 
+            this.comboBoxCurPort.FormattingEnabled = true;
+            this.comboBoxCurPort.Location = new System.Drawing.Point(94, 19);
+            this.comboBoxCurPort.Name = "comboBoxCurPort";
+            this.comboBoxCurPort.Size = new System.Drawing.Size(96, 27);
+            this.comboBoxCurPort.TabIndex = 6;
+            this.comboBoxCurPort.SelectedValueChanged += new System.EventHandler(this.comboBoxCurPort_SelectedValueChanged);
+            // 
+            // labelRefreshPort
+            // 
+            this.labelRefreshPort.AutoSize = true;
+            this.labelRefreshPort.Location = new System.Drawing.Point(3, 23);
+            this.labelRefreshPort.Name = "labelRefreshPort";
+            this.labelRefreshPort.Size = new System.Drawing.Size(85, 19);
+            this.labelRefreshPort.TabIndex = 5;
+            this.labelRefreshPort.Text = "串口号：";
+            this.labelRefreshPort.Click += new System.EventHandler(this.labelRefreshPort_Click);
             // 
             // panelResult
             // 
@@ -165,9 +250,8 @@
             this.labelResult.Font = new System.Drawing.Font("宋体", 24.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.labelResult.Location = new System.Drawing.Point(30, 11);
             this.labelResult.Name = "labelResult";
-            this.labelResult.Size = new System.Drawing.Size(87, 33);
+            this.labelResult.Size = new System.Drawing.Size(0, 33);
             this.labelResult.TabIndex = 0;
-            this.labelResult.Text = "PASS";
             this.labelResult.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // label2
@@ -187,15 +271,18 @@
             this.label1.Size = new System.Drawing.Size(67, 19);
             this.label1.TabIndex = 2;
             this.label1.Text = "扫描RN";
+            this.label1.Visible = false;
             // 
             // BtnStart
             // 
-            this.BtnStart.Location = new System.Drawing.Point(878, 4);
+            this.BtnStart.BackColor = System.Drawing.Color.SeaGreen;
+            this.BtnStart.Font = new System.Drawing.Font("宋体", 16F);
+            this.BtnStart.Location = new System.Drawing.Point(789, 4);
             this.BtnStart.Name = "BtnStart";
             this.BtnStart.Size = new System.Drawing.Size(127, 55);
             this.BtnStart.TabIndex = 0;
             this.BtnStart.Text = "开始";
-            this.BtnStart.UseVisualStyleBackColor = true;
+            this.BtnStart.UseVisualStyleBackColor = false;
             this.BtnStart.Click += new System.EventHandler(this.BtnStart_Click);
             // 
             // groupBox2
@@ -226,11 +313,96 @@
             this.RichTBSerial.TabIndex = 0;
             this.RichTBSerial.Text = "";
             // 
+            // tabPageSetting
+            // 
+            this.tabPageSetting.Controls.Add(this.groupBox3);
+            this.tabPageSetting.Location = new System.Drawing.Point(4, 29);
+            this.tabPageSetting.Name = "tabPageSetting";
+            this.tabPageSetting.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPageSetting.Size = new System.Drawing.Size(1238, 614);
+            this.tabPageSetting.TabIndex = 1;
+            this.tabPageSetting.Text = "设置";
+            this.tabPageSetting.UseVisualStyleBackColor = true;
+            // 
+            // groupBox3
+            // 
+            this.groupBox3.Controls.Add(this.textBoxFirmware);
+            this.groupBox3.Controls.Add(this.label6);
+            this.groupBox3.Controls.Add(this.BtnSave);
+            this.groupBox3.Controls.Add(this.numericUpDownReset);
+            this.groupBox3.Controls.Add(this.label5);
+            this.groupBox3.Controls.Add(this.numericUpDownPowerON);
+            this.groupBox3.Controls.Add(this.label4);
+            this.groupBox3.Location = new System.Drawing.Point(27, 23);
+            this.groupBox3.Name = "groupBox3";
+            this.groupBox3.Size = new System.Drawing.Size(550, 274);
+            this.groupBox3.TabIndex = 0;
+            this.groupBox3.TabStop = false;
+            // 
+            // textBoxFirmware
+            // 
+            this.textBoxFirmware.Location = new System.Drawing.Point(159, 43);
+            this.textBoxFirmware.Name = "textBoxFirmware";
+            this.textBoxFirmware.Size = new System.Drawing.Size(121, 29);
+            this.textBoxFirmware.TabIndex = 8;
+            // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Location = new System.Drawing.Point(11, 46);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(104, 19);
+            this.label6.TabIndex = 7;
+            this.label6.Text = "固件版本：";
+            // 
+            // BtnSave
+            // 
+            this.BtnSave.Location = new System.Drawing.Point(15, 206);
+            this.BtnSave.Name = "BtnSave";
+            this.BtnSave.Size = new System.Drawing.Size(120, 43);
+            this.BtnSave.TabIndex = 6;
+            this.BtnSave.Text = "保存";
+            this.BtnSave.UseVisualStyleBackColor = true;
+            this.BtnSave.Click += new System.EventHandler(this.BtnSave_Click);
+            // 
+            // numericUpDownReset
+            // 
+            this.numericUpDownReset.Location = new System.Drawing.Point(209, 154);
+            this.numericUpDownReset.Name = "numericUpDownReset";
+            this.numericUpDownReset.Size = new System.Drawing.Size(120, 29);
+            this.numericUpDownReset.TabIndex = 5;
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(11, 157);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(192, 19);
+            this.label5.TabIndex = 4;
+            this.label5.Text = "等待RESET重启时间：";
+            // 
+            // numericUpDownPowerON
+            // 
+            this.numericUpDownPowerON.Location = new System.Drawing.Point(159, 97);
+            this.numericUpDownPowerON.Name = "numericUpDownPowerON";
+            this.numericUpDownPowerON.Size = new System.Drawing.Size(120, 29);
+            this.numericUpDownPowerON.TabIndex = 3;
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(11, 102);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(142, 19);
+            this.label4.TabIndex = 2;
+            this.label4.Text = "等待开机时间：";
+            // 
             // toolStrip1
             // 
             this.toolStrip1.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolStripButton1});
+            this.toolStripButton1,
+            this.toolStripButton2});
             this.toolStrip1.Location = new System.Drawing.Point(0, 656);
             this.toolStrip1.Name = "toolStrip1";
             this.toolStrip1.Padding = new System.Windows.Forms.Padding(0, 0, 2, 0);
@@ -248,60 +420,19 @@
             this.toolStripButton1.Text = "打开调试界面";
             this.toolStripButton1.Click += new System.EventHandler(this.toolStripButton1_Click);
             // 
-            // labelRefreshPort
+            // toolStripButton2
             // 
-            this.labelRefreshPort.AutoSize = true;
-            this.labelRefreshPort.Location = new System.Drawing.Point(3, 23);
-            this.labelRefreshPort.Name = "labelRefreshPort";
-            this.labelRefreshPort.Size = new System.Drawing.Size(85, 19);
-            this.labelRefreshPort.TabIndex = 5;
-            this.labelRefreshPort.Text = "串口号：";
-            this.labelRefreshPort.Click += new System.EventHandler(this.labelRefreshPort_Click);
+            this.toolStripButton2.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.toolStripButton2.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButton2.Image")));
+            this.toolStripButton2.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButton2.Name = "toolStripButton2";
+            this.toolStripButton2.Size = new System.Drawing.Size(84, 22);
+            this.toolStripButton2.Text = "查询测试记录";
+            this.toolStripButton2.Click += new System.EventHandler(this.toolStripButton2_Click);
             // 
-            // comboBoxCurPort
+            // timerTest
             // 
-            this.comboBoxCurPort.FormattingEnabled = true;
-            this.comboBoxCurPort.Location = new System.Drawing.Point(94, 19);
-            this.comboBoxCurPort.Name = "comboBoxCurPort";
-            this.comboBoxCurPort.Size = new System.Drawing.Size(96, 27);
-            this.comboBoxCurPort.TabIndex = 6;
-            // 
-            // RichTBScanRN
-            // 
-            this.RichTBScanRN.Location = new System.Drawing.Point(290, 8);
-            this.RichTBScanRN.Name = "RichTBScanRN";
-            this.RichTBScanRN.Size = new System.Drawing.Size(582, 44);
-            this.RichTBScanRN.TabIndex = 7;
-            this.RichTBScanRN.Text = "";
-            this.RichTBScanRN.TextChanged += new System.EventHandler(this.RichTBScanRN_TextChanged);
-            // 
-            // Column1
-            // 
-            this.Column1.HeaderText = "序号";
-            this.Column1.Name = "Column1";
-            this.Column1.ReadOnly = true;
-            this.Column1.Width = 70;
-            // 
-            // Column2
-            // 
-            this.Column2.HeaderText = "测项";
-            this.Column2.Name = "Column2";
-            this.Column2.ReadOnly = true;
-            this.Column2.Width = 200;
-            // 
-            // Column3
-            // 
-            this.Column3.HeaderText = "内容";
-            this.Column3.Name = "Column3";
-            this.Column3.ReadOnly = true;
-            this.Column3.Width = 200;
-            // 
-            // Column4
-            // 
-            this.Column4.HeaderText = "状态";
-            this.Column4.Name = "Column4";
-            this.Column4.ReadOnly = true;
-            this.Column4.Width = 70;
+            this.timerTest.Tick += new System.EventHandler(this.timerTest_Tick);
             // 
             // Form1
             // 
@@ -317,6 +448,7 @@
             this.Text = "Form1";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form1_FormClosing);
             this.Load += new System.EventHandler(this.Form1_Load);
+            this.Shown += new System.EventHandler(this.Form1_Shown);
             this.Click += new System.EventHandler(this.Form1_Click);
             this.tabControl1.ResumeLayout(false);
             this.tabPageSwitch.ResumeLayout(false);
@@ -327,6 +459,11 @@
             this.panelResult.ResumeLayout(false);
             this.panelResult.PerformLayout();
             this.groupBox2.ResumeLayout(false);
+            this.tabPageSetting.ResumeLayout(false);
+            this.groupBox3.ResumeLayout(false);
+            this.groupBox3.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownReset)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownPowerON)).EndInit();
             this.toolStrip1.ResumeLayout(false);
             this.toolStrip1.PerformLayout();
             this.ResumeLayout(false);
@@ -359,6 +496,18 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn Column2;
         private System.Windows.Forms.DataGridViewTextBoxColumn Column3;
         private System.Windows.Forms.DataGridViewTextBoxColumn Column4;
+        private System.Windows.Forms.ToolStripButton toolStripButton2;
+        private System.Windows.Forms.Label labelTestTime;
+        private System.Windows.Forms.Timer timerTest;
+        private System.Windows.Forms.TabPage tabPageSetting;
+        private System.Windows.Forms.GroupBox groupBox3;
+        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.NumericUpDown numericUpDownPowerON;
+        private System.Windows.Forms.NumericUpDown numericUpDownReset;
+        private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.Button BtnSave;
+        private System.Windows.Forms.Label label6;
+        private System.Windows.Forms.TextBox textBoxFirmware;
     }
 }
 

@@ -43,9 +43,36 @@ namespace XDC03Debug
 
         private void BtnOpenPort_Click(object sender, EventArgs e)
         {
-            string port = comboBoxCurPort.SelectedItem.ToString();
-            serial = new XDC03Serial(serialPortXdc03, port, richTextBox1);
-            serial.OpenPort();
+            if (comboBoxCurPort.SelectedItem == null)
+            {
+                MessageBox.Show("请先选择端口");
+                return;
+            }
+            else
+            {
+                string port = comboBoxCurPort.SelectedItem.ToString();
+                if (port != "")
+                {
+                    serial = new XDC03Serial(serialPortXdc03, port, richTextBox1);
+                    serial.OpenPort();
+                }
+            }
+        }
+
+        private void BtnSendCMD_Click(object sender, EventArgs e)
+        {
+            if (serial == null)
+            {
+                MessageBox.Show("请先打开串口");
+                comboBoxCurPort.Focus();
+                return;
+            }
+            string str_cmd = textBoxSendCmd.Text.Trim();
+            string str_ret_value = "";
+            if (serial.SendCMDToXDC03(str_cmd, 2000, true, ref str_ret_value, "#") == false)
+            {
+                MessageBox.Show($"发送获取系统信息指令[{str_cmd}]失败");
+            }
         }
 
         private void Form1_Shown(object sender, EventArgs e)
@@ -55,6 +82,12 @@ namespace XDC03Debug
 
         private void BtnReadSysInfo_Click(object sender, EventArgs e)
         {
+            if (serial == null)
+            {
+                MessageBox.Show("请先打开串口");
+                comboBoxCurPort.Focus();
+                return;
+            }
             string str_error_log = "";
             CameraInfo cameraInfo = new CameraInfo();
             serial.GetSystemParam(ref cameraInfo, ref str_error_log);
@@ -69,6 +102,12 @@ namespace XDC03Debug
 
         private void BtnReadRN_Click(object sender, EventArgs e)
         {
+            if (serial == null)
+            {
+                MessageBox.Show("请先打开串口");
+                comboBoxCurPort.Focus();
+                return;
+            }
             textBoxReadRN.Text = string.Empty;
             string str_error_log = "";
             string RN = "";
@@ -78,13 +117,30 @@ namespace XDC03Debug
 
         private void BtnWriteRN_Click(object sender, EventArgs e)
         {
+            if (serial == null)
+            {
+                MessageBox.Show("请先打开串口");
+                comboBoxCurPort.Focus();
+                return;
+            }
             string write_rn = textBoxWriteRN.Text;
+            if (write_rn.Length != 15)
+            {
+                MessageBox.Show("RN必须为15位");
+                return;
+            }
             string str_error_log = "";
             serial.SetRN(write_rn, ref str_error_log);
         }
 
         private void BtnReadTagNum_Click(object sender, EventArgs e)
         {
+            if (serial == null)
+            {
+                MessageBox.Show("请先打开串口");
+                comboBoxCurPort.Focus();
+                return;
+            }
             textBoxReadTagNum.Text = string.Empty;
             string str_error_log = "";
             string str_tagnum = "";
@@ -94,6 +150,18 @@ namespace XDC03Debug
 
         private void BtnWriteTagNum_Click(object sender, EventArgs e)
         {
+            if (serial == null)
+            {
+                MessageBox.Show("请先打开串口");
+                comboBoxCurPort.Focus();
+                return;
+            }
+            if (comboBoxWriteTagNum.SelectedItem == null)
+            {
+                MessageBox.Show("请先选择要写入的工序号");
+                comboBoxWriteTagNum.Focus();
+                return;
+            }
             string str_tagNum = comboBoxWriteTagNum.SelectedItem.ToString();
             string str_error_log = "";
             serial.SetTagNumber(str_tagNum, ref str_error_log);
@@ -101,6 +169,12 @@ namespace XDC03Debug
 
         private void BtnReadMAC_Click(object sender, EventArgs e)
         {
+            if (serial == null)
+            {
+                MessageBox.Show("请先打开串口");
+                comboBoxCurPort.Focus();
+                return;
+            }
             textBoxReadMAC.Text = string.Empty;
             string str_mac = "";
             string str_error_log = "";
@@ -110,6 +184,12 @@ namespace XDC03Debug
 
         private void BtnReadIP_Click(object sender, EventArgs e)
         {
+            if (serial == null)
+            {
+                MessageBox.Show("请先打开串口");
+                comboBoxCurPort.Focus();
+                return;
+            }
             textBoxReadIP.Text = string.Empty;
             string str_ip = "";
             string str_error_log = "";
@@ -119,6 +199,12 @@ namespace XDC03Debug
 
         private void BtnReadWiFi_Click(object sender, EventArgs e)
         {
+            if (serial == null)
+            {
+                MessageBox.Show("请先打开串口");
+                comboBoxCurPort.Focus();
+                return;
+            }
             textBoxReadWiFiSSID.Text = string.Empty;
             textBoxReadWiFiPWD.Text = string.Empty;
             string str_wifi_ssid = "";
@@ -133,6 +219,12 @@ namespace XDC03Debug
 
         private void BtnWriteWiFi_Click(object sender, EventArgs e)
         {
+            if (serial == null)
+            {
+                MessageBox.Show("请先打开串口");
+                comboBoxCurPort.Focus();
+                return;
+            }
             string str_wifi_ssid = textBoxWriteWiFiSSID.Text;
             string str_wifi_pwd = textBoxWriteWiFiPWD.Text;
             string str_error_log = "";
@@ -141,6 +233,12 @@ namespace XDC03Debug
 
         private void BtnReadLight_Click(object sender, EventArgs e)
         {
+            if (serial == null)
+            {
+                MessageBox.Show("请先打开串口");
+                comboBoxCurPort.Focus();
+                return;
+            }
             textBoxReadLight.Text = string.Empty;
             string str_light = "";
             string str_error_log = "";
@@ -150,6 +248,12 @@ namespace XDC03Debug
 
         private void BtnFactoryMode_Click(object sender, EventArgs e)
         {
+            if (serial == null)
+            {
+                MessageBox.Show("请先打开串口");
+                comboBoxCurPort.Focus();
+                return;
+            }
             BtnFactoryMode.Enabled = false;
             string str_error_log = "";
             serial.ChangeFactoryMode(ref str_error_log);
@@ -158,6 +262,12 @@ namespace XDC03Debug
 
         private void BtnFactoryReset_Click(object sender, EventArgs e)
         {
+            if (serial == null)
+            {
+                MessageBox.Show("请先打开串口");
+                comboBoxCurPort.Focus();
+                return;
+            }
             BtnFactoryReset.Enabled = false;
             string str_error_log = "";
             serial.ResetFactory(ref str_error_log);
@@ -166,6 +276,18 @@ namespace XDC03Debug
 
         private void BtnSetLEDColor_Click(object sender, EventArgs e)
         {
+            if (serial == null)
+            {
+                MessageBox.Show("请先打开串口");
+                comboBoxCurPort.Focus();
+                return;
+            }
+            if (CbxLedColor.SelectedItem == null)
+            {
+                MessageBox.Show("请先选择要设置的颜色");
+                CbxLedColor.Focus();
+                return;
+            }
             string color = CbxLedColor.SelectedItem.ToString();
             string str_error_log = "";
             serial.SetBtnLEDColor(color, ref str_error_log);
@@ -173,19 +295,43 @@ namespace XDC03Debug
 
         private void BtnOpenPIR_Click(object sender, EventArgs e)
         {
+            if (serial == null)
+            {
+                MessageBox.Show("请先打开串口");
+                comboBoxCurPort.Focus();
+                return;
+            }
             string str_error_log = "";
             serial.SetPIR("on", ref str_error_log);
         }
 
         private void BtnClosePIR_Click(object sender, EventArgs e)
         {
+            if (serial == null)
+            {
+                MessageBox.Show("请先打开串口");
+                comboBoxCurPort.Focus();
+                return;
+            }
             string str_error_log = "";
             serial.SetPIR("off", ref str_error_log);
         }
 
         private void BtnPlayWav_Click(object sender, EventArgs e)
         {
+            if (serial == null)
+            {
+                MessageBox.Show("请先打开串口");
+                comboBoxCurPort.Focus();
+                return;
+            }
             BtnPlayWav.Enabled = false;
+            if (CbxWavIndex.SelectedItem == null)
+            {
+                MessageBox.Show("请先选择要播放的音频文件");
+                CbxWavIndex.Focus();
+                return;
+            }
             string wavIndex = CbxWavIndex.SelectedItem.ToString();
             string str_error_log = "";
             serial.PlayWav(wavIndex, ref str_error_log);
@@ -195,18 +341,36 @@ namespace XDC03Debug
 
         private void BtnOpenMic_Click(object sender, EventArgs e)
         {
+            if (serial == null)
+            {
+                MessageBox.Show("请先打开串口");
+                comboBoxCurPort.Focus();
+                return;
+            }
             string str_error_log = "";
             serial.OpenMic(ref str_error_log);
         }
 
         private void BtnCloseMic_Click(object sender, EventArgs e)
         {
+            if (serial == null)
+            {
+                MessageBox.Show("请先打开串口");
+                comboBoxCurPort.Focus();
+                return;
+            }
             string str_error_log = "";
             serial.CloseMic(ref str_error_log);
         }
 
         private void BtnRecordMic_Click(object sender, EventArgs e)
         {
+            if (serial == null)
+            {
+                MessageBox.Show("请先打开串口");
+                comboBoxCurPort.Focus();
+                return;
+            }
             BtnRecordMic.Enabled = false;
             string str_error_log = "";
             string str_duration = textBoxRecordDuration.Text;
@@ -227,6 +391,12 @@ namespace XDC03Debug
 
         private void BtnPlayRecord_Click(object sender, EventArgs e)
         {
+            if (serial == null)
+            {
+                MessageBox.Show("请先打开串口");
+                comboBoxCurPort.Focus();
+                return;
+            }
             BtnPlayRecord.Enabled = false;
             string str_error_log = "";
             serial.PlayRecordWav(ref str_error_log);
@@ -235,6 +405,15 @@ namespace XDC03Debug
 
         private void BtnAutoTestMic_Click(object sender, EventArgs e)
         {
+            if (serial == null)
+            {
+                MessageBox.Show("请先打开串口");
+                comboBoxCurPort.Focus();
+                return;
+            }
+            textBoxMicMaxAbs.Text = string.Empty;
+            textBoxMicDelta.Text = string.Empty;
+            textBoxMicResult.Text = string.Empty;
             BtnAutoTestMic.Enabled = false;
             string str_max_abs = "";
             string str_delta = "";
@@ -264,6 +443,14 @@ namespace XDC03Debug
 
         private void BtnWiFiUpT_Click(object sender, EventArgs e)
         {
+            if (serial == null)
+            {
+                MessageBox.Show("请先打开串口");
+                comboBoxCurPort.Focus();
+                return;
+            }
+            textBoxUpRate.Text = string.Empty;
+            textBoxUpLoss.Text = string.Empty;
             string str_rate = "";
             string str_loss = "";
             string str_error_log = "";
@@ -276,8 +463,8 @@ namespace XDC03Debug
             {
                 MessageBox.Show("请先选择服务器IP");
             }
-            string str_duration = textBoxDuration.Text.Trim();
-            string str_bandwidth = textBoxBandWidth.Text.Trim();
+            string str_duration = numericUpDownDuration.Text.Trim();
+            string str_bandwidth = numericUpDownBandWidth.Text.Trim() + comboBoxUnit.SelectedItem.ToString();
             serial.TestWifiUpThroughput(ref str_rate, ref str_loss, ref str_error_log, str_ip, str_duration, str_bandwidth);
             textBoxUpRate.Text = str_rate;
             textBoxUpLoss.Text = str_loss;
@@ -285,6 +472,14 @@ namespace XDC03Debug
 
         private void BtnWifiDownT_Click(object sender, EventArgs e)
         {
+            if (serial == null)
+            {
+                MessageBox.Show("请先打开串口");
+                comboBoxCurPort.Focus();
+                return;
+            }
+            textBoxDownRate.Text = string.Empty;
+            textBoxDownLoss.Text = string.Empty;
             string str_rate = "";
             string str_loss = "";
             string str_error_log = "";
@@ -297,8 +492,8 @@ namespace XDC03Debug
             {
                 MessageBox.Show("请先选择服务器IP");
             }
-            string str_duration = textBoxDuration.Text.Trim();
-            string str_bandwidth = textBoxBandWidth.Text.Trim();
+            string str_duration = numericUpDownDuration.Text.Trim();
+            string str_bandwidth = numericUpDownBandWidth.Text.Trim() + comboBoxUnit.SelectedItem.ToString();
             serial.TestWifiDownThroughput(ref str_rate, ref str_loss, ref str_error_log, str_ip, str_duration, str_bandwidth);
             textBoxDownRate.Text = str_rate;
             textBoxDownLoss.Text = str_loss;
@@ -314,6 +509,12 @@ namespace XDC03Debug
 
         private void BtnOpenRTSP_Click(object sender, EventArgs e)
         {
+            if (serial == null)
+            {
+                MessageBox.Show("请先打开串口");
+                comboBoxCurPort.Focus();
+                return;
+            }
             string str_ip = "";
             string str_error_log = "";
             serial.GetSystemIP(ref str_ip, ref str_error_log);
@@ -326,6 +527,12 @@ namespace XDC03Debug
 
         private void BtnEnterBW_Click(object sender, EventArgs e)
         {
+            if (serial == null)
+            {
+                MessageBox.Show("请先打开串口");
+                comboBoxCurPort.Focus();
+                return;
+            }
             string str_error_log = "";
             string str_state = "on";
             serial.SwitchIR_CUT(str_state, ref str_error_log);
@@ -333,6 +540,12 @@ namespace XDC03Debug
 
         private void BtnQuitBW_Click(object sender, EventArgs e)
         {
+            if (serial == null)
+            {
+                MessageBox.Show("请先打开串口");
+                comboBoxCurPort.Focus();
+                return;
+            }
             string str_error_log = "";
             string str_state = "off";
             serial.SwitchIR_CUT(str_state, ref str_error_log);
@@ -340,6 +553,12 @@ namespace XDC03Debug
 
         private void BtnOpenIRLed_Click(object sender, EventArgs e)
         {
+            if (serial == null)
+            {
+                MessageBox.Show("请先打开串口");
+                comboBoxCurPort.Focus();
+                return;
+            }
             string str_error_log = "";
             string str_state = "on";
             serial.SwitchIR_LED(str_state, ref str_error_log);
@@ -347,6 +566,12 @@ namespace XDC03Debug
 
         private void BtnCloseIRLed_Click(object sender, EventArgs e)
         {
+            if (serial == null)
+            {
+                MessageBox.Show("请先打开串口");
+                comboBoxCurPort.Focus();
+                return;
+            }
             string str_error_log = "";
             string str_state = "off";
             serial.SwitchIR_LED(str_state, ref str_error_log);
@@ -354,6 +579,12 @@ namespace XDC03Debug
 
         private void BtnPCBARfTx_Click(object sender, EventArgs e)
         {
+            if (serial == null)
+            {
+                MessageBox.Show("请先打开串口");
+                comboBoxCurPort.Focus();
+                return;
+            }
             string str_error_log = "";
             string str_index = CbxPCBARfIndex.SelectedIndex.ToString();
             serial.PCBA_RFTX(str_index, ref str_error_log);
@@ -361,6 +592,12 @@ namespace XDC03Debug
 
         private void BtnRfTx_Click(object sender, EventArgs e)
         {
+            if (serial == null)
+            {
+                MessageBox.Show("请先打开串口");
+                comboBoxCurPort.Focus();
+                return;
+            }
             string str_error_log = "";
             string str_state = "send";
             serial.SetRFMode(str_state, ref str_error_log);
@@ -368,6 +605,12 @@ namespace XDC03Debug
 
         private void BtnRfRx_Click(object sender, EventArgs e)
         {
+            if (serial == null)
+            {
+                MessageBox.Show("请先打开串口");
+                comboBoxCurPort.Focus();
+                return;
+            }
             string str_error_log = "";
             string str_state = "rcv";
             serial.SetRFMode(str_state, ref str_error_log);
@@ -375,6 +618,13 @@ namespace XDC03Debug
 
         private void BtnReadSN_Click(object sender, EventArgs e)
         {
+            if (serial == null)
+            {
+                MessageBox.Show("请先打开串口");
+                comboBoxCurPort.Focus();
+                return;
+            }
+            textBoxSN.Text = string.Empty;
             string str_error_log = "";
             string str_sn = "";
             serial.GetSN(ref str_sn, ref str_error_log);
@@ -383,6 +633,13 @@ namespace XDC03Debug
 
         private void BtnReadUID_Click(object sender, EventArgs e)
         {
+            if (serial == null)
+            {
+                MessageBox.Show("请先打开串口");
+                comboBoxCurPort.Focus();
+                return;
+            }
+            textBoxUID.Text = string.Empty;
             string str_error_log = "";
             string str_uid = "";
             serial.GetUID(ref str_uid, ref str_error_log);
@@ -391,14 +648,38 @@ namespace XDC03Debug
 
         private void BtnWriteSNUID_Click(object sender, EventArgs e)
         {
+            if (serial == null)
+            {
+                MessageBox.Show("请先打开串口");
+                comboBoxCurPort.Focus();
+                return;
+            }
             string str_uid = textBoxUID.Text.Trim();
             string str_sn = textBoxSN.Text.Trim();
+            if (str_uid.Length != 20)
+            {
+                MessageBox.Show("UID必须为20位");
+                textBoxUID.Focus();
+                return;
+            }
+            if (str_sn.Length == 0)
+            {
+                MessageBox.Show("SN必须为16位");
+                textBoxSN.Focus();
+                return;
+            }
             string str_error_log = "";
             serial.SetUIDandSN(str_uid, str_sn, ref str_error_log);
         }
 
         private void BtnSetChargeMode_Click(object sender, EventArgs e)
         {
+            if (serial == null)
+            {
+                MessageBox.Show("请先打开串口");
+                comboBoxCurPort.Focus();
+                return;
+            }
             string str_level = textBoxChargeLevel.Text.Trim();
             string str_error_log = "";
             serial.SetChargeMode(str_level, ref str_error_log);
@@ -406,6 +687,12 @@ namespace XDC03Debug
 
         private void BtnStartCharge_Click(object sender, EventArgs e)
         {
+            if (serial == null)
+            {
+                MessageBox.Show("请先打开串口");
+                comboBoxCurPort.Focus();
+                return;
+            }
             string str_error_log = "";
             string str_state = "enable";
             serial.SetChargeIC(str_state, ref str_error_log);
@@ -413,6 +700,12 @@ namespace XDC03Debug
 
         private void BtnStopCharge_Click(object sender, EventArgs e)
         {
+            if (serial == null)
+            {
+                MessageBox.Show("请先打开串口");
+                comboBoxCurPort.Focus();
+                return;
+            }
             string str_error_log = "";
             string str_state = "disable";
             serial.SetChargeIC(str_state, ref str_error_log);
@@ -420,12 +713,24 @@ namespace XDC03Debug
 
         private void BtnOpenCamera_Click(object sender, EventArgs e)
         {
+            if (serial == null)
+            {
+                MessageBox.Show("请先打开串口");
+                comboBoxCurPort.Focus();
+                return;
+            }
             string str_error_log = "";
             serial.OpenCameraRTOS(ref str_error_log);
         }
 
         private void BtnEnterBWRTOS_Click(object sender, EventArgs e)
         {
+            if (serial == null)
+            {
+                MessageBox.Show("请先打开串口");
+                comboBoxCurPort.Focus();
+                return;
+            }
             string str_error_log = "";
             string str_state = "on";
             serial.SwitchIR_CUT_RTOS(str_state, ref str_error_log);
@@ -433,6 +738,12 @@ namespace XDC03Debug
 
         private void BtnQuitBWRTOS_Click(object sender, EventArgs e)
         {
+            if (serial == null)
+            {
+                MessageBox.Show("请先打开串口");
+                comboBoxCurPort.Focus();
+                return;
+            }
             string str_error_log = "";
             string str_state = "off";
             serial.SwitchIR_CUT_RTOS(str_state, ref str_error_log);
@@ -440,6 +751,12 @@ namespace XDC03Debug
 
         private void BtnReadTagNumRTOS_Click(object sender, EventArgs e)
         {
+            if (serial == null)
+            {
+                MessageBox.Show("请先打开串口");
+                comboBoxCurPort.Focus();
+                return;
+            }
             tBReadTagNumRTOS.Text = string.Empty;
             string str_error_log = "";
             string str_tagnum = "";
@@ -449,6 +766,12 @@ namespace XDC03Debug
 
         private void BtnWriteTagNumRTOS_Click(object sender, EventArgs e)
         {
+            if (serial == null)
+            {
+                MessageBox.Show("请先打开串口");
+                comboBoxCurPort.Focus();
+                return;
+            }
             string str_tagNum = CbxWriteTagNumRTOS.SelectedItem.ToString();
             string str_error_log = "";
             serial.SetTagNumberRTOS(str_tagNum, ref str_error_log);
@@ -456,6 +779,12 @@ namespace XDC03Debug
 
         private void BtnReadRNRTOS_Click(object sender, EventArgs e)
         {
+            if (serial == null)
+            {
+                MessageBox.Show("请先打开串口");
+                comboBoxCurPort.Focus();
+                return;
+            }
             tBReadRNRTOS.Text = string.Empty;
             string str_error_log = "";
             string RN = "";
@@ -463,5 +792,17 @@ namespace XDC03Debug
             tBReadRNRTOS.Text = RN;
         }
 
+        private void comboBoxCurPort_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (serial != null)
+            {
+                string newPort = "";
+                if (comboBoxCurPort.SelectedItem != null)
+                {
+                    newPort = comboBoxCurPort.SelectedItem.ToString();
+                    serial.ChangePort(newPort);
+                }
+            }
+        }
     }
 }

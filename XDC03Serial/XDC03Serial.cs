@@ -89,9 +89,16 @@ namespace XDC03SerialLib
         {
             _serialPort = serialPort;
             _portName = portName;
+            _serialPort.PortName = _portName;
+            _serialPort.BaudRate = 115200;
+            _serialPort.DataBits = 8;
+            _serialPort.Parity = System.IO.Ports.Parity.None;
+            _serialPort.StopBits = System.IO.Ports.StopBits.One;
             _richTextBox = richTextBox;
+            str_Receive_skybell = "";
+            _richTextBox.Text = "";
             // 绑定 DataReceived 事件处理程序
-            serialPort.DataReceived += SerialPort_DataReceived;
+            _serialPort.DataReceived += SerialPort_DataReceived;
         }
 
         ~XDC03Serial()
@@ -134,15 +141,39 @@ namespace XDC03SerialLib
         {
             try
             {
-                _serialPort.PortName = _portName;
-                _serialPort.BaudRate = 115200;
-                _serialPort.DataBits = 8;
-                _serialPort.Parity = System.IO.Ports.Parity.None;
-                _serialPort.StopBits = System.IO.Ports.StopBits.One;
                 if (_serialPort.IsOpen == false)
                 {
                     _serialPort.Open();
                 }
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        public bool ChangePort(string newPort)
+        {
+            try
+            {
+                if (_serialPort != null && _serialPort.IsOpen)
+                {
+                    _serialPort.DataReceived -= SerialPort_DataReceived;
+                }
+                if (_serialPort != null && _serialPort.IsOpen)
+                {
+                    _serialPort.Close();
+                }
+
+                // 切换串口号
+                _serialPort.PortName = newPort;
+
+                // 打开串口
+                _serialPort.Open();
+                _richTextBox.Text = string.Empty;
+                _serialPort.DataReceived += SerialPort_DataReceived;
+
                 return true;
             }
             catch

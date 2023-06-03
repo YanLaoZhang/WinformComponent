@@ -90,11 +90,16 @@ namespace XDC01SerialLib
         {
             _serialPort = serialPort;
             _portName = portName;
+            _serialPort.PortName = _portName;
+            _serialPort.BaudRate = 115200;
+            _serialPort.DataBits = 8;
+            _serialPort.Parity = System.IO.Ports.Parity.None;
+            _serialPort.StopBits = System.IO.Ports.StopBits.One;
             _richTextBox = richTextBox;
             str_Receive_skybell = "";
             _richTextBox.Text = "";
             // 绑定 DataReceived 事件处理程序
-            serialPort.DataReceived += SerialPort_DataReceived;
+            _serialPort.DataReceived += SerialPort_DataReceived;
         }
 
         ~XDC01Serial()
@@ -111,6 +116,7 @@ namespace XDC01SerialLib
             try
             {
                 string indata = _serialPort.ReadExisting();
+                //Console.WriteLine($"串口信息：{indata}");
                 str_Receive_skybell += indata;
                 _richTextBox.Invoke((Action)(() =>
                 {
@@ -129,6 +135,35 @@ namespace XDC01SerialLib
             }
         }
 
+        public bool ChangePort(string newPort)
+        {
+            try
+            {
+                if (_serialPort != null && _serialPort.IsOpen)
+                {
+                    _serialPort.DataReceived -= SerialPort_DataReceived;
+                }
+                if (_serialPort != null && _serialPort.IsOpen)
+                {
+                    _serialPort.Close();
+                }
+
+                // 切换串口号
+                _serialPort.PortName = newPort;
+
+                // 打开串口
+                _serialPort.Open();
+                _richTextBox.Text = string.Empty;
+                _serialPort.DataReceived += SerialPort_DataReceived;
+
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
         /// <summary>
         /// 打开串口
         /// </summary>
@@ -137,11 +172,6 @@ namespace XDC01SerialLib
         {
             try
             {
-                _serialPort.PortName = _portName;
-                _serialPort.BaudRate = 115200;
-                _serialPort.DataBits = 8;
-                _serialPort.Parity = System.IO.Ports.Parity.None;
-                _serialPort.StopBits = System.IO.Ports.StopBits.One;
                 if (_serialPort.IsOpen == false)
                 {
                     _serialPort.Open();
@@ -204,6 +234,7 @@ namespace XDC01SerialLib
                 int numa = Environment.TickCount;
                 while (str_Receive_skybell.IndexOf(endFlag) < 0)//条件是真的时执行循环，条件是假的时候跳出循环
                 {
+                    //Console.WriteLine($"信息：{str_Receive_skybell}");
                     Application.DoEvents();
                     if (Environment.TickCount - numa > t)
                     {

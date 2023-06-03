@@ -102,12 +102,10 @@
             this.BtnCloseMic = new System.Windows.Forms.Button();
             this.BtnOpenMic = new System.Windows.Forms.Button();
             this.groupBox12 = new System.Windows.Forms.GroupBox();
-            this.label21 = new System.Windows.Forms.Label();
-            this.textBoxBandWidth = new System.Windows.Forms.TextBox();
+            this.comboBoxServerIp = new System.Windows.Forms.ComboBox();
             this.label20 = new System.Windows.Forms.Label();
             this.label19 = new System.Windows.Forms.Label();
             this.label18 = new System.Windows.Forms.Label();
-            this.textBoxDuration = new System.Windows.Forms.TextBox();
             this.label17 = new System.Windows.Forms.Label();
             this.label15 = new System.Windows.Forms.Label();
             this.textBoxDownLoss = new System.Windows.Forms.TextBox();
@@ -157,7 +155,12 @@
             this.labelRefreshPort = new System.Windows.Forms.Label();
             this.BtnOpenPort = new System.Windows.Forms.Button();
             this.richTextBoxPCCmd = new System.Windows.Forms.RichTextBox();
-            this.comboBoxServerIp = new System.Windows.Forms.ComboBox();
+            this.textBoxSendCmd = new System.Windows.Forms.TextBox();
+            this.BtnSendCMD = new System.Windows.Forms.Button();
+            this.numericUpDownDuration = new System.Windows.Forms.NumericUpDown();
+            this.numericUpDownBandWidth = new System.Windows.Forms.NumericUpDown();
+            this.comboBoxUnit = new System.Windows.Forms.ComboBox();
+            this.label21 = new System.Windows.Forms.Label();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.groupBox3.SuspendLayout();
@@ -175,6 +178,8 @@
             this.groupBox15.SuspendLayout();
             this.groupBox16.SuspendLayout();
             this.groupBox17.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownDuration)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownBandWidth)).BeginInit();
             this.SuspendLayout();
             // 
             // richTextBox1
@@ -184,11 +189,11 @@
             this.richTextBox1.BackColor = System.Drawing.SystemColors.InfoText;
             this.richTextBox1.Font = new System.Drawing.Font("宋体", 9F);
             this.richTextBox1.ForeColor = System.Drawing.SystemColors.Info;
-            this.richTextBox1.Location = new System.Drawing.Point(16, 429);
+            this.richTextBox1.Location = new System.Drawing.Point(16, 476);
             this.richTextBox1.Margin = new System.Windows.Forms.Padding(4);
             this.richTextBox1.Name = "richTextBox1";
             this.richTextBox1.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.ForcedBoth;
-            this.richTextBox1.Size = new System.Drawing.Size(483, 239);
+            this.richTextBox1.Size = new System.Drawing.Size(483, 192);
             this.richTextBox1.TabIndex = 0;
             this.richTextBox1.Text = "";
             this.richTextBox1.WordWrap = false;
@@ -899,13 +904,14 @@
             // 
             // groupBox12
             // 
-            this.groupBox12.Controls.Add(this.comboBoxServerIp);
+            this.groupBox12.Controls.Add(this.comboBoxUnit);
             this.groupBox12.Controls.Add(this.label21);
-            this.groupBox12.Controls.Add(this.textBoxBandWidth);
+            this.groupBox12.Controls.Add(this.numericUpDownBandWidth);
+            this.groupBox12.Controls.Add(this.numericUpDownDuration);
+            this.groupBox12.Controls.Add(this.comboBoxServerIp);
             this.groupBox12.Controls.Add(this.label20);
             this.groupBox12.Controls.Add(this.label19);
             this.groupBox12.Controls.Add(this.label18);
-            this.groupBox12.Controls.Add(this.textBoxDuration);
             this.groupBox12.Controls.Add(this.label17);
             this.groupBox12.Controls.Add(this.label15);
             this.groupBox12.Controls.Add(this.textBoxDownLoss);
@@ -926,22 +932,13 @@
             this.groupBox12.TabStop = false;
             this.groupBox12.Text = "WiFi吞吐量";
             // 
-            // label21
+            // comboBoxServerIp
             // 
-            this.label21.AutoSize = true;
-            this.label21.Font = new System.Drawing.Font("宋体", 8F);
-            this.label21.Location = new System.Drawing.Point(399, 74);
-            this.label21.Name = "label21";
-            this.label21.Size = new System.Drawing.Size(111, 11);
-            this.label21.TabIndex = 18;
-            this.label21.Text = "单位K、M、G比特每秒";
-            // 
-            // textBoxBandWidth
-            // 
-            this.textBoxBandWidth.Location = new System.Drawing.Point(326, 66);
-            this.textBoxBandWidth.Name = "textBoxBandWidth";
-            this.textBoxBandWidth.Size = new System.Drawing.Size(67, 26);
-            this.textBoxBandWidth.TabIndex = 17;
+            this.comboBoxServerIp.FormattingEnabled = true;
+            this.comboBoxServerIp.Location = new System.Drawing.Point(318, 28);
+            this.comboBoxServerIp.Name = "comboBoxServerIp";
+            this.comboBoxServerIp.Size = new System.Drawing.Size(173, 24);
+            this.comboBoxServerIp.TabIndex = 19;
             // 
             // label20
             // 
@@ -969,13 +966,6 @@
             this.label18.Size = new System.Drawing.Size(119, 16);
             this.label18.TabIndex = 15;
             this.label18.Text = "测试持续时间：";
-            // 
-            // textBoxDuration
-            // 
-            this.textBoxDuration.Location = new System.Drawing.Point(131, 66);
-            this.textBoxDuration.Name = "textBoxDuration";
-            this.textBoxDuration.Size = new System.Drawing.Size(67, 26);
-            this.textBoxDuration.TabIndex = 14;
             // 
             // label17
             // 
@@ -1439,6 +1429,7 @@
             this.comboBoxCurPort.Name = "comboBoxCurPort";
             this.comboBoxCurPort.Size = new System.Drawing.Size(121, 24);
             this.comboBoxCurPort.TabIndex = 21;
+            this.comboBoxCurPort.SelectedIndexChanged += new System.EventHandler(this.comboBoxCurPort_SelectedIndexChanged);
             // 
             // labelRefreshPort
             // 
@@ -1476,19 +1467,81 @@
             this.richTextBoxPCCmd.Text = "";
             this.richTextBoxPCCmd.WordWrap = false;
             // 
-            // comboBoxServerIp
+            // textBoxSendCmd
             // 
-            this.comboBoxServerIp.FormattingEnabled = true;
-            this.comboBoxServerIp.Location = new System.Drawing.Point(318, 28);
-            this.comboBoxServerIp.Name = "comboBoxServerIp";
-            this.comboBoxServerIp.Size = new System.Drawing.Size(173, 24);
-            this.comboBoxServerIp.TabIndex = 19;
+            this.textBoxSendCmd.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.textBoxSendCmd.Location = new System.Drawing.Point(13, 429);
+            this.textBoxSendCmd.Margin = new System.Windows.Forms.Padding(4);
+            this.textBoxSendCmd.Name = "textBoxSendCmd";
+            this.textBoxSendCmd.Size = new System.Drawing.Size(480, 26);
+            this.textBoxSendCmd.TabIndex = 29;
+            // 
+            // BtnSendCMD
+            // 
+            this.BtnSendCMD.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.BtnSendCMD.Location = new System.Drawing.Point(393, 395);
+            this.BtnSendCMD.Margin = new System.Windows.Forms.Padding(4);
+            this.BtnSendCMD.Name = "BtnSendCMD";
+            this.BtnSendCMD.Size = new System.Drawing.Size(100, 31);
+            this.BtnSendCMD.TabIndex = 30;
+            this.BtnSendCMD.Text = "发送";
+            this.BtnSendCMD.UseVisualStyleBackColor = true;
+            this.BtnSendCMD.Click += new System.EventHandler(this.BtnSendCMD_Click);
+            // 
+            // numericUpDownDuration
+            // 
+            this.numericUpDownDuration.Location = new System.Drawing.Point(131, 62);
+            this.numericUpDownDuration.Name = "numericUpDownDuration";
+            this.numericUpDownDuration.Size = new System.Drawing.Size(67, 26);
+            this.numericUpDownDuration.TabIndex = 21;
+            this.numericUpDownDuration.Value = new decimal(new int[] {
+            10,
+            0,
+            0,
+            0});
+            // 
+            // numericUpDownBandWidth
+            // 
+            this.numericUpDownBandWidth.Location = new System.Drawing.Point(318, 62);
+            this.numericUpDownBandWidth.Name = "numericUpDownBandWidth";
+            this.numericUpDownBandWidth.Size = new System.Drawing.Size(75, 26);
+            this.numericUpDownBandWidth.TabIndex = 22;
+            this.numericUpDownBandWidth.Value = new decimal(new int[] {
+            10,
+            0,
+            0,
+            0});
+            // 
+            // comboBoxUnit
+            // 
+            this.comboBoxUnit.FormattingEnabled = true;
+            this.comboBoxUnit.Items.AddRange(new object[] {
+            "K",
+            "M",
+            "G"});
+            this.comboBoxUnit.Location = new System.Drawing.Point(422, 62);
+            this.comboBoxUnit.Name = "comboBoxUnit";
+            this.comboBoxUnit.Size = new System.Drawing.Size(36, 24);
+            this.comboBoxUnit.TabIndex = 24;
+            this.comboBoxUnit.Text = "M";
+            // 
+            // label21
+            // 
+            this.label21.AutoSize = true;
+            this.label21.Font = new System.Drawing.Font("宋体", 10F);
+            this.label21.Location = new System.Drawing.Point(464, 70);
+            this.label21.Name = "label21";
+            this.label21.Size = new System.Drawing.Size(28, 14);
+            this.label21.TabIndex = 23;
+            this.label21.Text = "bps";
             // 
             // XDC03DebugForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1264, 681);
+            this.Controls.Add(this.BtnSendCMD);
+            this.Controls.Add(this.textBoxSendCmd);
             this.Controls.Add(this.richTextBoxPCCmd);
             this.Controls.Add(this.BtnOpenPort);
             this.Controls.Add(this.labelRefreshPort);
@@ -1515,6 +1568,7 @@
             this.Margin = new System.Windows.Forms.Padding(4);
             this.MaximizeBox = false;
             this.Name = "XDC03DebugForm";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Form1";
             this.Load += new System.EventHandler(this.Form1_Load);
             this.Shown += new System.EventHandler(this.Form1_Shown);
@@ -1547,6 +1601,8 @@
             this.groupBox16.PerformLayout();
             this.groupBox17.ResumeLayout(false);
             this.groupBox17.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownDuration)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownBandWidth)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -1639,11 +1695,8 @@
         private System.Windows.Forms.Button BtnWifiDownT;
         private System.Windows.Forms.Label label17;
         private System.Windows.Forms.Label label18;
-        private System.Windows.Forms.TextBox textBoxDuration;
         private System.Windows.Forms.Label label19;
         private System.Windows.Forms.Label label20;
-        private System.Windows.Forms.TextBox textBoxBandWidth;
-        private System.Windows.Forms.Label label21;
         private System.Windows.Forms.Button BtnOpenRTSP;
         private System.Windows.Forms.TextBox textBoxRTSPUrl;
         private System.Windows.Forms.GroupBox groupBox13;
@@ -1683,6 +1736,12 @@
         private System.Windows.Forms.Button BtnOpenPort;
         private System.Windows.Forms.RichTextBox richTextBoxPCCmd;
         private System.Windows.Forms.ComboBox comboBoxServerIp;
+        private System.Windows.Forms.TextBox textBoxSendCmd;
+        private System.Windows.Forms.Button BtnSendCMD;
+        private System.Windows.Forms.NumericUpDown numericUpDownDuration;
+        private System.Windows.Forms.NumericUpDown numericUpDownBandWidth;
+        private System.Windows.Forms.ComboBox comboBoxUnit;
+        private System.Windows.Forms.Label label21;
     }
 }
 

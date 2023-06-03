@@ -292,6 +292,7 @@ namespace XDC01Debug
             if(write_rn.Length != 15)
             {
                 MessageBox.Show("RN必须为15位");
+                return;
             }
             string str_error_log = "";
             if(serial.SetRN(write_rn, ref str_error_log) == false){
@@ -906,6 +907,19 @@ namespace XDC01Debug
             string str_error_log = "";
             serial.GetFirmwareVersion(ref str_fw, ref str_error_log);
             textBoxFwVer.Text = str_fw;
+        }
+
+        private void comboBoxCurPort_SelectedValueChanged(object sender, EventArgs e)
+        {
+            if (serial != null)
+            {
+                string newPort = "";
+                if (comboBoxCurPort.SelectedItem != null)
+                {
+                    newPort = comboBoxCurPort.SelectedItem.ToString();
+                    serial.ChangePort(newPort);
+                }
+            }
         }
     }
 }
