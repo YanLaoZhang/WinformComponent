@@ -804,5 +804,13 @@ namespace XDC03Debug
                 }
             }
         }
+
+        private void textBoxSendCmd_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+            {
+                BtnSendCMD.PerformClick();
+            }
+        }
     }
 }
