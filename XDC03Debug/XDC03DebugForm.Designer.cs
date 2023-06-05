@@ -585,7 +585,7 @@
             // 
             this.textBoxReadIP.Location = new System.Drawing.Point(117, 71);
             this.textBoxReadIP.Name = "textBoxReadIP";
-            this.textBoxReadIP.Size = new System.Drawing.Size(161, 29);
+            this.textBoxReadIP.Size = new System.Drawing.Size(214, 29);
             this.textBoxReadIP.TabIndex = 8;
             // 
             // BtnReadIP
@@ -612,7 +612,7 @@
             // 
             this.textBoxReadMAC.Location = new System.Drawing.Point(117, 25);
             this.textBoxReadMAC.Name = "textBoxReadMAC";
-            this.textBoxReadMAC.Size = new System.Drawing.Size(161, 29);
+            this.textBoxReadMAC.Size = new System.Drawing.Size(214, 29);
             this.textBoxReadMAC.TabIndex = 5;
             // 
             // groupBox6
@@ -1290,7 +1290,7 @@
             // 
             this.textBoxUID.Location = new System.Drawing.Point(136, 70);
             this.textBoxUID.Name = "textBoxUID";
-            this.textBoxUID.Size = new System.Drawing.Size(191, 29);
+            this.textBoxUID.Size = new System.Drawing.Size(260, 29);
             this.textBoxUID.TabIndex = 9;
             // 
             // BtnReadUID
@@ -1307,7 +1307,7 @@
             // 
             this.textBoxSN.Location = new System.Drawing.Point(136, 28);
             this.textBoxSN.Name = "textBoxSN";
-            this.textBoxSN.Size = new System.Drawing.Size(191, 29);
+            this.textBoxSN.Size = new System.Drawing.Size(260, 29);
             this.textBoxSN.TabIndex = 7;
             // 
             // BtnReadSN
