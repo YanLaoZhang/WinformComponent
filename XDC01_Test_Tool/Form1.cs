@@ -150,7 +150,10 @@ namespace XDC01_Test_Tool
             RefreshPort();
             logger = new Logger(ref RichTBRunningLog, ref LogPath);
             comboBoxCurPort.SelectedItem = ConfigFile.IniReadValue("Run_Param", "port", Path_ini);
-            serial = new XDC01Serial(serialPort1, comboBoxCurPort.SelectedItem.ToString(), RichTBSerial);
+            if( comboBoxCurPort.SelectedItem != null)
+            {
+                serial = new XDC01Serial(serialPort1, comboBoxCurPort.SelectedItem.ToString(), RichTBSerial);
+            }
         }
 
         private void RefreshPort()
@@ -160,7 +163,10 @@ namespace XDC01_Test_Tool
             {
                 comboBoxCurPort.Items.Add(aa);
             }
-            comboBoxCurPort.SelectedIndex = 0;
+            if(comboBoxCurPort.Items.Count > 0)
+            {
+                comboBoxCurPort.SelectedIndex = 0;
+            }
         }
 
         private void labelRefreshPort_Click(object sender, EventArgs e)
@@ -216,6 +222,10 @@ namespace XDC01_Test_Tool
                 labelTestTime.Text = "0s";
                 timerTest.Interval = 1000;
                 timerTest.Start();
+                if(serial == null)
+                {
+                    serial = new XDC01Serial(serialPort1, comboBoxCurPort.SelectedItem.ToString(), RichTBSerial);
+                }
 
                 serial.OpenPort();
                 logger.ShowLog($"串口已连接");
