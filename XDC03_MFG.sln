@@ -25,6 +25,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LogLib", "LogLib\LogLib.csp
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestDataLib", "TestDataLib\TestDataLib.csproj", "{D3FF1B65-1C78-438C-930F-3A9C56BEE33A}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LocalServerDbLib", "LocalServerDbLib\LocalServerDbLib.csproj", "{CA11E590-0D66-487F-AD5F-15B6BB915F53}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -75,6 +77,10 @@ Global
 		{D3FF1B65-1C78-438C-930F-3A9C56BEE33A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D3FF1B65-1C78-438C-930F-3A9C56BEE33A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D3FF1B65-1C78-438C-930F-3A9C56BEE33A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CA11E590-0D66-487F-AD5F-15B6BB915F53}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CA11E590-0D66-487F-AD5F-15B6BB915F53}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CA11E590-0D66-487F-AD5F-15B6BB915F53}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CA11E590-0D66-487F-AD5F-15B6BB915F53}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

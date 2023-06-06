@@ -65,6 +65,10 @@
             this.toolStripButton2 = new System.Windows.Forms.ToolStripButton();
             this.serialPort1 = new System.IO.Ports.SerialPort(this.components);
             this.timerTest = new System.Windows.Forms.Timer(this.components);
+            this.label3 = new System.Windows.Forms.Label();
+            this.label7 = new System.Windows.Forms.Label();
+            this.textBoxServerIP = new System.Windows.Forms.TextBox();
+            this.textBoxServerPort = new System.Windows.Forms.TextBox();
             this.tabControl1.SuspendLayout();
             this.tabPageSwitch.SuspendLayout();
             this.groupBox1.SuspendLayout();
@@ -326,8 +330,12 @@
             // 
             // groupBox3
             // 
+            this.groupBox3.Controls.Add(this.textBoxServerPort);
             this.groupBox3.Controls.Add(this.textBoxFirmware);
+            this.groupBox3.Controls.Add(this.textBoxServerIP);
             this.groupBox3.Controls.Add(this.label6);
+            this.groupBox3.Controls.Add(this.label7);
+            this.groupBox3.Controls.Add(this.label3);
             this.groupBox3.Controls.Add(this.BtnSave);
             this.groupBox3.Controls.Add(this.numericUpDownReset);
             this.groupBox3.Controls.Add(this.label5);
@@ -335,7 +343,7 @@
             this.groupBox3.Controls.Add(this.label4);
             this.groupBox3.Location = new System.Drawing.Point(27, 23);
             this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(550, 274);
+            this.groupBox3.Size = new System.Drawing.Size(550, 370);
             this.groupBox3.TabIndex = 0;
             this.groupBox3.TabStop = false;
             // 
@@ -357,7 +365,7 @@
             // 
             // BtnSave
             // 
-            this.BtnSave.Location = new System.Drawing.Point(15, 206);
+            this.BtnSave.Location = new System.Drawing.Point(6, 305);
             this.BtnSave.Name = "BtnSave";
             this.BtnSave.Size = new System.Drawing.Size(120, 43);
             this.BtnSave.TabIndex = 6;
@@ -434,6 +442,38 @@
             // 
             this.timerTest.Tick += new System.EventHandler(this.timerTest_Tick);
             // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(11, 206);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(96, 19);
+            this.label3.TabIndex = 0;
+            this.label3.Text = "服务器IP:";
+            // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.Location = new System.Drawing.Point(12, 255);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(114, 19);
+            this.label7.TabIndex = 1;
+            this.label7.Text = "服务器端口:";
+            // 
+            // textBoxServerIP
+            // 
+            this.textBoxServerIP.Location = new System.Drawing.Point(132, 203);
+            this.textBoxServerIP.Name = "textBoxServerIP";
+            this.textBoxServerIP.Size = new System.Drawing.Size(180, 29);
+            this.textBoxServerIP.TabIndex = 2;
+            // 
+            // textBoxServerPort
+            // 
+            this.textBoxServerPort.Location = new System.Drawing.Point(132, 252);
+            this.textBoxServerPort.Name = "textBoxServerPort";
+            this.textBoxServerPort.Size = new System.Drawing.Size(180, 29);
+            this.textBoxServerPort.TabIndex = 3;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(10F, 19F);
@@ -508,6 +548,10 @@
         private System.Windows.Forms.Button BtnSave;
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.TextBox textBoxFirmware;
+        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.Label label7;
+        private System.Windows.Forms.TextBox textBoxServerIP;
+        private System.Windows.Forms.TextBox textBoxServerPort;
     }
 }
 
