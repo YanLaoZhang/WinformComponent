@@ -145,6 +145,7 @@ namespace XDC01_Test_Tool
 
         private void Form1_Load(object sender, EventArgs e)
         {
+            this.Text = "XDC01出货模式转产测模式20230606";
             InitDataGridView();
             RefreshPort();
             logger = new Logger(ref RichTBRunningLog, ref LogPath);
