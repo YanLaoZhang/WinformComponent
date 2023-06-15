@@ -1,4 +1,5 @@
-﻿using CloudAPILib;
+﻿using CameraRTOSLib;
+using CloudAPILib;
 using ConfigFileLib;
 using LogLib;
 using MySql.Data.MySqlClient;
@@ -12,6 +13,7 @@ using System.IO;
 using System.IO.Ports;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using TestDataLib;
@@ -53,6 +55,10 @@ namespace XDC01_TestAction
 
         // 麦克风测试音频文件
         public string wavePath = System.Windows.Forms.Application.StartupPath + @"\wav";
+
+        // rtos截图
+        public string Path_iamge_document = System.Windows.Forms.Application.StartupPath + @"\Image_file" + @"\" + DateTime.Now.ToString("yyyy.MM.dd"); //文件夹路径
+        public string Path_image_file = "";//当前保存文件路径
 
         #region XDC01调试界面
         private void OpenXDC01DebugForm()
@@ -164,6 +170,7 @@ namespace XDC01_TestAction
                     cur_tagnumber = ConfigFile.IniReadValue("Run_Param", "cur_tagnumber", Path_ini),
                     test_mode = ConfigFile.IniReadValue("Run_Param", "test_mode", Path_ini),
                     stage_name = ConfigFile.IniReadValue("Run_Param", "stage_name", Path_ini),
+                    ng_continue = ConfigFile.IniReadValue("Run_Param", "ng_continue", Path_ini),
 
                     ping_ip = ConfigFile.IniReadValue("wifi_param", "ping_ip", Path_ini),
                     ping_count = ConfigFile.IniReadValue("wifi_param", "ping_count", Path_ini),
@@ -198,6 +205,8 @@ namespace XDC01_TestAction
                     productId = ConfigFile.IniReadValue("cloud", "productId", Path_ini),
                     modeId = ConfigFile.IniReadValue("cloud", "modeId", Path_ini),
                     productType = ConfigFile.IniReadValue("cloud", "productType", Path_ini),
+
+                    local_server_name = ConfigFile.IniReadValue("rtos", "local_server_name", Path_ini),
                 };
             }
             catch (Exception ee)
@@ -301,7 +310,9 @@ namespace XDC01_TestAction
                 str_standard_id = testParam.standard_id,
                 str_fixture_id = "fixture1",
                 str_operator_id = "No.001",
-                str_start_test_time = DateTime.Now.ToString(),
+                str_start_test_time = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"),
+                str_stage_name = testParam.stage_name,
+                str_test_mode = testParam.test_mode,
             };
 
             TestAction testAction = new TestAction();
@@ -311,7 +322,10 @@ namespace XDC01_TestAction
             if (RNandTagnumber == null)
             {
                 logger.ShowLog($"RN号或工序号检查不通过，无法进行后续测试");
-                return;
+                if(testParam.ng_continue == "false")
+                {
+                    return;
+                }
             }
             else
             {
@@ -339,7 +353,10 @@ namespace XDC01_TestAction
             if(DUTInfo == null)
             {
                 logger.ShowLog($"设备信息检查不通过，无法进行后续测试");
-                return;
+                if (testParam.ng_continue == "false")
+                {
+                    return;
+                }
             }
             else
             {
@@ -377,7 +394,10 @@ namespace XDC01_TestAction
             if(pingTest == null)
             {
                 logger.ShowLog($"Ping测试异常，无法进行后续测试");
-                return;
+                if (testParam.ng_continue == "false")
+                {
+                    return;
+                }
             }
             else
             {
@@ -396,7 +416,10 @@ namespace XDC01_TestAction
             if (mic_auto == null)
             {
                 logger.ShowLog($"麦克风测试(自动)异常，无法进行后续测试");
-                return;
+                if (testParam.ng_continue == "false")
+                {
+                    return;
+                }
             }
             else
             {
@@ -409,7 +432,10 @@ namespace XDC01_TestAction
                     if(mic_manual == null)
                     {
                         logger.ShowLog($"麦克风测试(人工)异常，无法进行后续测试");
-                        return;
+                        if (testParam.ng_continue == "false")
+                        {
+                            return;
+                        }
                     }
                     else
                     {
@@ -428,7 +454,10 @@ namespace XDC01_TestAction
             if (btn_audio == null)
             {
                 logger.ShowLog($"按键和喇叭测试异常，无法进行后续测试");
-                return;
+                if (testParam.ng_continue == "false")
+                {
+                    return;
+                }
             }
             else
             {
@@ -454,7 +483,10 @@ namespace XDC01_TestAction
             if (pirTest == null)
             {
                 logger.ShowLog($"移动感应测试异常，无法进行后续测试");
-                return;
+                if (testParam.ng_continue == "false")
+                {
+                    return;
+                }
             }
             else
             {
@@ -470,7 +502,10 @@ namespace XDC01_TestAction
             if (led_color == null)
             {
                 logger.ShowLog($"LED颜色测试异常，无法进行后续测试");
-                return;
+                if (testParam.ng_continue == "false")
+                {
+                    return;
+                }
             }
             else
             {
@@ -486,7 +521,10 @@ namespace XDC01_TestAction
             if (rtsp == null)
             {
                 logger.ShowLog($"VLC视频检查异常，无法进行后续测试");
-                return;
+                if (testParam.ng_continue == "false")
+                {
+                    return;
+                }
             }
             else
             {
@@ -516,7 +554,10 @@ namespace XDC01_TestAction
             if (wifiThroughput == null)
             {
                 logger.ShowLog($"wifi吞吐量测试异常，无法进行后续测试");
-                return;
+                if (testParam.ng_continue == "false")
+                {
+                    return;
+                }
             }
             else
             {
@@ -552,7 +593,10 @@ namespace XDC01_TestAction
             if (light == null)
             {
                 logger.ShowLog($"亮度值测试异常，无法进行后续测试");
-                return;
+                if (testParam.ng_continue == "false")
+                {
+                    return;
+                }
             }
             else
             {
@@ -569,7 +613,10 @@ namespace XDC01_TestAction
             if (rf_tx == null)
             {
                 logger.ShowLog($"RF发送测试异常，无法进行后续测试");
-                return;
+                if (testParam.ng_continue == "false")
+                {
+                    return;
+                }
             }
             else
             {
@@ -596,7 +643,10 @@ namespace XDC01_TestAction
             if (rf_rx == null)
             {
                 logger.ShowLog($"RF接收测试异常，无法进行后续测试");
-                return;
+                if (testParam.ng_continue == "false")
+                {
+                    return;
+                }
             }
             else
             {
@@ -628,7 +678,10 @@ namespace XDC01_TestAction
                 if(apply_cloud == null)
                 {
                     logger.ShowLog($"云端申请SN|UID|MAC异常，无法进行后续测试");
-                    return;
+                    if (testParam.ng_continue == "false")
+                    {
+                        return;
+                    }
                 }
                 else
                 {
@@ -645,7 +698,10 @@ namespace XDC01_TestAction
                 if(check_cloud == null)
                 {
                     logger.ShowLog($"云端检查SN|UID|MAC异常，无法进行后续测试");
-                    return;
+                    if (testParam.ng_continue == "false")
+                    {
+                        return;
+                    }
                 }
                 else
                 {
@@ -666,7 +722,10 @@ namespace XDC01_TestAction
             if(reset_btn == null)
             {
                 logger.ShowLog($"复位键测试异常，无法进行后续测试");
-                return;
+                if (testParam.ng_continue == "false")
+                {
+                    return;
+                }
             }
             else
             {
@@ -682,7 +741,10 @@ namespace XDC01_TestAction
             if(factory_reset == null)
             {
                 logger.ShowLog($"恢复出厂设置异常，无法进行后续测试");
-                return;
+                if (testParam.ng_continue == "false")
+                {
+                    return;
+                }
             }
             else
             {
@@ -694,18 +756,24 @@ namespace XDC01_TestAction
             }
 
             // 写入下一站wifi
-            TestItem writeWIFI = testAction.SetNextStationWiFi(serial, dataGridView1, logger, testParam);
-            if(writeWIFI == null)
+            if(testParam.write_next_wifi == "True")
             {
-                logger.ShowLog($"写入下一站WIFI异常，无法进行后续测试");
-                return;
-            }
-            else
-            {
-                model.str_write_wifi = writeWIFI.Result;
-                if(writeWIFI.Result == "FAIL")
+                TestItem writeWIFI = testAction.SetNextStationWiFi(serial, dataGridView1, logger, testParam);
+                if(writeWIFI == null)
                 {
-                    model.str_ng_item += $"{writeWIFI.NgItem},";
+                    logger.ShowLog($"写入下一站WIFI异常，无法进行后续测试");
+                    if (testParam.ng_continue == "false")
+                    {
+                        return;
+                    }
+                }
+                else
+                {
+                    model.str_write_wifi = writeWIFI.Result;
+                    if(writeWIFI.Result == "FAIL")
+                    {
+                        model.str_ng_item += $"{writeWIFI.NgItem},";
+                    }
                 }
             }
 
@@ -714,7 +782,10 @@ namespace XDC01_TestAction
             if(writeTagnumber == null)
             {
                 logger.ShowLog($"写入下一站WIFI异常，无法进行后续测试");
-                return;
+                if (testParam.ng_continue == "false")
+                {
+                    return;
+                }
             }
             else
             {
@@ -726,10 +797,18 @@ namespace XDC01_TestAction
             }
 
             // 保存数据库
-            model.str_end_test_time = DateTime.Now.ToString();
-            string str_sql = $"INSERT INTO `xdc01_management`.`t030_product_test_report` " +
+            model.str_end_test_time = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+            if(model.str_ng_item.Length == 0)
+            {
+                model.str_test_result = "PASS";
+            }
+            else
+            {
+                model.str_test_result = "FAIL";
+            }
+            string str_sql = $"INSERT INTO `t030_product_test_report` " +
                 $"(`software_version`, `spec_id`, `standard_id`, `fixture_id`, `operator_id`, `rn`, " +
-                $"`start_test_time`, `end_test_time`, `stage`, `test_mode`, `test_result`, " +
+                $"`start_test_time`, `end_test_time`, `stage_name`, `test_mode`, `test_result`, " +
                 $"`ng_items`, `read_tagnumber`, `write_tagnumber`, `ping_rtt`, " +
                 $"`mic_auto`, `mic_data`, `mic_manual`, `led_color`, `motion`, `button`, `audio`, " +
                 $"`fw_version`, `hw_version`, `mcu_version`, `battery_voltage`, `cpu_temperature`, " +
@@ -737,18 +816,405 @@ namespace XDC01_TestAction
                 $"`wifi_down_loss`, `wifi_down_rate`, `down_rate_revise`, `rf_rx`, `rf_tx_frenquency`, " +
                 $"`rf_tx_power`, `rf_tx_power_revise`, `reset_button`, `factory_reset`, " +
                 $"`mac`, `sn`, `uid`, `mac_cloud`, `check_sn_uid`)" +
-                $" VALUES ({model.str_software_version}, {model.str_spec_id}, {model.str_standard_id}, {model.str_fixture_id}, {model.str_operator_id}, {model.str_rn}," +
-                $" {model.str_start_test_time}, {model.str_end_test_time}, {model.str_stage_name}, {model.str_test_mode}, {model.str_test_result}," +
-                $" {model.str_ng_item}, {model.str_read_tagnumber}, {model.str_write_tagnumber}, {model.str_ping_rtt}," +
-                $" {model.str_mic_auto}, {model.str_mic_data}, {model.str_mic_manual}, {model.str_led_color}, {model.str_motion}, {model.str_button}, {model.str_audio}," +
-                $" {model.str_fw_version}, {model.str_hw_version}, {model.str_mcu_version}, {model.str_battery_voltage}, {model.str_cpu_temperature}," +
-                $" {model.str_light}, {model.str_vlc_rtsp}, {model.str_ir_cut}, {model.str_ir_led}, {model.str_wifi_up_loss}, {model.str_wifi_up_rate}, {model.str_up_rate_revise}," +
-                $" {model.str_wifi_down_loss}, {model.str_wifi_down_rate}, {model.str_down_rate_revise}, {model.str_rf_rx}, {model.str_rf_tx_frenquency}," +
-                $" {model.str_rf_tx_power}, {model.str_rf_tx_power_revise}, {model.str_reset_button}, {model.str_factory_reset}," +
-                $" {model.str_mac}, {model.str_sn}, {model.str_uid}, {model.str_mac_cloud}, {model.str_check_cloud});";
+                $" VALUES ('{model.str_software_version}', '{model.str_spec_id}', '{model.str_standard_id}', '{model.str_fixture_id}', '{model.str_operator_id}', '{model.str_rn}'," +
+                $" '{model.str_start_test_time}', '{model.str_end_test_time}', '{model.str_stage_name}', '{model.str_test_mode}', '{model.str_test_result}'," +
+                $" '{model.str_ng_item}', '{model.str_read_tagnumber}', '{model.str_write_tagnumber}', '{model.str_ping_rtt}'," +
+                $" '{model.str_mic_auto}', '{model.str_mic_data}', '{model.str_mic_manual}', '{model.str_led_color}', '{model.str_motion}', '{model.str_button}', '{model.str_audio}'," +
+                $" '{model.str_fw_version}', '{model.str_hw_version}', '{model.str_mcu_version}', '{model.str_battery_voltage}', '{model.str_cpu_temperature}'," +
+                $" '{model.str_light}', '{model.str_vlc_rtsp}', '{model.str_ir_cut}', '{model.str_ir_led}', '{model.str_wifi_up_loss}', '{model.str_wifi_up_rate}', '{model.str_up_rate_revise}'," +
+                $" '{model.str_wifi_down_loss}', '{model.str_wifi_down_rate}', '{model.str_down_rate_revise}', '{model.str_rf_rx}', '{model.str_rf_tx_frenquency}'," +
+                $" '{model.str_rf_tx_power}', '{model.str_rf_tx_power_revise}', '{model.str_reset_button}', '{model.str_factory_reset}'," +
+                $" '{model.str_mac}', '{model.str_sn}', '{model.str_uid}', '{model.str_mac_cloud}', '{model.str_check_cloud}');";
             SaveLocalSqliteDB(str_sql);
             UploadToLocalServer(str_sql);
         }
+
+        #region RTOS
+        public void RunTestRTOS()
+        {
+            // 先获取运行参数
+            InitTestParam();
+            // 初始化测试规格
+            InitialTestSpec();
+
+            dataGridView1.Rows.Clear();
+            richTextBoxRunLog.Clear();
+
+            Model model = new Model
+            {
+                str_software_version = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString(),
+                str_spec_id = testParam.spec_id,
+                str_standard_id = testParam.standard_id,
+                str_fixture_id = "fixture1",
+                str_operator_id = "No.001",
+                str_start_test_time = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"),
+                str_stage_name = testParam.stage_name,
+                str_test_mode = testParam.test_mode,
+            };
+            string image_time = string.Format("{0:_HHmmss}", DateTime.Now);
+
+            TestAction testAction = new TestAction();
+            // 检查RN和工序号
+            List<TestItem> RNandTagnumber = testAction.CheckRNandTagnameRTOS(serial, dataGridView1, logger, testParam, specStandard);
+
+            if (RNandTagnumber == null)
+            {
+                logger.ShowLog($"RN号或工序号检查不通过，无法进行后续测试");
+                if (testParam.ng_continue == "false")
+                {
+                    return;
+                }
+            }
+            else
+            {
+                foreach (TestItem item in RNandTagnumber)
+                {
+                    if (item.NgItem == "rn")
+                    {
+                        model.str_rn = item.StrVal;
+                    }
+                    if (item.NgItem == "tagnumber")
+                    {
+                        model.str_read_tagnumber = item.StrVal;
+                    }
+
+                    if (item.Result == "FAIL")
+                    {
+                        logger.ShowLog($"{item.Name}检查不通过，无法进行后续测试");
+                        return;
+                    }
+                }
+            }
+
+            // 打开摄像头
+            string str_error_log = "";
+            if (serial.OpenCameraRTOS(ref str_error_log))
+            {
+                ShowUSBCamera showUSBCamera = new ShowUSBCamera(0);
+                showUSBCamera.Show();
+                testAction.Delay(5000);
+
+                // 镜头清晰度
+                TestItem dayItem = testAction.CheckDayResolutionRTOS(serial, dataGridView1, logger);
+                if (dayItem == null)
+                {
+                    logger.ShowLog($"镜头清晰度检查不通过，无法进行后续测试");
+                    if (testParam.ng_continue == "false")
+                    {
+                        return;
+                    }
+                }
+                else
+                {
+                    model.day_video_check = dayItem.Result;
+                    if (dayItem.Result == "FAIL")
+                    {
+                        model.str_ng_item += $"{dayItem.NgItem},";
+                    }
+                }
+                // 保存图片
+                SaveDayPicture(showUSBCamera, model.str_rn, image_time);
+                // 上传共享目录
+                logger.ShowLog("开始上传正常模式截图到指定目录...");
+                string fileOnServer = @"\\" + testParam.local_server_name + @"\xdc03_focus_test_img\" + model.str_rn + image_time + "_normal.png";
+                string fileToCopy = Path_iamge_document + @"\" + model.str_rn + image_time + "_normal.png";
+                model.day_video_photo = fileToCopy;
+                Task<bool> UploadImageTask = new Task<bool>(() => UploadImage(fileOnServer, fileToCopy));
+                UploadImageTask.Start();
+
+                // 镜头暗角
+                TestItem darkcornerItem = testAction.CheckDayDarkCornerRTOS(serial, dataGridView1, logger);
+                if (darkcornerItem == null)
+                {
+                    logger.ShowLog($"镜头暗角检查不通过，无法进行后续测试");
+                    if (testParam.ng_continue == "false")
+                    {
+                        return;
+                    }
+                }
+                else
+                {
+                    model.dark_corner = darkcornerItem.Result;
+                    if (darkcornerItem.Result == "FAIL")
+                    {
+                        model.str_ng_item += $"{darkcornerItem.NgItem},";
+                    }
+                }
+
+                // 夜视切换
+                List<TestItem> IRItems = testAction.CheckIR_CUT_LED_RTOS(serial, dataGridView1, logger);
+                if(IRItems == null)
+                {
+                    logger.ShowLog($"夜视切换检查不通过，无法进行后续测试");
+                    if (testParam.ng_continue == "false")
+                    {
+                        return;
+                    }
+                }
+                else
+                {
+                    foreach(TestItem item in IRItems)
+                    {
+                        if(item.NgItem == "ir_led")
+                        {
+                            model.rtos_ir_led = item.Result;
+                        }
+                        if(item.NgItem == "ir_cut")
+                        {
+                            model.rtos_ir_cut = item.Result;
+                        }
+                        if(item.Result == "FAIL")
+                        {
+                            model.str_ng_item += $"{item.NgItem},";
+                        }
+                    }
+                }
+
+                // 夜视清晰度
+                TestItem nightItem = testAction.CheckDayResolutionRTOS(serial, dataGridView1, logger);
+                if (nightItem == null)
+                {
+                    logger.ShowLog($"夜视清晰度检查不通过，无法进行后续测试");
+                    if (testParam.ng_continue == "false")
+                    {
+                        return;
+                    }
+                }
+                else
+                {
+                    model.night_video_check = nightItem.Result;
+                    if (nightItem.Result == "FAIL")
+                    {
+                        model.str_ng_item += $"{nightItem.NgItem},";
+                    }
+                }
+
+                SaveNightPicture(showUSBCamera, model.str_rn, image_time);
+                // 上传共享目录
+                logger.ShowLog("开始上传夜视模式截图到指定目录...");
+                string fileOnServer_night = @"\\" + testParam.local_server_name + @"\xdc03_focus_test_img\" + model.str_rn + image_time + "_night.png";
+                string fileToCopy_night = Path_iamge_document + @"\" + model.str_rn + image_time + "_night.png";
+                model.night_video_photo = fileToCopy_night;
+                Task<bool> UploadNightImageTask = new Task<bool>(() => UploadNightImage(fileOnServer, fileToCopy));
+                UploadNightImageTask.Start();
+
+                // 等待上传白天照片任务结束
+                int startVol = Environment.TickCount;
+                while (!UploadImageTask.IsCompleted)
+                {
+                    testAction.Delay(1000);
+                    logger.ShowLog("等待镜头清晰度照片上传任务结束...");
+                }
+                if (UploadImageTask.Result == false)
+                {
+                    model.str_ng_item += $"day_video_photo,";
+                }
+
+                // 等待上传黑夜照片任务结束
+                int startCur = Environment.TickCount;
+                while (!UploadNightImageTask.IsCompleted)
+                {
+                    testAction.Delay(1000);
+                    logger.ShowLog("等待夜视清晰度照片上传任务结束...");
+                }
+                if (UploadNightImageTask.Result == false)
+                {
+                    model.str_ng_item += $"night_video_photo";
+                }
+
+            }
+            else
+            {
+                logger.ShowLog($"打开摄像头失败：[{str_error_log}]");
+            }
+
+            // 保存数据库
+            model.str_end_test_time = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+            if (model.str_ng_item.Length == 0)
+            {
+                model.str_test_result = "PASS";
+            }
+            else
+            {
+                model.str_test_result = "FAIL";
+            }
+            string str_sql = $"INSERT INTO `t030_product_test_report` " +
+                $"(`software_version`, `spec_id`, `standard_id`, `fixture_id`, `operator_id`, `rn`, " +
+                $"`start_test_time`, `end_test_time`, `stage_name`, `test_mode`, `test_result`, " +
+                $"`ng_items`, `read_tagnumber`, `write_tagnumber`, `ping_rtt`, " +
+                $"`mic_auto`, `mic_data`, `mic_manual`, `led_color`, `motion`, `button`, `audio`, " +
+                $"`fw_version`, `hw_version`, `mcu_version`, `battery_voltage`, `cpu_temperature`, " +
+                $"`light`, `vlc_rtsp`, `ir_cut`, `ir_led`, `wifi_up_loss`, `wifi_up_rate`, `up_rate_revise`, " +
+                $"`wifi_down_loss`, `wifi_down_rate`, `down_rate_revise`, `rf_rx`, `rf_tx_frenquency`, " +
+                $"`rf_tx_power`, `rf_tx_power_revise`, `reset_button`, `factory_reset`, " +
+                $"`mac`, `sn`, `uid`, `mac_cloud`, `check_sn_uid`)" +
+                $" VALUES ('{model.str_software_version}', '{model.str_spec_id}', '{model.str_standard_id}', '{model.str_fixture_id}', '{model.str_operator_id}', '{model.str_rn}'," +
+                $" '{model.str_start_test_time}', '{model.str_end_test_time}', '{model.str_stage_name}', '{model.str_test_mode}', '{model.str_test_result}'," +
+                $" '{model.str_ng_item}', '{model.str_read_tagnumber}', '{model.str_write_tagnumber}', '{model.str_ping_rtt}'," +
+                $" '{model.str_mic_auto}', '{model.str_mic_data}', '{model.str_mic_manual}', '{model.str_led_color}', '{model.str_motion}', '{model.str_button}', '{model.str_audio}'," +
+                $" '{model.str_fw_version}', '{model.str_hw_version}', '{model.str_mcu_version}', '{model.str_battery_voltage}', '{model.str_cpu_temperature}'," +
+                $" '{model.str_light}', '{model.str_vlc_rtsp}', '{model.str_ir_cut}', '{model.str_ir_led}', '{model.str_wifi_up_loss}', '{model.str_wifi_up_rate}', '{model.str_up_rate_revise}'," +
+                $" '{model.str_wifi_down_loss}', '{model.str_wifi_down_rate}', '{model.str_down_rate_revise}', '{model.str_rf_rx}', '{model.str_rf_tx_frenquency}'," +
+                $" '{model.str_rf_tx_power}', '{model.str_rf_tx_power_revise}', '{model.str_reset_button}', '{model.str_factory_reset}'," +
+                $" '{model.str_mac}', '{model.str_sn}', '{model.str_uid}', '{model.str_mac_cloud}', '{model.str_check_cloud}');";
+            SaveLocalSqliteDB(str_sql);
+            UploadToLocalServer(str_sql);
+
+        }
+
+        private bool gen_CreateDirectory(string file_path_document)
+        {
+            try
+            {
+                //==========创建文件夹===========================
+                if (System.IO.Directory.Exists(file_path_document) == false)
+                {
+                    System.IO.Directory.CreateDirectory(file_path_document);
+                }
+
+                return true;
+            }
+            catch (Exception ee)
+            {
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// 保存正常模式图片
+        /// </summary>
+        /// <returns></returns>
+        private bool SaveDayPicture(ShowUSBCamera showUSBCamera, string str_rn, string image_time)
+        {
+            try
+            {
+                gen_CreateDirectory(Path_iamge_document);
+                Path_image_file = Path_iamge_document + @"\" + str_rn + image_time + "_normal.png";
+                if (System.IO.File.Exists(Path_image_file))
+                {
+                    System.IO.File.Delete(Path_image_file);
+                }
+                if (showUSBCamera != null)
+                {
+                    Bitmap img = showUSBCamera.CapturePNG(Path_image_file);
+                    if (img == null)
+                    {
+                        logger.ShowLog("截图失败");
+                        return false;
+                    }
+                    img.Save(Path_image_file, System.Drawing.Imaging.ImageFormat.Png);
+                    //rich_run_log("正在上传图片到指定目录...");
+                    //trdUploadImage = new Thread(new ThreadStart(UploadImage));
+                    //trdUploadImage.IsBackground = true;
+                    //trdUploadImage.Start();
+                    //trdUploadImage.Join();
+                    return true;
+                }
+                else
+                {
+                    logger.ShowLog("截图失败");
+                    return false;
+                }
+            }
+            catch (Exception ee)
+            {
+                logger.ShowLog($"保存正常模式图片，发生异常：{ee.Message}");
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// 保存夜视模式图片
+        /// </summary>
+        /// <returns></returns>
+        private bool SaveNightPicture(ShowUSBCamera showUSBCamera, string str_rn, string image_time)
+        {
+            try
+            {
+                gen_CreateDirectory(Path_iamge_document);
+                Path_image_file = Path_iamge_document + @"\" + str_rn + image_time + "_night.png";
+                if (System.IO.File.Exists(Path_image_file))
+                {
+                    System.IO.File.Delete(Path_image_file);
+                }
+                //Bitmap img = videoSourcePlayer1.GetCurrentVideoFrame();
+                //img.Save(Path_image_file, System.Drawing.Imaging.ImageFormat.Png);
+                if (showUSBCamera != null)
+                {
+                    Bitmap img = showUSBCamera.CapturePNG(Path_image_file);
+                    if (img == null)
+                    {
+                        logger.ShowLog("截图失败");
+                        return false;
+                    }
+                    img.Save(Path_image_file, System.Drawing.Imaging.ImageFormat.Png);
+                    //rich_run_log("正在上传图片到指定目录...");
+                    //trdUploadIRImage = new Thread(new ThreadStart(UploadIRImage));
+                    //trdUploadIRImage.IsBackground = true;
+                    //trdUploadIRImage.Start();
+                    //trdUploadIRImage.Join();
+                    return true;
+                }
+                else
+                {
+                    logger.ShowLog("截图失败");
+                    return false;
+                }
+            }
+            catch (Exception ee)
+            {
+                logger.ShowLog($"保存夜视模式图片，发生异常：{ee.Message}");
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// 夜视清晰度图片上传服务器
+        /// </summary>
+        private bool UploadNightImage(string fileOnServer, string fileToCopy)
+        {
+            
+            if (!File.Exists(fileToCopy))
+            {
+                logger.ShowLog("--- 找不到夜视图片文件：" + fileToCopy);
+                return false;
+            }
+            try
+            {
+                File.Copy(fileToCopy, fileOnServer, true);
+                logger.ShowLog("--- 夜视清晰度图片上传本地服务器成功");
+                return true;
+            }
+            catch (Exception e)
+            {
+                logger.ShowLog($"--- 夜视清晰度图片上传本地服务器({fileOnServer})失败：" + e.Message);
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// 镜头清晰度图片上传服务器
+        /// </summary>
+        private bool UploadImage(string fileOnServer, string fileToCopy)
+        {
+            if (!File.Exists(fileToCopy))
+            {
+                logger.ShowLog("--- 找不到图片文件：" + fileToCopy);
+                return false;
+            }
+            try
+            {
+                File.Copy(fileToCopy, fileOnServer, true);
+                logger.ShowLog("--- 清晰度图片上传本地服务器成功");
+                return true;
+            }
+            catch (Exception e)
+            {
+                logger.ShowLog($"--- 清晰度图片上传本地服务器({fileOnServer})失败：" + e.Message);
+                return false;
+            }
+        }
+        #endregion
 
         /// <summary>
         /// 保存数据至本机Sqlite数据库
@@ -952,7 +1418,8 @@ namespace XDC01_TestAction
                 comboBoxNextTagNumber.SelectedItem = testParam.next_tagnumber;
                 textBoxNextWIFISSID.Text = testParam.next_wifi_ssid;
                 textBoxNextWIFIPWD.Text = testParam.next_wifi_pwd;
-                checkBoxWriteNextWIFI.Checked = testParam.write_next_wifi == "true";
+                checkBoxWriteNextWIFI.Checked = testParam.write_next_wifi == "True";
+                checkBoxNGContinue.Checked = testParam.ng_continue == "True";
 
                 comboBoxFactoryid.SelectedItem = testParam.factoryId;
                 comboBoxColorid.SelectedItem = testParam.colorId;
@@ -961,6 +1428,8 @@ namespace XDC01_TestAction
                 comboBoxProducttype.SelectedItem = testParam.productType;
                 textBoxCloudUsername.Text = testParam.cloud_username;
                 textBoxCloudPassword.Text = testParam.cloud_password;
+
+                textBoxImageServer.Text = testParam.local_server_name;
             }
         }
 
@@ -1027,6 +1496,7 @@ namespace XDC01_TestAction
             ConfigFile.IniWriteValue("next_station", "next_wifi_pwd", textBoxNextWIFIPWD.Text, Path_ini);
             ConfigFile.IniWriteValue("next_station", "write_next_wifi", checkBoxWriteNextWIFI.Checked.ToString(), Path_ini);
         }
+        
         private void BtnPanelInfo_Click(object sender, EventArgs e)
         {
             ConfigFile.IniWriteValue("cloud", "cloud_username", textBoxCloudUsername.Text, Path_ini);
@@ -1038,7 +1508,29 @@ namespace XDC01_TestAction
             ConfigFile.IniWriteValue("cloud", "productType", comboBoxProducttype.SelectedItem.ToString(), Path_ini);
         }
 
+        private void BtnNGcontinue_Click(object sender, EventArgs e)
+        {
+            ConfigFile.IniWriteValue("Run_Param", "ng_continue", checkBoxNGContinue.Checked.ToString(), Path_ini);
+        }
+
+        private void BtnImageServer_Click(object sender, EventArgs e)
+        {
+            ConfigFile.IniWriteValue("rtos", "local_server_name", textBoxImageServer.Text, Path_ini);
+        }
         #endregion
+
+        private void dataGridView1_RowsAdded(object sender, DataGridViewRowsAddedEventArgs e)
+        {
+            // 滚动到最后一行
+            dataGridView1.FirstDisplayedScrollingRowIndex = dataGridView1.Rows.Count - 1;
+
+            // 确保最后一行完全可见
+            if (dataGridView1.Rows.Count > 0)
+            {
+                dataGridView1.Rows[dataGridView1.Rows.Count - 1].Selected = true;
+                dataGridView1.CurrentCell = dataGridView1.Rows[dataGridView1.Rows.Count - 1].Cells[0];
+            }
+        }
 
     }
 

@@ -23,6 +23,7 @@
 /XDC01_TestAction/obj
 /XDC01Action/obj
 /CloudAPILib/obj
+/CameraRTOSLib/obj
 *.log
 *.txt
 

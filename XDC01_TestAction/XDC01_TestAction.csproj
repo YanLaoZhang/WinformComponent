@@ -37,6 +37,10 @@
       <HintPath>..\..\..\..\CommonDLL\AxInterop.WMPLib.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="CameraRTOSLib">
+      <HintPath>..\CameraRTOSLib\bin\Debug\CameraRTOSLib.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="CloudAPILib">
       <HintPath>..\CloudAPILib\bin\Debug\CloudAPILib.dll</HintPath>
       <Private>False</Private>

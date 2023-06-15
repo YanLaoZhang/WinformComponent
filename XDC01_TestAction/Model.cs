@@ -73,6 +73,14 @@ namespace XDC01_TestAction
         public string str_factory_reset=string.Empty;
 
         public string str_write_wifi=string.Empty;
+
+        public string day_video_check=string.Empty;
+        public string day_video_photo = string.Empty;
+        public string dark_corner=string.Empty;
+        public string rtos_ir_cut=string.Empty;
+        public string rtos_ir_led=string.Empty;
+        public string night_video_check = string.Empty;
+        public string night_video_photo = string.Empty;
     }
 
 }

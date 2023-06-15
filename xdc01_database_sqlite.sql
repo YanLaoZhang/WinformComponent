@@ -18,7 +18,7 @@ CREATE TABLE t030_product_test_report (
     write_tagnumber    VARCHAR (30)  DEFAULT '',
     ping_rtt           FLOAT         DEFAULT NULL,
     mic_auto           VARCHAR (16)  DEFAULT '',
-    mic_data           VARCHAR (16)  DEFAULT '',
+    mic_data           VARCHAR (30)  DEFAULT '',
     mic_manual         VARCHAR (16)  DEFAULT '',
     led_color          VARCHAR (16)  DEFAULT '',
     motion             VARCHAR (16)  DEFAULT '',
@@ -50,4 +50,31 @@ CREATE TABLE t030_product_test_report (
     uid                VARCHAR (30)  DEFAULT '',
     mac_cloud          VARCHAR (30)  DEFAULT '',
     check_sn_uid       VARCHAR (30)  DEFAULT ''
+);
+
+CREATE TABLE t020_focus_test_rtos (
+    id                INTEGER       PRIMARY KEY AUTOINCREMENT,
+    software_version  VARCHAR (30)  DEFAULT '',
+    spec_id           INT (11)      DEFAULT NULL,
+    standard_id       INT (11)      DEFAULT NULL,
+    fixture_id        VARCHAR (30)  DEFAULT '',
+    operator_id       VARCHAR (30)  DEFAULT '',
+    rn                VARCHAR (30)  NOT NULL,
+    start_test_time   DATETIME      DEFAULT (datetime('now', 'localtime') ) 
+                                    NOT NULL,
+    end_test_time     DATETIME      DEFAULT (datetime('now', 'localtime') ) 
+                                    NOT NULL,
+    stage_name        VARCHAR (30)  NOT NULL,
+    test_mode         VARCHAR (30)  NOT NULL,
+    test_result       VARCHAR (30)  NOT NULL,
+    ng_items          VARCHAR (500) DEFAULT '',
+    read_tagnumber    VARCHAR (30)  DEFAULT '',
+    write_tagnumber   VARCHAR (30)  DEFAULT '',
+    day_video_check   VARCHAR (16)  DEFAULT '',
+    day_video_photo   VARCHAR (255) DEFAULT '',
+    dark_corner       VARCHAR (16)  DEFAULT '',
+    ir_cut            VARCHAR (16)  DEFAULT '',
+    ir_led            VARCHAR (16)  DEFAULT '',
+    night_video_check VARCHAR (16)  DEFAULT '',
+    night_video_photo VARCHAR (255) DEFAULT ''
 );

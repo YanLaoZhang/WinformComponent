@@ -41,6 +41,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XDC01Action", "XDC01Action\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CloudAPILib", "CloudAPILib\CloudAPILib.csproj", "{63ECD551-48BC-4EFA-A2FC-A229D36CC2ED}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CameraRTOSLib", "CameraRTOSLib\CameraRTOSLib.csproj", "{B7F7FA02-B6A8-428F-BCB0-1CCE481E9ADF}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -123,6 +125,10 @@ Global
 		{63ECD551-48BC-4EFA-A2FC-A229D36CC2ED}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{63ECD551-48BC-4EFA-A2FC-A229D36CC2ED}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{63ECD551-48BC-4EFA-A2FC-A229D36CC2ED}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B7F7FA02-B6A8-428F-BCB0-1CCE481E9ADF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B7F7FA02-B6A8-428F-BCB0-1CCE481E9ADF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B7F7FA02-B6A8-428F-BCB0-1CCE481E9ADF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B7F7FA02-B6A8-428F-BCB0-1CCE481E9ADF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

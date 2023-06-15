@@ -56,7 +56,7 @@ namespace XDC01Debug
             else
             {
                 string port = comboBoxCurPort.SelectedItem.ToString();
-                if (port != "")
+                if (port != "" && serial == null)
                 {
                     serial = new XDC01Serial(serialPortXdc01, port, richTextBox1);
                     serial.OpenPort();

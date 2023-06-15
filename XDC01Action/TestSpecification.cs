@@ -253,6 +253,7 @@ namespace XDC01Action
         public string next_wifi_pwd;
         public string next_tagnumber;
         public string write_next_wifi;
+        public string ng_continue;
 
         public string cloud_username;
         public string cloud_password;
@@ -261,5 +262,7 @@ namespace XDC01Action
         public string productId;
         public string modeId;
         public string productType;
+
+        public string local_server_name;
     }
 }

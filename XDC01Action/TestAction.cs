@@ -648,6 +648,11 @@ namespace XDC01Action
                 logger.ShowLog($"PIR测试发生异常：[{ee.Message}]");
                 return null;
             }
+            finally
+            {
+                string str_error_log = "";
+                xDC01Serial.SetPIR("off", ref str_error_log);
+            }
         }
 
         /// <summary>
@@ -1518,8 +1523,10 @@ namespace XDC01Action
             try
             {
                 int start_time = Environment.TickCount;
-                TestItem testItem = new TestItem()
-                { Name = "复位键测试(人工)", NgItem = "reset_button" };
+                TestItem testItem = new TestItem(){ 
+                    Name = "复位键测试(人工)", 
+                    NgItem = "reset_button" 
+                };
                 logger.ShowLog("-进行复位键功能测试...");
                 CustomDialog btnDialog = new CustomDialog("复位键测试(人工)", "请按REST键，RESET键是否正常");
                 DialogResult result = btnDialog.ShowDialog();
@@ -1654,7 +1661,6 @@ namespace XDC01Action
             }
         }
 
-
         public TestItem ApplySNandUIDFromCloud(CloudLoginForm cloudLoginForm, System.Windows.Forms.DataGridView dataGridView, Logger logger, CloudModel cloudModel)
         {
             try
@@ -1753,6 +1759,302 @@ namespace XDC01Action
                 return null;
             }
         }
+
+        public List<TestItem> CheckRNandTagnameRTOS(XDC01Serial xDC01Serial,
+            System.Windows.Forms.DataGridView dataGridView, Logger logger, TestParam testParam, TestStandard testStandard)
+        {
+            try
+            {
+                int start_time = Environment.TickCount;
+                List<TestItem> testItems = new List<TestItem>();
+                string str_error_log = "";
+                logger.ShowLog("-读取RN");
+                // 1、读取RN
+                string str_rn = "";
+                if (xDC01Serial.GetRnRTOS(ref str_rn, ref str_error_log) == false)
+                {
+                    logger.ShowLog($"--- 读RN失败：{str_error_log}");
+                    float Duration = (Environment.TickCount - start_time) / 1000.00f;
+                    dataGridView.Rows.Add("读取RN号", "-", "-", "-", "-", "串口指令发送异常", "FAIL", Duration.ToString("F2"));
+                    return null;
+                }
+                else
+                {
+                    TestItem RNtestItem = new TestItem
+                    {
+                        Name = "RN号",
+                        NgItem = "rn",
+                        Standard = $"{testStandard.rn_length}位",
+                        StrVal = str_rn
+                    };
+                    // RN号格式检查
+                    if (str_rn.Length != testStandard.rn_length)
+                    {
+                        logger.ShowLog("--- Rn长度错误...");
+                        RNtestItem.Result = "FAIL";
+                    }
+                    else
+                    {
+                        logger.ShowLog($"读取到RN号为{str_rn}");
+                        RNtestItem.Result = "PASS";
+                    }
+                    RNtestItem.Duration = (Environment.TickCount - start_time) / 1000.00f;
+                    dataGridView.Rows.Add(RNtestItem.Name, RNtestItem.Standard, "-", "-", "-", RNtestItem.StrVal, RNtestItem.Result, RNtestItem.Duration.ToString("F2"));
+                    testItems.Add(RNtestItem);
+                }
+
+                // 2、读取测试工序号tagNumber
+                start_time = Environment.TickCount;
+                if (testParam.test_mode == "operator")
+                {
+                    string str_tagNumber = "";
+                    if (xDC01Serial.GetTagNumber(ref str_tagNumber, ref str_error_log) == false)
+                    {
+                        logger.ShowLog($"--- 读工序号失败：{str_error_log}");
+                        float Duration = (Environment.TickCount - start_time) / 1000.00f;
+                        dataGridView.Rows.Add("读取工序号", "-", "-", "-", "-", "串口指令发送异常", "FAIL", Duration.ToString("F2"));
+                        return null;
+                    }
+                    else
+                    {
+                        TestItem tagNumbertestItem = new TestItem()
+                        {
+                            Name = "工序号",
+                            NgItem = "tagnumber",
+                            Standard = $"{testParam.cur_tagnumber}"
+                            //Value = float.Parse(cameraInfo.Battery)
+                        };
+                        tagNumbertestItem.StrVal = str_tagNumber;
+                        if (str_tagNumber != testParam.cur_tagnumber)
+                        {
+                            logger.ShowLog($"--- 工序号[{str_tagNumber}]与预期[{testParam.cur_tagnumber}]不匹配");
+                            tagNumbertestItem.Result = "FAIL";
+                        }
+                        else
+                        {
+                            logger.ShowLog($"--- 读取到工序号[{str_tagNumber}]符合工序控制");
+                            tagNumbertestItem.Result = "PASS";
+                        }
+                        tagNumbertestItem.Duration = (Environment.TickCount - start_time) / 1000.00f;
+                        dataGridView.Rows.Add(tagNumbertestItem.Name, tagNumbertestItem.Standard, "-", "-", "-", tagNumbertestItem.StrVal, tagNumbertestItem.Result, tagNumbertestItem.Duration.ToString("F2"));
+                        testItems.Add(tagNumbertestItem);
+                    }
+                }
+                else
+                {
+                    logger.ShowLog("--- 工程师测试模式，不读工序号");
+                }
+                return testItems;
+            }
+            catch (Exception e)
+            {
+
+                logger.ShowLog($"RTOS RN和工序号检查发生异常：[{e.Message}]");
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// 镜头清晰度检查
+        /// </summary>
+        /// <returns></returns>
+        public TestItem CheckDayResolutionRTOS(XDC01Serial xDC01Serial,
+            System.Windows.Forms.DataGridView dataGridView, Logger logger)
+        {
+            try
+            {
+                int start_time = Environment.TickCount;
+                TestItem testItem = new TestItem()
+                {
+                    Name = "镜头清晰度检查",
+                    NgItem = "day_video_check"
+                };
+                logger.ShowLog("-镜头清晰度检查...");
+                CustomDialog btnDialog = new CustomDialog("镜头清晰度检查", "请检查镜头画面清晰度");
+                DialogResult result = btnDialog.ShowDialog();
+
+                if (result == DialogResult.Yes)
+                {
+                    logger.ShowLog($"--- 镜头清晰度检查通过");
+                    testItem.Result = "PASS";
+                }
+                else
+                {
+                    logger.ShowLog($"--- 镜头清晰度检查失败");
+                    testItem.Result = "FAIL";
+                }
+                testItem.Duration = (Environment.TickCount - start_time) / 1000.00f;
+                dataGridView.Rows.Add(testItem.Name, "-", "-", "-", "-", "-", testItem.Result, testItem.Duration.ToString("F2"));
+                return testItem;
+            }
+            catch (Exception ee)
+            {
+                logger.ShowLog($"镜头清晰度检查，发生异常：[{ee.Message}]");
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// 镜头暗角检查
+        /// </summary>
+        /// <returns></returns>
+        public TestItem CheckDayDarkCornerRTOS(XDC01Serial xDC01Serial,
+            System.Windows.Forms.DataGridView dataGridView, Logger logger)
+        {
+            try
+            {
+                int start_time = Environment.TickCount;
+                TestItem testItem = new TestItem()
+                {
+                    Name = "镜头暗角检查",
+                    NgItem = "dark_corner"
+                };
+                logger.ShowLog("-镜头暗角检查...");
+                CustomDialog btnDialog = new CustomDialog("镜头暗角检查", "请确认画面有无暗角");
+                DialogResult result = btnDialog.ShowDialog();
+
+                if (result == DialogResult.Yes)
+                {
+                    logger.ShowLog($"--- 镜头暗角检查通过");
+                    testItem.Result = "PASS";
+                }
+                else
+                {
+                    logger.ShowLog($"--- 镜头暗角检查失败");
+                    testItem.Result = "FAIL";
+                }
+                testItem.Duration = (Environment.TickCount - start_time) / 1000.00f;
+                dataGridView.Rows.Add(testItem.Name, "-", "-", "-", "-", "-", testItem.Result, testItem.Duration.ToString("F2"));
+                return testItem;
+            }
+            catch (Exception ee)
+            {
+                logger.ShowLog($"镜头暗角检查，发生异常：[{ee.Message}]");
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// 发送夜视切换指令，听声音并查看LED灯
+        /// </summary>
+        /// <returns></returns>
+        public List<TestItem> CheckIR_CUT_LED_RTOS(XDC01Serial xDC01Serial,
+            System.Windows.Forms.DataGridView dataGridView, Logger logger)
+        {
+            try
+            {
+                int start_time = Environment.TickCount;
+                List<TestItem> testItems = new List<TestItem>();
+                logger.ShowLog("-进行夜视切换检查...");
+                //------12 通过vlc video确认IR Cut IR LED
+                TestItem IRLedTestItem = new TestItem()
+                {
+                    Name = "IR_LED",
+                    NgItem = "ir_led"
+                };
+                string str_error_log = "";
+                if (xDC01Serial.SwitchIR_CUT_RTOS("on", ref str_error_log) == false)
+                {
+                    logger.ShowLog($"切换夜视模式异常：[{str_error_log}]");
+                    float Duration = (Environment.TickCount - start_time) / 1000.00f;
+                    dataGridView.Rows.Add("切换夜视检查", "-", "-", "-", "-", "串口指令发送异常", "FAIL", Duration.ToString("F2"));
+                    return null;
+                }
+                else
+                {
+                    logger.ShowLog("--- 请检查IR_LED灯功能");
+                    CustomDialog IRLedDialog = new CustomDialog("IR_LED检查测试（人工）", "请确认\r\n1、是否听到切换的动作音？\r\n2、六颗红外LED灯是否全亮？", true);
+                    DialogResult IRLedresult = IRLedDialog.ShowDialog();
+
+                    if (IRLedresult == DialogResult.Yes)
+                    {
+                        logger.ShowLog($"--- IR_LED检查测试(人工)通过");
+                        IRLedTestItem.Result = "PASS";
+                    }
+                    else
+                    {
+                        logger.ShowLog($"--- IR_LED检查测试(人工)失败");
+                        IRLedTestItem.Result = "FAIL";
+                    }
+                    IRLedTestItem.Duration = (Environment.TickCount - start_time) / 1000.00f;
+                    dataGridView.Rows.Add(IRLedTestItem.Name, "-", "-", "-", "-", "-", IRLedTestItem.Result, IRLedTestItem.Duration.ToString("F2"));
+                    testItems.Add(IRLedTestItem);
+
+                    start_time = Environment.TickCount;
+                    TestItem IRCutTestItem = new TestItem()
+                    {
+                        Name = "IR_CUT",
+                        NgItem = "ir_cut"
+                    };
+                    logger.ShowLog("--- 请检查IR_CUT夜视功能");
+                    CustomDialog IRCutDialog = new CustomDialog("IR_CUT检查测试（人工）", "是否已切换到夜视模式？", true);
+                    DialogResult IRCutresult = IRCutDialog.ShowDialog();
+
+                    if (IRCutresult == DialogResult.Yes)
+                    {
+                        logger.ShowLog($"--- IR_CUT检查测试(人工)通过");
+                        IRCutTestItem.Result = "PASS";
+                    }
+                    else
+                    {
+                        logger.ShowLog($"--- IR_CUT检查测试(人工)失败");
+                        IRCutTestItem.Result = "FAIL";
+                    }
+                    IRCutTestItem.Duration = (Environment.TickCount - start_time) / 1000.00f;
+                    dataGridView.Rows.Add(IRCutTestItem.Name, "-", "-", "-", "-", "-", IRCutTestItem.Result, IRCutTestItem.Duration.ToString("F2"));
+                    testItems.Add(IRCutTestItem);
+
+                    return testItems;
+                }
+            }
+            catch (Exception ee)
+            {
+                logger.ShowLog($"IR-CUT|IR_LED功能检查，发生异常：[{ee.Message}]");
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// 将机器放入测试暗箱预留卡位，查看黑夜模式下的图像清晰度
+        /// </summary>
+        /// <returns></returns>
+        public TestItem CheckNightResolution(XDC01Serial xDC01Serial,
+            System.Windows.Forms.DataGridView dataGridView, Logger logger)
+        {
+            try
+            {
+                int start_time = Environment.TickCount;
+                TestItem testItem = new TestItem()
+                {
+                    Name = "夜视清晰度检查",
+                    NgItem = "night_video_check"
+                };
+                logger.ShowLog("-夜视清晰度检查...");
+                CustomDialog btnDialog = new CustomDialog("夜视清晰度检查", "请检查夜视画面清晰度");
+                DialogResult result = btnDialog.ShowDialog();
+
+                if (result == DialogResult.Yes)
+                {
+                    logger.ShowLog($"--- 夜视清晰度检查通过");
+                    testItem.Result = "PASS";
+                }
+                else
+                {
+                    logger.ShowLog($"--- 夜视清晰度检查失败");
+                    testItem.Result = "FAIL";
+                }
+                testItem.Duration = (Environment.TickCount - start_time) / 1000.00f;
+                dataGridView.Rows.Add(testItem.Name, "-", "-", "-", "-", "-", testItem.Result, testItem.Duration.ToString("F2"));
+                return testItem;
+            }
+            catch (Exception ee)
+            {
+                logger.ShowLog($"镜头夜视清晰度检查，发生异常：[{ee.Message}]");
+                return null;
+            }
+        }
+
+
 
     }
 }

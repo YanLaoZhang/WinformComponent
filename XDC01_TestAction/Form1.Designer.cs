@@ -29,7 +29,7 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPageMain = new System.Windows.Forms.TabPage();
@@ -65,10 +65,31 @@
             this.label1 = new System.Windows.Forms.Label();
             this.tabPageSetting = new System.Windows.Forms.TabPage();
             this.panel4 = new System.Windows.Forms.Panel();
+            this.groupBox17 = new System.Windows.Forms.GroupBox();
+            this.BtnNGcontinue = new System.Windows.Forms.Button();
+            this.checkBoxNGContinue = new System.Windows.Forms.CheckBox();
+            this.groupBox16 = new System.Windows.Forms.GroupBox();
+            this.textBoxCloudPassword = new System.Windows.Forms.TextBox();
+            this.label33 = new System.Windows.Forms.Label();
+            this.textBoxCloudUsername = new System.Windows.Forms.TextBox();
+            this.label32 = new System.Windows.Forms.Label();
+            this.BtnPanelInfo = new System.Windows.Forms.Button();
+            this.comboBoxProducttype = new System.Windows.Forms.ComboBox();
+            this.comboBoxColorid = new System.Windows.Forms.ComboBox();
+            this.comboBoxModeid = new System.Windows.Forms.ComboBox();
+            this.comboBoxProductid = new System.Windows.Forms.ComboBox();
+            this.comboBoxFactoryid = new System.Windows.Forms.ComboBox();
+            this.label96 = new System.Windows.Forms.Label();
+            this.label79 = new System.Windows.Forms.Label();
+            this.label76 = new System.Windows.Forms.Label();
+            this.label64 = new System.Windows.Forms.Label();
+            this.label62 = new System.Windows.Forms.Label();
             this.groupBox15 = new System.Windows.Forms.GroupBox();
             this.BtnNextStation = new System.Windows.Forms.Button();
+            this.comboBoxTagNumber = new System.Windows.Forms.ComboBox();
             this.checkBoxWriteNextWIFI = new System.Windows.Forms.CheckBox();
             this.textBoxNextWIFIPWD = new System.Windows.Forms.TextBox();
+            this.label11 = new System.Windows.Forms.Label();
             this.comboBoxNextTagNumber = new System.Windows.Forms.ComboBox();
             this.label30 = new System.Windows.Forms.Label();
             this.label29 = new System.Windows.Forms.Label();
@@ -120,11 +141,11 @@
             this.textBoxPingIP = new System.Windows.Forms.TextBox();
             this.label12 = new System.Windows.Forms.Label();
             this.groupBox8 = new System.Windows.Forms.GroupBox();
+            this.comboBoxStage = new System.Windows.Forms.ComboBox();
+            this.label34 = new System.Windows.Forms.Label();
             this.BtnRunParam = new System.Windows.Forms.Button();
-            this.comboBoxTagNumber = new System.Windows.Forms.ComboBox();
             this.comboBoxTestMode = new System.Windows.Forms.ComboBox();
             this.comboBoxSerialPort = new System.Windows.Forms.ComboBox();
-            this.label11 = new System.Windows.Forms.Label();
             this.label10 = new System.Windows.Forms.Label();
             this.label9 = new System.Windows.Forms.Label();
             this.groupBox7 = new System.Windows.Forms.GroupBox();
@@ -155,24 +176,10 @@
             this.toolStripButton1 = new System.Windows.Forms.ToolStripButton();
             this.toolStripButton2 = new System.Windows.Forms.ToolStripButton();
             this.timerTestTime = new System.Windows.Forms.Timer(this.components);
-            this.groupBox16 = new System.Windows.Forms.GroupBox();
-            this.comboBoxProducttype = new System.Windows.Forms.ComboBox();
-            this.comboBoxColorid = new System.Windows.Forms.ComboBox();
-            this.comboBoxModeid = new System.Windows.Forms.ComboBox();
-            this.comboBoxProductid = new System.Windows.Forms.ComboBox();
-            this.comboBoxFactoryid = new System.Windows.Forms.ComboBox();
-            this.label96 = new System.Windows.Forms.Label();
-            this.label79 = new System.Windows.Forms.Label();
-            this.label76 = new System.Windows.Forms.Label();
-            this.label64 = new System.Windows.Forms.Label();
-            this.label62 = new System.Windows.Forms.Label();
-            this.BtnPanelInfo = new System.Windows.Forms.Button();
-            this.textBoxCloudUsername = new System.Windows.Forms.TextBox();
-            this.label32 = new System.Windows.Forms.Label();
-            this.textBoxCloudPassword = new System.Windows.Forms.TextBox();
-            this.label33 = new System.Windows.Forms.Label();
-            this.comboBoxStage = new System.Windows.Forms.ComboBox();
-            this.label34 = new System.Windows.Forms.Label();
+            this.groupBox18 = new System.Windows.Forms.GroupBox();
+            this.textBoxImageServer = new System.Windows.Forms.TextBox();
+            this.label35 = new System.Windows.Forms.Label();
+            this.BtnImageServer = new System.Windows.Forms.Button();
             this.tabControl1.SuspendLayout();
             this.tabPageMain.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
@@ -190,6 +197,8 @@
             this.panel1.SuspendLayout();
             this.tabPageSetting.SuspendLayout();
             this.panel4.SuspendLayout();
+            this.groupBox17.SuspendLayout();
+            this.groupBox16.SuspendLayout();
             this.groupBox15.SuspendLayout();
             this.groupBox14.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownRFRXTimeout)).BeginInit();
@@ -215,7 +224,7 @@
             this.groupBox4.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewTestSpec)).BeginInit();
             this.toolStrip2.SuspendLayout();
-            this.groupBox16.SuspendLayout();
+            this.groupBox18.SuspendLayout();
             this.SuspendLayout();
             // 
             // tabControl1
@@ -230,7 +239,7 @@
             this.tabControl1.Margin = new System.Windows.Forms.Padding(0);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(1322, 642);
+            this.tabControl1.Size = new System.Drawing.Size(1322, 718);
             this.tabControl1.TabIndex = 0;
             this.tabControl1.SelectedIndexChanged += new System.EventHandler(this.tabControl1_SelectedIndexChanged);
             // 
@@ -240,7 +249,7 @@
             this.tabPageMain.Location = new System.Drawing.Point(4, 29);
             this.tabPageMain.Name = "tabPageMain";
             this.tabPageMain.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageMain.Size = new System.Drawing.Size(1314, 609);
+            this.tabPageMain.Size = new System.Drawing.Size(1314, 645);
             this.tabPageMain.TabIndex = 0;
             this.tabPageMain.Text = "测试";
             this.tabPageMain.UseVisualStyleBackColor = true;
@@ -262,7 +271,7 @@
             // 
             this.splitContainer1.Panel2.Controls.Add(this.groupBox1);
             this.splitContainer1.Panel2.Controls.Add(this.panel1);
-            this.splitContainer1.Size = new System.Drawing.Size(1308, 603);
+            this.splitContainer1.Size = new System.Drawing.Size(1308, 639);
             this.splitContainer1.SplitterDistance = 560;
             this.splitContainer1.TabIndex = 0;
             // 
@@ -301,7 +310,7 @@
             this.groupBox3.Controls.Add(this.richTextBoxSerialLog);
             this.groupBox3.Location = new System.Drawing.Point(2, 399);
             this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(553, 199);
+            this.groupBox3.Size = new System.Drawing.Size(553, 235);
             this.groupBox3.TabIndex = 1;
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "串口日志";
@@ -317,7 +326,7 @@
             this.richTextBoxSerialLog.Name = "richTextBoxSerialLog";
             this.richTextBoxSerialLog.ReadOnly = true;
             this.richTextBoxSerialLog.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.ForcedVertical;
-            this.richTextBoxSerialLog.Size = new System.Drawing.Size(547, 171);
+            this.richTextBoxSerialLog.Size = new System.Drawing.Size(547, 207);
             this.richTextBoxSerialLog.TabIndex = 0;
             this.richTextBoxSerialLog.Text = "";
             // 
@@ -357,7 +366,7 @@
             this.groupBox1.Controls.Add(this.panel2);
             this.groupBox1.Location = new System.Drawing.Point(3, 69);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(736, 529);
+            this.groupBox1.Size = new System.Drawing.Size(736, 565);
             this.groupBox1.TabIndex = 2;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "测试详情";
@@ -387,9 +396,10 @@
             this.dataGridView1.ReadOnly = true;
             this.dataGridView1.RowHeadersVisible = false;
             this.dataGridView1.RowTemplate.Height = 30;
-            this.dataGridView1.Size = new System.Drawing.Size(729, 426);
+            this.dataGridView1.Size = new System.Drawing.Size(729, 462);
             this.dataGridView1.TabIndex = 1;
             this.dataGridView1.CellFormatting += new System.Windows.Forms.DataGridViewCellFormattingEventHandler(this.dataGridView1_CellFormatting);
+            this.dataGridView1.RowsAdded += new System.Windows.Forms.DataGridViewRowsAddedEventHandler(this.dataGridView1_RowsAdded);
             // 
             // Column8
             // 
@@ -450,8 +460,8 @@
             // 
             // Column14
             // 
-            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
-            this.Column14.DefaultCellStyle = dataGridViewCellStyle1;
+            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+            this.Column14.DefaultCellStyle = dataGridViewCellStyle2;
             this.Column14.HeaderText = "耗时";
             this.Column14.Name = "Column14";
             this.Column14.ReadOnly = true;
@@ -596,13 +606,15 @@
             this.tabPageSetting.Location = new System.Drawing.Point(4, 29);
             this.tabPageSetting.Name = "tabPageSetting";
             this.tabPageSetting.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageSetting.Size = new System.Drawing.Size(1314, 609);
+            this.tabPageSetting.Size = new System.Drawing.Size(1314, 685);
             this.tabPageSetting.TabIndex = 1;
             this.tabPageSetting.Text = "设置";
             this.tabPageSetting.UseVisualStyleBackColor = true;
             // 
             // panel4
             // 
+            this.panel4.Controls.Add(this.groupBox18);
+            this.panel4.Controls.Add(this.groupBox17);
             this.panel4.Controls.Add(this.groupBox16);
             this.panel4.Controls.Add(this.groupBox15);
             this.panel4.Controls.Add(this.groupBox14);
@@ -616,8 +628,228 @@
             this.panel4.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel4.Location = new System.Drawing.Point(3, 3);
             this.panel4.Name = "panel4";
-            this.panel4.Size = new System.Drawing.Size(1308, 603);
+            this.panel4.Size = new System.Drawing.Size(1308, 679);
             this.panel4.TabIndex = 0;
+            // 
+            // groupBox17
+            // 
+            this.groupBox17.Controls.Add(this.BtnNGcontinue);
+            this.groupBox17.Controls.Add(this.checkBoxNGContinue);
+            this.groupBox17.Location = new System.Drawing.Point(988, 141);
+            this.groupBox17.Name = "groupBox17";
+            this.groupBox17.Size = new System.Drawing.Size(320, 80);
+            this.groupBox17.TabIndex = 10;
+            this.groupBox17.TabStop = false;
+            this.groupBox17.Text = "测试NG是否继续";
+            // 
+            // BtnNGcontinue
+            // 
+            this.BtnNGcontinue.Location = new System.Drawing.Point(224, 31);
+            this.BtnNGcontinue.Name = "BtnNGcontinue";
+            this.BtnNGcontinue.Size = new System.Drawing.Size(85, 31);
+            this.BtnNGcontinue.TabIndex = 12;
+            this.BtnNGcontinue.Text = "保存";
+            this.BtnNGcontinue.UseVisualStyleBackColor = true;
+            this.BtnNGcontinue.Click += new System.EventHandler(this.BtnNGcontinue_Click);
+            // 
+            // checkBoxNGContinue
+            // 
+            this.checkBoxNGContinue.AutoSize = true;
+            this.checkBoxNGContinue.Location = new System.Drawing.Point(13, 39);
+            this.checkBoxNGContinue.Name = "checkBoxNGContinue";
+            this.checkBoxNGContinue.Size = new System.Drawing.Size(162, 23);
+            this.checkBoxNGContinue.TabIndex = 0;
+            this.checkBoxNGContinue.Text = "NG仍旧继续测试";
+            this.checkBoxNGContinue.UseVisualStyleBackColor = true;
+            // 
+            // groupBox16
+            // 
+            this.groupBox16.Controls.Add(this.textBoxCloudPassword);
+            this.groupBox16.Controls.Add(this.label33);
+            this.groupBox16.Controls.Add(this.textBoxCloudUsername);
+            this.groupBox16.Controls.Add(this.label32);
+            this.groupBox16.Controls.Add(this.BtnPanelInfo);
+            this.groupBox16.Controls.Add(this.comboBoxProducttype);
+            this.groupBox16.Controls.Add(this.comboBoxColorid);
+            this.groupBox16.Controls.Add(this.comboBoxModeid);
+            this.groupBox16.Controls.Add(this.comboBoxProductid);
+            this.groupBox16.Controls.Add(this.comboBoxFactoryid);
+            this.groupBox16.Controls.Add(this.label96);
+            this.groupBox16.Controls.Add(this.label79);
+            this.groupBox16.Controls.Add(this.label76);
+            this.groupBox16.Controls.Add(this.label64);
+            this.groupBox16.Controls.Add(this.label62);
+            this.groupBox16.Location = new System.Drawing.Point(4, 498);
+            this.groupBox16.Name = "groupBox16";
+            this.groupBox16.Size = new System.Drawing.Size(1301, 102);
+            this.groupBox16.TabIndex = 9;
+            this.groupBox16.TabStop = false;
+            this.groupBox16.Text = "产品信息";
+            // 
+            // textBoxCloudPassword
+            // 
+            this.textBoxCloudPassword.Location = new System.Drawing.Point(946, 57);
+            this.textBoxCloudPassword.Name = "textBoxCloudPassword";
+            this.textBoxCloudPassword.PasswordChar = '*';
+            this.textBoxCloudPassword.Size = new System.Drawing.Size(196, 29);
+            this.textBoxCloudPassword.TabIndex = 43;
+            // 
+            // label33
+            // 
+            this.label33.AutoSize = true;
+            this.label33.Location = new System.Drawing.Point(781, 60);
+            this.label33.Name = "label33";
+            this.label33.Size = new System.Drawing.Size(159, 19);
+            this.label33.TabIndex = 42;
+            this.label33.Text = "cloud_password:";
+            // 
+            // textBoxCloudUsername
+            // 
+            this.textBoxCloudUsername.Location = new System.Drawing.Point(946, 22);
+            this.textBoxCloudUsername.Name = "textBoxCloudUsername";
+            this.textBoxCloudUsername.Size = new System.Drawing.Size(196, 29);
+            this.textBoxCloudUsername.TabIndex = 37;
+            // 
+            // label32
+            // 
+            this.label32.AutoSize = true;
+            this.label32.Location = new System.Drawing.Point(781, 25);
+            this.label32.Name = "label32";
+            this.label32.Size = new System.Drawing.Size(159, 19);
+            this.label32.TabIndex = 36;
+            this.label32.Text = "cloud_username:";
+            // 
+            // BtnPanelInfo
+            // 
+            this.BtnPanelInfo.Location = new System.Drawing.Point(1198, 34);
+            this.BtnPanelInfo.Name = "BtnPanelInfo";
+            this.BtnPanelInfo.Size = new System.Drawing.Size(85, 31);
+            this.BtnPanelInfo.TabIndex = 41;
+            this.BtnPanelInfo.Text = "保存";
+            this.BtnPanelInfo.UseVisualStyleBackColor = true;
+            this.BtnPanelInfo.Click += new System.EventHandler(this.BtnPanelInfo_Click);
+            // 
+            // comboBoxProducttype
+            // 
+            this.comboBoxProducttype.AutoCompleteCustomSource.AddRange(new string[] {
+            "1",
+            "2"});
+            this.comboBoxProducttype.FormattingEnabled = true;
+            this.comboBoxProducttype.Items.AddRange(new object[] {
+            "433"});
+            this.comboBoxProducttype.Location = new System.Drawing.Point(696, 37);
+            this.comboBoxProducttype.Name = "comboBoxProducttype";
+            this.comboBoxProducttype.Size = new System.Drawing.Size(56, 27);
+            this.comboBoxProducttype.TabIndex = 24;
+            // 
+            // comboBoxColorid
+            // 
+            this.comboBoxColorid.AutoCompleteCustomSource.AddRange(new string[] {
+            "1",
+            "2",
+            "3",
+            "4",
+            "5",
+            "6",
+            "7"});
+            this.comboBoxColorid.FormattingEnabled = true;
+            this.comboBoxColorid.Items.AddRange(new object[] {
+            "1",
+            "2",
+            "3",
+            "4",
+            "5",
+            "6",
+            "7"});
+            this.comboBoxColorid.Location = new System.Drawing.Point(253, 37);
+            this.comboBoxColorid.Name = "comboBoxColorid";
+            this.comboBoxColorid.Size = new System.Drawing.Size(56, 27);
+            this.comboBoxColorid.TabIndex = 23;
+            // 
+            // comboBoxModeid
+            // 
+            this.comboBoxModeid.AutoCompleteCustomSource.AddRange(new string[] {
+            "1",
+            "2"});
+            this.comboBoxModeid.FormattingEnabled = true;
+            this.comboBoxModeid.Items.AddRange(new object[] {
+            "5"});
+            this.comboBoxModeid.Location = new System.Drawing.Point(543, 37);
+            this.comboBoxModeid.Name = "comboBoxModeid";
+            this.comboBoxModeid.Size = new System.Drawing.Size(56, 27);
+            this.comboBoxModeid.TabIndex = 22;
+            // 
+            // comboBoxProductid
+            // 
+            this.comboBoxProductid.AutoCompleteCustomSource.AddRange(new string[] {
+            "1",
+            "2"});
+            this.comboBoxProductid.FormattingEnabled = true;
+            this.comboBoxProductid.Items.AddRange(new object[] {
+            "201"});
+            this.comboBoxProductid.Location = new System.Drawing.Point(398, 37);
+            this.comboBoxProductid.Name = "comboBoxProductid";
+            this.comboBoxProductid.Size = new System.Drawing.Size(56, 27);
+            this.comboBoxProductid.TabIndex = 21;
+            // 
+            // comboBoxFactoryid
+            // 
+            this.comboBoxFactoryid.AutoCompleteCustomSource.AddRange(new string[] {
+            "1",
+            "2"});
+            this.comboBoxFactoryid.FormattingEnabled = true;
+            this.comboBoxFactoryid.Items.AddRange(new object[] {
+            "1",
+            "2"});
+            this.comboBoxFactoryid.Location = new System.Drawing.Point(108, 37);
+            this.comboBoxFactoryid.Name = "comboBoxFactoryid";
+            this.comboBoxFactoryid.Size = new System.Drawing.Size(56, 27);
+            this.comboBoxFactoryid.TabIndex = 20;
+            // 
+            // label96
+            // 
+            this.label96.AutoSize = true;
+            this.label96.Location = new System.Drawing.Point(605, 40);
+            this.label96.Name = "label96";
+            this.label96.Size = new System.Drawing.Size(85, 19);
+            this.label96.TabIndex = 19;
+            this.label96.Text = "产品类型";
+            // 
+            // label79
+            // 
+            this.label79.AutoSize = true;
+            this.label79.Location = new System.Drawing.Point(170, 40);
+            this.label79.Name = "label79";
+            this.label79.Size = new System.Drawing.Size(77, 19);
+            this.label79.TabIndex = 18;
+            this.label79.Text = "颜色 ID";
+            // 
+            // label76
+            // 
+            this.label76.AutoSize = true;
+            this.label76.Location = new System.Drawing.Point(460, 40);
+            this.label76.Name = "label76";
+            this.label76.Size = new System.Drawing.Size(77, 19);
+            this.label76.TabIndex = 17;
+            this.label76.Text = "型号 ID";
+            // 
+            // label64
+            // 
+            this.label64.AutoSize = true;
+            this.label64.Location = new System.Drawing.Point(315, 40);
+            this.label64.Name = "label64";
+            this.label64.Size = new System.Drawing.Size(77, 19);
+            this.label64.TabIndex = 16;
+            this.label64.Text = "产品 ID";
+            // 
+            // label62
+            // 
+            this.label62.AutoSize = true;
+            this.label62.Location = new System.Drawing.Point(25, 40);
+            this.label62.Name = "label62";
+            this.label62.Size = new System.Drawing.Size(77, 19);
+            this.label62.TabIndex = 15;
+            this.label62.Text = "工厂 ID";
             // 
             // groupBox15
             // 
@@ -648,6 +880,23 @@
             this.BtnNextStation.UseVisualStyleBackColor = true;
             this.BtnNextStation.Click += new System.EventHandler(this.BtnNextStation_Click);
             // 
+            // comboBoxTagNumber
+            // 
+            this.comboBoxTagNumber.FormattingEnabled = true;
+            this.comboBoxTagNumber.Items.AddRange(new object[] {
+            "T010",
+            "T020",
+            "T030",
+            "T040",
+            "T050",
+            "T060",
+            "T070",
+            "T080"});
+            this.comboBoxTagNumber.Location = new System.Drawing.Point(154, 35);
+            this.comboBoxTagNumber.Name = "comboBoxTagNumber";
+            this.comboBoxTagNumber.Size = new System.Drawing.Size(104, 27);
+            this.comboBoxTagNumber.TabIndex = 5;
+            // 
             // checkBoxWriteNextWIFI
             // 
             this.checkBoxWriteNextWIFI.AutoSize = true;
@@ -664,6 +913,15 @@
             this.textBoxNextWIFIPWD.Name = "textBoxNextWIFIPWD";
             this.textBoxNextWIFIPWD.Size = new System.Drawing.Size(252, 29);
             this.textBoxNextWIFIPWD.TabIndex = 39;
+            // 
+            // label11
+            // 
+            this.label11.AutoSize = true;
+            this.label11.Location = new System.Drawing.Point(20, 38);
+            this.label11.Name = "label11";
+            this.label11.Size = new System.Drawing.Size(123, 19);
+            this.label11.TabIndex = 2;
+            this.label11.Text = "当前工序号：";
             // 
             // comboBoxNextTagNumber
             // 
@@ -1195,6 +1453,27 @@
             this.groupBox8.TabStop = false;
             this.groupBox8.Text = "运行参数";
             // 
+            // comboBoxStage
+            // 
+            this.comboBoxStage.FormattingEnabled = true;
+            this.comboBoxStage.Items.AddRange(new object[] {
+            "MP",
+            "PVT",
+            "DVT"});
+            this.comboBoxStage.Location = new System.Drawing.Point(116, 123);
+            this.comboBoxStage.Name = "comboBoxStage";
+            this.comboBoxStage.Size = new System.Drawing.Size(128, 27);
+            this.comboBoxStage.TabIndex = 11;
+            // 
+            // label34
+            // 
+            this.label34.AutoSize = true;
+            this.label34.Location = new System.Drawing.Point(6, 126);
+            this.label34.Name = "label34";
+            this.label34.Size = new System.Drawing.Size(104, 19);
+            this.label34.TabIndex = 10;
+            this.label34.Text = "测试阶段：";
+            // 
             // BtnRunParam
             // 
             this.BtnRunParam.Location = new System.Drawing.Point(154, 172);
@@ -1204,23 +1483,6 @@
             this.BtnRunParam.Text = "保存";
             this.BtnRunParam.UseVisualStyleBackColor = true;
             this.BtnRunParam.Click += new System.EventHandler(this.BtnRunParam_Click);
-            // 
-            // comboBoxTagNumber
-            // 
-            this.comboBoxTagNumber.FormattingEnabled = true;
-            this.comboBoxTagNumber.Items.AddRange(new object[] {
-            "T010",
-            "T020",
-            "T030",
-            "T040",
-            "T050",
-            "T060",
-            "T070",
-            "T080"});
-            this.comboBoxTagNumber.Location = new System.Drawing.Point(154, 35);
-            this.comboBoxTagNumber.Name = "comboBoxTagNumber";
-            this.comboBoxTagNumber.Size = new System.Drawing.Size(104, 27);
-            this.comboBoxTagNumber.TabIndex = 5;
             // 
             // comboBoxTestMode
             // 
@@ -1240,15 +1502,6 @@
             this.comboBoxSerialPort.Name = "comboBoxSerialPort";
             this.comboBoxSerialPort.Size = new System.Drawing.Size(104, 27);
             this.comboBoxSerialPort.TabIndex = 3;
-            // 
-            // label11
-            // 
-            this.label11.AutoSize = true;
-            this.label11.Location = new System.Drawing.Point(20, 38);
-            this.label11.Name = "label11";
-            this.label11.Size = new System.Drawing.Size(123, 19);
-            this.label11.TabIndex = 2;
-            this.label11.Text = "当前工序号：";
             // 
             // label10
             // 
@@ -1505,7 +1758,7 @@
             this.toolStrip2.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripButton1,
             this.toolStripButton2});
-            this.toolStrip2.Location = new System.Drawing.Point(0, 656);
+            this.toolStrip2.Location = new System.Drawing.Point(0, 732);
             this.toolStrip2.Name = "toolStrip2";
             this.toolStrip2.Size = new System.Drawing.Size(1340, 25);
             this.toolStrip2.TabIndex = 2;
@@ -1538,221 +1791,49 @@
             // 
             this.timerTestTime.Tick += new System.EventHandler(this.timerTestTime_Tick);
             // 
-            // groupBox16
+            // groupBox18
             // 
-            this.groupBox16.Controls.Add(this.textBoxCloudPassword);
-            this.groupBox16.Controls.Add(this.label33);
-            this.groupBox16.Controls.Add(this.textBoxCloudUsername);
-            this.groupBox16.Controls.Add(this.label32);
-            this.groupBox16.Controls.Add(this.BtnPanelInfo);
-            this.groupBox16.Controls.Add(this.comboBoxProducttype);
-            this.groupBox16.Controls.Add(this.comboBoxColorid);
-            this.groupBox16.Controls.Add(this.comboBoxModeid);
-            this.groupBox16.Controls.Add(this.comboBoxProductid);
-            this.groupBox16.Controls.Add(this.comboBoxFactoryid);
-            this.groupBox16.Controls.Add(this.label96);
-            this.groupBox16.Controls.Add(this.label79);
-            this.groupBox16.Controls.Add(this.label76);
-            this.groupBox16.Controls.Add(this.label64);
-            this.groupBox16.Controls.Add(this.label62);
-            this.groupBox16.Location = new System.Drawing.Point(4, 498);
-            this.groupBox16.Name = "groupBox16";
-            this.groupBox16.Size = new System.Drawing.Size(1301, 102);
-            this.groupBox16.TabIndex = 9;
-            this.groupBox16.TabStop = false;
-            this.groupBox16.Text = "产品信息";
+            this.groupBox18.Controls.Add(this.BtnImageServer);
+            this.groupBox18.Controls.Add(this.textBoxImageServer);
+            this.groupBox18.Controls.Add(this.label35);
+            this.groupBox18.Location = new System.Drawing.Point(4, 607);
+            this.groupBox18.Name = "groupBox18";
+            this.groupBox18.Size = new System.Drawing.Size(623, 72);
+            this.groupBox18.TabIndex = 11;
+            this.groupBox18.TabStop = false;
+            this.groupBox18.Text = "RTOS镜头测试";
             // 
-            // comboBoxProducttype
+            // textBoxImageServer
             // 
-            this.comboBoxProducttype.AutoCompleteCustomSource.AddRange(new string[] {
-            "1",
-            "2"});
-            this.comboBoxProducttype.FormattingEnabled = true;
-            this.comboBoxProducttype.Items.AddRange(new object[] {
-            "433"});
-            this.comboBoxProducttype.Location = new System.Drawing.Point(696, 37);
-            this.comboBoxProducttype.Name = "comboBoxProducttype";
-            this.comboBoxProducttype.Size = new System.Drawing.Size(56, 27);
-            this.comboBoxProducttype.TabIndex = 24;
+            this.textBoxImageServer.Location = new System.Drawing.Point(141, 37);
+            this.textBoxImageServer.Name = "textBoxImageServer";
+            this.textBoxImageServer.Size = new System.Drawing.Size(196, 29);
+            this.textBoxImageServer.TabIndex = 37;
             // 
-            // comboBoxColorid
+            // label35
             // 
-            this.comboBoxColorid.AutoCompleteCustomSource.AddRange(new string[] {
-            "1",
-            "2",
-            "3",
-            "4",
-            "5",
-            "6",
-            "7"});
-            this.comboBoxColorid.FormattingEnabled = true;
-            this.comboBoxColorid.Items.AddRange(new object[] {
-            "1",
-            "2",
-            "3",
-            "4",
-            "5",
-            "6",
-            "7"});
-            this.comboBoxColorid.Location = new System.Drawing.Point(253, 37);
-            this.comboBoxColorid.Name = "comboBoxColorid";
-            this.comboBoxColorid.Size = new System.Drawing.Size(56, 27);
-            this.comboBoxColorid.TabIndex = 23;
+            this.label35.AutoSize = true;
+            this.label35.Location = new System.Drawing.Point(21, 40);
+            this.label35.Name = "label35";
+            this.label35.Size = new System.Drawing.Size(114, 19);
+            this.label35.TabIndex = 36;
+            this.label35.Text = "图片服务器:";
             // 
-            // comboBoxModeid
+            // BtnImageServer
             // 
-            this.comboBoxModeid.AutoCompleteCustomSource.AddRange(new string[] {
-            "1",
-            "2"});
-            this.comboBoxModeid.FormattingEnabled = true;
-            this.comboBoxModeid.Items.AddRange(new object[] {
-            "5"});
-            this.comboBoxModeid.Location = new System.Drawing.Point(543, 37);
-            this.comboBoxModeid.Name = "comboBoxModeid";
-            this.comboBoxModeid.Size = new System.Drawing.Size(56, 27);
-            this.comboBoxModeid.TabIndex = 22;
-            // 
-            // comboBoxProductid
-            // 
-            this.comboBoxProductid.AutoCompleteCustomSource.AddRange(new string[] {
-            "1",
-            "2"});
-            this.comboBoxProductid.FormattingEnabled = true;
-            this.comboBoxProductid.Items.AddRange(new object[] {
-            "201"});
-            this.comboBoxProductid.Location = new System.Drawing.Point(398, 37);
-            this.comboBoxProductid.Name = "comboBoxProductid";
-            this.comboBoxProductid.Size = new System.Drawing.Size(56, 27);
-            this.comboBoxProductid.TabIndex = 21;
-            // 
-            // comboBoxFactoryid
-            // 
-            this.comboBoxFactoryid.AutoCompleteCustomSource.AddRange(new string[] {
-            "1",
-            "2"});
-            this.comboBoxFactoryid.FormattingEnabled = true;
-            this.comboBoxFactoryid.Items.AddRange(new object[] {
-            "1",
-            "2"});
-            this.comboBoxFactoryid.Location = new System.Drawing.Point(108, 37);
-            this.comboBoxFactoryid.Name = "comboBoxFactoryid";
-            this.comboBoxFactoryid.Size = new System.Drawing.Size(56, 27);
-            this.comboBoxFactoryid.TabIndex = 20;
-            // 
-            // label96
-            // 
-            this.label96.AutoSize = true;
-            this.label96.Location = new System.Drawing.Point(605, 40);
-            this.label96.Name = "label96";
-            this.label96.Size = new System.Drawing.Size(85, 19);
-            this.label96.TabIndex = 19;
-            this.label96.Text = "产品类型";
-            // 
-            // label79
-            // 
-            this.label79.AutoSize = true;
-            this.label79.Location = new System.Drawing.Point(170, 40);
-            this.label79.Name = "label79";
-            this.label79.Size = new System.Drawing.Size(77, 19);
-            this.label79.TabIndex = 18;
-            this.label79.Text = "颜色 ID";
-            // 
-            // label76
-            // 
-            this.label76.AutoSize = true;
-            this.label76.Location = new System.Drawing.Point(460, 40);
-            this.label76.Name = "label76";
-            this.label76.Size = new System.Drawing.Size(77, 19);
-            this.label76.TabIndex = 17;
-            this.label76.Text = "型号 ID";
-            // 
-            // label64
-            // 
-            this.label64.AutoSize = true;
-            this.label64.Location = new System.Drawing.Point(315, 40);
-            this.label64.Name = "label64";
-            this.label64.Size = new System.Drawing.Size(77, 19);
-            this.label64.TabIndex = 16;
-            this.label64.Text = "产品 ID";
-            // 
-            // label62
-            // 
-            this.label62.AutoSize = true;
-            this.label62.Location = new System.Drawing.Point(25, 40);
-            this.label62.Name = "label62";
-            this.label62.Size = new System.Drawing.Size(77, 19);
-            this.label62.TabIndex = 15;
-            this.label62.Text = "工厂 ID";
-            // 
-            // BtnPanelInfo
-            // 
-            this.BtnPanelInfo.Location = new System.Drawing.Point(1198, 34);
-            this.BtnPanelInfo.Name = "BtnPanelInfo";
-            this.BtnPanelInfo.Size = new System.Drawing.Size(85, 31);
-            this.BtnPanelInfo.TabIndex = 41;
-            this.BtnPanelInfo.Text = "保存";
-            this.BtnPanelInfo.UseVisualStyleBackColor = true;
-            this.BtnPanelInfo.Click += new System.EventHandler(this.BtnPanelInfo_Click);
-            // 
-            // textBoxCloudUsername
-            // 
-            this.textBoxCloudUsername.Location = new System.Drawing.Point(946, 22);
-            this.textBoxCloudUsername.Name = "textBoxCloudUsername";
-            this.textBoxCloudUsername.Size = new System.Drawing.Size(196, 29);
-            this.textBoxCloudUsername.TabIndex = 37;
-            // 
-            // label32
-            // 
-            this.label32.AutoSize = true;
-            this.label32.Location = new System.Drawing.Point(781, 25);
-            this.label32.Name = "label32";
-            this.label32.Size = new System.Drawing.Size(159, 19);
-            this.label32.TabIndex = 36;
-            this.label32.Text = "cloud_username:";
-            // 
-            // textBoxCloudPassword
-            // 
-            this.textBoxCloudPassword.Location = new System.Drawing.Point(946, 57);
-            this.textBoxCloudPassword.Name = "textBoxCloudPassword";
-            this.textBoxCloudPassword.PasswordChar = '*';
-            this.textBoxCloudPassword.Size = new System.Drawing.Size(196, 29);
-            this.textBoxCloudPassword.TabIndex = 43;
-            // 
-            // label33
-            // 
-            this.label33.AutoSize = true;
-            this.label33.Location = new System.Drawing.Point(781, 60);
-            this.label33.Name = "label33";
-            this.label33.Size = new System.Drawing.Size(159, 19);
-            this.label33.TabIndex = 42;
-            this.label33.Text = "cloud_password:";
-            // 
-            // comboBoxStage
-            // 
-            this.comboBoxStage.FormattingEnabled = true;
-            this.comboBoxStage.Items.AddRange(new object[] {
-            "MP",
-            "PVT",
-            "DVT"});
-            this.comboBoxStage.Location = new System.Drawing.Point(116, 123);
-            this.comboBoxStage.Name = "comboBoxStage";
-            this.comboBoxStage.Size = new System.Drawing.Size(128, 27);
-            this.comboBoxStage.TabIndex = 11;
-            // 
-            // label34
-            // 
-            this.label34.AutoSize = true;
-            this.label34.Location = new System.Drawing.Point(6, 126);
-            this.label34.Name = "label34";
-            this.label34.Size = new System.Drawing.Size(104, 19);
-            this.label34.TabIndex = 10;
-            this.label34.Text = "测试阶段：";
+            this.BtnImageServer.Location = new System.Drawing.Point(514, 34);
+            this.BtnImageServer.Name = "BtnImageServer";
+            this.BtnImageServer.Size = new System.Drawing.Size(85, 31);
+            this.BtnImageServer.TabIndex = 36;
+            this.BtnImageServer.Text = "保存";
+            this.BtnImageServer.UseVisualStyleBackColor = true;
+            this.BtnImageServer.Click += new System.EventHandler(this.BtnImageServer_Click);
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(10F, 19F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1340, 681);
+            this.ClientSize = new System.Drawing.Size(1340, 757);
             this.Controls.Add(this.toolStrip2);
             this.Controls.Add(this.tabControl1);
             this.Font = new System.Drawing.Font("宋体", 14F);
@@ -1786,6 +1867,10 @@
             this.panel1.PerformLayout();
             this.tabPageSetting.ResumeLayout(false);
             this.panel4.ResumeLayout(false);
+            this.groupBox17.ResumeLayout(false);
+            this.groupBox17.PerformLayout();
+            this.groupBox16.ResumeLayout(false);
+            this.groupBox16.PerformLayout();
             this.groupBox15.ResumeLayout(false);
             this.groupBox15.PerformLayout();
             this.groupBox14.ResumeLayout(false);
@@ -1821,8 +1906,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewTestSpec)).EndInit();
             this.toolStrip2.ResumeLayout(false);
             this.toolStrip2.PerformLayout();
-            this.groupBox16.ResumeLayout(false);
-            this.groupBox16.PerformLayout();
+            this.groupBox18.ResumeLayout(false);
+            this.groupBox18.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -1972,6 +2057,13 @@
         private System.Windows.Forms.Label label33;
         private System.Windows.Forms.ComboBox comboBoxStage;
         private System.Windows.Forms.Label label34;
+        private System.Windows.Forms.GroupBox groupBox17;
+        private System.Windows.Forms.CheckBox checkBoxNGContinue;
+        private System.Windows.Forms.Button BtnNGcontinue;
+        private System.Windows.Forms.GroupBox groupBox18;
+        private System.Windows.Forms.TextBox textBoxImageServer;
+        private System.Windows.Forms.Label label35;
+        private System.Windows.Forms.Button BtnImageServer;
     }
 }
 
