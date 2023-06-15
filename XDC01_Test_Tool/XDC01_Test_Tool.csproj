@@ -102,9 +102,18 @@
       <Project>{d740c631-0779-4666-9a05-03e340006933}</Project>
       <Name>LogLib</Name>
     </ProjectReference>
+    <ProjectReference Include="..\PCCommand\PCCommand.csproj">
+      <Project>{fb4826b4-8b1d-4106-ae13-4fd3451205c0}</Project>
+      <Name>PCCommand</Name>
+      <Private>False</Private>
+    </ProjectReference>
     <ProjectReference Include="..\TestDataLib\TestDataLib.csproj">
       <Project>{d3ff1b65-1c78-438c-930f-3a9c56bee33a}</Project>
       <Name>TestDataLib</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\VLCForm\VLCForm.csproj">
+      <Project>{61006077-a4f0-44a2-88ac-a9a2c162d113}</Project>
+      <Name>VLCForm</Name>
     </ProjectReference>
     <ProjectReference Include="..\XDC01Debug\XDC01Debug.csproj">
       <Project>{5ea392e2-256e-4d4a-9907-929e748c9127}</Project>

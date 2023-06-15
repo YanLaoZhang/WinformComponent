@@ -1,0 +1,171 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{5DFB16E3-31E3-4E63-A405-3EA7C23581FD}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <RootNamespace>XDC01_TestAction</RootNamespace>
+    <AssemblyName>XDC01_TestAction</AssemblyName>
+    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <Deterministic>true</Deterministic>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="AxInterop.WMPLib">
+      <HintPath>..\..\..\..\CommonDLL\AxInterop.WMPLib.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="CloudAPILib">
+      <HintPath>..\CloudAPILib\bin\Debug\CloudAPILib.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Interop.WMPLib">
+      <HintPath>..\..\..\..\CommonDLL\Interop.WMPLib.dll</HintPath>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </Reference>
+    <Reference Include="MySql.Data">
+      <HintPath>..\..\..\..\CommonDLL\MySql.Data6.7.9.0Lib\net45\MySql.Data.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Deployment" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+    <Reference Include="XDC01Action">
+      <HintPath>..\XDC01Action\bin\Debug\XDC01Action.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Form1.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Form1.Designer.cs">
+      <DependentUpon>Form1.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Model.cs" />
+    <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="Form1.resx">
+      <DependentUpon>Form1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\ConfigFileLib\ConfigFileLib.csproj">
+      <Project>{9c361d8a-af72-4539-a517-4a611ef93060}</Project>
+      <Name>ConfigFileLib</Name>
+      <Private>False</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\DSA700Lib\DSA700Lib.csproj">
+      <Project>{608cf3cf-7b59-4d34-b29b-931d7f8df237}</Project>
+      <Name>DSA700Lib</Name>
+      <Private>False</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\LogLib\LogLib.csproj">
+      <Project>{d740c631-0779-4666-9a05-03e340006933}</Project>
+      <Name>LogLib</Name>
+      <Private>False</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\MyCustomDialog\MyCustomDialog.csproj">
+      <Project>{763c020a-2844-4e6d-8871-902b1d280796}</Project>
+      <Name>MyCustomDialog</Name>
+      <Private>False</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\PCCommand\PCCommand.csproj">
+      <Project>{FB4826B4-8B1D-4106-AE13-4FD3451205C0}</Project>
+      <Name>PCCommand</Name>
+      <Private>False</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\RelaySerial\RelaySerial.csproj">
+      <Project>{5d2b620e-4c99-46c2-9a3e-5fe009e707df}</Project>
+      <Name>RelaySerial</Name>
+      <Private>False</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\TDMSerial\TDMSerial.csproj">
+      <Project>{4e7af621-2b50-4884-9b7a-4e356ae6251a}</Project>
+      <Name>TDMSerial</Name>
+      <Private>False</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\TestDataLib\TestDataLib.csproj">
+      <Project>{d3ff1b65-1c78-438c-930f-3a9c56bee33a}</Project>
+      <Name>TestDataLib</Name>
+      <Private>False</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\VLCForm\VLCForm.csproj">
+      <Project>{61006077-A4F0-44A2-88AC-A9A2C162D113}</Project>
+      <Name>VLCForm</Name>
+      <Private>False</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\XDC01Debug\XDC01Debug.csproj">
+      <Project>{5ea392e2-256e-4d4a-9907-929e748c9127}</Project>
+      <Name>XDC01Debug</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\XDC01Serial\XDC01Serial.csproj">
+      <Project>{e2180cc6-5c5b-4acb-9372-3e79f55b6370}</Project>
+      <Name>XDC01Serial</Name>
+      <Private>False</Private>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <COMReference Include="WMPLib">
+      <Guid>{6BF52A50-394A-11D3-B153-00C04F79FAA6}</Guid>
+      <VersionMajor>1</VersionMajor>
+      <VersionMinor>0</VersionMinor>
+      <Lcid>0</Lcid>
+      <WrapperTool>tlbimp</WrapperTool>
+      <Isolated>False</Isolated>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </COMReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>

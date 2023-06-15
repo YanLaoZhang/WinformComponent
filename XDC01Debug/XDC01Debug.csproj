@@ -47,14 +47,17 @@
     <Reference Include="Vlc.DotNet.Core, Version=3.1.0.0, Culture=neutral, PublicKeyToken=84529da31f4eb963, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>bin\Debug\Vlc.DotNet.Core.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="Vlc.DotNet.Core.Interops, Version=3.1.0.0, Culture=neutral, PublicKeyToken=84529da31f4eb963, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>bin\Debug\Vlc.DotNet.Core.Interops.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="Vlc.DotNet.Forms, Version=3.1.0.0, Culture=neutral, PublicKeyToken=84529da31f4eb963, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>bin\Debug\Vlc.DotNet.Forms.dll</HintPath>
+      <Private>False</Private>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -104,10 +107,12 @@
     <ProjectReference Include="..\PCCommand\PCCommand.csproj">
       <Project>{fb4826b4-8b1d-4106-ae13-4fd3451205c0}</Project>
       <Name>PCCommand</Name>
+      <Private>False</Private>
     </ProjectReference>
     <ProjectReference Include="..\XDC01Serial\XDC01Serial.csproj">
       <Project>{e2180cc6-5c5b-4acb-9372-3e79f55b6370}</Project>
       <Name>XDC01Serial</Name>
+      <Private>False</Private>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

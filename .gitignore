@@ -15,6 +15,14 @@
 /ConfigFileLib/obj
 /PCCommand/obj
 /TestDataLib/obj
+/DSA700Lib/obj
+/MyCustomDialog/obj
+/RelaySerial/obj
+/TDMSerial/obj
+/VLCForm/obj
+/XDC01_TestAction/obj
+/XDC01Action/obj
+/CloudAPILib/obj
 *.log
 *.txt
 

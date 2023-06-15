@@ -40,7 +40,7 @@ namespace XDC01SerialLib
         System.IO.Ports.SerialPort _serialPort;
         string _portName;
         System.Windows.Forms.RichTextBox _richTextBox;
-        string str_Receive_skybell = "";
+        public string str_Receive_skybell = "";
 
         // 结束字符串
         const string ENDFLAG_1 = "info print end";
@@ -1059,6 +1059,18 @@ namespace XDC01SerialLib
                     str_error_log = $"发送恢复出厂设置指令[{CMD_RESET_FACTORY}]失败";
                     return false;
                 }
+                Delay(5000);
+                string CMD_CHECK_FACTORY = "ls /mnt/diskc/apSwitch.sh";
+                if (SendCMDToXDC01(CMD_CHECK_FACTORY, 5000, true, ref str_ret_value, ENDFLAG_2) == false)
+                {
+                    str_error_log = $"发送检查恢复出厂是否成功指令[{CMD_CHECK_FACTORY}]失败";
+                    return false;
+                }
+                if (str_ret_value.Contains("/mnt/diskc/apSwitch.sh") && str_ret_value.Contains("No such file or directory"))
+                {
+                    str_error_log = str_ret_value.Replace("\r", "").Replace("\n", "");
+                    return false;
+                }
                 return true;
             }
             catch (Exception ee)
@@ -1231,7 +1243,7 @@ namespace XDC01SerialLib
             {
                 string CMD_TEST_RECORD = $"mic_test-openwrt.arm /tmp/audio_cap.wav";
                 string str_ret_value = "";
-                if (SendCMDToXDC01(CMD_TEST_RECORD, 5000, true, ref str_ret_value, "}") == false)
+                if (SendCMDToXDC01(CMD_TEST_RECORD, 30000, true, ref str_ret_value, "{\"max_abs\":") == false)
                 {
                     str_error_log = $"发送测试录音文件指令[{CMD_TEST_RECORD}]失败";
                     return false;
@@ -1428,6 +1440,55 @@ namespace XDC01SerialLib
             catch (Exception ee)
             {
                 str_error_log = $"TestWifiDownThroughput发生异常：[{ee.Message}]";
+                return false;
+            }
+        }
+
+        public bool TestPingDelay(ref string str_rtt, string str_ip, ref string str_error_log, int int_count = 10)
+        {
+            try
+            {
+                string CMD_PING = $"ping -c {int_count} {str_ip}";
+                string str_ret_value = "";
+                if (SendCMDToXDC01(CMD_PING, int_count*1000+1000, true, ref str_ret_value, ENDFLAG_2) == false)
+                {
+                    str_error_log = $"发送ping指令[{CMD_PING}]失败";
+                    return false;
+                }
+                /*
+                 --- 127.0.0.1 ping statistics ---
+                10 packets transmitted, 10 packets received, 0% packet loss
+                round-trip min/avg/max = 0.236/0.252/0.297 ms
+                 */
+                string[] striparr = str_ret_value.Split(new string[1] { "\r\n" }, StringSplitOptions.None);
+                string str_rtt_temp = "";
+                for (int i = 0; i < striparr.Length; i++)
+                {
+                    if (striparr[i].Contains("round-trip"))
+                    {
+                        str_rtt_temp = striparr[i];
+                        break;
+                    }
+                }
+                str_rtt_temp = str_rtt_temp.Replace("round-trip min/avg/max = ", "");
+
+                int startIndex = str_rtt_temp.IndexOf('/') + 1; // 加1是为了跳过第一个斜杠
+                int endIndex = str_rtt_temp.IndexOf('/', startIndex);
+
+                if (startIndex >= 0 && endIndex > startIndex)
+                {
+                    str_rtt = str_rtt_temp.Substring(startIndex, endIndex - startIndex);
+                    return true;
+                }
+                else
+                {
+                    str_error_log = $"解析[{str_rtt_temp}]错误";
+                    return false;
+                }
+            }
+            catch (Exception ee)
+            {
+                str_error_log = $"TestPingDelay发生异常：[{ee.Message}]";
                 return false;
             }
         }

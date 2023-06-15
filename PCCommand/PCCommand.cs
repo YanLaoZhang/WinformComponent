@@ -126,7 +126,6 @@ namespace PCCommandLib
             }
         }
 
-
         public bool CheckIperf3(bool bool_close_iperf3)
         {
             try
@@ -191,6 +190,34 @@ namespace PCCommandLib
             }
 
             return all;
+        }
+
+        /// <summary>
+        /// PC 播放/停止播放 音频文件
+        /// </summary>
+        /// <param name="play_stop"></param>
+        /// <returns></returns>
+        public bool PlayWavFile(AxWMPLib.AxWindowsMediaPlayer axWindowsMediaPlayer1, string wav_file, bool play_stop)
+        {
+            try
+            {
+                if (play_stop)
+                {
+                    //axWindowsMediaPlayer1.settings.volume = 100;//int.Parse(_set_param.str_wav_volume);
+                    //axWindowsMediaPlayer1.settings.playCount = 1;// int.Parse(_set_param.str_wav_paly_count);
+                    //axWindowsMediaPlayer1.URL = wav_file;
+                    axWindowsMediaPlayer1.Ctlcontrols.play();
+                }
+                if (play_stop == false)
+                {
+                    axWindowsMediaPlayer1.Ctlcontrols.stop();
+                }
+                return true;
+            }
+            catch (Exception ee)
+            {
+                return false;
+            }
         }
 
     }

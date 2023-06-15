@@ -1,0 +1,103 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{06CEF54B-138F-4583-9FCF-F1EC2E330864}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <RootNamespace>XDC01Action</RootNamespace>
+    <AssemblyName>XDC01Action</AssemblyName>
+    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <Deterministic>true</Deterministic>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject />
+  </PropertyGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="TestAction.cs" />
+    <Compile Include="TestItem.cs" />
+    <Compile Include="TestSpecification.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="AxInterop.WMPLib">
+      <HintPath>..\XDC01_TestAction\bin\Debug\libs\AxInterop.WMPLib.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="DSA700Lib">
+      <HintPath>..\XDC01_TestAction\bin\Debug\libs\DSA700Lib.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Interop.WMPLib">
+      <HintPath>..\XDC01_TestAction\bin\Debug\libs\Interop.WMPLib.dll</HintPath>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </Reference>
+    <Reference Include="LogLib">
+      <HintPath>..\XDC01_TestAction\bin\Debug\libs\LogLib.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="MyCustomDialog">
+      <HintPath>..\XDC01_TestAction\bin\Debug\libs\MyCustomDialog.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="MySql.Data">
+      <HintPath>..\XDC01_TestAction\bin\Debug\libs\MySql.Data.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="PCCommand">
+      <HintPath>..\XDC01_TestAction\bin\Debug\libs\PCCommand.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="RelaySerial">
+      <HintPath>..\XDC01_TestAction\bin\Debug\libs\RelaySerial.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="TDMSerial">
+      <HintPath>..\XDC01_TestAction\bin\Debug\libs\TDMSerial.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="VLCForm">
+      <HintPath>..\XDC01_TestAction\bin\Debug\libs\VLCForm.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="XDC01Serial">
+      <HintPath>..\XDC01_TestAction\bin\Debug\libs\XDC01Serial.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\CloudAPILib\CloudAPILib.csproj">
+      <Project>{63ECD551-48BC-4EFA-A2FC-A229D36CC2ED}</Project>
+      <Name>CloudAPILib</Name>
+      <Private>False</Private>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>
