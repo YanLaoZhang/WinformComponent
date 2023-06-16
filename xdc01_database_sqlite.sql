@@ -18,7 +18,7 @@ CREATE TABLE t030_product_test_report (
     write_tagnumber    VARCHAR (30)  DEFAULT '',
     ping_rtt           FLOAT         DEFAULT NULL,
     mic_auto           VARCHAR (16)  DEFAULT '',
-    mic_data           VARCHAR (30)  DEFAULT '',
+    mic_data           VARCHAR (50)  DEFAULT '',
     mic_manual         VARCHAR (16)  DEFAULT '',
     led_color          VARCHAR (16)  DEFAULT '',
     motion             VARCHAR (16)  DEFAULT '',

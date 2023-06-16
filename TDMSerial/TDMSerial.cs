@@ -87,6 +87,10 @@ namespace TDMSerialLib
         {
             try
             {
+                if(_serialPort.IsOpen)
+                {
+                    _serialPort.Close();
+                }
                 _serialPort.PortName = _portName;
                 _serialPort.BaudRate = 115200;
                 _serialPort.DataBits = 8;

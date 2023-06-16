@@ -24,6 +24,7 @@
 /XDC01Action/obj
 /CloudAPILib/obj
 /CameraRTOSLib/obj
+/FLUKE8808ALib/obj
 *.log
 *.txt
 

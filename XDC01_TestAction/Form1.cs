@@ -1,9 +1,11 @@
 ﻿using CameraRTOSLib;
 using CloudAPILib;
 using ConfigFileLib;
+using FLUKE8808ALib;
 using LogLib;
 using MySql.Data.MySqlClient;
 using PCCommandLib;
+using RelaySerialLib;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -16,6 +18,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using TDMSerialLib;
 using TestDataLib;
 using XDC01Action;
 using XDC01Debug;
@@ -126,6 +129,7 @@ namespace XDC01_TestAction
         public Form1()
         {
             InitializeComponent();
+            CheckForIllegalCrossThreadCalls = false;
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -207,6 +211,12 @@ namespace XDC01_TestAction
                     productType = ConfigFile.IniReadValue("cloud", "productType", Path_ini),
 
                     local_server_name = ConfigFile.IniReadValue("rtos", "local_server_name", Path_ini),
+
+                    charge_relay_index = ConfigFile.IniReadValue("voltage_current", "charge_relay_index", Path_ini),
+                    voltage_tdm_port = ConfigFile.IniReadValue("voltage_current", "voltage_tdm_port", Path_ini),
+                    current_tdm_port = ConfigFile.IniReadValue("voltage_current", "current_tdm_port", Path_ini),
+                    current_fluke_port = ConfigFile.IniReadValue("voltage_current", "current_fluke_port", Path_ini),
+                    relay_port = ConfigFile.IniReadValue("voltage_current", "relay_port", Path_ini),
                 };
             }
             catch (Exception ee)
@@ -388,11 +398,12 @@ namespace XDC01_TestAction
                     }
                 }
             }
-
+/*
             // ping网测试
             TestItem pingTest = testAction.CheckWiFi(serial, dataGridView1, logger, specMax, specMin, testParam);
             if(pingTest == null)
             {
+                model.str_ping_rtt = "-1";
                 logger.ShowLog($"Ping测试异常，无法进行后续测试");
                 if (testParam.ng_continue == "false")
                 {
@@ -612,6 +623,9 @@ namespace XDC01_TestAction
             List<TestItem> rf_tx = testAction.CheckRFTxTest(serial, dataGridView1, logger, specMax, specMin, specStandard, _DSA700, testParam);
             if (rf_tx == null)
             {
+                model.str_rf_tx_frenquency = "0";
+                model.str_rf_tx_power = "0";
+                model.str_rf_tx_power_revise = "0";
                 logger.ShowLog($"RF发送测试异常，无法进行后续测试");
                 if (testParam.ng_continue == "false")
                 {
@@ -715,7 +729,7 @@ namespace XDC01_TestAction
             else
             {
                 logger.ShowLog($"获取mac失败：[{str_error_log}], 无法向云端申请");
-            }
+            }*/
 
             // 复位键
             TestItem reset_btn = testAction.CheckResetButton(serial, dataGridView1, logger);
@@ -776,7 +790,7 @@ namespace XDC01_TestAction
                     }
                 }
             }
-
+/*
             // 写入下一站工序号
             TestItem writeTagnumber = testAction.WriteTagNumber(serial, dataGridView1, logger, testParam);
             if(writeTagnumber == null)
@@ -794,7 +808,7 @@ namespace XDC01_TestAction
                 {
                     model.str_ng_item += $"{writeTagnumber.NgItem},";
                 }
-            }
+            }*/
 
             // 保存数据库
             model.str_end_test_time = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
@@ -1216,37 +1230,228 @@ namespace XDC01_TestAction
         }
         #endregion
 
+        public void RunTestVolCur()
+        {
+            // 先获取运行参数
+            InitTestParam();
+            // 初始化测试规格
+            InitialTestSpec();
+
+            dataGridView1.Rows.Clear();
+            richTextBoxRunLog.Clear();
+
+            Model model = new Model
+            {
+                str_software_version = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString(),
+                str_spec_id = testParam.spec_id,
+                str_standard_id = testParam.standard_id,
+                str_fixture_id = "fixture1",
+                str_operator_id = "No.001",
+                str_start_test_time = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"),
+                str_stage_name = testParam.stage_name,
+                str_test_mode = testParam.test_mode,
+            };
+            string image_time = string.Format("{0:_HHmmss}", DateTime.Now);
+
+            TestAction testAction = new TestAction();
+
+            TDMSerial volTDMSerial = new TDMSerial(serialPortVolTDM, testParam.voltage_tdm_port);
+            TDMSerial curTDMSerial = new TDMSerial(serialPortCurTDM, testParam.current_tdm_port);
+            FlukeSerial flukeSerial = new FlukeSerial(serialPortFluke, testParam.current_fluke_port, richTextBoxFluke);
+            RelaySerial relaySerial = new RelaySerial(serialPortRelay, testParam.relay_port);
+            TestItem standbyCurrent = testAction.PCBAStandbyCurrentTest(flukeSerial, dataGridView1, logger, specMax, specMin);
+            if(standbyCurrent == null)
+            {
+                logger.ShowLog($"漏电流测试不通过，无法进行后续测试");
+                if (testParam.ng_continue == "false")
+                {
+                    return;
+                }
+            }
+            else
+            {
+                model.str_standby_current = standbyCurrent.Value.ToString();
+                if(standbyCurrent.Result == "FAIL")
+                {
+                    model.str_ng_item += $"{standbyCurrent.NgItem},";
+                }
+            }
+
+            TestItem chargeCurrent = testAction.PCBAChargeCurrentTest(flukeSerial, relaySerial, dataGridView1, logger, specMax, specMin, testParam);
+            if (chargeCurrent == null)
+            {
+                logger.ShowLog($"充电电流测试不通过，无法进行后续测试");
+                if (testParam.ng_continue == "false")
+                {
+                    return;
+                }
+            }
+            else
+            {
+                model.str_standby_current = chargeCurrent.Value.ToString();
+                if (chargeCurrent.Result == "FAIL")
+                {
+                    model.str_ng_item += $"{chargeCurrent.NgItem},";
+                }
+            }
+
+            // 电压测试
+            Task<List<TestItem>> voltageTask = new Task<List<TestItem>>(() => testAction.PCBAVoltageTest(relaySerial, volTDMSerial, dataGridView1, logger, specMax, specMin));
+            voltageTask.Start();
+
+            // 检查RN和工序号
+            List<TestItem> RNandTagnumber = testAction.CheckRNandTagname(serial, dataGridView1, logger, testParam, specStandard);
+
+            if (RNandTagnumber == null)
+            {
+                logger.ShowLog($"RN号或工序号检查不通过，无法进行后续测试");
+                if (testParam.ng_continue == "false")
+                {
+                    return;
+                }
+            }
+            else
+            {
+                foreach (TestItem item in RNandTagnumber)
+                {
+                    if (item.NgItem == "rn")
+                    {
+                        model.str_rn = item.StrVal;
+                    }
+                    if (item.NgItem == "tagnumber")
+                    {
+                        model.str_read_tagnumber = item.StrVal;
+                    }
+
+                    if (item.Result == "FAIL")
+                    {
+                        logger.ShowLog($"{item.Name}检查不通过，无法进行后续测试");
+                        return;
+                    }
+                }
+            }
+
+            // 工作电流测试
+            Task<TestItem> workCurrent = new Task<TestItem>(() => testAction.PCBAWorkCurrentTest(curTDMSerial, dataGridView1, logger, specMax, specMin));
+            workCurrent.Start();
+
+            // 等待电压测试任务结束
+            int startVol = Environment.TickCount;
+            while (!voltageTask.IsCompleted)
+            {
+                testAction.Delay(1000);
+                logger.ShowLog("等待电压测试任务结束...");
+            }
+            List<TestItem> voltage_result = voltageTask.Result;
+            if(voltage_result == null)
+            {
+                logger.ShowLog($"电压测试不通过，无法进行后续测试");
+                if (testParam.ng_continue == "false")
+                {
+                    return;
+                }
+            }
+            else
+            {
+                foreach (TestItem item in voltage_result)
+                {
+                    if (item.NgItem == "voltage_wifi")
+                    {
+                        model.str_voltage_wifi = item.Result;
+                    }
+                    if (item.NgItem == "voltage_vcc_core")
+                    {
+                        model.str_voltage_vcc_core = item.Result;
+                    }
+                    if (item.NgItem == "voltage_sensor1")
+                    {
+                        model.str_voltage_sensor1 = item.Result;
+                    }
+                    if (item.NgItem == "voltage_sensor2")
+                    {
+                        model.str_voltage_sensor2 = item.Result;
+                    }
+                    if (item.NgItem == "voltage_rtc")
+                    {
+                        model.str_voltage_rtc = item.Result;
+                    }
+                    if (item.NgItem == "voltage_vcc")
+                    {
+                        model.str_voltage_vcc = item.Result;
+                    }
+                    if (item.NgItem == "voltage_mcu")
+                    {
+                        model.str_voltage_mcu = item.Result;
+                    }
+                    if (item.NgItem == "voltage_ddr")
+                    {
+                        model.str_voltage_ddr = item.Result;
+                    }
+                    if (item.Result == "FAIL")
+                    {
+                        model.str_ng_item += $"{item.NgItem},";
+                    }
+                }
+            }
+
+            // 等待工作电流测试结束
+            int startCur = Environment.TickCount;
+            while (!workCurrent.IsCompleted)
+            {
+                testAction.Delay(1000);
+                logger.ShowLog("等待工作电流测试任务结束...");
+            }
+            TestItem workCurrent_result = workCurrent.Result;
+            if(workCurrent_result == null)
+            {
+                logger.ShowLog($"工作电流测试不通过，无法进行后续测试");
+                if (testParam.ng_continue == "false")
+                {
+                    return;
+                }
+            }
+            else
+            {
+                model.str_work_current = workCurrent_result.Value.ToString();
+                if(workCurrent_result.Result == "FAIL")
+                {
+                    model.str_ng_item += $"{workCurrent_result.NgItem},";
+                }
+            }
+
+        }
+
         /// <summary>
         /// 保存数据至本机Sqlite数据库
         /// </summary>
         /// <param name="str_error_log"></param>
         /// <returns></returns>
         private bool SaveLocalSqliteDB(string str_sql)
+    {
+        try
         {
-            try
-            {
-                // 本机数据库sqlite
-                LocalMachineDB localMachineDB = new LocalMachineDB();
-                string db_file = Environment.CurrentDirectory + @"\Local.db";
+            // 本机数据库sqlite
+            LocalMachineDB localMachineDB = new LocalMachineDB();
+            string db_file = Environment.CurrentDirectory + @"\Local.db";
 
-                string str_error_log = "";
-                if (localMachineDB.SaveDataToLocal(db_file, str_sql, ref str_error_log) == false)
-                {
-                    logger.ShowLog("--- 数据保存本机Sqlite失败：" + str_error_log);
-                    return false;
-                }
-                else
-                {
-                    logger.ShowLog("--- 数据保存本机Sqlite成功");
-                    return true;
-                }
-            }
-            catch (Exception ee)
+            string str_error_log = "";
+            if (localMachineDB.SaveDataToLocal(db_file, str_sql, ref str_error_log) == false)
             {
-                MessageBox.Show(ee.Message);
+                logger.ShowLog("--- 数据保存本机Sqlite失败：" + str_error_log);
                 return false;
             }
+            else
+            {
+                logger.ShowLog("--- 数据保存本机Sqlite成功");
+                return true;
+            }
         }
+        catch (Exception ee)
+        {
+            MessageBox.Show(ee.Message);
+            return false;
+        }
+    }
 
         /// <summary>
         /// 
@@ -1307,6 +1512,7 @@ namespace XDC01_TestAction
                 labelResult.Text = string.Empty;
                 panelResult.BackColor = Color.White;
                 RunTest();
+                //RunTestVolCur();
                 float testTime = (Environment.TickCount - start_time) / 1000.00f;
                 textBoxTime.Text = testTime.ToString("F2");
             }
@@ -1430,6 +1636,48 @@ namespace XDC01_TestAction
                 textBoxCloudPassword.Text = testParam.cloud_password;
 
                 textBoxImageServer.Text = testParam.local_server_name;
+
+                comboBoxChargeRelayIndex.SelectedItem = testParam.charge_relay_index;
+
+                comboBoxVolTDMSerial.Items.Clear();
+                foreach (string aa in System.IO.Ports.SerialPort.GetPortNames())
+                {
+                    comboBoxVolTDMSerial.Items.Add(aa);
+                    if (aa.Equals(testParam.voltage_tdm_port))
+                    {
+                        comboBoxVolTDMSerial.SelectedItem = testParam.voltage_tdm_port;
+                    }
+                }
+
+                comboBoxCurTDMSerial.Items.Clear();
+                foreach (string aa in System.IO.Ports.SerialPort.GetPortNames())
+                {
+                    comboBoxCurTDMSerial.Items.Add(aa);
+                    if (aa.Equals(testParam.current_tdm_port))
+                    {
+                        comboBoxCurTDMSerial.SelectedItem = testParam.current_tdm_port;
+                    }
+                }
+
+                comboBoxCurFluke.Items.Clear();
+                foreach (string aa in System.IO.Ports.SerialPort.GetPortNames())
+                {
+                    comboBoxCurFluke.Items.Add(aa);
+                    if (aa.Equals(testParam.current_fluke_port))
+                    {
+                        comboBoxCurFluke.SelectedItem = testParam.current_fluke_port;
+                    }
+                }
+
+                comboBoxRelay.Items.Clear();
+                foreach (string aa in System.IO.Ports.SerialPort.GetPortNames())
+                {
+                    comboBoxRelay.Items.Add(aa);
+                    if (aa.Equals(testParam.relay_port))
+                    {
+                        comboBoxRelay.SelectedItem = testParam.relay_port;
+                    }
+                }
             }
         }
 
@@ -1516,6 +1764,15 @@ namespace XDC01_TestAction
         private void BtnImageServer_Click(object sender, EventArgs e)
         {
             ConfigFile.IniWriteValue("rtos", "local_server_name", textBoxImageServer.Text, Path_ini);
+        }
+
+        private void BtnChargeRelay_Click(object sender, EventArgs e)
+        {
+            ConfigFile.IniWriteValue("voltage_current", "charge_relay_index", comboBoxChargeRelayIndex.SelectedItem.ToString(), Path_ini);
+            ConfigFile.IniWriteValue("voltage_current", "voltage_tdm_port", comboBoxVolTDMSerial.SelectedItem.ToString(), Path_ini);
+            ConfigFile.IniWriteValue("voltage_current", "current_tdm_port", comboBoxCurTDMSerial.SelectedItem.ToString(), Path_ini);
+            ConfigFile.IniWriteValue("voltage_current", "current_fluke_port", comboBoxCurFluke.SelectedItem.ToString(), Path_ini);
+            ConfigFile.IniWriteValue("voltage_current", "relay_port", comboBoxRelay.SelectedItem.ToString(), Path_ini);
         }
         #endregion
 

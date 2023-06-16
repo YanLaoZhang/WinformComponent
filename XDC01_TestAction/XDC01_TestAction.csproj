@@ -115,6 +115,10 @@
       <Name>DSA700Lib</Name>
       <Private>False</Private>
     </ProjectReference>
+    <ProjectReference Include="..\FLUKE8808ALib\FLUKE8808ALib.csproj">
+      <Project>{5389a472-e2f7-4fea-aea5-5c14e6c334df}</Project>
+      <Name>FLUKE8808ALib</Name>
+    </ProjectReference>
     <ProjectReference Include="..\LogLib\LogLib.csproj">
       <Project>{d740c631-0779-4666-9a05-03e340006933}</Project>
       <Name>LogLib</Name>

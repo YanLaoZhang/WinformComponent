@@ -1,4 +1,5 @@
 ﻿using CloudAPILib;
+using FLUKE8808ALib;
 using LogLib;
 using MyCustomDialog;
 using PCCommandLib;
@@ -20,6 +21,7 @@ namespace XDC01Action
 {
     public class TestAction
     {
+        System.Windows.Forms.DataGridView _dataGridView;
 
         /// <summary>
         /// 非阻塞式等待
@@ -47,15 +49,25 @@ namespace XDC01Action
         {
             try
             {
+                _dataGridView = dataGridView;
                 #region 环境准备
                 int start_time = Environment.TickCount;
                 string str_error_log = "";
+                logger.ShowLog("-进行电压测试...");
                 //--------停止连续获取数据
                 if (tDMVolSerial._vol_stop_continuous() == false)
                 {
                     logger.ShowLog($"初始化电压表失败");
                     float Duration = (Environment.TickCount - start_time) / 1000.00f;
-                    dataGridView.Rows.Add("电压测试", "-", "-", "-", "-", "电压表控制异常", "FAIL", Duration.ToString("F2"));
+                    //dataGridView.Invoke((Action)(() =>
+                    //{
+                    //    dataGridView.Rows.Add("电压测试", "-", "-", "-", "-", "电压表控制异常", "FAIL", Duration.ToString("F2"));
+                    //}));
+                    _dataGridView.Invoke((MethodInvoker)delegate
+                    {
+                        // 设置数据源
+                        _dataGridView.Rows.Add("电压测试", "-", "-", "-", "-", "电压表控制异常", "FAIL", Duration.ToString("F2"));
+                    });
                     return null;
                 }
                 else
@@ -114,11 +126,12 @@ namespace XDC01Action
                     TestItem testItem = volTestItems[i];
                     start_time = Environment.TickCount;
                     // 继电器开关序号
-                    ushort relayNum = (ushort)i;
+                    ushort relayNum = (ushort)(i+1);
 
                     if (relaySerial.TriggerRelaySingle(relayNum, true) == false)
                     {
                     }
+                    Delay(300);
                     str_error_log = "";
                     int[] relay_status = new int[16];
                     if (relaySerial.GetRelayStatus(ref str_error_log, ref relay_status) == false)
@@ -126,6 +139,7 @@ namespace XDC01Action
                         logger.ShowLog($"获取继电器状态发生异常[{str_error_log}]");
                         float Duration = (Environment.TickCount - start_time) / 1000.00f;
                         dataGridView.Rows.Add(testItem.Name, "-", "-", "-", "-", "继电器控制异常", "FAIL", Duration.ToString("F2"));
+                        Delay(300);
                         continue;
                     }
                     if (relay_status[relayNum - 1] == 0)
@@ -133,6 +147,7 @@ namespace XDC01Action
                         logger.ShowLog($"继电器状态错误：[通道{relayNum}未打开]");
                         float Duration = (Environment.TickCount - start_time) / 1000.00f;
                         dataGridView.Rows.Add(testItem.Name, "-", "-", "-", "-", "继电器控制异常", "FAIL", Duration.ToString("F2"));
+                        Delay(300);
                         continue;
                     }
                     Delay(300);
@@ -162,11 +177,15 @@ namespace XDC01Action
                             logger.ShowLog($"---电压{testItem.Name}[{float_vol1:F3}V],测试通过");
                             testItem.Result = "PASS";
                         }
+                        // 关闭继电器
+                        if (relaySerial.TriggerRelaySingle(relayNum, false) == false)
+                        {
+                        }
+
+                        Delay(300);  // 间隔0.5秒
                         testItem.Duration = (Environment.TickCount - start_time) / 1000.00f;
                         dataGridView.Rows.Add(testItem.Name, testItem.Standard, testItem.MinValue, testItem.MaxValue, testItem.Value, testItem.StrVal,testItem.Result, testItem.Duration.ToString("F2"));
                     }
-
-                    Delay(3000);  // 间隔3秒
                 }
 
                 return volTestItems;
@@ -187,7 +206,6 @@ namespace XDC01Action
             }
         }
 
-
         /// <summary>
         /// 工作电流读取
         /// </summary>
@@ -200,9 +218,11 @@ namespace XDC01Action
                 int start_time = Environment.TickCount;
                 TestItem testItem = new TestItem() { 
                     Name = "工作电流", 
-                    NgItem = "work_current", 
-                    MinValue = testSpecMin.vol_wifi, 
-                    MaxValue = testSpecMax.vol_wifi 
+                    NgItem = "work_current",
+                    Standard = "-",
+                    MinValue = testSpecMin.work_current, 
+                    MaxValue = testSpecMax.work_current,
+                    StrVal = "-"
                 };
                 logger.ShowLog("-进行工作电流测试...");
                 //--------停止连续获取数据
@@ -247,7 +267,188 @@ namespace XDC01Action
             }
             catch (Exception ee)
             {
-                logger.ShowLog($"PCBA电流测试发生异常：[{ee.Message}]");
+                logger.ShowLog($"PCBA工作电流测试发生异常：[{ee.Message}]");
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// 漏电流读取
+        /// </summary>
+        /// <returns></returns>
+        public TestItem PCBAStandbyCurrentTest(FlukeSerial flukeSerial,
+            System.Windows.Forms.DataGridView dataGridView, Logger logger, TestSpecMax testSpecMax, TestSpecMin testSpecMin)
+        {
+            try
+            {
+                int start_time = Environment.TickCount;
+                string str_error_log = "";
+                TestItem testItem = new TestItem()
+                {
+                    Name = "漏电流",
+                    NgItem = "standby_current",
+                    Standard = "-",
+                    MinValue = testSpecMin.standby_current,
+                    MaxValue = testSpecMax.standby_current,
+                    StrVal = "-"
+                };
+                logger.ShowLog("-进行漏电流测试...");
+                //--------切换量程为200uA
+                if (flukeSerial.SetRange("1", ref str_error_log) == false)
+                {
+                    logger.ShowLog($"FLUKE电流表切换量程为200uA失败");
+                    float Duration = (Environment.TickCount - start_time) / 1000.00f;
+                    dataGridView.Rows.Add("读取漏电流", "-", "-", "-", "-", "FLUKE电流表控制异常", "FAIL", Duration.ToString("F2"));
+                    return null;
+                }
+                else
+                {
+                    float max_current = 0.00f;
+                    //int count = int.Parse(_param_run.str_current_count);
+                    for (int i = 0; i < 10; i++)
+                    {
+                        string current_value = "";
+                        string unit = "";
+                        string error_log_current = "";
+                        if (flukeSerial.GetCurrent(ref current_value, ref unit, ref error_log_current))
+                        {
+                            Console.WriteLine(current_value);
+                            float f_current_value = float.Parse(current_value);
+                            if (max_current <= f_current_value)
+                            {
+                                max_current = f_current_value;
+                            }
+                        }
+                    }
+                    testItem.Value = max_current;
+                    // 判断电流数据情况
+                    if (testItem.Value > testItem.MaxValue || testItem.Value < testItem.MinValue)
+                    {
+                        logger.ShowLog($"---漏电流{testItem.Name}[{max_current:F3}uA],测试失败");
+                        testItem.Result = "FAIL";
+                    }
+                    else
+                    {
+                        logger.ShowLog($"---漏电流{testItem.Name}[{max_current:F3}uA],测试通过");
+                        testItem.Result = "PASS";
+                    }
+                    testItem.Duration = (Environment.TickCount - start_time) / 1000.00f;
+                    dataGridView.Rows.Add(testItem.Name, testItem.Standard, testItem.MinValue, testItem.MaxValue, testItem.Value, testItem.StrVal, testItem.Result, testItem.Duration.ToString("F2"));
+                    return testItem;
+                }
+            }
+            catch (Exception ee)
+            {
+                logger.ShowLog($"PCBA漏电流测试发生异常：[{ee.Message}]");
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// 充电电流读取
+        /// </summary>
+        /// <returns></returns>
+        public TestItem PCBAChargeCurrentTest(FlukeSerial flukeSerial, RelaySerial relaySerial,
+            System.Windows.Forms.DataGridView dataGridView, Logger logger, TestSpecMax testSpecMax, TestSpecMin testSpecMin, TestParam testParam)
+        {
+            try
+            {
+                int start_time = Environment.TickCount;
+                string str_error_log = "";
+                TestItem testItem = new TestItem()
+                {
+                    Name = "充电电流",
+                    NgItem = "charge_current",
+                    Standard = "-",
+                    MinValue = testSpecMin.charge_current,
+                    MaxValue = testSpecMax.charge_current,
+                    StrVal = "-"
+                };
+                logger.ShowLog("-进行充电电流测试...");
+                // 切换量程为20mA
+                logger.ShowLog("万用表切换量程为20mA");
+                if (flukeSerial.SetRange("3", ref str_error_log) == false)
+                {
+                    logger.ShowLog($"FLUKE电流表切换量程为20mA失败");
+                    float Duration = (Environment.TickCount - start_time) / 1000.00f;
+                    dataGridView.Rows.Add("读取充电电流", "-", "-", "-", "-", "FLUKE电流表控制异常", "FAIL", Duration.ToString("F2"));
+                    return null;
+                }
+                else
+                {
+                    // 提示打开开关
+                    CustomDialog customDialog = new CustomDialog("充电电流测试", "请打开治具上的开关，给设备上电");
+                    DialogResult result = customDialog.ShowDialog();
+
+                    if (result == DialogResult.Yes)
+                    {
+                        logger.ShowLog($"--- 已打开上电开关");
+                        // 继电器开关序号
+                        ushort relayNum = ushort.Parse(testParam.charge_relay_index);
+
+                        if (relaySerial.TriggerRelaySingle(relayNum, true) == false)
+                        {
+                        }
+                        str_error_log = "";
+                        int[] relay_status = new int[16];
+                        if (relaySerial.GetRelayStatus(ref str_error_log, ref relay_status) == false)
+                        {
+                            logger.ShowLog($"获取继电器状态发生异常[{str_error_log}]");
+                            float Duration = (Environment.TickCount - start_time) / 1000.00f;
+                            dataGridView.Rows.Add(testItem.Name, "-", "-", "-", "-", "继电器控制异常", "FAIL", Duration.ToString("F2"));
+                        }
+                        if (relay_status[relayNum - 1] == 0)
+                        {
+                            logger.ShowLog($"继电器状态错误：[通道{relayNum}未打开]");
+                            float Duration = (Environment.TickCount - start_time) / 1000.00f;
+                            dataGridView.Rows.Add(testItem.Name, "-", "-", "-", "-", "继电器控制异常", "FAIL", Duration.ToString("F2"));
+                        }
+
+                        float max_current = 0.00f;
+                        //int count = int.Parse(_param_run.str_current_count);
+                        for (int i = 0; i < 10; i++)
+                        {
+                            string current_value = "";
+                            string unit = "";
+                            string error_log_current = "";
+                            if (flukeSerial.GetCurrent(ref current_value, ref unit, ref error_log_current))
+                            {
+                                Console.WriteLine(current_value);
+                                float f_current_value = float.Parse(current_value);
+                                if (max_current <= f_current_value)
+                                {
+                                    max_current = f_current_value;
+                                }
+                            }
+                        }
+                        testItem.Value = max_current;
+                        // 判断电流数据情况
+                        if (testItem.Value > testItem.MaxValue || testItem.Value < testItem.MinValue)
+                        {
+                            logger.ShowLog($"---充电电流{testItem.Name}[{max_current:F3}uA],测试失败");
+                            testItem.Result = "FAIL";
+                        }
+                        else
+                        {
+                            logger.ShowLog($"---充电电流{testItem.Name}[{max_current:F3}uA],测试通过");
+                            testItem.Result = "PASS";
+                        }
+                    }
+                    else
+                    {
+                        logger.ShowLog($"--- 未打开上电开关");
+                        testItem.Result = "FAIL";
+                        testItem.StrVal = "未打开上电开关";
+                    }
+
+                    testItem.Duration = (Environment.TickCount - start_time) / 1000.00f;
+                    dataGridView.Rows.Add(testItem.Name, testItem.Standard, testItem.MinValue, testItem.MaxValue, testItem.Value, testItem.StrVal, testItem.Result, testItem.Duration.ToString("F2"));
+                    return testItem;
+                }
+            }
+            catch (Exception ee)
+            {
+                logger.ShowLog($"PCBA充电电流测试发生异常：[{ee.Message}]");
                 return null;
             }
         }
@@ -1567,7 +1768,7 @@ namespace XDC01Action
                 { Name = "恢复出厂设置", NgItem = "factory_reset" };
                 string str_error_log = "";
                 logger.ShowLog("-进行恢复出厂设置...");
-                if (xDC01Serial.ResetFactory(ref str_error_log) == false)
+                if (xDC01Serial.ResetFactory(ref str_error_log))
                 {
                     logger.ShowLog($"--- 恢复出厂设置通过");
                     testItem.Result = "PASS";
@@ -2053,8 +2254,6 @@ namespace XDC01Action
                 return null;
             }
         }
-
-
 
     }
 }

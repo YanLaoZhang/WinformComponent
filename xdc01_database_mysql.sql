@@ -116,7 +116,7 @@ CREATE TABLE `t030_product_test_report` (
 	`write_tagnumber` VARCHAR (30) DEFAULT '',
 	`ping_rtt` FLOAT DEFAULT NULL COMMENT 'Ping的平均延迟',
 	`mic_auto` VARCHAR (16) DEFAULT '' COMMENT '自动判定mic结果',
-	`mic_data` VARCHAR (30) DEFAULT '' COMMENT '自动测试数据',
+	`mic_data` VARCHAR (50) DEFAULT '' COMMENT '自动测试数据',
 	`mic_manual` VARCHAR (16) DEFAULT '' COMMENT '人工判定mic结果',
 	`led_color` VARCHAR (16) DEFAULT '' COMMENT 'Button Led颜色检查',
 	`motion` VARCHAR (16) DEFAULT '' COMMENT 'PIR测试',

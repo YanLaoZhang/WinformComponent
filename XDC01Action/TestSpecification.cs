@@ -264,5 +264,11 @@ namespace XDC01Action
         public string productType;
 
         public string local_server_name;
+
+        public string charge_relay_index;
+        public string voltage_tdm_port;
+        public string current_tdm_port;
+        public string current_fluke_port;
+        public string relay_port;
     }
 }

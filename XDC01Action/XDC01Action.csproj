@@ -98,6 +98,11 @@
       <Name>CloudAPILib</Name>
       <Private>False</Private>
     </ProjectReference>
+    <ProjectReference Include="..\FLUKE8808ALib\FLUKE8808ALib.csproj">
+      <Project>{5389a472-e2f7-4fea-aea5-5c14e6c334df}</Project>
+      <Name>FLUKE8808ALib</Name>
+      <Private>False</Private>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -25,35 +25,39 @@ namespace LogLib
                 lock (this)
                 {
                     string add_str = DateTime.Now.ToString("G") + $": {run_log}\r\n";
-                    _richTextBox.Text += add_str;
-                    _richTextBox.SelectionStart = _richTextBox.TextLength;
-                    _richTextBox.ScrollToCaret();
-                    //--------richtext特定字体颜色改变--第二种方法
-                    if (_richTextBox.Text.Length > 0)
+                    _richTextBox.Invoke(new Action(() =>
                     {
-                        _richTextBox.Select(0, _richTextBox.TextLength);
-                        _richTextBox.SelectionColor = Color.Black;
-                        int _i = 0;
-                        int _count = 0;
-                        while (_richTextBox.Text.IndexOf("失败", _i) != -1)
+                        _richTextBox.Text += add_str;
+                        _richTextBox.SelectionStart = _richTextBox.TextLength;
+                        _richTextBox.ScrollToCaret();
+                        //--------richtext特定字体颜色改变--第二种方法
+                        if (_richTextBox.Text.Length > 0)
                         {
-                            Application.DoEvents();
-                            _i = _richTextBox.Text.IndexOf("失败", _i) + 1;
-                            _richTextBox.Select(_i - 1, 2);
-                            _richTextBox.SelectionColor = Color.FromArgb(255, 0, 0);
-                            _count++;
+                            _richTextBox.Select(0, _richTextBox.TextLength);
+                            _richTextBox.SelectionColor = Color.Black;
+                            int _i = 0;
+                            int _count = 0;
+                            while (_richTextBox.Text.IndexOf("失败", _i) != -1)
+                            {
+                                Application.DoEvents();
+                                _i = _richTextBox.Text.IndexOf("失败", _i) + 1;
+                                _richTextBox.Select(_i - 1, 2);
+                                _richTextBox.SelectionColor = Color.FromArgb(255, 0, 0);
+                                _count++;
+                            }
+                            _i = 0;
+                            _count = 0;
+                            while (_richTextBox.Text.IndexOf("异常", _i) != -1)
+                            {
+                                Application.DoEvents();
+                                _i = _richTextBox.Text.IndexOf("异常", _i) + 1;
+                                _richTextBox.Select(_i - 1, 2);
+                                _richTextBox.SelectionColor = Color.FromArgb(255, 0, 0);
+                                _count++;
+                            }
                         }
-                        _i = 0;
-                        _count = 0;
-                        while (_richTextBox.Text.IndexOf("异常", _i) != -1)
-                        {
-                            Application.DoEvents();
-                            _i = _richTextBox.Text.IndexOf("异常", _i) + 1;
-                            _richTextBox.Select(_i - 1, 2);
-                            _richTextBox.SelectionColor = Color.FromArgb(255, 0, 0);
-                            _count++;
-                        }
-                    }
+
+                    }));
                     if (WriteLogToFile(add_str) == false)
                     {
 

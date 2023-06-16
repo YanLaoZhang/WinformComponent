@@ -29,7 +29,7 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPageMain = new System.Windows.Forms.TabPage();
@@ -65,6 +65,10 @@
             this.label1 = new System.Windows.Forms.Label();
             this.tabPageSetting = new System.Windows.Forms.TabPage();
             this.panel4 = new System.Windows.Forms.Panel();
+            this.groupBox18 = new System.Windows.Forms.GroupBox();
+            this.BtnImageServer = new System.Windows.Forms.Button();
+            this.textBoxImageServer = new System.Windows.Forms.TextBox();
+            this.label35 = new System.Windows.Forms.Label();
             this.groupBox17 = new System.Windows.Forms.GroupBox();
             this.BtnNGcontinue = new System.Windows.Forms.Button();
             this.checkBoxNGContinue = new System.Windows.Forms.CheckBox();
@@ -176,10 +180,23 @@
             this.toolStripButton1 = new System.Windows.Forms.ToolStripButton();
             this.toolStripButton2 = new System.Windows.Forms.ToolStripButton();
             this.timerTestTime = new System.Windows.Forms.Timer(this.components);
-            this.groupBox18 = new System.Windows.Forms.GroupBox();
-            this.textBoxImageServer = new System.Windows.Forms.TextBox();
-            this.label35 = new System.Windows.Forms.Label();
-            this.BtnImageServer = new System.Windows.Forms.Button();
+            this.groupBox19 = new System.Windows.Forms.GroupBox();
+            this.comboBoxChargeRelayIndex = new System.Windows.Forms.ComboBox();
+            this.label36 = new System.Windows.Forms.Label();
+            this.BtnChargeRelay = new System.Windows.Forms.Button();
+            this.comboBoxVolTDMSerial = new System.Windows.Forms.ComboBox();
+            this.label37 = new System.Windows.Forms.Label();
+            this.comboBoxCurTDMSerial = new System.Windows.Forms.ComboBox();
+            this.label38 = new System.Windows.Forms.Label();
+            this.comboBoxCurFluke = new System.Windows.Forms.ComboBox();
+            this.label39 = new System.Windows.Forms.Label();
+            this.comboBoxRelay = new System.Windows.Forms.ComboBox();
+            this.label40 = new System.Windows.Forms.Label();
+            this.serialPortVolTDM = new System.IO.Ports.SerialPort(this.components);
+            this.serialPortCurTDM = new System.IO.Ports.SerialPort(this.components);
+            this.serialPortFluke = new System.IO.Ports.SerialPort(this.components);
+            this.serialPortRelay = new System.IO.Ports.SerialPort(this.components);
+            this.richTextBoxFluke = new System.Windows.Forms.RichTextBox();
             this.tabControl1.SuspendLayout();
             this.tabPageMain.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
@@ -197,6 +214,7 @@
             this.panel1.SuspendLayout();
             this.tabPageSetting.SuspendLayout();
             this.panel4.SuspendLayout();
+            this.groupBox18.SuspendLayout();
             this.groupBox17.SuspendLayout();
             this.groupBox16.SuspendLayout();
             this.groupBox15.SuspendLayout();
@@ -224,7 +242,7 @@
             this.groupBox4.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewTestSpec)).BeginInit();
             this.toolStrip2.SuspendLayout();
-            this.groupBox18.SuspendLayout();
+            this.groupBox19.SuspendLayout();
             this.SuspendLayout();
             // 
             // tabControl1
@@ -239,7 +257,7 @@
             this.tabControl1.Margin = new System.Windows.Forms.Padding(0);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(1322, 718);
+            this.tabControl1.Size = new System.Drawing.Size(1322, 767);
             this.tabControl1.TabIndex = 0;
             this.tabControl1.SelectedIndexChanged += new System.EventHandler(this.tabControl1_SelectedIndexChanged);
             // 
@@ -249,7 +267,7 @@
             this.tabPageMain.Location = new System.Drawing.Point(4, 29);
             this.tabPageMain.Name = "tabPageMain";
             this.tabPageMain.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageMain.Size = new System.Drawing.Size(1314, 645);
+            this.tabPageMain.Size = new System.Drawing.Size(1314, 734);
             this.tabPageMain.TabIndex = 0;
             this.tabPageMain.Text = "测试";
             this.tabPageMain.UseVisualStyleBackColor = true;
@@ -271,7 +289,7 @@
             // 
             this.splitContainer1.Panel2.Controls.Add(this.groupBox1);
             this.splitContainer1.Panel2.Controls.Add(this.panel1);
-            this.splitContainer1.Size = new System.Drawing.Size(1308, 639);
+            this.splitContainer1.Size = new System.Drawing.Size(1308, 728);
             this.splitContainer1.SplitterDistance = 560;
             this.splitContainer1.TabIndex = 0;
             // 
@@ -310,7 +328,7 @@
             this.groupBox3.Controls.Add(this.richTextBoxSerialLog);
             this.groupBox3.Location = new System.Drawing.Point(2, 399);
             this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(553, 235);
+            this.groupBox3.Size = new System.Drawing.Size(553, 324);
             this.groupBox3.TabIndex = 1;
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "串口日志";
@@ -326,7 +344,7 @@
             this.richTextBoxSerialLog.Name = "richTextBoxSerialLog";
             this.richTextBoxSerialLog.ReadOnly = true;
             this.richTextBoxSerialLog.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.ForcedVertical;
-            this.richTextBoxSerialLog.Size = new System.Drawing.Size(547, 207);
+            this.richTextBoxSerialLog.Size = new System.Drawing.Size(547, 296);
             this.richTextBoxSerialLog.TabIndex = 0;
             this.richTextBoxSerialLog.Text = "";
             // 
@@ -366,7 +384,7 @@
             this.groupBox1.Controls.Add(this.panel2);
             this.groupBox1.Location = new System.Drawing.Point(3, 69);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(736, 565);
+            this.groupBox1.Size = new System.Drawing.Size(736, 654);
             this.groupBox1.TabIndex = 2;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "测试详情";
@@ -396,7 +414,7 @@
             this.dataGridView1.ReadOnly = true;
             this.dataGridView1.RowHeadersVisible = false;
             this.dataGridView1.RowTemplate.Height = 30;
-            this.dataGridView1.Size = new System.Drawing.Size(729, 462);
+            this.dataGridView1.Size = new System.Drawing.Size(729, 551);
             this.dataGridView1.TabIndex = 1;
             this.dataGridView1.CellFormatting += new System.Windows.Forms.DataGridViewCellFormattingEventHandler(this.dataGridView1_CellFormatting);
             this.dataGridView1.RowsAdded += new System.Windows.Forms.DataGridViewRowsAddedEventHandler(this.dataGridView1_RowsAdded);
@@ -460,8 +478,8 @@
             // 
             // Column14
             // 
-            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
-            this.Column14.DefaultCellStyle = dataGridViewCellStyle2;
+            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+            this.Column14.DefaultCellStyle = dataGridViewCellStyle1;
             this.Column14.HeaderText = "耗时";
             this.Column14.Name = "Column14";
             this.Column14.ReadOnly = true;
@@ -554,6 +572,7 @@
             // 
             this.panel1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.panel1.Controls.Add(this.richTextBoxFluke);
             this.panel1.Controls.Add(this.BtnInit);
             this.panel1.Controls.Add(this.BtnStart);
             this.panel1.Controls.Add(this.textBoxRN);
@@ -606,13 +625,14 @@
             this.tabPageSetting.Location = new System.Drawing.Point(4, 29);
             this.tabPageSetting.Name = "tabPageSetting";
             this.tabPageSetting.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageSetting.Size = new System.Drawing.Size(1314, 685);
+            this.tabPageSetting.Size = new System.Drawing.Size(1314, 734);
             this.tabPageSetting.TabIndex = 1;
             this.tabPageSetting.Text = "设置";
             this.tabPageSetting.UseVisualStyleBackColor = true;
             // 
             // panel4
             // 
+            this.panel4.Controls.Add(this.groupBox19);
             this.panel4.Controls.Add(this.groupBox18);
             this.panel4.Controls.Add(this.groupBox17);
             this.panel4.Controls.Add(this.groupBox16);
@@ -628,8 +648,47 @@
             this.panel4.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel4.Location = new System.Drawing.Point(3, 3);
             this.panel4.Name = "panel4";
-            this.panel4.Size = new System.Drawing.Size(1308, 679);
+            this.panel4.Size = new System.Drawing.Size(1308, 728);
             this.panel4.TabIndex = 0;
+            // 
+            // groupBox18
+            // 
+            this.groupBox18.Controls.Add(this.BtnImageServer);
+            this.groupBox18.Controls.Add(this.textBoxImageServer);
+            this.groupBox18.Controls.Add(this.label35);
+            this.groupBox18.Location = new System.Drawing.Point(4, 607);
+            this.groupBox18.Name = "groupBox18";
+            this.groupBox18.Size = new System.Drawing.Size(454, 118);
+            this.groupBox18.TabIndex = 11;
+            this.groupBox18.TabStop = false;
+            this.groupBox18.Text = "RTOS镜头测试";
+            // 
+            // BtnImageServer
+            // 
+            this.BtnImageServer.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            this.BtnImageServer.Location = new System.Drawing.Point(363, 60);
+            this.BtnImageServer.Name = "BtnImageServer";
+            this.BtnImageServer.Size = new System.Drawing.Size(85, 31);
+            this.BtnImageServer.TabIndex = 36;
+            this.BtnImageServer.Text = "保存";
+            this.BtnImageServer.UseVisualStyleBackColor = true;
+            this.BtnImageServer.Click += new System.EventHandler(this.BtnImageServer_Click);
+            // 
+            // textBoxImageServer
+            // 
+            this.textBoxImageServer.Location = new System.Drawing.Point(141, 37);
+            this.textBoxImageServer.Name = "textBoxImageServer";
+            this.textBoxImageServer.Size = new System.Drawing.Size(196, 29);
+            this.textBoxImageServer.TabIndex = 37;
+            // 
+            // label35
+            // 
+            this.label35.AutoSize = true;
+            this.label35.Location = new System.Drawing.Point(21, 40);
+            this.label35.Name = "label35";
+            this.label35.Size = new System.Drawing.Size(114, 19);
+            this.label35.TabIndex = 36;
+            this.label35.Text = "图片服务器:";
             // 
             // groupBox17
             // 
@@ -1498,7 +1557,7 @@
             // comboBoxSerialPort
             // 
             this.comboBoxSerialPort.FormattingEnabled = true;
-            this.comboBoxSerialPort.Location = new System.Drawing.Point(97, 22);
+            this.comboBoxSerialPort.Location = new System.Drawing.Point(116, 39);
             this.comboBoxSerialPort.Name = "comboBoxSerialPort";
             this.comboBoxSerialPort.Size = new System.Drawing.Size(104, 27);
             this.comboBoxSerialPort.TabIndex = 3;
@@ -1515,7 +1574,7 @@
             // label9
             // 
             this.label9.AutoSize = true;
-            this.label9.Location = new System.Drawing.Point(6, 25);
+            this.label9.Location = new System.Drawing.Point(6, 42);
             this.label9.Name = "label9";
             this.label9.Size = new System.Drawing.Size(85, 19);
             this.label9.TabIndex = 0;
@@ -1630,7 +1689,7 @@
             this.tabPageSpec.Controls.Add(this.panel3);
             this.tabPageSpec.Location = new System.Drawing.Point(4, 29);
             this.tabPageSpec.Name = "tabPageSpec";
-            this.tabPageSpec.Size = new System.Drawing.Size(1314, 609);
+            this.tabPageSpec.Size = new System.Drawing.Size(1314, 685);
             this.tabPageSpec.TabIndex = 2;
             this.tabPageSpec.Text = "测试规格";
             this.tabPageSpec.UseVisualStyleBackColor = true;
@@ -1642,7 +1701,7 @@
             this.panel3.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel3.Location = new System.Drawing.Point(0, 0);
             this.panel3.Name = "panel3";
-            this.panel3.Size = new System.Drawing.Size(1314, 609);
+            this.panel3.Size = new System.Drawing.Size(1314, 685);
             this.panel3.TabIndex = 0;
             // 
             // groupBox5
@@ -1758,7 +1817,7 @@
             this.toolStrip2.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripButton1,
             this.toolStripButton2});
-            this.toolStrip2.Location = new System.Drawing.Point(0, 732);
+            this.toolStrip2.Location = new System.Drawing.Point(0, 781);
             this.toolStrip2.Name = "toolStrip2";
             this.toolStrip2.Size = new System.Drawing.Size(1340, 25);
             this.toolStrip2.TabIndex = 2;
@@ -1791,49 +1850,161 @@
             // 
             this.timerTestTime.Tick += new System.EventHandler(this.timerTestTime_Tick);
             // 
-            // groupBox18
+            // groupBox19
             // 
-            this.groupBox18.Controls.Add(this.BtnImageServer);
-            this.groupBox18.Controls.Add(this.textBoxImageServer);
-            this.groupBox18.Controls.Add(this.label35);
-            this.groupBox18.Location = new System.Drawing.Point(4, 607);
-            this.groupBox18.Name = "groupBox18";
-            this.groupBox18.Size = new System.Drawing.Size(623, 72);
-            this.groupBox18.TabIndex = 11;
-            this.groupBox18.TabStop = false;
-            this.groupBox18.Text = "RTOS镜头测试";
+            this.groupBox19.Controls.Add(this.comboBoxRelay);
+            this.groupBox19.Controls.Add(this.label40);
+            this.groupBox19.Controls.Add(this.comboBoxCurFluke);
+            this.groupBox19.Controls.Add(this.label39);
+            this.groupBox19.Controls.Add(this.comboBoxCurTDMSerial);
+            this.groupBox19.Controls.Add(this.label38);
+            this.groupBox19.Controls.Add(this.comboBoxVolTDMSerial);
+            this.groupBox19.Controls.Add(this.BtnChargeRelay);
+            this.groupBox19.Controls.Add(this.label37);
+            this.groupBox19.Controls.Add(this.comboBoxChargeRelayIndex);
+            this.groupBox19.Controls.Add(this.label36);
+            this.groupBox19.Location = new System.Drawing.Point(464, 607);
+            this.groupBox19.Name = "groupBox19";
+            this.groupBox19.Size = new System.Drawing.Size(841, 118);
+            this.groupBox19.TabIndex = 12;
+            this.groupBox19.TabStop = false;
+            this.groupBox19.Text = "继电器";
             // 
-            // textBoxImageServer
+            // comboBoxChargeRelayIndex
             // 
-            this.textBoxImageServer.Location = new System.Drawing.Point(141, 37);
-            this.textBoxImageServer.Name = "textBoxImageServer";
-            this.textBoxImageServer.Size = new System.Drawing.Size(196, 29);
-            this.textBoxImageServer.TabIndex = 37;
+            this.comboBoxChargeRelayIndex.AutoCompleteCustomSource.AddRange(new string[] {
+            "1",
+            "2",
+            "3",
+            "4",
+            "5",
+            "6",
+            "7"});
+            this.comboBoxChargeRelayIndex.FormattingEnabled = true;
+            this.comboBoxChargeRelayIndex.Items.AddRange(new object[] {
+            "1",
+            "2",
+            "3",
+            "4",
+            "5",
+            "6",
+            "7",
+            "8",
+            "9",
+            "10",
+            "11",
+            "12",
+            "13",
+            "14",
+            "15",
+            "16"});
+            this.comboBoxChargeRelayIndex.Location = new System.Drawing.Point(192, 31);
+            this.comboBoxChargeRelayIndex.Name = "comboBoxChargeRelayIndex";
+            this.comboBoxChargeRelayIndex.Size = new System.Drawing.Size(56, 27);
+            this.comboBoxChargeRelayIndex.TabIndex = 45;
             // 
-            // label35
+            // label36
             // 
-            this.label35.AutoSize = true;
-            this.label35.Location = new System.Drawing.Point(21, 40);
-            this.label35.Name = "label35";
-            this.label35.Size = new System.Drawing.Size(114, 19);
-            this.label35.TabIndex = 36;
-            this.label35.Text = "图片服务器:";
+            this.label36.AutoSize = true;
+            this.label36.Location = new System.Drawing.Point(6, 34);
+            this.label36.Name = "label36";
+            this.label36.Size = new System.Drawing.Size(180, 19);
+            this.label36.TabIndex = 44;
+            this.label36.Text = "充电电流继电器通道";
             // 
-            // BtnImageServer
+            // BtnChargeRelay
             // 
-            this.BtnImageServer.Location = new System.Drawing.Point(514, 34);
-            this.BtnImageServer.Name = "BtnImageServer";
-            this.BtnImageServer.Size = new System.Drawing.Size(85, 31);
-            this.BtnImageServer.TabIndex = 36;
-            this.BtnImageServer.Text = "保存";
-            this.BtnImageServer.UseVisualStyleBackColor = true;
-            this.BtnImageServer.Click += new System.EventHandler(this.BtnImageServer_Click);
+            this.BtnChargeRelay.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            this.BtnChargeRelay.Location = new System.Drawing.Point(750, 53);
+            this.BtnChargeRelay.Name = "BtnChargeRelay";
+            this.BtnChargeRelay.Size = new System.Drawing.Size(85, 31);
+            this.BtnChargeRelay.TabIndex = 38;
+            this.BtnChargeRelay.Text = "保存";
+            this.BtnChargeRelay.UseVisualStyleBackColor = true;
+            this.BtnChargeRelay.Click += new System.EventHandler(this.BtnChargeRelay_Click);
+            // 
+            // comboBoxVolTDMSerial
+            // 
+            this.comboBoxVolTDMSerial.FormattingEnabled = true;
+            this.comboBoxVolTDMSerial.Location = new System.Drawing.Point(383, 31);
+            this.comboBoxVolTDMSerial.Name = "comboBoxVolTDMSerial";
+            this.comboBoxVolTDMSerial.Size = new System.Drawing.Size(104, 27);
+            this.comboBoxVolTDMSerial.TabIndex = 13;
+            // 
+            // label37
+            // 
+            this.label37.AutoSize = true;
+            this.label37.Location = new System.Drawing.Point(254, 34);
+            this.label37.Name = "label37";
+            this.label37.Size = new System.Drawing.Size(123, 19);
+            this.label37.TabIndex = 12;
+            this.label37.Text = "电压表串口：";
+            // 
+            // comboBoxCurTDMSerial
+            // 
+            this.comboBoxCurTDMSerial.FormattingEnabled = true;
+            this.comboBoxCurTDMSerial.Location = new System.Drawing.Point(622, 31);
+            this.comboBoxCurTDMSerial.Name = "comboBoxCurTDMSerial";
+            this.comboBoxCurTDMSerial.Size = new System.Drawing.Size(104, 27);
+            this.comboBoxCurTDMSerial.TabIndex = 47;
+            // 
+            // label38
+            // 
+            this.label38.AutoSize = true;
+            this.label38.Location = new System.Drawing.Point(493, 34);
+            this.label38.Name = "label38";
+            this.label38.Size = new System.Drawing.Size(123, 19);
+            this.label38.TabIndex = 46;
+            this.label38.Text = "电流表串口：";
+            // 
+            // comboBoxCurFluke
+            // 
+            this.comboBoxCurFluke.FormattingEnabled = true;
+            this.comboBoxCurFluke.Location = new System.Drawing.Point(383, 69);
+            this.comboBoxCurFluke.Name = "comboBoxCurFluke";
+            this.comboBoxCurFluke.Size = new System.Drawing.Size(104, 27);
+            this.comboBoxCurFluke.TabIndex = 49;
+            // 
+            // label39
+            // 
+            this.label39.AutoSize = true;
+            this.label39.Location = new System.Drawing.Point(216, 72);
+            this.label39.Name = "label39";
+            this.label39.Size = new System.Drawing.Size(161, 19);
+            this.label39.TabIndex = 48;
+            this.label39.Text = "台式电流表串口：";
+            // 
+            // comboBoxRelay
+            // 
+            this.comboBoxRelay.FormattingEnabled = true;
+            this.comboBoxRelay.Location = new System.Drawing.Point(622, 69);
+            this.comboBoxRelay.Name = "comboBoxRelay";
+            this.comboBoxRelay.Size = new System.Drawing.Size(104, 27);
+            this.comboBoxRelay.TabIndex = 51;
+            // 
+            // label40
+            // 
+            this.label40.AutoSize = true;
+            this.label40.Location = new System.Drawing.Point(493, 72);
+            this.label40.Name = "label40";
+            this.label40.Size = new System.Drawing.Size(123, 19);
+            this.label40.TabIndex = 50;
+            this.label40.Text = "继电器串口：";
+            // 
+            // richTextBoxFluke
+            // 
+            this.richTextBoxFluke.Location = new System.Drawing.Point(589, 16);
+            this.richTextBoxFluke.Name = "richTextBoxFluke";
+            this.richTextBoxFluke.Size = new System.Drawing.Size(130, 27);
+            this.richTextBoxFluke.TabIndex = 4;
+            this.richTextBoxFluke.Text = "";
+            this.richTextBoxFluke.Visible = false;
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(10F, 19F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1340, 757);
+            this.ClientSize = new System.Drawing.Size(1340, 806);
             this.Controls.Add(this.toolStrip2);
             this.Controls.Add(this.tabControl1);
             this.Font = new System.Drawing.Font("宋体", 14F);
@@ -1867,6 +2038,8 @@
             this.panel1.PerformLayout();
             this.tabPageSetting.ResumeLayout(false);
             this.panel4.ResumeLayout(false);
+            this.groupBox18.ResumeLayout(false);
+            this.groupBox18.PerformLayout();
             this.groupBox17.ResumeLayout(false);
             this.groupBox17.PerformLayout();
             this.groupBox16.ResumeLayout(false);
@@ -1906,8 +2079,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewTestSpec)).EndInit();
             this.toolStrip2.ResumeLayout(false);
             this.toolStrip2.PerformLayout();
-            this.groupBox18.ResumeLayout(false);
-            this.groupBox18.PerformLayout();
+            this.groupBox19.ResumeLayout(false);
+            this.groupBox19.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -2064,6 +2237,23 @@
         private System.Windows.Forms.TextBox textBoxImageServer;
         private System.Windows.Forms.Label label35;
         private System.Windows.Forms.Button BtnImageServer;
+        private System.Windows.Forms.GroupBox groupBox19;
+        private System.Windows.Forms.ComboBox comboBoxChargeRelayIndex;
+        private System.Windows.Forms.Label label36;
+        private System.Windows.Forms.Button BtnChargeRelay;
+        private System.Windows.Forms.ComboBox comboBoxVolTDMSerial;
+        private System.Windows.Forms.Label label37;
+        private System.Windows.Forms.ComboBox comboBoxRelay;
+        private System.Windows.Forms.Label label40;
+        private System.Windows.Forms.ComboBox comboBoxCurFluke;
+        private System.Windows.Forms.Label label39;
+        private System.Windows.Forms.ComboBox comboBoxCurTDMSerial;
+        private System.Windows.Forms.Label label38;
+        private System.IO.Ports.SerialPort serialPortVolTDM;
+        private System.IO.Ports.SerialPort serialPortCurTDM;
+        private System.IO.Ports.SerialPort serialPortFluke;
+        private System.IO.Ports.SerialPort serialPortRelay;
+        private System.Windows.Forms.RichTextBox richTextBoxFluke;
     }
 }
 

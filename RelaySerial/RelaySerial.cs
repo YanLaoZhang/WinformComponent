@@ -337,7 +337,7 @@ namespace RelaySerialLib
         {
             try
             {
-                byte[] byte_ret_value = new byte[7];  // 返回数据，长度为7
+                byte[] byte_ret_value = new byte[6];  // 返回数据，长度为6
                 /*
                  * 查询继电器状态指令：AA5A00FC00FF  
                  * 返回  AA5A00FC0000  (FC后面的两个十六进制对应的两组8位二进制为十六个继电器的状态  1为打开，0为关闭)

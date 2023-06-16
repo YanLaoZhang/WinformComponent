@@ -1068,6 +1068,7 @@ namespace XDC01SerialLib
                 }
                 if (str_ret_value.Contains("/mnt/diskc/apSwitch.sh") && str_ret_value.Contains("No such file or directory"))
                 {
+                    // apSwitch.sh文件不存在，说明仍旧为产测模式
                     str_error_log = str_ret_value.Replace("\r", "").Replace("\n", "");
                     return false;
                 }
