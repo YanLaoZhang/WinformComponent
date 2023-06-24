@@ -16,7 +16,7 @@ namespace TestDataLib
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new Data_information());
+            Application.Run(new Data_information(""));
         }
     }
 }

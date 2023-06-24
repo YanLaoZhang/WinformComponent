@@ -253,6 +253,36 @@ namespace XDC01SerialLib
 
         #region Unix指令
         /// <summary>
+        /// ifcoonfig指令来判断是否已开机
+        /// </summary>
+        /// <param name="str_bell_ip_address"></param>
+        /// <param name="str_error_log"></param>
+        /// <returns></returns>
+        public bool CheckIfconfig(ref string str_error_log)
+        {
+            try
+            {
+                string CMD_IFCOONFIG = "ifconfig";
+                string str_ret_value = "";
+                if (SendCMDToXDC01(CMD_IFCOONFIG, 3000, true, ref str_ret_value, ENDFLAG_2) == false)
+                {
+                    str_error_log = $"发送获取网卡信息指令[{CMD_IFCOONFIG}]失败";
+                    return false;
+                }
+                if (!str_ret_value.Contains("127.0.0.1"))
+                {
+                    return false;
+                }
+                return true;
+            }
+            catch (Exception ee)
+            {
+                str_error_log = $"CheckIfconfig发生异常：[{ee.Message}]";
+                return false;
+            }
+        }
+
+        /// <summary>
         /// 获取系统信息：FwVersion、RtosVersion、McuBootloaderV、McuAppV、HwVersion、Battery、BatteryPerCent、Temp、McuRfType、Backend、WifiVer
         /// </summary>
         /// <param name="cameraInfo">存储系统信息的实例</param>
@@ -470,6 +500,43 @@ namespace XDC01SerialLib
             catch (Exception ee)
             {
                 str_error_log = $"GetSystemMac发生异常：[{ee.Message}]";
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// 写入MAC
+        /// </summary>
+        /// <param name="str_mac"></param>
+        /// <param name="str_error_log"></param>
+        /// <returns></returns>
+        public bool SetSystemMac(string str_mac, ref string str_error_log)
+        {
+            try
+            {
+                if (str_mac.Length != 17)
+                {
+                    str_error_log = "mac address length error";
+                    return false;
+                }
+                if (mac_check(str_mac, 17) == false)
+                {
+                    str_error_log = "mac address format error";
+                    return false;
+                }
+                string CMD_SET_MAC = $"rtwpriv wlan0 efuse_set wmap,16A,{str_mac.Replace(":", "")}";
+                string str_ret_value = "";
+                if (SendCMDToXDC01(CMD_SET_MAC, 5000, true, ref str_ret_value, ENDFLAG_2) == false)
+                {
+                    str_error_log = $"发送写入MAC指令[{CMD_SET_MAC}]失败";
+                    return false;
+                }
+
+                return true;
+            }
+            catch (Exception ee)
+            {
+                str_error_log = $"SetSystemMac发生异常：[{ee.Message}]";
                 return false;
             }
         }
@@ -1735,7 +1802,7 @@ namespace XDC01SerialLib
                     str_error_log = $"发送写入UID和SN指令[{CMD_SET_SN_UID}]失败";
                     return false;
                 }
-                Delay(200);
+                Delay(1000);
                 string str_cur_sn = "";
                 GetSN(ref str_cur_sn, ref str_error_log);
                 if (str_cur_sn == str_sn)
@@ -1991,7 +2058,7 @@ namespace XDC01SerialLib
             {
                 string CMD_OPEN_CAMERA = $"usbon 1";
                 string str_ret_value = "";
-                if (SendCMDToXDC01(CMD_OPEN_CAMERA, 15000, true, ref str_ret_value, $"cmd>") == false)
+                if (SendCMDToXDC01(CMD_OPEN_CAMERA, 15000, true, ref str_ret_value, $"cmd") == false)
                 {
                     str_error_log = $"RTOS发送打开摄像头指令[{CMD_OPEN_CAMERA}]失败";
                     return false;

@@ -17,17 +17,20 @@ namespace CameraRTOSLib
 
         private void ShowUSBCamera_Load(object sender, EventArgs e)
         {
-            int height = System.Windows.Forms.Screen.PrimaryScreen.WorkingArea.Height;
-            int width = System.Windows.Forms.Screen.PrimaryScreen.WorkingArea.Width;
-            this.Height = height;
-            this.Width = height;
-            int startX = (width - height) / 2;
-            this.Location = new System.Drawing.Point(startX, 0);
-            if (height < 1536)
-            {
-                videoSourcePlayer1.Height = height - 40;
-                videoSourcePlayer1.Width = height - 40;
-            }
+            //int height = System.Windows.Forms.Screen.PrimaryScreen.WorkingArea.Height;
+            //int width = System.Windows.Forms.Screen.PrimaryScreen.WorkingArea.Width;
+            //this.Height = height;
+            //this.Width = height;
+            //int startX = (width - height) / 2;
+            //this.Location = new System.Drawing.Point(startX, 0);
+            //if (height < 1536)
+            //{
+            //    videoSourcePlayer1.Height = height - 40;
+            //    videoSourcePlayer1.Width = height - 40;
+            //}
+
+            //videoSourcePlayer1.Height = 1920;
+            //videoSourcePlayer1.Width = 1080;
 
             GetCameraVideo();
         }
@@ -87,10 +90,13 @@ namespace CameraRTOSLib
                 if (index == -1)
                 {
                     MessageBox.Show($"未找到摄像头{camera}");
+                    this.Close();
                     return false;
                 }
                 VideoCaptureDevice videoSource = new VideoCaptureDevice(videoDevices[index].MonikerString);
                 videoSource.VideoResolution = videoSource.VideoCapabilities[this.index];
+                videoSourcePlayer1.Height = videoSource.VideoResolution.FrameSize.Height;
+                videoSourcePlayer1.Width = videoSource.VideoResolution.FrameSize.Width;
                 videoSourcePlayer1.VideoSource = videoSource;
                 videoSourcePlayer1.Start();
                 return true;
@@ -147,21 +153,21 @@ namespace CameraRTOSLib
 
         private void ShowUSBCamera_Resize(object sender, EventArgs e)
         {
-            int min = Math.Min(panel1.Width, panel1.Height);
-            if (min < 1536)
-            {
-                videoSourcePlayer1.Width = min;
-                videoSourcePlayer1.Height = min;
-            }
-            else
-            {
-                videoSourcePlayer1.Width = 1536;
-                videoSourcePlayer1.Height = 1536;
-            }
-            int centerX = (panel1.Width - videoSourcePlayer1.Width) / 2;
-            //int centerY = (panel1.Height - videoSourcePlayer1.Height) / 2;
+            //int min = Math.Min(panel1.Width, panel1.Height);
+            //if (min < 1536)
+            //{
+            //    videoSourcePlayer1.Width = min;
+            //    videoSourcePlayer1.Height = min;
+            //}
+            //else
+            //{
+            //    videoSourcePlayer1.Width = 1536;
+            //    videoSourcePlayer1.Height = 1536;
+            //}
+            //int centerX = (panel1.Width - videoSourcePlayer1.Width) / 2;
+            ////int centerY = (panel1.Height - videoSourcePlayer1.Height) / 2;
 
-            videoSourcePlayer1.Location = new System.Drawing.Point(centerX, 0);
+            //videoSourcePlayer1.Location = new System.Drawing.Point(centerX, 0);
         }
     }
 }

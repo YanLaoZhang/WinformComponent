@@ -41,6 +41,79 @@ namespace XDC01Action
         }
 
         /// <summary>
+        /// 等待开机
+        /// </summary>
+        /// <param name="xDC01Serial"></param>
+        /// <param name="logger"></param>
+        /// <param name="testParam"></param>
+        /// <returns></returns>
+        public bool WaitPoweronByifconfig(XDC01Serial xDC01Serial, Logger logger, TestParam testParam)
+        {
+            try
+            {
+                int numa = Environment.TickCount;
+                string str_error_log = "";
+                while (true)
+                {
+                    Application.DoEvents();
+                    if (Environment.TickCount - numa > (int)decimal.Parse(testParam.poweron_delay))
+                    {
+                        logger.ShowLog($"等待开机超时");
+                        return false;
+                    }
+                    if (xDC01Serial.CheckIfconfig(ref str_error_log))
+                    {
+                        break;
+                    }
+                    else
+                    {
+                        Delay(2000);
+                    }
+                }
+                logger.ShowLog("设备已开机");
+                return true;
+            }
+            catch (Exception ee)
+            {
+                logger.ShowLog($"等待开机发生异常：[{ee.Message}]");
+                return false;
+            }
+        }
+
+        public bool WaitPoweronRTOS(XDC01Serial xDC01Serial, Logger logger, TestParam testParam)
+        {
+            try
+            {
+                string str_error_log = "";
+                int numa = Environment.TickCount;
+                while (true)
+                {
+                    System.Windows.Forms.Application.DoEvents();
+                    if (Environment.TickCount - numa > (int)decimal.Parse(testParam.poweron_delay))
+                    {
+                        logger.ShowLog($"等待开机超时");
+                        return false;
+                    }
+                    if (xDC01Serial.CheckPowerStatusRTOS(ref str_error_log))
+                    {
+                        break;
+                    }
+                    else
+                    {
+                        Delay(2000);
+                    }
+                }
+                logger.ShowLog("设备已开机");
+                return true;
+            }
+            catch (Exception ee)
+            {
+                logger.ShowLog($"等待开机发生异常：[{ee.Message}]");
+                return false;
+            }
+        }
+
+        /// <summary>
         /// PCBA电压测试
         /// </summary>
         /// <returns></returns>
@@ -770,6 +843,11 @@ namespace XDC01Action
                         btnTestItem.Result = "FAIL";
                     }
                 }
+                else
+                {
+                    logger.ShowLog($"--- 按键功能测试失败(人工选择NO)");
+                    btnTestItem.Result = "FAIL";
+                }
                 btnTestItem.Duration = (Environment.TickCount - start_time) / 1000.00f;
                 dataGridView.Rows.Add(btnTestItem.Name, "-", "-", "-", "-", "-", btnTestItem.Result, btnTestItem.Duration.ToString("F2"));
                 testItems.Add(btnTestItem);
@@ -840,6 +918,11 @@ namespace XDC01Action
                         testItem.Result = "FAIL";
                     }
                 }
+                else
+                {
+                    logger.ShowLog($"--- 移动感应功能测试失败(人工选择NO)");
+                    testItem.Result = "FAIL";
+                }
                 testItem.Duration = (Environment.TickCount - start_time) / 1000.00f;
                 dataGridView.Rows.Add(testItem.Name, "-", "-", "-", "-", "-", testItem.Result, testItem.Duration.ToString("F2"));
                 return testItem;
@@ -880,7 +963,8 @@ namespace XDC01Action
                 int interval = 1000;
                 try
                 {
-                    interval = int.Parse(testParam.led_interval) * 1000;
+                    decimal temp = decimal.Parse(testParam.led_interval) * 1000;
+                    interval = (int)temp;
                 }
                 catch (Exception ee)
                 {
@@ -1836,14 +1920,14 @@ namespace XDC01Action
             {
                 int start_time = Environment.TickCount;
                 TestItem testItem = new TestItem(){ 
-                    Name = "写下一站工序", 
+                    Name = "写当前站工序", 
                     NgItem = "write_tagnumber" 
                 };
                 string str_error_log = "";
-                logger.ShowLog("-写下一站工序...");
+                logger.ShowLog("-写当前站工序...");
                 if (xDC01Serial.SetTagNumber(testParam.next_tagnumber, ref str_error_log))
                 {
-                    logger.ShowLog("--- 下一工站的工序号设置成功");
+                    logger.ShowLog("--- 当前站的工序号设置成功");
                     testItem.Result = "PASS";
                 }
                 else
@@ -1857,11 +1941,19 @@ namespace XDC01Action
             }
             catch (Exception e)
             {
-                logger.ShowLog($"写入下一站工序号，发生异常：[{e.Message}]");
+                logger.ShowLog($"写入当前站工序号，发生异常：[{e.Message}]");
                 return null;
             }
         }
 
+        /// <summary>
+        /// 申请SN/UID/MAC
+        /// </summary>
+        /// <param name="cloudLoginForm"></param>
+        /// <param name="dataGridView"></param>
+        /// <param name="logger"></param>
+        /// <param name="cloudModel"></param>
+        /// <returns></returns>
         public TestItem ApplySNandUIDFromCloud(CloudLoginForm cloudLoginForm, System.Windows.Forms.DataGridView dataGridView, Logger logger, CloudModel cloudModel)
         {
             try
@@ -1928,6 +2020,170 @@ namespace XDC01Action
             }
         }
 
+        /// <summary>
+        /// SN/UID写入DUT
+        /// </summary>
+        /// <returns></returns>
+        public List<TestItem> WriteSnUidToDUT(XDC01Serial xDC01Serial,
+            System.Windows.Forms.DataGridView dataGridView, Logger logger, CloudModel cloudModel)
+        {
+            try
+            {
+                List<TestItem> testItems = new List<TestItem>();
+
+                int start_time = Environment.TickCount;
+                string str_error_log = "";
+                logger.ShowLog("---写入SN/UID");
+                TestItem writeSN = new TestItem()
+                {
+                    Name = "写入SN",
+                    NgItem = "write_sn",
+                    Standard = cloudModel.str_sn,
+                };
+                TestItem writeUID = new TestItem()
+                {
+                    Name = "写入UID",
+                    NgItem = "write_uid",
+                    Standard = cloudModel.str_uid,
+                };
+                //-----写入SN/UID 
+                if (xDC01Serial.SetUIDandSN(cloudModel.str_uid, cloudModel.str_sn, ref str_error_log) == false)
+                {
+                    logger.ShowLog("-- 写SN或UID失败：" + str_error_log);
+                    float Duration = (Environment.TickCount - start_time) / 1000.00f;
+                    dataGridView.Rows.Add("写入SN和UID", "-", "-", "-", "-", "串口指令发送异常", "FAIL", Duration.ToString("F2"));
+                    return null;
+                }
+                else
+                {
+                    logger.ShowLog("-- 写SN和UID完成");
+                    // 确认写入是否成功
+                    string str_read_sn = "";
+                    //string str_read_bell_mac = "";
+                    str_error_log = "";
+                    if (xDC01Serial.GetSN(ref str_read_sn, ref str_error_log) == false)
+                    {
+                        logger.ShowLog("--- 读SN失败");
+                        float Duration = (Environment.TickCount - start_time) / 1000.00f;
+                        dataGridView.Rows.Add("读SN", "-", "-", "-", "-", "串口指令发送异常", "FAIL", Duration.ToString("F2"));
+                        return null;
+                    }
+                    else
+                    {
+                        writeSN.StrVal = str_read_sn;
+                        if (string.Equals(str_read_sn.ToUpper(), cloudModel.str_sn.ToUpper()) == false)
+                        {
+                            logger.ShowLog("--- 读到的SN：" + str_read_sn.ToUpper() + "和写入的SN：" + cloudModel.str_sn.ToUpper() + "不一致");
+                            writeSN.Result = "FAIL";
+                        }
+                        else
+                        {
+                            logger.ShowLog("--- 读到的SN：" + str_read_sn.ToUpper() + "和写入的SN：" + cloudModel.str_sn.ToUpper() + "一致");
+                            writeSN.Result = "PASS";
+                        }
+                        writeSN.Duration = (Environment.TickCount - start_time) / 1000.00f;
+                        dataGridView.Rows.Add(writeSN.Name, writeSN.Standard, "-", "-", "-", writeSN.StrVal, writeSN.Result, writeSN.Duration.ToString("F2"));
+                        testItems.Add(writeSN);
+                    }
+                    Delay(500);
+                    string str_read_uid = "";
+                    str_error_log = "";
+                    if (xDC01Serial.GetUID(ref str_read_uid, ref str_error_log) == false)
+                    {
+                        logger.ShowLog("--- 读UID失败");
+                        float Duration = (Environment.TickCount - start_time) / 1000.00f;
+                        dataGridView.Rows.Add("读UID", "-", "-", "-", "-", "串口指令发送异常", "FAIL", Duration.ToString("F2"));
+                        return null;
+                    }
+                    else
+                    {
+                        writeUID.StrVal = str_read_uid;
+                        if (string.Equals(str_read_uid.ToUpper(), cloudModel.str_uid.ToUpper()) == false)
+                        {
+                            logger.ShowLog("--- 读到的UID：" + str_read_uid.ToUpper() + "和写入的UID：" + cloudModel.str_uid.ToUpper() + "不一致");
+                            writeUID.Result = "FAIL";
+                        }
+                        else
+                        {
+                            logger.ShowLog("--- 读到的UID：" + str_read_uid.ToUpper() + "和写入的UID：" + cloudModel.str_uid.ToUpper() + "一致");
+                            writeUID.Result = "PASS";
+                        }
+                        writeUID.Duration = (Environment.TickCount - start_time) / 1000.00f;
+                        dataGridView.Rows.Add(writeUID.Name, writeUID.Standard, "-", "-", "-", writeUID.StrVal, writeUID.Result, writeUID.Duration.ToString("F2"));
+                        testItems.Add(writeUID);
+                    }
+                }
+
+                //-----写入Mac address
+                Delay(500);
+                TestItem writeMAC = new TestItem()
+                {
+                    Name = "写入MAC",
+                    NgItem = "write_mac",
+                    Standard = cloudModel.str_mac,
+                };
+                str_error_log = "";
+                if (string.Equals(cloudModel.str_mac.ToUpper(), cloudModel.str_mac_cloud.ToUpper()))
+                {
+                    logger.ShowLog("--- 设备原MAC地址和云端相同，不再重新写入");
+                    writeMAC.Result = "PASS";
+                }
+                else
+                {
+                    if (xDC01Serial.SetSystemMac(cloudModel.str_mac_cloud, ref str_error_log) == false)
+                    {
+                        logger.ShowLog("--- 写MAC地址失败：" + str_error_log);
+                        float Duration = (Environment.TickCount - start_time) / 1000.00f;
+                        dataGridView.Rows.Add("写入SN和UID", "-", "-", "-", "-", "串口指令发送异常", "FAIL", Duration.ToString("F2"));
+                        return null;
+                    }
+                    else
+                    {
+                        logger.ShowLog("--- 写MAC地址完成");
+                        str_error_log = "";
+                        string str_read_mac = "";
+                        if (xDC01Serial.GetSystemMac(ref str_read_mac, ref str_error_log) == false)
+                        {
+                            logger.ShowLog("--- 读MAC地址失败"); 
+                            float Duration = (Environment.TickCount - start_time) / 1000.00f;
+                            dataGridView.Rows.Add("读MAC", "-", "-", "-", "-", "串口指令发送异常", "FAIL", Duration.ToString("F2"));
+                            return null;
+                        }
+                        else
+                        {
+                            if (string.Equals(str_read_mac.ToUpper(), cloudModel.str_mac_cloud.ToUpper()) == false)
+                            {
+                                logger.ShowLog("--- 读到的MAC：" + str_read_mac.ToUpper() + "和写入的MAC：" + cloudModel.str_mac_cloud.ToUpper() + "不一致");
+                                writeMAC.Result = "FAIL";
+                            }
+                            else
+                            {
+                                logger.ShowLog("--- 读到的MAC：" + str_read_mac.ToUpper() + "和写入的MAC：" + cloudModel.str_mac_cloud.ToUpper() + "一致");
+                                writeMAC.Result = "PASS";
+                            }
+                            writeMAC.Duration = (Environment.TickCount - start_time) / 1000.00f;
+                            dataGridView.Rows.Add(writeMAC.Name, writeMAC.Standard, "-", "-", "-", writeMAC.StrVal, writeMAC.Result, writeMAC.Duration.ToString("F2"));
+                            testItems.Add(writeMAC);
+                        }
+                    }
+                }
+                return testItems;
+            }
+            catch (Exception ee)
+            {
+                logger.ShowLog($"SN/UID/MAC写入DUT,发生异常：[{ee.Message}]");
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// 检查SN/UID/MAC
+        /// </summary>
+        /// <param name="cloudLoginForm"></param>
+        /// <param name="dataGridView"></param>
+        /// <param name="logger"></param>
+        /// <param name="cloudModel"></param>
+        /// <returns></returns>
         public TestItem CheckSNandUIDFromCloud(CloudLoginForm cloudLoginForm, System.Windows.Forms.DataGridView dataGridView, Logger logger, CloudModel cloudModel)
         {
             try
@@ -1939,14 +2195,36 @@ namespace XDC01Action
                 };
                 string str_error_log = "";
                 logger.ShowLog("-云端检查SN|UID|MAC...");
-                if(cloudLoginForm.CheckSNandUIDFromCloud(cloudModel, ref str_error_log))
+                string str_respone = "";
+                if (cloudLoginForm.cloud_token(cloudModel, ref str_respone))
                 {
-                    logger.ShowLog("--- 云端检查SN,UID,MAC成功");
-                    testItem.Result = "PASS";
+                    logger.ShowLog("--- 登录成功");
+                    str_respone = "";
+                    if (cloudLoginForm.cloud_create_token(cloudModel, ref str_respone))
+                    {
+                        logger.ShowLog("--- token创建成功");
+                        Delay(500);
+                        str_error_log = "";
+                        if (cloudLoginForm.CheckSNandUIDFromCloud(cloudModel, ref str_error_log))
+                        {
+                            logger.ShowLog("--- 云端检查SN,UID,MAC成功");
+                            testItem.Result = "PASS";
+                        }
+                        else
+                        {
+                            logger.ShowLog("--- 云端检查SN,UID,MAC失败：" + str_error_log);
+                            testItem.Result = "FAIL";
+                        }
+                    }
+                    else
+                    {
+                        logger.ShowLog("--- token创建失败：" + str_respone);
+                        testItem.Result = "FAIL";
+                    }
                 }
                 else
                 {
-                    logger.ShowLog("--- 云端检查SN,UID,MAC失败：" + str_error_log);
+                    logger.ShowLog($"--- 登录失败：{str_respone}");
                     testItem.Result = "FAIL";
                 }
 
@@ -1957,6 +2235,110 @@ namespace XDC01Action
             catch (Exception ee)
             {
                 logger.ShowLog($"云端检查SN/UID/MAC发生异常：[{ee.Message}]");
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// 打印SN/MAC
+        /// </summary>
+        /// <param name="dataGridView"></param>
+        /// <param name="logger"></param>
+        /// <param name="testParam"></param>
+        /// <param name="cloudModel"></param>
+        /// <returns></returns>
+        public List<TestItem> PrintSnMAC(System.Windows.Forms.DataGridView dataGridView, Logger logger, TestParam testParam, CloudModel cloudModel)
+        {
+            try
+            {
+                List<TestItem> testItems = new List<TestItem>();
+                int start_time = Environment.TickCount;
+                TestItem SNtestItem = new TestItem()
+                {
+                    Name = "打印SN",
+                    NgItem = "print_sn"
+                };
+                string str_error_log = "";
+                logger.ShowLog("---打印SN和MAC");
+
+                if (Printer.Print_SN(logger, testParam.printer_name, cloudModel.str_sn, testParam.sn_count, ref str_error_log) == false)
+                {
+                    logger.ShowLog("--- 打印SN失败：" + str_error_log);
+                    SNtestItem.Result = "FAIL";
+                }
+                else
+                {
+                    logger.ShowLog("--- 打印SN成功");
+                    SNtestItem.Result = "PASS";
+                }
+                SNtestItem.Duration = (Environment.TickCount - start_time) / 1000.00f;
+                dataGridView.Rows.Add(SNtestItem.Name, "-", "-", "-", "-", "-", SNtestItem.Result, SNtestItem.Duration.ToString("F2"));
+                testItems.Add(SNtestItem);
+
+                TestItem MACtestItem = new TestItem()
+                {
+                    Name = "打印MAC",
+                    NgItem = "print_mac"
+                };
+                str_error_log = "";
+                if (Printer.Print_MAC(logger, testParam.printer_name, cloudModel.str_mac_cloud, testParam.mac_count, ref str_error_log) == false)
+                {
+                    logger.ShowLog("--- 打印MAC地址失败：" + str_error_log);
+                    MACtestItem.Result = "FAIL";
+                }
+                else
+                {
+                    logger.ShowLog("--- 打印MAC地址成功");
+                    MACtestItem.Result = "PASS";
+                }
+
+                MACtestItem.Duration = (Environment.TickCount - start_time) / 1000.00f;
+                dataGridView.Rows.Add(MACtestItem.Name, "-", "-", "-", "-", "-", MACtestItem.Result, MACtestItem.Duration.ToString("F2"));
+                testItems.Add(MACtestItem);
+
+                return testItems;
+            }
+            catch (Exception ee)
+            {
+                logger.ShowLog($"打印SN/MAC发生异常：[{ee.Message}]");
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// RTOS测试通过时调用，写入测试工序号
+        /// </summary>
+        /// <returns></returns>
+        public TestItem WriteTagNumberRTOS(XDC01Serial xDC01Serial,
+            System.Windows.Forms.DataGridView dataGridView, Logger logger, TestParam testParam)
+        {
+            try
+            {
+                int start_time = Environment.TickCount;
+                TestItem testItem = new TestItem()
+                {
+                    Name = "写当前站工序",
+                    NgItem = "write_tagnumber"
+                };
+                string str_error_log = "";
+                logger.ShowLog("-写当前站工序...");
+                if (xDC01Serial.SetTagNumberRTOS(testParam.next_tagnumber, ref str_error_log))
+                {
+                    logger.ShowLog("--- 当前站的工序号设置成功");
+                    testItem.Result = "PASS";
+                }
+                else
+                {
+                    logger.ShowLog("--- 写工序号操作异常：" + str_error_log);
+                    testItem.Result = "FAIL";
+                }
+                float Duration = (Environment.TickCount - start_time) / 1000.00f;
+                dataGridView.Rows.Add(testItem.Name, "-", "-", "-", "-", testParam.next_tagnumber, testItem.Result, Duration.ToString("F2"));
+                return testItem;
+            }
+            catch (Exception e)
+            {
+                logger.ShowLog($"写入当前站工序号，发生异常：[{e.Message}]");
                 return null;
             }
         }
@@ -2219,7 +2601,7 @@ namespace XDC01Action
         /// 将机器放入测试暗箱预留卡位，查看黑夜模式下的图像清晰度
         /// </summary>
         /// <returns></returns>
-        public TestItem CheckNightResolution(XDC01Serial xDC01Serial,
+        public TestItem CheckNightResolutionRTOS(XDC01Serial xDC01Serial,
             System.Windows.Forms.DataGridView dataGridView, Logger logger)
         {
             try

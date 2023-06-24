@@ -39,8 +39,15 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Printer.cs" />
     <Compile Include="TestAction.cs" />
     <Compile Include="TestItem.cs" />
+    <Compile Include="TestParamForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="TestParamForm.Designer.cs">
+      <DependentUpon>TestParamForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="TestSpecification.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -50,6 +57,11 @@
     </Reference>
     <Reference Include="DSA700Lib">
       <HintPath>..\XDC01_TestAction\bin\Debug\libs\DSA700Lib.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Interop.LabelManager2">
+      <HintPath>..\..\..\..\CommonDLL\Interop.LabelManager2.dll</HintPath>
+      <EmbedInteropTypes>False</EmbedInteropTypes>
       <Private>False</Private>
     </Reference>
     <Reference Include="Interop.WMPLib">
@@ -78,7 +90,9 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
     <Reference Include="TDMSerial">
       <HintPath>..\XDC01_TestAction\bin\Debug\libs\TDMSerial.dll</HintPath>
       <Private>False</Private>
@@ -88,7 +102,7 @@
       <Private>False</Private>
     </Reference>
     <Reference Include="XDC01Serial">
-      <HintPath>..\XDC01_TestAction\bin\Debug\libs\XDC01Serial.dll</HintPath>
+      <HintPath>..\XDC01Serial\bin\Debug\XDC01Serial.dll</HintPath>
       <Private>False</Private>
     </Reference>
   </ItemGroup>
@@ -98,11 +112,21 @@
       <Name>CloudAPILib</Name>
       <Private>False</Private>
     </ProjectReference>
+    <ProjectReference Include="..\ConfigFileLib\ConfigFileLib.csproj">
+      <Project>{9C361D8A-AF72-4539-A517-4A611EF93060}</Project>
+      <Name>ConfigFileLib</Name>
+      <Private>False</Private>
+    </ProjectReference>
     <ProjectReference Include="..\FLUKE8808ALib\FLUKE8808ALib.csproj">
       <Project>{5389a472-e2f7-4fea-aea5-5c14e6c334df}</Project>
       <Name>FLUKE8808ALib</Name>
       <Private>False</Private>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="TestParamForm.resx">
+      <DependentUpon>TestParamForm.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

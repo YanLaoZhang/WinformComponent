@@ -226,6 +226,7 @@ namespace XDC01Action
 
     public class TestParam
     {
+        public string poweron_delay;
         public string db_ip;
         public string db_port;
         public string spec_id;
@@ -264,11 +265,16 @@ namespace XDC01Action
         public string productType;
 
         public string local_server_name;
+        public string rtos_serial_port;
 
         public string charge_relay_index;
         public string voltage_tdm_port;
         public string current_tdm_port;
         public string current_fluke_port;
         public string relay_port;
+
+        public string printer_name;
+        public string sn_count;
+        public string mac_count;
     }
 }

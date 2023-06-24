@@ -12,9 +12,12 @@ namespace TestDataLib
 {
     public partial class Data_information : Form
     {
-        public Data_information()
+        private string _table_name = string.Empty;
+
+        public Data_information(string table_name)
         {
             InitializeComponent();
+            _table_name = table_name;
         }
 
         private void data_information_Load(object sender, EventArgs e)
@@ -36,11 +39,17 @@ namespace TestDataLib
                 string Start_Time = string.Format("{0:yyyy-MM-dd HH:mm:ss}", dtp_Start.Value);
                 string End_Time = string.Format("{0:yyyy-MM-dd HH:mm:ss}", dtp_End.Value);
 
+                if(_table_name == "")
+                {
+                    MessageBox.Show($"未指定数据表，无法查询");
+                    return false;
+                }
+
                 //System_Cloud_DB.System_DB _db = new System_Cloud_DB.System_DB();
                 // 本机数据库sqlite
                 LocalMachineDB localMachineDB = new LocalMachineDB();
                 DataTable dt = new DataTable();
-                string str_sql = $"SELECT * FROM `change_mode` WHERE `start_test_time` between '{Start_Time}' and '{End_Time}'";
+                string str_sql = $"SELECT * FROM `{_table_name}` WHERE `start_test_time` between '{Start_Time}' and '{End_Time}'";
                 if (str_rn.Length == 15)
                 {
                     str_sql += $" and `rn`='{str_rn}'";

@@ -97,7 +97,7 @@ namespace XDC01_TestAction
         #region 测试记录
         private void OpenDataInfoForm()
         {
-            data_InfoForm = new Data_information();
+            data_InfoForm = new Data_information("");
             data_InfoForm.FormClosed += DataInfoForm_FormClosed;
             data_InfoForm.Show();
         }
@@ -326,14 +326,14 @@ namespace XDC01_TestAction
             };
 
             TestAction testAction = new TestAction();
-            // 检查RN和工序号
+            #region 检查RN和工序号
             List<TestItem> RNandTagnumber = testAction.CheckRNandTagname(serial, dataGridView1, logger, testParam, specStandard);
             
             if (RNandTagnumber == null)
             {
-                logger.ShowLog($"RN号或工序号检查不通过，无法进行后续测试");
                 if(testParam.ng_continue == "false")
                 {
+                    logger.ShowLog($"RN号或工序号检查不通过，无法进行后续测试");
                     return;
                 }
             }
@@ -357,14 +357,15 @@ namespace XDC01_TestAction
                     }
                 }
             }
+            #endregion
 
-            // 检查设备信息
+            #region 检查设备信息
             List<TestItem> DUTInfo = testAction.CheckDUTInfo(serial, dataGridView1, logger, specMax, specMin, specStandard);
             if(DUTInfo == null)
             {
-                logger.ShowLog($"设备信息检查不通过，无法进行后续测试");
                 if (testParam.ng_continue == "false")
                 {
+                    logger.ShowLog($"设备信息检查不通过，无法进行后续测试");
                     return;
                 }
             }
@@ -398,15 +399,16 @@ namespace XDC01_TestAction
                     }
                 }
             }
-/*
-            // ping网测试
+            #endregion
+
+            #region ping网测试
             TestItem pingTest = testAction.CheckWiFi(serial, dataGridView1, logger, specMax, specMin, testParam);
             if(pingTest == null)
             {
                 model.str_ping_rtt = "-1";
-                logger.ShowLog($"Ping测试异常，无法进行后续测试");
                 if (testParam.ng_continue == "false")
                 {
+                    logger.ShowLog($"Ping测试异常，无法进行后续测试");
                     return;
                 }
             }
@@ -418,17 +420,18 @@ namespace XDC01_TestAction
                     model.str_ng_item += $"{pingTest.NgItem},";
                 }
             }
-            
-            // 麦克风测试
+            #endregion
+
+            #region 麦克风测试
             axWindowsMediaPlayer1.settings.volume = 100;
             axWindowsMediaPlayer1.settings.playCount = 1;
             axWindowsMediaPlayer1.URL = $@"{wavePath}\{testParam.mic_wave_file}";
             TestItem mic_auto = testAction.CheckMicrophoneAuto(serial, dataGridView1, logger, pcCommand, axWindowsMediaPlayer1, testParam);
             if (mic_auto == null)
             {
-                logger.ShowLog($"麦克风测试(自动)异常，无法进行后续测试");
                 if (testParam.ng_continue == "false")
                 {
+                    logger.ShowLog($"麦克风测试(自动)异常，无法进行后续测试");
                     return;
                 }
             }
@@ -442,9 +445,9 @@ namespace XDC01_TestAction
                     TestItem mic_manual = testAction.CheckMicrophoneManual(serial, dataGridView1, logger, testParam);
                     if(mic_manual == null)
                     {
-                        logger.ShowLog($"麦克风测试(人工)异常，无法进行后续测试");
                         if (testParam.ng_continue == "false")
                         {
+                            logger.ShowLog($"麦克风测试(人工)异常，无法进行后续测试");
                             return;
                         }
                     }
@@ -458,15 +461,15 @@ namespace XDC01_TestAction
                     }
                 }
             }
+            #endregion
 
-
-            // 按键和喇叭测试
+            #region 按键和喇叭测试
             List<TestItem> btn_audio =  testAction.CheckButtonAndSpeaker(serial, dataGridView1, logger);
             if (btn_audio == null)
             {
-                logger.ShowLog($"按键和喇叭测试异常，无法进行后续测试");
                 if (testParam.ng_continue == "false")
                 {
+                    logger.ShowLog($"按键和喇叭测试异常，无法进行后续测试");
                     return;
                 }
             }
@@ -488,14 +491,15 @@ namespace XDC01_TestAction
                     }
                 }
             }
+            #endregion
 
-            // 移动感应测试
+            #region 移动感应测试
             TestItem pirTest = testAction.CheckPIRMotion(serial, dataGridView1, logger);
             if (pirTest == null)
             {
-                logger.ShowLog($"移动感应测试异常，无法进行后续测试");
                 if (testParam.ng_continue == "false")
                 {
+                    logger.ShowLog($"移动感应测试异常，无法进行后续测试");
                     return;
                 }
             }
@@ -507,14 +511,15 @@ namespace XDC01_TestAction
                     model.str_ng_item += $"{pirTest.NgItem},";
                 }
             }
+            #endregion
 
-            // LED颜色测试
+            #region LED颜色测试
             TestItem led_color = testAction.CheckLEDColor(serial, dataGridView1, logger, testParam);
             if (led_color == null)
             {
-                logger.ShowLog($"LED颜色测试异常，无法进行后续测试");
                 if (testParam.ng_continue == "false")
                 {
+                    logger.ShowLog($"LED颜色测试异常，无法进行后续测试");
                     return;
                 }
             }
@@ -526,14 +531,15 @@ namespace XDC01_TestAction
                     model.str_ng_item += $"{led_color.NgItem},";
                 }
             }
+            #endregion
 
-            // VLC视频检查
+            #region VLC视频检查
             List<TestItem> rtsp = testAction.CheckRTSP(serial, dataGridView1, logger);
             if (rtsp == null)
             {
-                logger.ShowLog($"VLC视频检查异常，无法进行后续测试");
                 if (testParam.ng_continue == "false")
                 {
+                    logger.ShowLog($"VLC视频检查异常，无法进行后续测试");
                     return;
                 }
             }
@@ -559,14 +565,15 @@ namespace XDC01_TestAction
                     }
                 }
             }
+            #endregion
 
-            // wifi吞吐量
+            #region wifi吞吐量
             List<TestItem> wifiThroughput = testAction.CheckWiFiThroughput(serial, pcCommand, dataGridView1, logger, specMax, specMin, testParam);
             if (wifiThroughput == null)
             {
-                logger.ShowLog($"wifi吞吐量测试异常，无法进行后续测试");
                 if (testParam.ng_continue == "false")
                 {
+                    logger.ShowLog($"wifi吞吐量测试异常，无法进行后续测试");
                     return;
                 }
             }
@@ -598,14 +605,15 @@ namespace XDC01_TestAction
                     }
                 }
             }
+            #endregion
 
-            // 亮度值
+            #region 亮度值
             TestItem light = testAction.CheckLightSensor(serial, dataGridView1, logger, specMax, specMin);
             if (light == null)
             {
-                logger.ShowLog($"亮度值测试异常，无法进行后续测试");
                 if (testParam.ng_continue == "false")
                 {
+                    logger.ShowLog($"亮度值测试异常，无法进行后续测试");
                     return;
                 }
             }
@@ -617,8 +625,9 @@ namespace XDC01_TestAction
                     model.str_ng_item += $"{light.NgItem},";
                 }
             }
+            #endregion
 
-            // RF TX
+            #region RF TX
             DSA700Lib.CVisaOpt_control _DSA700 = new DSA700Lib.CVisaOpt_control();
             List<TestItem> rf_tx = testAction.CheckRFTxTest(serial, dataGridView1, logger, specMax, specMin, specStandard, _DSA700, testParam);
             if (rf_tx == null)
@@ -626,9 +635,9 @@ namespace XDC01_TestAction
                 model.str_rf_tx_frenquency = "0";
                 model.str_rf_tx_power = "0";
                 model.str_rf_tx_power_revise = "0";
-                logger.ShowLog($"RF发送测试异常，无法进行后续测试");
                 if (testParam.ng_continue == "false")
                 {
+                    logger.ShowLog($"RF发送测试异常，无法进行后续测试");
                     return;
                 }
             }
@@ -651,14 +660,15 @@ namespace XDC01_TestAction
                     }
                 }
             }
+            #endregion
 
-            // RF RX
+            #region RF RX
             TestItem rf_rx = testAction.CheckRFRxTest(serial, dataGridView1, logger, testParam);
             if (rf_rx == null)
             {
-                logger.ShowLog($"RF接收测试异常，无法进行后续测试");
                 if (testParam.ng_continue == "false")
                 {
+                    logger.ShowLog($"RF接收测试异常，无法进行后续测试");
                     return;
                 }
             }
@@ -670,8 +680,9 @@ namespace XDC01_TestAction
                     model.str_ng_item += $"{rf_rx.NgItem},";
                 }
             }
+            #endregion
 
-            // 申请SN/uid/mac
+            #region 申请SN/uid/mac
             string str_error_log = "";
             if(serial.GetSystemMac(ref model.str_mac, ref str_error_log))
             {
@@ -691,9 +702,9 @@ namespace XDC01_TestAction
                 TestItem apply_cloud = testAction.ApplySNandUIDFromCloud(cloudLoginForm, dataGridView1, logger, cloudModel);
                 if(apply_cloud == null)
                 {
-                    logger.ShowLog($"云端申请SN|UID|MAC异常，无法进行后续测试");
                     if (testParam.ng_continue == "false")
                     {
+                        logger.ShowLog($"云端申请SN|UID|MAC异常，无法进行后续测试");
                         return;
                     }
                 }
@@ -711,9 +722,9 @@ namespace XDC01_TestAction
                 TestItem check_cloud = testAction.CheckSNandUIDFromCloud(cloudLoginForm, dataGridView1, logger, cloudModel);
                 if(check_cloud == null)
                 {
-                    logger.ShowLog($"云端检查SN|UID|MAC异常，无法进行后续测试");
                     if (testParam.ng_continue == "false")
                     {
+                        logger.ShowLog($"云端检查SN|UID|MAC异常，无法进行后续测试");
                         return;
                     }
                 }
@@ -729,15 +740,16 @@ namespace XDC01_TestAction
             else
             {
                 logger.ShowLog($"获取mac失败：[{str_error_log}], 无法向云端申请");
-            }*/
+            }
+            #endregion
 
-            // 复位键
+            #region 复位键
             TestItem reset_btn = testAction.CheckResetButton(serial, dataGridView1, logger);
             if(reset_btn == null)
             {
-                logger.ShowLog($"复位键测试异常，无法进行后续测试");
                 if (testParam.ng_continue == "false")
                 {
+                    logger.ShowLog($"复位键测试异常，无法进行后续测试");
                     return;
                 }
             }
@@ -749,14 +761,15 @@ namespace XDC01_TestAction
                     model.str_ng_item += $"{reset_btn.NgItem},";
                 }
             }
+            #endregion
 
-            // 恢复出厂设置
+            #region 恢复出厂设置
             TestItem factory_reset = testAction.SetFactoryReset(serial, dataGridView1, logger);
             if(factory_reset == null)
             {
-                logger.ShowLog($"恢复出厂设置异常，无法进行后续测试");
                 if (testParam.ng_continue == "false")
                 {
+                    logger.ShowLog($"恢复出厂设置异常，无法进行后续测试");
                     return;
                 }
             }
@@ -768,57 +781,78 @@ namespace XDC01_TestAction
                     model.str_ng_item += $"{factory_reset.NgItem},";
                 }
             }
-
-            // 写入下一站wifi
-            if(testParam.write_next_wifi == "True")
-            {
-                TestItem writeWIFI = testAction.SetNextStationWiFi(serial, dataGridView1, logger, testParam);
-                if(writeWIFI == null)
-                {
-                    logger.ShowLog($"写入下一站WIFI异常，无法进行后续测试");
-                    if (testParam.ng_continue == "false")
-                    {
-                        return;
-                    }
-                }
-                else
-                {
-                    model.str_write_wifi = writeWIFI.Result;
-                    if(writeWIFI.Result == "FAIL")
-                    {
-                        model.str_ng_item += $"{writeWIFI.NgItem},";
-                    }
-                }
-            }
-/*
-            // 写入下一站工序号
-            TestItem writeTagnumber = testAction.WriteTagNumber(serial, dataGridView1, logger, testParam);
-            if(writeTagnumber == null)
-            {
-                logger.ShowLog($"写入下一站WIFI异常，无法进行后续测试");
-                if (testParam.ng_continue == "false")
-                {
-                    return;
-                }
-            }
-            else
-            {
-                model.str_write_tagnumber = testParam.next_tagnumber;
-                if(writeTagnumber.Result == "FAIL")
-                {
-                    model.str_ng_item += $"{writeTagnumber.NgItem},";
-                }
-            }*/
+            #endregion
 
             // 保存数据库
             model.str_end_test_time = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
             if(model.str_ng_item.Length == 0)
             {
-                model.str_test_result = "PASS";
+                bool isWriteWifi = true;
+                #region 写入下一站wifi
+                if (testParam.write_next_wifi == "True")
+                {
+                    TestItem writeWIFI = testAction.SetNextStationWiFi(serial, dataGridView1, logger, testParam);
+                    if (writeWIFI == null)
+                    {
+                        if (testParam.ng_continue == "false")
+                        {
+                            logger.ShowLog($"写入下一站WIFI异常，无法进行后续测试");
+                            return;
+                        }
+                    }
+                    else
+                    {
+                        model.str_write_wifi = writeWIFI.Result;
+                        if (writeWIFI.Result == "FAIL")
+                        {
+                            model.str_ng_item += $"{writeWIFI.NgItem},";
+                            isWriteWifi = false;
+                        }
+                    }
+                }
+                #endregion
+
+                bool isWriteTag = true;
+                #region 写入下一站工序号
+                TestItem writeTagnumber = testAction.WriteTagNumber(serial, dataGridView1, logger, testParam);
+                if (writeTagnumber == null)
+                {
+                    if (testParam.ng_continue == "false")
+                    {
+                        logger.ShowLog($"写入下一站工序异常，无法进行后续测试");
+                        return;
+                    }
+                }
+                else
+                {
+                    model.str_write_tagnumber = testParam.next_tagnumber;
+                    if (writeTagnumber.Result == "FAIL")
+                    {
+                        model.str_ng_item += $"{writeTagnumber.NgItem},";
+                        isWriteTag = false;
+                    }
+                }
+                #endregion
+
+                if (isWriteWifi && isWriteTag)
+                {
+                    model.str_test_result = "PASS";
+
+                    labelResult.Text = "PASS";
+                    panelResult.BackColor = Color.Green;
+                }
+                else
+                {
+                    model.str_test_result = "FAIL";
+                    labelResult.Text = "FAIL";
+                    panelResult.BackColor = Color.Red;
+                }
             }
             else
             {
                 model.str_test_result = "FAIL";
+                labelResult.Text = "FAIL";
+                panelResult.BackColor = Color.Red;
             }
             string str_sql = $"INSERT INTO `t030_product_test_report` " +
                 $"(`software_version`, `spec_id`, `standard_id`, `fixture_id`, `operator_id`, `rn`, " +
@@ -832,9 +866,9 @@ namespace XDC01_TestAction
                 $"`mac`, `sn`, `uid`, `mac_cloud`, `check_sn_uid`)" +
                 $" VALUES ('{model.str_software_version}', '{model.str_spec_id}', '{model.str_standard_id}', '{model.str_fixture_id}', '{model.str_operator_id}', '{model.str_rn}'," +
                 $" '{model.str_start_test_time}', '{model.str_end_test_time}', '{model.str_stage_name}', '{model.str_test_mode}', '{model.str_test_result}'," +
-                $" '{model.str_ng_item}', '{model.str_read_tagnumber}', '{model.str_write_tagnumber}', '{model.str_ping_rtt}'," +
+                $" '{model.str_ng_item}', '{model.str_read_tagnumber}', '{model.str_write_tagnumber}', {model.str_ping_rtt}," +
                 $" '{model.str_mic_auto}', '{model.str_mic_data}', '{model.str_mic_manual}', '{model.str_led_color}', '{model.str_motion}', '{model.str_button}', '{model.str_audio}'," +
-                $" '{model.str_fw_version}', '{model.str_hw_version}', '{model.str_mcu_version}', '{model.str_battery_voltage}', '{model.str_cpu_temperature}'," +
+                $" '{model.str_fw_version}', '{model.str_hw_version}', '{model.str_mcu_version}', {model.str_battery_voltage}, {model.str_cpu_temperature}," +
                 $" '{model.str_light}', '{model.str_vlc_rtsp}', '{model.str_ir_cut}', '{model.str_ir_led}', '{model.str_wifi_up_loss}', '{model.str_wifi_up_rate}', '{model.str_up_rate_revise}'," +
                 $" '{model.str_wifi_down_loss}', '{model.str_wifi_down_rate}', '{model.str_down_rate_revise}', '{model.str_rf_rx}', '{model.str_rf_tx_frenquency}'," +
                 $" '{model.str_rf_tx_power}', '{model.str_rf_tx_power_revise}', '{model.str_reset_button}', '{model.str_factory_reset}'," +

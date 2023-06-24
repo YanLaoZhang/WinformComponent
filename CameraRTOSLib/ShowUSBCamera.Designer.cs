@@ -45,9 +45,6 @@
             // 
             // videoSourcePlayer1
             // 
-            this.videoSourcePlayer1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
             this.videoSourcePlayer1.Location = new System.Drawing.Point(3, 3);
             this.videoSourcePlayer1.Name = "videoSourcePlayer1";
             this.videoSourcePlayer1.Size = new System.Drawing.Size(794, 435);
@@ -67,6 +64,7 @@
             this.Name = "ShowUSBCamera";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "USB图像展示";
+            this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.ShowUSBCamera_FormClosing);
             this.Load += new System.EventHandler(this.ShowUSBCamera_Load);
             this.Resize += new System.EventHandler(this.ShowUSBCamera_Resize);

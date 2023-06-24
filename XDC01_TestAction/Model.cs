@@ -23,19 +23,19 @@ namespace XDC01_TestAction
         public string str_read_tagnumber=string.Empty;
         public string str_write_tagnumber = string.Empty;
 
-        public string str_voltage_wifi=string.Empty;
-        public string str_voltage_vcc_core=string.Empty;
-        public string str_voltage_sensor1=string.Empty;
-        public string str_voltage_sensor2=string.Empty;
-        public string str_voltage_rtc=string.Empty;
-        public string str_voltage_vcc=string.Empty;
-        public string str_voltage_mcu=string.Empty;
-        public string str_voltage_ddr=string.Empty;
-        public string str_work_current=string.Empty;
-        public string str_charge_current=string.Empty;
-        public string str_standby_current=string.Empty;
+        public string str_voltage_wifi="null";
+        public string str_voltage_vcc_core="null";
+        public string str_voltage_sensor1="null";
+        public string str_voltage_sensor2="null";
+        public string str_voltage_rtc="null";
+        public string str_voltage_vcc="null";
+        public string str_voltage_mcu="null";
+        public string str_voltage_ddr="null";
+        public string str_work_current="null";
+        public string str_charge_current="null";
+        public string str_standby_current="null";
 
-        public string str_ping_rtt=string.Empty;
+        public string str_ping_rtt="null";
         public string str_mic_auto=string.Empty;
         public string str_mic_data=string.Empty;
         public string str_mic_manual=string.Empty;
@@ -46,8 +46,8 @@ namespace XDC01_TestAction
         public string str_fw_version=string.Empty;
         public string str_hw_version=string.Empty;
         public string str_mcu_version=string.Empty;
-        public string str_battery_voltage=string.Empty;
-        public string str_cpu_temperature=string.Empty;
+        public string str_battery_voltage="null";
+        public string str_cpu_temperature="null";
         public string str_light=string.Empty;
         public string str_vlc_rtsp=string.Empty;
         public string str_ir_cut=string.Empty;
