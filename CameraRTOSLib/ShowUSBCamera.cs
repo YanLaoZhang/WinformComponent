@@ -13,6 +13,7 @@ namespace CameraRTOSLib
         {
             InitializeComponent();
             this.index = index;
+            this.MaximizedBounds = Screen.PrimaryScreen.WorkingArea;//在窗体初始化后添加一句代码
         }
 
         private void ShowUSBCamera_Load(object sender, EventArgs e)

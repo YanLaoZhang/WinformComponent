@@ -2481,7 +2481,7 @@ namespace XDC01Action
                     NgItem = "day_video_check"
                 };
                 logger.ShowLog("-镜头清晰度检查...");
-                CustomDialog btnDialog = new CustomDialog("镜头清晰度检查", "请检查镜头画面清晰度");
+                CustomDialog btnDialog = new CustomDialog("镜头清晰度检查", "请检查镜头画面清晰度", true);
                 DialogResult result = btnDialog.ShowDialog();
 
                 if (result == DialogResult.Yes)
@@ -2521,7 +2521,7 @@ namespace XDC01Action
                     NgItem = "dark_corner"
                 };
                 logger.ShowLog("-镜头暗角检查...");
-                CustomDialog btnDialog = new CustomDialog("镜头暗角检查", "请确认画面有无暗角");
+                CustomDialog btnDialog = new CustomDialog("镜头暗角检查", "请确认画面有无暗角", true);
                 DialogResult result = btnDialog.ShowDialog();
 
                 if (result == DialogResult.Yes)
@@ -2641,7 +2641,7 @@ namespace XDC01Action
                     NgItem = "night_video_check"
                 };
                 logger.ShowLog("-夜视清晰度检查...");
-                CustomDialog btnDialog = new CustomDialog("夜视清晰度检查", "请检查夜视画面清晰度");
+                CustomDialog btnDialog = new CustomDialog("夜视清晰度检查", "请检查夜视画面清晰度", true);
                 DialogResult result = btnDialog.ShowDialog();
 
                 if (result == DialogResult.Yes)
