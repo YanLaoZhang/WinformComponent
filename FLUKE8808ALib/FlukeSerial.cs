@@ -193,7 +193,7 @@ namespace FLUKE8808ALib
                 MessageBox.Show($"向万用表发送指令{str_send},发生异常：{ee.Message}");
                 return false;
             }
-            finally { _serialPort.Close(); }
+            //finally { _serialPort.Close(); }
         }
 
         #region FLUKE 8808A万用表

@@ -45,9 +45,10 @@
             // 
             // videoSourcePlayer1
             // 
-            this.videoSourcePlayer1.Location = new System.Drawing.Point(3, 3);
+            this.videoSourcePlayer1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.videoSourcePlayer1.Location = new System.Drawing.Point(0, 0);
             this.videoSourcePlayer1.Name = "videoSourcePlayer1";
-            this.videoSourcePlayer1.Size = new System.Drawing.Size(794, 435);
+            this.videoSourcePlayer1.Size = new System.Drawing.Size(800, 450);
             this.videoSourcePlayer1.TabIndex = 1;
             this.videoSourcePlayer1.Text = "videoSourcePlayer1";
             this.videoSourcePlayer1.VideoSource = null;

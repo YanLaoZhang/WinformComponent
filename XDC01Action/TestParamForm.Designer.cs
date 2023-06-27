@@ -47,6 +47,8 @@
             this.label64 = new System.Windows.Forms.Label();
             this.label62 = new System.Windows.Forms.Label();
             this.groupBox8 = new System.Windows.Forms.GroupBox();
+            this.numericUpDownPoweronDelay = new System.Windows.Forms.NumericUpDown();
+            this.label41 = new System.Windows.Forms.Label();
             this.checkBoxNGContinue = new System.Windows.Forms.CheckBox();
             this.comboBoxStage = new System.Windows.Forms.ComboBox();
             this.label34 = new System.Windows.Forms.Label();
@@ -151,12 +153,13 @@
             this.label3 = new System.Windows.Forms.Label();
             this.comboBoxPrinter = new System.Windows.Forms.ComboBox();
             this.label2 = new System.Windows.Forms.Label();
-            this.numericUpDownPoweronDelay = new System.Windows.Forms.NumericUpDown();
-            this.label41 = new System.Windows.Forms.Label();
+            this.numericUpDownTriggerRelay = new System.Windows.Forms.NumericUpDown();
+            this.label42 = new System.Windows.Forms.Label();
             this.tabControl1.SuspendLayout();
             this.tabPageCommon.SuspendLayout();
             this.groupBox16.SuspendLayout();
             this.groupBox8.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownPoweronDelay)).BeginInit();
             this.groupBox15.SuspendLayout();
             this.groupBox7.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownStandardId)).BeginInit();
@@ -183,7 +186,7 @@
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownMacCount)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownSNCount)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownPoweronDelay)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownTriggerRelay)).BeginInit();
             this.SuspendLayout();
             // 
             // tabControl1
@@ -198,7 +201,7 @@
             this.tabControl1.Margin = new System.Windows.Forms.Padding(4);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(1264, 681);
+            this.tabControl1.Size = new System.Drawing.Size(954, 539);
             this.tabControl1.TabIndex = 0;
             this.tabControl1.SelectedIndexChanged += new System.EventHandler(this.tabControl1_SelectedIndexChanged);
             // 
@@ -212,15 +215,13 @@
             this.tabPageCommon.Margin = new System.Windows.Forms.Padding(4);
             this.tabPageCommon.Name = "tabPageCommon";
             this.tabPageCommon.Padding = new System.Windows.Forms.Padding(4);
-            this.tabPageCommon.Size = new System.Drawing.Size(1256, 651);
+            this.tabPageCommon.Size = new System.Drawing.Size(946, 509);
             this.tabPageCommon.TabIndex = 0;
             this.tabPageCommon.Text = "通用设置";
             this.tabPageCommon.UseVisualStyleBackColor = true;
             // 
             // groupBox16
             // 
-            this.groupBox16.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBox16.Controls.Add(this.textBoxCloudPassword);
             this.groupBox16.Controls.Add(this.label33);
             this.groupBox16.Controls.Add(this.textBoxCloudUsername);
@@ -238,7 +239,7 @@
             this.groupBox16.Controls.Add(this.label62);
             this.groupBox16.Location = new System.Drawing.Point(400, 247);
             this.groupBox16.Name = "groupBox16";
-            this.groupBox16.Size = new System.Drawing.Size(418, 251);
+            this.groupBox16.Size = new System.Drawing.Size(423, 251);
             this.groupBox16.TabIndex = 11;
             this.groupBox16.TabStop = false;
             this.groupBox16.Text = "云服务器(申请SN|UID|MAC)";
@@ -278,12 +279,13 @@
             // 
             // BtnPanelInfo
             // 
-            this.BtnPanelInfo.Location = new System.Drawing.Point(302, 25);
+            this.BtnPanelInfo.BackColor = System.Drawing.Color.SeaGreen;
+            this.BtnPanelInfo.Location = new System.Drawing.Point(302, 205);
             this.BtnPanelInfo.Name = "BtnPanelInfo";
             this.BtnPanelInfo.Size = new System.Drawing.Size(110, 40);
             this.BtnPanelInfo.TabIndex = 41;
             this.BtnPanelInfo.Text = "保存";
-            this.BtnPanelInfo.UseVisualStyleBackColor = true;
+            this.BtnPanelInfo.UseVisualStyleBackColor = false;
             this.BtnPanelInfo.Click += new System.EventHandler(this.BtnPanelInfo_Click);
             // 
             // comboBoxProducttype
@@ -330,7 +332,7 @@
             "2"});
             this.comboBoxModeid.FormattingEnabled = true;
             this.comboBoxModeid.Items.AddRange(new object[] {
-            "5"});
+            "1"});
             this.comboBoxModeid.Location = new System.Drawing.Point(231, 74);
             this.comboBoxModeid.Name = "comboBoxModeid";
             this.comboBoxModeid.Size = new System.Drawing.Size(56, 24);
@@ -343,7 +345,7 @@
             "2"});
             this.comboBoxProductid.FormattingEnabled = true;
             this.comboBoxProductid.Items.AddRange(new object[] {
-            "201"});
+            "200"});
             this.comboBoxProductid.Location = new System.Drawing.Point(82, 74);
             this.comboBoxProductid.Name = "comboBoxProductid";
             this.comboBoxProductid.Size = new System.Drawing.Size(56, 24);
@@ -410,8 +412,6 @@
             // 
             // groupBox8
             // 
-            this.groupBox8.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBox8.Controls.Add(this.numericUpDownPoweronDelay);
             this.groupBox8.Controls.Add(this.label41);
             this.groupBox8.Controls.Add(this.checkBoxNGContinue);
@@ -428,6 +428,27 @@
             this.groupBox8.TabIndex = 10;
             this.groupBox8.TabStop = false;
             this.groupBox8.Text = "运行参数";
+            // 
+            // numericUpDownPoweronDelay
+            // 
+            this.numericUpDownPoweronDelay.Location = new System.Drawing.Point(159, 207);
+            this.numericUpDownPoweronDelay.Name = "numericUpDownPoweronDelay";
+            this.numericUpDownPoweronDelay.Size = new System.Drawing.Size(61, 26);
+            this.numericUpDownPoweronDelay.TabIndex = 15;
+            this.numericUpDownPoweronDelay.Value = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            // 
+            // label41
+            // 
+            this.label41.AutoSize = true;
+            this.label41.Location = new System.Drawing.Point(18, 209);
+            this.label41.Name = "label41";
+            this.label41.Size = new System.Drawing.Size(135, 16);
+            this.label41.TabIndex = 14;
+            this.label41.Text = "等待开机时间(s):";
             // 
             // checkBoxNGContinue
             // 
@@ -462,12 +483,13 @@
             // 
             // BtnRunParam
             // 
-            this.BtnRunParam.Location = new System.Drawing.Point(270, 25);
+            this.BtnRunParam.BackColor = System.Drawing.Color.SeaGreen;
+            this.BtnRunParam.Location = new System.Drawing.Point(270, 205);
             this.BtnRunParam.Name = "BtnRunParam";
-            this.BtnRunParam.Size = new System.Drawing.Size(110, 38);
+            this.BtnRunParam.Size = new System.Drawing.Size(110, 40);
             this.BtnRunParam.TabIndex = 9;
             this.BtnRunParam.Text = "保存";
-            this.BtnRunParam.UseVisualStyleBackColor = true;
+            this.BtnRunParam.UseVisualStyleBackColor = false;
             this.BtnRunParam.Click += new System.EventHandler(this.BtnRunParam_Click);
             // 
             // comboBoxTestMode
@@ -509,8 +531,6 @@
             // 
             // groupBox15
             // 
-            this.groupBox15.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBox15.Controls.Add(this.BtnNextStation);
             this.groupBox15.Controls.Add(this.comboBoxTagNumber);
             this.groupBox15.Controls.Add(this.checkBoxWriteNextWIFI);
@@ -523,19 +543,20 @@
             this.groupBox15.Controls.Add(this.label31);
             this.groupBox15.Location = new System.Drawing.Point(401, 7);
             this.groupBox15.Name = "groupBox15";
-            this.groupBox15.Size = new System.Drawing.Size(417, 233);
+            this.groupBox15.Size = new System.Drawing.Size(422, 233);
             this.groupBox15.TabIndex = 9;
             this.groupBox15.TabStop = false;
             this.groupBox15.Text = "下一站信息设置";
             // 
             // BtnNextStation
             // 
-            this.BtnNextStation.Location = new System.Drawing.Point(301, 25);
+            this.BtnNextStation.BackColor = System.Drawing.Color.SeaGreen;
+            this.BtnNextStation.Location = new System.Drawing.Point(301, 108);
             this.BtnNextStation.Name = "BtnNextStation";
             this.BtnNextStation.Size = new System.Drawing.Size(110, 40);
             this.BtnNextStation.TabIndex = 39;
             this.BtnNextStation.Text = "保存";
-            this.BtnNextStation.UseVisualStyleBackColor = true;
+            this.BtnNextStation.UseVisualStyleBackColor = false;
             this.BtnNextStation.Click += new System.EventHandler(this.BtnNextStation_Click);
             // 
             // comboBoxTagNumber
@@ -634,8 +655,6 @@
             // 
             // groupBox7
             // 
-            this.groupBox7.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBox7.Controls.Add(this.BtnServer);
             this.groupBox7.Controls.Add(this.numericUpDownStandardId);
             this.groupBox7.Controls.Add(this.numericUpDownSpecId);
@@ -656,13 +675,14 @@
             // 
             // BtnServer
             // 
-            this.BtnServer.Location = new System.Drawing.Point(270, 146);
+            this.BtnServer.BackColor = System.Drawing.Color.SeaGreen;
+            this.BtnServer.Location = new System.Drawing.Point(270, 172);
             this.BtnServer.Margin = new System.Windows.Forms.Padding(4);
             this.BtnServer.Name = "BtnServer";
             this.BtnServer.Size = new System.Drawing.Size(110, 41);
             this.BtnServer.TabIndex = 8;
             this.BtnServer.Text = "保存";
-            this.BtnServer.UseVisualStyleBackColor = true;
+            this.BtnServer.UseVisualStyleBackColor = false;
             this.BtnServer.Click += new System.EventHandler(this.BtnServer_Click);
             // 
             // numericUpDownStandardId
@@ -756,15 +776,15 @@
             this.tabPageVoltage.Margin = new System.Windows.Forms.Padding(4);
             this.tabPageVoltage.Name = "tabPageVoltage";
             this.tabPageVoltage.Padding = new System.Windows.Forms.Padding(4);
-            this.tabPageVoltage.Size = new System.Drawing.Size(1256, 651);
+            this.tabPageVoltage.Size = new System.Drawing.Size(946, 509);
             this.tabPageVoltage.TabIndex = 1;
             this.tabPageVoltage.Text = "电流电压测试";
             this.tabPageVoltage.UseVisualStyleBackColor = true;
             // 
             // groupBox19
             // 
-            this.groupBox19.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBox19.Controls.Add(this.numericUpDownTriggerRelay);
+            this.groupBox19.Controls.Add(this.label42);
             this.groupBox19.Controls.Add(this.comboBoxRelay);
             this.groupBox19.Controls.Add(this.label40);
             this.groupBox19.Controls.Add(this.comboBoxCurFluke);
@@ -778,7 +798,7 @@
             this.groupBox19.Controls.Add(this.label36);
             this.groupBox19.Location = new System.Drawing.Point(7, 7);
             this.groupBox19.Name = "groupBox19";
-            this.groupBox19.Size = new System.Drawing.Size(302, 338);
+            this.groupBox19.Size = new System.Drawing.Size(302, 418);
             this.groupBox19.TabIndex = 13;
             this.groupBox19.TabStop = false;
             this.groupBox19.Text = "继电器";
@@ -844,12 +864,13 @@
             // 
             // BtnChargeRelay
             // 
-            this.BtnChargeRelay.Location = new System.Drawing.Point(179, 290);
+            this.BtnChargeRelay.BackColor = System.Drawing.Color.SeaGreen;
+            this.BtnChargeRelay.Location = new System.Drawing.Point(179, 360);
             this.BtnChargeRelay.Name = "BtnChargeRelay";
             this.BtnChargeRelay.Size = new System.Drawing.Size(88, 30);
             this.BtnChargeRelay.TabIndex = 38;
             this.BtnChargeRelay.Text = "保存";
-            this.BtnChargeRelay.UseVisualStyleBackColor = true;
+            this.BtnChargeRelay.UseVisualStyleBackColor = false;
             this.BtnChargeRelay.Click += new System.EventHandler(this.BtnChargeRelay_Click);
             // 
             // label37
@@ -914,15 +935,13 @@
             this.tabPageFunTest.Location = new System.Drawing.Point(4, 26);
             this.tabPageFunTest.Margin = new System.Windows.Forms.Padding(4);
             this.tabPageFunTest.Name = "tabPageFunTest";
-            this.tabPageFunTest.Size = new System.Drawing.Size(1256, 651);
+            this.tabPageFunTest.Size = new System.Drawing.Size(946, 509);
             this.tabPageFunTest.TabIndex = 2;
             this.tabPageFunTest.Text = "功能测试";
             this.tabPageFunTest.UseVisualStyleBackColor = true;
             // 
             // groupBox14
             // 
-            this.groupBox14.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBox14.Controls.Add(this.BtnRFRX);
             this.groupBox14.Controls.Add(this.numericUpDownRFRXTimeout);
             this.groupBox14.Controls.Add(this.label28);
@@ -935,12 +954,13 @@
             // 
             // BtnRFRX
             // 
+            this.BtnRFRX.BackColor = System.Drawing.Color.SeaGreen;
             this.BtnRFRX.Location = new System.Drawing.Point(171, 143);
             this.BtnRFRX.Name = "BtnRFRX";
             this.BtnRFRX.Size = new System.Drawing.Size(85, 31);
             this.BtnRFRX.TabIndex = 38;
             this.BtnRFRX.Text = "保存";
-            this.BtnRFRX.UseVisualStyleBackColor = true;
+            this.BtnRFRX.UseVisualStyleBackColor = false;
             this.BtnRFRX.Click += new System.EventHandler(this.BtnRFRX_Click);
             // 
             // numericUpDownRFRXTimeout
@@ -966,8 +986,6 @@
             // 
             // groupBox13
             // 
-            this.groupBox13.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBox13.Controls.Add(this.BtnRFTX);
             this.groupBox13.Controls.Add(this.numericUpDownRFTXDelay);
             this.groupBox13.Controls.Add(this.textBoxRFPowerRevise);
@@ -982,12 +1000,13 @@
             // 
             // BtnRFTX
             // 
-            this.BtnRFTX.Location = new System.Drawing.Point(113, 143);
+            this.BtnRFTX.BackColor = System.Drawing.Color.SeaGreen;
+            this.BtnRFTX.Location = new System.Drawing.Point(206, 142);
             this.BtnRFTX.Name = "BtnRFTX";
             this.BtnRFTX.Size = new System.Drawing.Size(85, 31);
             this.BtnRFTX.TabIndex = 12;
             this.BtnRFTX.Text = "保存";
-            this.BtnRFTX.UseVisualStyleBackColor = true;
+            this.BtnRFTX.UseVisualStyleBackColor = false;
             this.BtnRFTX.Click += new System.EventHandler(this.BtnRFTX_Click);
             // 
             // numericUpDownRFTXDelay
@@ -1029,8 +1048,6 @@
             // 
             // groupBox12
             // 
-            this.groupBox12.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBox12.Controls.Add(this.BtnWiFIthroughput);
             this.groupBox12.Controls.Add(this.textBoxDownRateRevise);
             this.groupBox12.Controls.Add(this.label25);
@@ -1058,12 +1075,13 @@
             // 
             // BtnWiFIthroughput
             // 
+            this.BtnWiFIthroughput.BackColor = System.Drawing.Color.SeaGreen;
             this.BtnWiFIthroughput.Location = new System.Drawing.Point(214, 143);
             this.BtnWiFIthroughput.Name = "BtnWiFIthroughput";
             this.BtnWiFIthroughput.Size = new System.Drawing.Size(85, 31);
             this.BtnWiFIthroughput.TabIndex = 10;
             this.BtnWiFIthroughput.Text = "保存";
-            this.BtnWiFIthroughput.UseVisualStyleBackColor = true;
+            this.BtnWiFIthroughput.UseVisualStyleBackColor = false;
             this.BtnWiFIthroughput.Click += new System.EventHandler(this.BtnWiFIthroughput_Click);
             // 
             // textBoxDownRateRevise
@@ -1223,8 +1241,6 @@
             // 
             // groupBox10
             // 
-            this.groupBox10.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBox10.Controls.Add(this.BtnLedColor);
             this.groupBox10.Controls.Add(this.numericUpDownLEDInterval);
             this.groupBox10.Controls.Add(this.label14);
@@ -1237,12 +1253,13 @@
             // 
             // BtnLedColor
             // 
-            this.BtnLedColor.Location = new System.Drawing.Point(123, 83);
+            this.BtnLedColor.BackColor = System.Drawing.Color.SeaGreen;
+            this.BtnLedColor.Location = new System.Drawing.Point(171, 83);
             this.BtnLedColor.Name = "BtnLedColor";
             this.BtnLedColor.Size = new System.Drawing.Size(85, 30);
             this.BtnLedColor.TabIndex = 11;
             this.BtnLedColor.Text = "保存";
-            this.BtnLedColor.UseVisualStyleBackColor = true;
+            this.BtnLedColor.UseVisualStyleBackColor = false;
             this.BtnLedColor.Click += new System.EventHandler(this.BtnLedColor_Click);
             // 
             // numericUpDownLEDInterval
@@ -1283,12 +1300,13 @@
             // 
             // BtnMic
             // 
+            this.BtnMic.BackColor = System.Drawing.Color.SeaGreen;
             this.BtnMic.Location = new System.Drawing.Point(206, 83);
             this.BtnMic.Name = "BtnMic";
             this.BtnMic.Size = new System.Drawing.Size(85, 30);
             this.BtnMic.TabIndex = 11;
             this.BtnMic.Text = "保存";
-            this.BtnMic.UseVisualStyleBackColor = true;
+            this.BtnMic.UseVisualStyleBackColor = false;
             this.BtnMic.Click += new System.EventHandler(this.BtnMic_Click);
             // 
             // comboBoxWaveFile
@@ -1345,12 +1363,13 @@
             // 
             // BtnPing
             // 
-            this.BtnPing.Location = new System.Drawing.Point(202, 83);
+            this.BtnPing.BackColor = System.Drawing.Color.SeaGreen;
+            this.BtnPing.Location = new System.Drawing.Point(214, 82);
             this.BtnPing.Name = "BtnPing";
             this.BtnPing.Size = new System.Drawing.Size(85, 30);
             this.BtnPing.TabIndex = 10;
             this.BtnPing.Text = "保存";
-            this.BtnPing.UseVisualStyleBackColor = true;
+            this.BtnPing.UseVisualStyleBackColor = false;
             this.BtnPing.Click += new System.EventHandler(this.BtnPing_Click);
             // 
             // numericUpDownPingCount
@@ -1396,7 +1415,7 @@
             this.tabPageRTOS.Controls.Add(this.groupBox18);
             this.tabPageRTOS.Location = new System.Drawing.Point(4, 26);
             this.tabPageRTOS.Name = "tabPageRTOS";
-            this.tabPageRTOS.Size = new System.Drawing.Size(1256, 651);
+            this.tabPageRTOS.Size = new System.Drawing.Size(946, 509);
             this.tabPageRTOS.TabIndex = 3;
             this.tabPageRTOS.Text = "RTOS镜头测试";
             this.tabPageRTOS.UseVisualStyleBackColor = true;
@@ -1434,12 +1453,13 @@
             // 
             // BtnImageServer
             // 
-            this.BtnImageServer.Location = new System.Drawing.Point(233, 87);
+            this.BtnImageServer.BackColor = System.Drawing.Color.SeaGreen;
+            this.BtnImageServer.Location = new System.Drawing.Point(259, 82);
             this.BtnImageServer.Name = "BtnImageServer";
-            this.BtnImageServer.Size = new System.Drawing.Size(85, 26);
+            this.BtnImageServer.Size = new System.Drawing.Size(85, 36);
             this.BtnImageServer.TabIndex = 36;
             this.BtnImageServer.Text = "保存";
-            this.BtnImageServer.UseVisualStyleBackColor = true;
+            this.BtnImageServer.UseVisualStyleBackColor = false;
             this.BtnImageServer.Click += new System.EventHandler(this.BtnImageServer_Click);
             // 
             // textBoxImageServer
@@ -1463,15 +1483,13 @@
             this.tabPagePrinter.Controls.Add(this.groupBox1);
             this.tabPagePrinter.Location = new System.Drawing.Point(4, 26);
             this.tabPagePrinter.Name = "tabPagePrinter";
-            this.tabPagePrinter.Size = new System.Drawing.Size(1256, 651);
+            this.tabPagePrinter.Size = new System.Drawing.Size(946, 509);
             this.tabPagePrinter.TabIndex = 4;
             this.tabPagePrinter.Text = "打印设置";
             this.tabPagePrinter.UseVisualStyleBackColor = true;
             // 
             // groupBox1
             // 
-            this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBox1.Controls.Add(this.BtnPrinter);
             this.groupBox1.Controls.Add(this.numericUpDownMacCount);
             this.groupBox1.Controls.Add(this.numericUpDownSNCount);
@@ -1481,19 +1499,20 @@
             this.groupBox1.Controls.Add(this.label2);
             this.groupBox1.Location = new System.Drawing.Point(9, 4);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(435, 182);
+            this.groupBox1.Size = new System.Drawing.Size(428, 182);
             this.groupBox1.TabIndex = 0;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "打印机设置";
             // 
             // BtnPrinter
             // 
+            this.BtnPrinter.BackColor = System.Drawing.Color.SeaGreen;
             this.BtnPrinter.Location = new System.Drawing.Point(328, 131);
             this.BtnPrinter.Name = "BtnPrinter";
-            this.BtnPrinter.Size = new System.Drawing.Size(75, 29);
+            this.BtnPrinter.Size = new System.Drawing.Size(75, 30);
             this.BtnPrinter.TabIndex = 6;
             this.BtnPrinter.Text = "保存";
-            this.BtnPrinter.UseVisualStyleBackColor = true;
+            this.BtnPrinter.UseVisualStyleBackColor = false;
             this.BtnPrinter.Click += new System.EventHandler(this.BtnPrinter_Click);
             // 
             // numericUpDownMacCount
@@ -1565,36 +1584,38 @@
             this.label2.TabIndex = 0;
             this.label2.Text = "选择打印机：";
             // 
-            // numericUpDownPoweronDelay
+            // numericUpDownTriggerRelay
             // 
-            this.numericUpDownPoweronDelay.Location = new System.Drawing.Point(159, 207);
-            this.numericUpDownPoweronDelay.Name = "numericUpDownPoweronDelay";
-            this.numericUpDownPoweronDelay.Size = new System.Drawing.Size(61, 26);
-            this.numericUpDownPoweronDelay.TabIndex = 15;
-            this.numericUpDownPoweronDelay.Value = new decimal(new int[] {
+            this.numericUpDownTriggerRelay.DecimalPlaces = 3;
+            this.numericUpDownTriggerRelay.Location = new System.Drawing.Point(163, 298);
+            this.numericUpDownTriggerRelay.Name = "numericUpDownTriggerRelay";
+            this.numericUpDownTriggerRelay.Size = new System.Drawing.Size(69, 26);
+            this.numericUpDownTriggerRelay.TabIndex = 53;
+            this.numericUpDownTriggerRelay.Value = new decimal(new int[] {
             1,
             0,
             0,
             0});
             // 
-            // label41
+            // label42
             // 
-            this.label41.AutoSize = true;
-            this.label41.Location = new System.Drawing.Point(18, 209);
-            this.label41.Name = "label41";
-            this.label41.Size = new System.Drawing.Size(135, 16);
-            this.label41.TabIndex = 14;
-            this.label41.Text = "等待开机时间(s):";
+            this.label42.AutoSize = true;
+            this.label42.Location = new System.Drawing.Point(22, 300);
+            this.label42.Name = "label42";
+            this.label42.Size = new System.Drawing.Size(127, 16);
+            this.label42.TabIndex = 52;
+            this.label42.Text = "继电器切换间隔:";
             // 
             // TestParamForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1264, 681);
+            this.ClientSize = new System.Drawing.Size(954, 539);
             this.Controls.Add(this.tabControl1);
             this.Font = new System.Drawing.Font("宋体", 12F);
             this.Margin = new System.Windows.Forms.Padding(4);
             this.Name = "TestParamForm";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "TestParamForm";
             this.Load += new System.EventHandler(this.TestParamForm_Load);
             this.tabControl1.ResumeLayout(false);
@@ -1603,6 +1624,7 @@
             this.groupBox16.PerformLayout();
             this.groupBox8.ResumeLayout(false);
             this.groupBox8.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownPoweronDelay)).EndInit();
             this.groupBox15.ResumeLayout(false);
             this.groupBox15.PerformLayout();
             this.groupBox7.ResumeLayout(false);
@@ -1640,7 +1662,7 @@
             this.groupBox1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownMacCount)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownSNCount)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownPoweronDelay)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownTriggerRelay)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -1772,5 +1794,7 @@
         private System.Windows.Forms.Button BtnPrinter;
         private System.Windows.Forms.NumericUpDown numericUpDownPoweronDelay;
         private System.Windows.Forms.Label label41;
+        private System.Windows.Forms.NumericUpDown numericUpDownTriggerRelay;
+        private System.Windows.Forms.Label label42;
     }
 }

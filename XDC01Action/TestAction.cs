@@ -11,6 +11,7 @@ using System.Linq;
 using System.Reflection;
 using System.Runtime.InteropServices.ComTypes;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using TDMSerialLib;
@@ -53,10 +54,11 @@ namespace XDC01Action
             {
                 int numa = Environment.TickCount;
                 string str_error_log = "";
+                logger.ShowLog("等待设备开机...");
                 while (true)
                 {
                     Application.DoEvents();
-                    if (Environment.TickCount - numa > (int)decimal.Parse(testParam.poweron_delay))
+                    if (Environment.TickCount - numa > (int)decimal.Parse(testParam.poweron_delay) * 1000)
                     {
                         logger.ShowLog($"等待开机超时");
                         return false;
@@ -89,7 +91,7 @@ namespace XDC01Action
                 while (true)
                 {
                     System.Windows.Forms.Application.DoEvents();
-                    if (Environment.TickCount - numa > (int)decimal.Parse(testParam.poweron_delay))
+                    if (Environment.TickCount - numa > (int)decimal.Parse(testParam.poweron_delay) * 1000)
                     {
                         logger.ShowLog($"等待开机超时");
                         return false;
@@ -118,7 +120,7 @@ namespace XDC01Action
         /// </summary>
         /// <returns></returns>
         public List<TestItem> PCBAVoltageTest(RelaySerial relaySerial, TDMSerial tDMVolSerial,
-            System.Windows.Forms.DataGridView dataGridView, Logger logger, TestSpecMax testSpecMax, TestSpecMin testSpecMin)
+            System.Windows.Forms.DataGridView dataGridView, Logger logger, TestSpecMax testSpecMax, TestSpecMin testSpecMin, TestParam testParam)
         {
             try
             {
@@ -145,37 +147,37 @@ namespace XDC01Action
                 }
                 else
                 {
-                    //-------关闭所有继电器
-                    if (relaySerial.CloseAllRelay() == false)
-                    {
-                        logger.ShowLog($"初始化继电器失败");
-                        float Duration = (Environment.TickCount - start_time) / 1000.00f;
-                        dataGridView.Rows.Add("电压测试", "-", "-", "-", "-", "继电器控制异常", "FAIL", Duration.ToString("F2"));
-                        return null;
-                    }
-                    else
-                    {
-                        Delay(200);
-                        str_error_log = "";
-                        int[] int_relay_status = new int[16];
-                        if (relaySerial.GetRelayStatus(ref str_error_log, ref int_relay_status) == false)
-                        {
-                            logger.ShowLog($"获取继电器状态发生异常[{str_error_log}]");
-                            float Duration = (Environment.TickCount - start_time) / 1000.00f;
-                            dataGridView.Rows.Add("电压测试", "-", "-", "-", "-", "继电器控制异常", "FAIL", Duration.ToString("F2"));
-                            return null;
-                        }
-                        for (int i = 0; i < 8; i++)
-                        {
-                            if (int_relay_status[i] != 0)
-                            {
-                                logger.ShowLog($"继电器状态错误：[全部断开后，通道{i}仍是打开状态]");
-                                float Duration = (Environment.TickCount - start_time) / 1000.00f;
-                                dataGridView.Rows.Add("电压测试", "-", "-", "-", "-", "继电器控制异常", "FAIL", Duration.ToString("F2"));
-                                return null;
-                            }
-                        }
-                    }
+                    ////-------关闭所有继电器
+                    //if (relaySerial.CloseAllRelay() == false)
+                    //{
+                    //    logger.ShowLog($"初始化继电器失败");
+                    //    float Duration = (Environment.TickCount - start_time) / 1000.00f;
+                    //    dataGridView.Rows.Add("电压测试", "-", "-", "-", "-", "继电器控制异常", "FAIL", Duration.ToString("F2"));
+                    //    return null;
+                    //}
+                    //else
+                    //{
+                    //    Delay(200);
+                    //    str_error_log = "";
+                    //    int[] int_relay_status = new int[16];
+                    //    if (relaySerial.GetRelayStatus(ref str_error_log, ref int_relay_status) == false)
+                    //    {
+                    //        logger.ShowLog($"获取继电器状态发生异常[{str_error_log}]");
+                    //        float Duration = (Environment.TickCount - start_time) / 1000.00f;
+                    //        dataGridView.Rows.Add("电压测试", "-", "-", "-", "-", "继电器控制异常", "FAIL", Duration.ToString("F2"));
+                    //        return null;
+                    //    }
+                    //    for (int i = 0; i < 8; i++)
+                    //    {
+                    //        if (int_relay_status[i] != 0)
+                    //        {
+                    //            logger.ShowLog($"继电器状态错误：[全部断开后，通道{i}仍是打开状态]");
+                    //            float Duration = (Environment.TickCount - start_time) / 1000.00f;
+                    //            dataGridView.Rows.Add("电压测试", "-", "-", "-", "-", "继电器控制异常", "FAIL", Duration.ToString("F2"));
+                    //            return null;
+                    //        }
+                    //    }
+                    //}
                 }
                 #endregion
 
@@ -192,6 +194,16 @@ namespace XDC01Action
                 };
 
                 int itemNum = volTestItems.Count;
+
+                int trigger_interval = 500;
+                try
+                {
+                    trigger_interval = (int)decimal.Parse(testParam.trigger_relay_interval) * 1000;
+                }
+                catch(Exception ee)
+                {
+                    
+                }
                 
                 StringBuilder ng_items = new StringBuilder();
                 for (int i = 0; i < itemNum; i++)
@@ -255,7 +267,7 @@ namespace XDC01Action
                         {
                         }
 
-                        Delay(300);  // 间隔0.5秒
+                        Delay(trigger_interval);  // 间隔0.5秒
                         testItem.Duration = (Environment.TickCount - start_time) / 1000.00f;
                         dataGridView.Rows.Add(testItem.Name, testItem.Standard, testItem.MinValue, testItem.MaxValue, testItem.Value, testItem.StrVal,testItem.Result, testItem.Duration.ToString("F2"));
                     }
@@ -271,11 +283,11 @@ namespace XDC01Action
             finally
             {
                 //-------关闭所有继电器
-                Delay(200);
-                if (relaySerial.CloseAllRelay() == false)
-                {
-                    logger.ShowLog($"继电器恢复失败");
-                }
+                //Delay(200);
+                //if (relaySerial.CloseAllRelay() == false)
+                //{
+                //    logger.ShowLog($"继电器恢复失败");
+                //}
             }
         }
 
@@ -449,6 +461,27 @@ namespace XDC01Action
                 }
                 else
                 {
+                    // 继电器开关序号
+                    ushort relayNum = ushort.Parse(testParam.charge_relay_index);
+
+                    if (relaySerial.TriggerRelaySingle(relayNum, true) == false)
+                    {
+                    }
+                    str_error_log = "";
+                    int[] relay_status = new int[16];
+                    if (relaySerial.GetRelayStatus(ref str_error_log, ref relay_status) == false)
+                    {
+                        logger.ShowLog($"获取继电器状态发生异常[{str_error_log}]");
+                        float Duration = (Environment.TickCount - start_time) / 1000.00f;
+                        dataGridView.Rows.Add(testItem.Name, "-", "-", "-", "-", "继电器控制异常", "FAIL", Duration.ToString("F2"));
+                    }
+                    if (relay_status[relayNum - 1] == 0)
+                    {
+                        logger.ShowLog($"继电器状态错误：[通道{relayNum}未打开]");
+                        float Duration = (Environment.TickCount - start_time) / 1000.00f;
+                        dataGridView.Rows.Add(testItem.Name, "-", "-", "-", "-", "继电器控制异常", "FAIL", Duration.ToString("F2"));
+                    }
+
                     // 提示打开开关
                     CustomDialog customDialog = new CustomDialog("充电电流测试", "请打开治具上的开关，给设备上电");
                     DialogResult result = customDialog.ShowDialog();
@@ -456,26 +489,8 @@ namespace XDC01Action
                     if (result == DialogResult.Yes)
                     {
                         logger.ShowLog($"--- 已打开上电开关");
-                        // 继电器开关序号
-                        ushort relayNum = ushort.Parse(testParam.charge_relay_index);
 
-                        if (relaySerial.TriggerRelaySingle(relayNum, true) == false)
-                        {
-                        }
-                        str_error_log = "";
-                        int[] relay_status = new int[16];
-                        if (relaySerial.GetRelayStatus(ref str_error_log, ref relay_status) == false)
-                        {
-                            logger.ShowLog($"获取继电器状态发生异常[{str_error_log}]");
-                            float Duration = (Environment.TickCount - start_time) / 1000.00f;
-                            dataGridView.Rows.Add(testItem.Name, "-", "-", "-", "-", "继电器控制异常", "FAIL", Duration.ToString("F2"));
-                        }
-                        if (relay_status[relayNum - 1] == 0)
-                        {
-                            logger.ShowLog($"继电器状态错误：[通道{relayNum}未打开]");
-                            float Duration = (Environment.TickCount - start_time) / 1000.00f;
-                            dataGridView.Rows.Add(testItem.Name, "-", "-", "-", "-", "继电器控制异常", "FAIL", Duration.ToString("F2"));
-                        }
+                        Delay(3000);
 
                         float max_current = 0.00f;
                         //int count = int.Parse(_param_run.str_current_count);
@@ -959,7 +974,7 @@ namespace XDC01Action
                 };
                 string str_error_log = "";
                 logger.ShowLog("-进行LED灯颜色测试...");
-                logger.ShowLog("--- 请检查LED灯颜色，OK请按[F2]，NG请按[F12]");
+                logger.ShowLog("--- 请检查LED灯颜色");
                 int interval = 1000;
                 try
                 {
@@ -971,13 +986,24 @@ namespace XDC01Action
                     logger.ShowLog($"LED切换间隔参数异常：[{ee.Message}]");
                 }
 
-                bool shouldStop = false;
-                Task.Run(() =>
+                CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
+                CancellationToken cancellationToken = cancellationTokenSource.Token;
+
+                Task ledTask = Task.Run(() =>
                 {
                     // 循环控制LED灯颜色，监测人工是否完成判定
-                    while (!shouldStop)
+                    while (!cancellationToken.IsCancellationRequested)
                     {
                         Application.DoEvents();
+
+                        // 检查取消标记
+                        if (cancellationToken.IsCancellationRequested)
+                        {
+                            // 在需要停止任务的地方进行清理或处理
+                            Console.WriteLine("任务被取消");
+                            break;
+                        }
+
                         // 红色
                         if (xDC01Serial.SetBtnLEDColor("red", ref str_error_log) == false)
                         {
@@ -1003,13 +1029,15 @@ namespace XDC01Action
                         }
                         Delay(interval);
                     }
+                }).ContinueWith(task => {
+                    xDC01Serial.SetBtnLEDColor("blue", ref str_error_log);
                 });
 
                 CustomDialog customDialog = new CustomDialog("LED灯检查测试（人工）", "是否依次红、绿、蓝、白四种颜色？");
                 DialogResult result = customDialog.ShowDialog();
 
                 // 停止切换灯光
-                shouldStop = true;
+                cancellationTokenSource.Cancel();
 
                 if (result == DialogResult.Yes)
                 {
