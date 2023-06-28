@@ -172,7 +172,7 @@ namespace XDC01SerialLib
         {
             try
             {
-                if (_serialPort.IsOpen == false)
+                if (!_serialPort.IsOpen)
                 {
                     _serialPort.Open();
                 }
@@ -217,10 +217,7 @@ namespace XDC01SerialLib
         {
             try
             {
-                if (_serialPort.IsOpen == false)
-                {
-                    _serialPort.Open();
-                }
+                OpenPort();
                 str_Receive_skybell = "";
                 _serialPort.DiscardInBuffer();
                 _serialPort.DiscardOutBuffer(); // \r回车 \n换行

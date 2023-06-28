@@ -87,6 +87,14 @@ namespace XDC01Action
                     printer_name = ConfigFile.IniReadValue("printer", "printer_name", Path_ini),
                     sn_count = ConfigFile.IniReadValue("printer", "sn_count", Path_ini),
                     mac_count = ConfigFile.IniReadValue("printer", "mac_count", Path_ini),
+
+                    wav_1 = ConfigFile.IniReadValue("audio", "wav_1", Path_ini),
+                    wav_2 = ConfigFile.IniReadValue("audio", "wav_2", Path_ini),
+                    wav_3 = ConfigFile.IniReadValue("audio", "wav_3", Path_ini),
+                    wav_4 = ConfigFile.IniReadValue("audio", "wav_4", Path_ini),
+                    wav_5 = ConfigFile.IniReadValue("audio", "wav_5", Path_ini),
+                    wav_8 = ConfigFile.IniReadValue("audio", "wav_8", Path_ini),
+                    wav_9 = ConfigFile.IniReadValue("audio", "wav_9", Path_ini),
                 };
                 return testParam;
             }
@@ -197,6 +205,7 @@ namespace XDC01Action
 
                 // 麦克风测试
                 System.IO.DirectoryInfo _ini_file = new System.IO.DirectoryInfo(System.Windows.Forms.Application.StartupPath + @"\wav");
+                comboBoxWaveFile.Items.Clear();
                 foreach (System.IO.FileInfo file in _ini_file.GetFiles())
                 {
                     if (System.IO.Path.GetFileName(file.Name).Contains(".wav"))
@@ -226,6 +235,15 @@ namespace XDC01Action
 
                 // RF rx
                 numericUpDownRFRXTimeout.Value = int.Parse(testParam.rf_rx_timeout);
+
+                // 喇叭播放
+                checkBoxWav_1.Checked = testParam.wav_1 == "True";
+                checkBoxWav_2.Checked = testParam.wav_2 == "True";
+                checkBoxWav_3.Checked = testParam.wav_3 == "True";
+                checkBoxWav_4.Checked = testParam.wav_4 == "True";
+                checkBoxWav_5.Checked = testParam.wav_5 == "True";
+                checkBoxWav_8.Checked = testParam.wav_8 == "True";
+                checkBoxWav_9.Checked = testParam.wav_9 == "True";
             }
             if(tabControl1.SelectedTab == tabPageRTOS)
             {
@@ -378,7 +396,6 @@ namespace XDC01Action
             }
         }
 
-
         private void BtnbtnTest_Click(object sender, EventArgs e)
         {
             try
@@ -400,6 +417,25 @@ namespace XDC01Action
 
                 ConfigFile.IniWriteValue("motion", "motion_test_timeout", numericUpDownMotion.Value.ToString(), Path_ini);
                 MessageBox.Show("移动感应测试保存成功");
+            }
+            catch (Exception ee)
+            {
+                MessageBox.Show("保存异常：" + ee.Message);
+            }
+        }
+
+        private void BtnAudioTest_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                ConfigFile.IniWriteValue("audio", "wav_1", checkBoxWav_1.Checked.ToString(), Path_ini);
+                ConfigFile.IniWriteValue("audio", "wav_2", checkBoxWav_2.Checked.ToString(), Path_ini);
+                ConfigFile.IniWriteValue("audio", "wav_3", checkBoxWav_3.Checked.ToString(), Path_ini);
+                ConfigFile.IniWriteValue("audio", "wav_4", checkBoxWav_4.Checked.ToString(), Path_ini);
+                ConfigFile.IniWriteValue("audio", "wav_5", checkBoxWav_5.Checked.ToString(), Path_ini);
+                ConfigFile.IniWriteValue("audio", "wav_8", checkBoxWav_8.Checked.ToString(), Path_ini);
+                ConfigFile.IniWriteValue("audio", "wav_9", checkBoxWav_9.Checked.ToString(), Path_ini);
+                MessageBox.Show("喇叭测试保存成功");
             }
             catch (Exception ee)
             {
@@ -474,6 +510,7 @@ namespace XDC01Action
                 MessageBox.Show("保存异常：" + ee.Message);
             }
         }
+        
         private void BtnPrinter_Click(object sender, EventArgs e)
         {
             try
@@ -494,5 +531,70 @@ namespace XDC01Action
         {
             tabControl1_SelectedIndexChanged(tabControl1, EventArgs.Empty);
         }
+
+        private void labelSerialPort_Click(object sender, EventArgs e)
+        {
+            comboBoxSerialPort.Items.Clear();
+            foreach(string a in System.IO.Ports.SerialPort.GetPortNames())
+            {
+                comboBoxSerialPort.Items.Add(a);
+            }
+        }
+
+        private void labelVolPort_Click(object sender, EventArgs e)
+        {
+            comboBoxVolTDMSerial.Items.Clear();
+            foreach(string a in System.IO.Ports.SerialPort.GetPortNames())
+            {
+                comboBoxVolTDMSerial.Items.Add(a);
+            }
+        }
+
+        private void labelCurPort_Click(object sender, EventArgs e)
+        {
+            comboBoxCurTDMSerial.Items.Clear();
+            foreach(string a in System.IO.Ports.SerialPort.GetPortNames())
+            {
+                comboBoxCurTDMSerial.Items.Add(a);
+            }
+        }
+
+        private void labelFlukePort_Click(object sender, EventArgs e)
+        {
+            comboBoxCurFluke.Items.Clear();
+            foreach(string a in System.IO.Ports.SerialPort.GetPortNames())
+            {
+                comboBoxCurFluke.Items.Add(a);
+            }
+        }
+
+        private void labelRelayPort_Click(object sender, EventArgs e)
+        {
+            comboBoxRelay.Items.Clear();
+            foreach(string a in System.IO.Ports.SerialPort.GetPortNames())
+            {
+                comboBoxRelay.Items.Add(a);
+            }
+        }
+
+        private void labelRTOSPort_Click(object sender, EventArgs e)
+        {
+            comboBoxRTOSPort.Items.Clear();
+            foreach (string aa in System.IO.Ports.SerialPort.GetPortNames())
+            {
+                comboBoxRTOSPort.Items.Add(aa);
+            }
+        }
+
+        private void labelPrinter_Click(object sender, EventArgs e)
+        {
+            comboBoxPrinter.Items.Clear();
+            foreach (string printer in System.Drawing.Printing.PrinterSettings.InstalledPrinters)
+            {
+                comboBoxPrinter.Items.Add(printer);
+            }
+        }
+
+        
     }
 }

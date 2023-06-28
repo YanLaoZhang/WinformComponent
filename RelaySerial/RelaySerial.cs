@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO.Ports;
 using System.Runtime.InteropServices;
+using System.Windows.Forms;
 
 namespace RelaySerialLib
 {
@@ -35,6 +36,11 @@ namespace RelaySerialLib
         {
             _serialPort = serialPort;
             _portName = portName;
+            _serialPort.PortName = _portName;
+            _serialPort.BaudRate = 9600;
+            _serialPort.DataBits = 8;
+            _serialPort.Parity = System.IO.Ports.Parity.None;
+            _serialPort.StopBits = System.IO.Ports.StopBits.One;
             // 绑定 DataReceived 事件处理程序
             serialPort.DataReceived += SerialPort_DataReceived;
         }
@@ -90,15 +96,39 @@ namespace RelaySerialLib
         {
             try
             {
-                _serialPort.PortName = _portName;
-                _serialPort.BaudRate = 9600;
-                _serialPort.DataBits = 8;
-                _serialPort.Parity = System.IO.Ports.Parity.None;
-                _serialPort.StopBits = System.IO.Ports.StopBits.One;
-                if (_serialPort.IsOpen == false)
+                if (!_serialPort.IsOpen)
                 {
                     _serialPort.Open();
                 }
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        public bool ChangePort(string newPort)
+        {
+            try
+            {
+                if (_serialPort != null && _serialPort.IsOpen)
+                {
+                    _serialPort.DataReceived -= SerialPort_DataReceived;
+                }
+                if (_serialPort != null && _serialPort.IsOpen)
+                {
+                    _serialPort.Close();
+                }
+
+                // 切换串口号
+                _serialPort.PortName = newPort;
+
+                // 打开串口
+                _serialPort.Open();
+                //_richTextBox.Text = string.Empty;
+                _serialPort.DataReceived += SerialPort_DataReceived;
+
                 return true;
             }
             catch
@@ -167,7 +197,7 @@ namespace RelaySerialLib
             {
                 return false;
             }
-            finally { _serialPort.Close(); }
+            //finally { _serialPort.Close(); }
         }
 
         #region 继电器

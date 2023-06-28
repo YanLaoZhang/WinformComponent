@@ -793,7 +793,7 @@ namespace XDC01Action
                 };
                 string str_error_log = "";
                 logger.ShowLog("--- 进行麦克风测试(人工)...");
-                logger.ShowLog("--- 请检查播放的录音声音，音质正常OK请按[F2]，音质有问题NG请按[F12]");
+                logger.ShowLog("--- 请检查播放的录音声音，音质正常OK请按[PASS]，音质有问题NG请按[FAIL]");
                 // 播放录音文件
                 xDC01Serial.PlayRecordWav(ref str_error_log);
                 Delay(int.Parse(testParam.mic_record_duration));
@@ -821,7 +821,180 @@ namespace XDC01Action
         }
 
         /// <summary>
-        /// 按键功能测试and喇叭测试
+        /// 整机 喇叭播放音频测试
+        /// </summary>
+        /// <param name="xDC01Serial"></param>
+        /// <param name="dataGridView"></param>
+        /// <param name="logger"></param>
+        /// <param name="testParam"></param>
+        /// <returns></returns>
+        public TestItem CheckAudioManual(XDC01Serial xDC01Serial,
+            System.Windows.Forms.DataGridView dataGridView, Logger logger, TestParam testParam)
+        {
+            try
+            {
+                int start_time = Environment.TickCount;
+                TestItem testItem = new TestItem()
+                {
+                    Name = "喇叭功能测试(人工)",
+                    NgItem = "audio"
+                };
+                string str_error_log = "";
+                logger.ShowLog("--- 进行喇叭功能测试(人工)...");
+                logger.ShowLog("--- 请检查播放的音频声音，音质正常OK请按[PASS]，音质有问题NG请按[FAIL]");
+                // 播放音频文件
+                if (testParam.wav_1 == "True")
+                {
+                    logger.ShowLog("--- 设备正在播放音频 wav.1");
+                    if (xDC01Serial.PlayWav("1", ref str_error_log) == false)
+                    {
+                        str_error_log = "audio1";
+                    }
+                    Delay(500);
+                }
+                if (testParam.wav_1 == "True")
+                {
+                    logger.ShowLog("--- 设备正在播放音频 wav.2");
+                    if (xDC01Serial.PlayWav("2", ref str_error_log) == false)
+                    {
+                        str_error_log = "audio2";
+                    }
+                    Delay(500);
+                }
+
+                if (testParam.wav_1 == "True")
+                {
+                    logger.ShowLog("--- 设备正在播放音频 wav.3");
+                    if (xDC01Serial.PlayWav("3", ref str_error_log) == false)
+                    {
+                        str_error_log = "audio3";
+                    }
+                    Delay(500);
+                }
+                if (testParam.wav_1 == "True")
+                {
+                    logger.ShowLog("--- 设备正在播放音频 wav.4");
+                    if (xDC01Serial.PlayWav("4", ref str_error_log) == false)
+                    {
+                        str_error_log = "audio4";
+                    }
+                    Delay(500);
+                }
+                if (testParam.wav_1 == "True")
+                {
+                    logger.ShowLog("--- 设备正在播放音频 wav.5");
+                    if (xDC01Serial.PlayWav("5", ref str_error_log) == false)
+                    {
+                        str_error_log = "audio5";
+                    }
+                    Delay(500);
+                }
+                if (testParam.wav_1 == "True")
+                {
+                    logger.ShowLog("--- 设备正在播放音频 wav.8");
+                    if (xDC01Serial.PlayWav("8", ref str_error_log) == false)
+                    {
+                        str_error_log = "audio8";
+                    }
+                    Delay(500);
+                }
+                if (testParam.wav_1 == "True")
+                {
+                    logger.ShowLog("--- 设备正在播放音频 wav.9");
+                    if (xDC01Serial.PlayWav("9", ref str_error_log) == false)
+                    {
+                        str_error_log = "audio9";
+                    }
+                    Delay(500);
+                }
+
+                // 人工判断
+                CustomDialog customDialog = new CustomDialog("喇叭功能测试（人工）", "喇叭播放音频是否正常？");
+                DialogResult result = customDialog.ShowDialog();
+
+                if (result == DialogResult.Yes)
+                {
+                    logger.ShowLog($"--- 喇叭功能测试(人工)通过");
+                    testItem.Result = "PASS";
+                }
+                else
+                {
+                    logger.ShowLog($"--- 喇叭功能测试(人工)失败");
+                    testItem.Result = "FAIL";
+                }
+                testItem.Duration = (Environment.TickCount - start_time) / 1000.00f;
+                dataGridView.Rows.Add(testItem.Name, "-", "-", "-", "-", "-", testItem.Result, testItem.Duration.ToString("F2"));
+                return testItem;
+            }
+            catch (Exception ee)
+            {
+                logger.ShowLog($"喇叭功能测试(人工)发生异常：【{ee.Message}】");
+                return null;
+            }
+        }
+
+        public TestItem CheckButton(XDC01Serial xDC01Serial,
+            System.Windows.Forms.DataGridView dataGridView, Logger logger, TestParam testParam)
+        {
+            try
+            {
+                int start_time = Environment.TickCount;
+                string str_error_log = "";
+                logger.ShowLog("-进行按键功能测试...");
+
+                int interval = 5000;
+                try
+                {
+                    decimal temp = decimal.Parse(testParam.btn_timeout) * 1000;
+                    interval = (int)temp;
+                }
+                catch (Exception ee)
+                {
+                    logger.ShowLog($"按键测试超时参数异常：[{ee.Message}]");
+                }
+
+                TestItem btnTestItem = new TestItem()
+                {
+                    Name = "按键测试",
+                    NgItem = "button"
+                };
+                xDC01Serial.SetPIR("off", ref str_error_log);
+                CustomDialog btnDialog = new CustomDialog("按键测试（人工）", "请按键！");
+                //DialogResult result = btnDialog.ShowDialog();
+                btnDialog.Show();
+
+                int numa = Environment.TickCount;
+                while (true)
+                {
+                    Application.DoEvents();
+                    if (Environment.TickCount - numa > interval)
+                    {
+                        logger.ShowLog($"--- 按键功能测试失败(超时)");
+                        btnTestItem.Result = "FAIL";
+                        break;
+                    }
+                    if (xDC01Serial.str_Receive_skybell.Contains("SystemParam.ButtonStatus = 1") && xDC01Serial.str_Receive_skybell.Contains("SystemParam.ButtonRelease Trigger = 1"))
+                    {
+                        logger.ShowLog($"--- 按键功能测试通过");
+                        btnTestItem.Result = "PASS";
+                        break;
+                    }
+                }
+                btnDialog.Close();
+
+                btnTestItem.Duration = (Environment.TickCount - start_time) / 1000.00f;
+                dataGridView.Rows.Add(btnTestItem.Name, "-", "-", "-", "-", "-", btnTestItem.Result, btnTestItem.Duration.ToString("F2"));
+                return btnTestItem;
+            }
+            catch (Exception ee)
+            {
+                logger.ShowLog($"按键测试发生异常：[{ee.Message}]");
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// PCBA 按键功能测试and喇叭测试
         /// </summary>
         /// <param name="xDC01Serial"></param>
         /// <param name="dataGridView"></param>

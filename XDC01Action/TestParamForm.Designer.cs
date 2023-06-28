@@ -56,7 +56,7 @@
             this.comboBoxTestMode = new System.Windows.Forms.ComboBox();
             this.comboBoxSerialPort = new System.Windows.Forms.ComboBox();
             this.label10 = new System.Windows.Forms.Label();
-            this.label9 = new System.Windows.Forms.Label();
+            this.labelSerialPort = new System.Windows.Forms.Label();
             this.groupBox15 = new System.Windows.Forms.GroupBox();
             this.BtnNextStation = new System.Windows.Forms.Button();
             this.comboBoxTagNumber = new System.Windows.Forms.ComboBox();
@@ -81,14 +81,14 @@
             this.tabPageVoltage = new System.Windows.Forms.TabPage();
             this.groupBox19 = new System.Windows.Forms.GroupBox();
             this.comboBoxRelay = new System.Windows.Forms.ComboBox();
-            this.label40 = new System.Windows.Forms.Label();
+            this.labelRelayPort = new System.Windows.Forms.Label();
             this.comboBoxCurFluke = new System.Windows.Forms.ComboBox();
-            this.label39 = new System.Windows.Forms.Label();
+            this.labelFlukePort = new System.Windows.Forms.Label();
             this.comboBoxCurTDMSerial = new System.Windows.Forms.ComboBox();
-            this.label38 = new System.Windows.Forms.Label();
+            this.labelCurPort = new System.Windows.Forms.Label();
             this.comboBoxVolTDMSerial = new System.Windows.Forms.ComboBox();
             this.BtnChargeRelay = new System.Windows.Forms.Button();
-            this.label37 = new System.Windows.Forms.Label();
+            this.labelVolPort = new System.Windows.Forms.Label();
             this.comboBoxChargeRelayIndex = new System.Windows.Forms.ComboBox();
             this.label36 = new System.Windows.Forms.Label();
             this.tabPageFunTest = new System.Windows.Forms.TabPage();
@@ -140,7 +140,7 @@
             this.tabPageRTOS = new System.Windows.Forms.TabPage();
             this.groupBox18 = new System.Windows.Forms.GroupBox();
             this.comboBoxRTOSPort = new System.Windows.Forms.ComboBox();
-            this.label1 = new System.Windows.Forms.Label();
+            this.labelRTOSPort = new System.Windows.Forms.Label();
             this.BtnImageServer = new System.Windows.Forms.Button();
             this.textBoxImageServer = new System.Windows.Forms.TextBox();
             this.label35 = new System.Windows.Forms.Label();
@@ -152,7 +152,7 @@
             this.label4 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
             this.comboBoxPrinter = new System.Windows.Forms.ComboBox();
-            this.label2 = new System.Windows.Forms.Label();
+            this.labelPrinter = new System.Windows.Forms.Label();
             this.numericUpDownTriggerRelay = new System.Windows.Forms.NumericUpDown();
             this.label42 = new System.Windows.Forms.Label();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
@@ -163,6 +163,16 @@
             this.BtnMotion = new System.Windows.Forms.Button();
             this.numericUpDownMotion = new System.Windows.Forms.NumericUpDown();
             this.label44 = new System.Windows.Forms.Label();
+            this.groupBox4 = new System.Windows.Forms.GroupBox();
+            this.label1 = new System.Windows.Forms.Label();
+            this.checkBoxWav_1 = new System.Windows.Forms.CheckBox();
+            this.checkBoxWav_2 = new System.Windows.Forms.CheckBox();
+            this.checkBoxWav_3 = new System.Windows.Forms.CheckBox();
+            this.checkBoxWav_4 = new System.Windows.Forms.CheckBox();
+            this.checkBoxWav_5 = new System.Windows.Forms.CheckBox();
+            this.checkBoxWav_8 = new System.Windows.Forms.CheckBox();
+            this.checkBoxWav_9 = new System.Windows.Forms.CheckBox();
+            this.BtnAudioTest = new System.Windows.Forms.Button();
             this.tabControl1.SuspendLayout();
             this.tabPageCommon.SuspendLayout();
             this.groupBox16.SuspendLayout();
@@ -199,6 +209,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownBtnTest)).BeginInit();
             this.groupBox3.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownMotion)).BeginInit();
+            this.groupBox4.SuspendLayout();
             this.SuspendLayout();
             // 
             // tabControl1
@@ -213,7 +224,7 @@
             this.tabControl1.Margin = new System.Windows.Forms.Padding(4);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(954, 539);
+            this.tabControl1.Size = new System.Drawing.Size(954, 561);
             this.tabControl1.TabIndex = 0;
             this.tabControl1.SelectedIndexChanged += new System.EventHandler(this.tabControl1_SelectedIndexChanged);
             // 
@@ -433,7 +444,7 @@
             this.groupBox8.Controls.Add(this.comboBoxTestMode);
             this.groupBox8.Controls.Add(this.comboBoxSerialPort);
             this.groupBox8.Controls.Add(this.label10);
-            this.groupBox8.Controls.Add(this.label9);
+            this.groupBox8.Controls.Add(this.labelSerialPort);
             this.groupBox8.Location = new System.Drawing.Point(8, 247);
             this.groupBox8.Name = "groupBox8";
             this.groupBox8.Size = new System.Drawing.Size(386, 250);
@@ -532,14 +543,15 @@
             this.label10.TabIndex = 1;
             this.label10.Text = "测试模式：";
             // 
-            // label9
+            // labelSerialPort
             // 
-            this.label9.AutoSize = true;
-            this.label9.Location = new System.Drawing.Point(12, 39);
-            this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(71, 16);
-            this.label9.TabIndex = 0;
-            this.label9.Text = "串口号：";
+            this.labelSerialPort.AutoSize = true;
+            this.labelSerialPort.Location = new System.Drawing.Point(12, 39);
+            this.labelSerialPort.Name = "labelSerialPort";
+            this.labelSerialPort.Size = new System.Drawing.Size(71, 16);
+            this.labelSerialPort.TabIndex = 0;
+            this.labelSerialPort.Text = "串口号：";
+            this.labelSerialPort.Click += new System.EventHandler(this.labelSerialPort_Click);
             // 
             // groupBox15
             // 
@@ -798,14 +810,14 @@
             this.groupBox19.Controls.Add(this.numericUpDownTriggerRelay);
             this.groupBox19.Controls.Add(this.label42);
             this.groupBox19.Controls.Add(this.comboBoxRelay);
-            this.groupBox19.Controls.Add(this.label40);
+            this.groupBox19.Controls.Add(this.labelRelayPort);
             this.groupBox19.Controls.Add(this.comboBoxCurFluke);
-            this.groupBox19.Controls.Add(this.label39);
+            this.groupBox19.Controls.Add(this.labelFlukePort);
             this.groupBox19.Controls.Add(this.comboBoxCurTDMSerial);
-            this.groupBox19.Controls.Add(this.label38);
+            this.groupBox19.Controls.Add(this.labelCurPort);
             this.groupBox19.Controls.Add(this.comboBoxVolTDMSerial);
             this.groupBox19.Controls.Add(this.BtnChargeRelay);
-            this.groupBox19.Controls.Add(this.label37);
+            this.groupBox19.Controls.Add(this.labelVolPort);
             this.groupBox19.Controls.Add(this.comboBoxChargeRelayIndex);
             this.groupBox19.Controls.Add(this.label36);
             this.groupBox19.Location = new System.Drawing.Point(7, 7);
@@ -823,14 +835,15 @@
             this.comboBoxRelay.Size = new System.Drawing.Size(104, 24);
             this.comboBoxRelay.TabIndex = 51;
             // 
-            // label40
+            // labelRelayPort
             // 
-            this.label40.AutoSize = true;
-            this.label40.Location = new System.Drawing.Point(54, 250);
-            this.label40.Name = "label40";
-            this.label40.Size = new System.Drawing.Size(103, 16);
-            this.label40.TabIndex = 50;
-            this.label40.Text = "继电器串口：";
+            this.labelRelayPort.AutoSize = true;
+            this.labelRelayPort.Location = new System.Drawing.Point(54, 250);
+            this.labelRelayPort.Name = "labelRelayPort";
+            this.labelRelayPort.Size = new System.Drawing.Size(103, 16);
+            this.labelRelayPort.TabIndex = 50;
+            this.labelRelayPort.Text = "继电器串口：";
+            this.labelRelayPort.Click += new System.EventHandler(this.labelRelayPort_Click);
             // 
             // comboBoxCurFluke
             // 
@@ -840,14 +853,15 @@
             this.comboBoxCurFluke.Size = new System.Drawing.Size(104, 24);
             this.comboBoxCurFluke.TabIndex = 49;
             // 
-            // label39
+            // labelFlukePort
             // 
-            this.label39.AutoSize = true;
-            this.label39.Location = new System.Drawing.Point(22, 194);
-            this.label39.Name = "label39";
-            this.label39.Size = new System.Drawing.Size(135, 16);
-            this.label39.TabIndex = 48;
-            this.label39.Text = "台式电流表串口：";
+            this.labelFlukePort.AutoSize = true;
+            this.labelFlukePort.Location = new System.Drawing.Point(22, 194);
+            this.labelFlukePort.Name = "labelFlukePort";
+            this.labelFlukePort.Size = new System.Drawing.Size(135, 16);
+            this.labelFlukePort.TabIndex = 48;
+            this.labelFlukePort.Text = "台式电流表串口：";
+            this.labelFlukePort.Click += new System.EventHandler(this.labelFlukePort_Click);
             // 
             // comboBoxCurTDMSerial
             // 
@@ -857,14 +871,15 @@
             this.comboBoxCurTDMSerial.Size = new System.Drawing.Size(104, 24);
             this.comboBoxCurTDMSerial.TabIndex = 47;
             // 
-            // label38
+            // labelCurPort
             // 
-            this.label38.AutoSize = true;
-            this.label38.Location = new System.Drawing.Point(54, 137);
-            this.label38.Name = "label38";
-            this.label38.Size = new System.Drawing.Size(103, 16);
-            this.label38.TabIndex = 46;
-            this.label38.Text = "电流表串口：";
+            this.labelCurPort.AutoSize = true;
+            this.labelCurPort.Location = new System.Drawing.Point(54, 137);
+            this.labelCurPort.Name = "labelCurPort";
+            this.labelCurPort.Size = new System.Drawing.Size(103, 16);
+            this.labelCurPort.TabIndex = 46;
+            this.labelCurPort.Text = "电流表串口：";
+            this.labelCurPort.Click += new System.EventHandler(this.labelCurPort_Click);
             // 
             // comboBoxVolTDMSerial
             // 
@@ -885,14 +900,15 @@
             this.BtnChargeRelay.UseVisualStyleBackColor = false;
             this.BtnChargeRelay.Click += new System.EventHandler(this.BtnChargeRelay_Click);
             // 
-            // label37
+            // labelVolPort
             // 
-            this.label37.AutoSize = true;
-            this.label37.Location = new System.Drawing.Point(54, 85);
-            this.label37.Name = "label37";
-            this.label37.Size = new System.Drawing.Size(103, 16);
-            this.label37.TabIndex = 12;
-            this.label37.Text = "电压表串口：";
+            this.labelVolPort.AutoSize = true;
+            this.labelVolPort.Location = new System.Drawing.Point(54, 85);
+            this.labelVolPort.Name = "labelVolPort";
+            this.labelVolPort.Size = new System.Drawing.Size(103, 16);
+            this.labelVolPort.TabIndex = 12;
+            this.labelVolPort.Text = "电压表串口：";
+            this.labelVolPort.Click += new System.EventHandler(this.labelVolPort_Click);
             // 
             // comboBoxChargeRelayIndex
             // 
@@ -938,6 +954,7 @@
             // 
             // tabPageFunTest
             // 
+            this.tabPageFunTest.Controls.Add(this.groupBox4);
             this.tabPageFunTest.Controls.Add(this.groupBox3);
             this.tabPageFunTest.Controls.Add(this.groupBox2);
             this.tabPageFunTest.Controls.Add(this.groupBox14);
@@ -949,7 +966,7 @@
             this.tabPageFunTest.Location = new System.Drawing.Point(4, 26);
             this.tabPageFunTest.Margin = new System.Windows.Forms.Padding(4);
             this.tabPageFunTest.Name = "tabPageFunTest";
-            this.tabPageFunTest.Size = new System.Drawing.Size(946, 509);
+            this.tabPageFunTest.Size = new System.Drawing.Size(946, 531);
             this.tabPageFunTest.TabIndex = 2;
             this.tabPageFunTest.Text = "功能测试";
             this.tabPageFunTest.UseVisualStyleBackColor = true;
@@ -979,12 +996,6 @@
             // 
             // numericUpDownRFRXTimeout
             // 
-            this.numericUpDownRFRXTimeout.DecimalPlaces = 3;
-            this.numericUpDownRFRXTimeout.Increment = new decimal(new int[] {
-            5,
-            0,
-            0,
-            65536});
             this.numericUpDownRFRXTimeout.Location = new System.Drawing.Point(195, 33);
             this.numericUpDownRFRXTimeout.Name = "numericUpDownRFRXTimeout";
             this.numericUpDownRFRXTimeout.Size = new System.Drawing.Size(96, 26);
@@ -1448,7 +1459,7 @@
             // groupBox18
             // 
             this.groupBox18.Controls.Add(this.comboBoxRTOSPort);
-            this.groupBox18.Controls.Add(this.label1);
+            this.groupBox18.Controls.Add(this.labelRTOSPort);
             this.groupBox18.Controls.Add(this.BtnImageServer);
             this.groupBox18.Controls.Add(this.textBoxImageServer);
             this.groupBox18.Controls.Add(this.label35);
@@ -1467,14 +1478,15 @@
             this.comboBoxRTOSPort.Size = new System.Drawing.Size(104, 24);
             this.comboBoxRTOSPort.TabIndex = 39;
             // 
-            // label1
+            // labelRTOSPort
             // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(45, 92);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(71, 16);
-            this.label1.TabIndex = 38;
-            this.label1.Text = "串口号：";
+            this.labelRTOSPort.AutoSize = true;
+            this.labelRTOSPort.Location = new System.Drawing.Point(45, 92);
+            this.labelRTOSPort.Name = "labelRTOSPort";
+            this.labelRTOSPort.Size = new System.Drawing.Size(71, 16);
+            this.labelRTOSPort.TabIndex = 38;
+            this.labelRTOSPort.Text = "串口号：";
+            this.labelRTOSPort.Click += new System.EventHandler(this.labelRTOSPort_Click);
             // 
             // BtnImageServer
             // 
@@ -1521,7 +1533,7 @@
             this.groupBox1.Controls.Add(this.label4);
             this.groupBox1.Controls.Add(this.label3);
             this.groupBox1.Controls.Add(this.comboBoxPrinter);
-            this.groupBox1.Controls.Add(this.label2);
+            this.groupBox1.Controls.Add(this.labelPrinter);
             this.groupBox1.Location = new System.Drawing.Point(9, 4);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(428, 182);
@@ -1600,14 +1612,15 @@
             this.comboBoxPrinter.Size = new System.Drawing.Size(245, 24);
             this.comboBoxPrinter.TabIndex = 1;
             // 
-            // label2
+            // labelPrinter
             // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(46, 34);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(103, 16);
-            this.label2.TabIndex = 0;
-            this.label2.Text = "选择打印机：";
+            this.labelPrinter.AutoSize = true;
+            this.labelPrinter.Location = new System.Drawing.Point(46, 34);
+            this.labelPrinter.Name = "labelPrinter";
+            this.labelPrinter.Size = new System.Drawing.Size(103, 16);
+            this.labelPrinter.TabIndex = 0;
+            this.labelPrinter.Text = "选择打印机：";
+            this.labelPrinter.Click += new System.EventHandler(this.labelPrinter_Click);
             // 
             // numericUpDownTriggerRelay
             // 
@@ -1736,11 +1749,119 @@
             this.label44.TabIndex = 14;
             this.label44.Text = "等待挥手超时时间(s):";
             // 
+            // groupBox4
+            // 
+            this.groupBox4.Controls.Add(this.BtnAudioTest);
+            this.groupBox4.Controls.Add(this.checkBoxWav_9);
+            this.groupBox4.Controls.Add(this.checkBoxWav_8);
+            this.groupBox4.Controls.Add(this.checkBoxWav_5);
+            this.groupBox4.Controls.Add(this.checkBoxWav_4);
+            this.groupBox4.Controls.Add(this.checkBoxWav_3);
+            this.groupBox4.Controls.Add(this.checkBoxWav_2);
+            this.groupBox4.Controls.Add(this.checkBoxWav_1);
+            this.groupBox4.Controls.Add(this.label1);
+            this.groupBox4.Location = new System.Drawing.Point(4, 451);
+            this.groupBox4.Name = "groupBox4";
+            this.groupBox4.Size = new System.Drawing.Size(919, 72);
+            this.groupBox4.TabIndex = 41;
+            this.groupBox4.TabStop = false;
+            this.groupBox4.Text = "喇叭测试";
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(6, 37);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(183, 16);
+            this.label1.TabIndex = 0;
+            this.label1.Text = "选择要播放的音频文件：";
+            // 
+            // checkBoxWav_1
+            // 
+            this.checkBoxWav_1.AutoSize = true;
+            this.checkBoxWav_1.Location = new System.Drawing.Point(195, 33);
+            this.checkBoxWav_1.Name = "checkBoxWav_1";
+            this.checkBoxWav_1.Size = new System.Drawing.Size(66, 20);
+            this.checkBoxWav_1.TabIndex = 1;
+            this.checkBoxWav_1.Text = "wav_1";
+            this.checkBoxWav_1.UseVisualStyleBackColor = true;
+            // 
+            // checkBoxWav_2
+            // 
+            this.checkBoxWav_2.AutoSize = true;
+            this.checkBoxWav_2.Location = new System.Drawing.Point(267, 33);
+            this.checkBoxWav_2.Name = "checkBoxWav_2";
+            this.checkBoxWav_2.Size = new System.Drawing.Size(66, 20);
+            this.checkBoxWav_2.TabIndex = 2;
+            this.checkBoxWav_2.Text = "wav_2";
+            this.checkBoxWav_2.UseVisualStyleBackColor = true;
+            // 
+            // checkBoxWav_3
+            // 
+            this.checkBoxWav_3.AutoSize = true;
+            this.checkBoxWav_3.Location = new System.Drawing.Point(339, 33);
+            this.checkBoxWav_3.Name = "checkBoxWav_3";
+            this.checkBoxWav_3.Size = new System.Drawing.Size(66, 20);
+            this.checkBoxWav_3.TabIndex = 3;
+            this.checkBoxWav_3.Text = "wav_3";
+            this.checkBoxWav_3.UseVisualStyleBackColor = true;
+            // 
+            // checkBoxWav_4
+            // 
+            this.checkBoxWav_4.AutoSize = true;
+            this.checkBoxWav_4.Location = new System.Drawing.Point(411, 33);
+            this.checkBoxWav_4.Name = "checkBoxWav_4";
+            this.checkBoxWav_4.Size = new System.Drawing.Size(66, 20);
+            this.checkBoxWav_4.TabIndex = 4;
+            this.checkBoxWav_4.Text = "wav_4";
+            this.checkBoxWav_4.UseVisualStyleBackColor = true;
+            // 
+            // checkBoxWav_5
+            // 
+            this.checkBoxWav_5.AutoSize = true;
+            this.checkBoxWav_5.Location = new System.Drawing.Point(483, 33);
+            this.checkBoxWav_5.Name = "checkBoxWav_5";
+            this.checkBoxWav_5.Size = new System.Drawing.Size(66, 20);
+            this.checkBoxWav_5.TabIndex = 5;
+            this.checkBoxWav_5.Text = "wav_5";
+            this.checkBoxWav_5.UseVisualStyleBackColor = true;
+            // 
+            // checkBoxWav_8
+            // 
+            this.checkBoxWav_8.AutoSize = true;
+            this.checkBoxWav_8.Location = new System.Drawing.Point(555, 33);
+            this.checkBoxWav_8.Name = "checkBoxWav_8";
+            this.checkBoxWav_8.Size = new System.Drawing.Size(66, 20);
+            this.checkBoxWav_8.TabIndex = 6;
+            this.checkBoxWav_8.Text = "wav_8";
+            this.checkBoxWav_8.UseVisualStyleBackColor = true;
+            // 
+            // checkBoxWav_9
+            // 
+            this.checkBoxWav_9.AutoSize = true;
+            this.checkBoxWav_9.Location = new System.Drawing.Point(627, 33);
+            this.checkBoxWav_9.Name = "checkBoxWav_9";
+            this.checkBoxWav_9.Size = new System.Drawing.Size(66, 20);
+            this.checkBoxWav_9.TabIndex = 7;
+            this.checkBoxWav_9.Text = "wav_9";
+            this.checkBoxWav_9.UseVisualStyleBackColor = true;
+            // 
+            // BtnAudioTest
+            // 
+            this.BtnAudioTest.BackColor = System.Drawing.Color.SeaGreen;
+            this.BtnAudioTest.Location = new System.Drawing.Point(808, 27);
+            this.BtnAudioTest.Name = "BtnAudioTest";
+            this.BtnAudioTest.Size = new System.Drawing.Size(85, 31);
+            this.BtnAudioTest.TabIndex = 39;
+            this.BtnAudioTest.Text = "保存";
+            this.BtnAudioTest.UseVisualStyleBackColor = false;
+            this.BtnAudioTest.Click += new System.EventHandler(this.BtnAudioTest_Click);
+            // 
             // TestParamForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(954, 539);
+            this.ClientSize = new System.Drawing.Size(954, 561);
             this.Controls.Add(this.tabControl1);
             this.Font = new System.Drawing.Font("宋体", 12F);
             this.Margin = new System.Windows.Forms.Padding(4);
@@ -1799,6 +1920,8 @@
             this.groupBox3.ResumeLayout(false);
             this.groupBox3.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownMotion)).EndInit();
+            this.groupBox4.ResumeLayout(false);
+            this.groupBox4.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -1837,7 +1960,7 @@
         private System.Windows.Forms.ComboBox comboBoxTestMode;
         private System.Windows.Forms.ComboBox comboBoxSerialPort;
         private System.Windows.Forms.Label label10;
-        private System.Windows.Forms.Label label9;
+        private System.Windows.Forms.Label labelSerialPort;
         private System.Windows.Forms.CheckBox checkBoxNGContinue;
         private System.Windows.Forms.GroupBox groupBox16;
         private System.Windows.Forms.TextBox textBoxCloudPassword;
@@ -1857,14 +1980,14 @@
         private System.Windows.Forms.Label label62;
         private System.Windows.Forms.GroupBox groupBox19;
         private System.Windows.Forms.ComboBox comboBoxRelay;
-        private System.Windows.Forms.Label label40;
+        private System.Windows.Forms.Label labelRelayPort;
         private System.Windows.Forms.ComboBox comboBoxCurFluke;
-        private System.Windows.Forms.Label label39;
+        private System.Windows.Forms.Label labelFlukePort;
         private System.Windows.Forms.ComboBox comboBoxCurTDMSerial;
-        private System.Windows.Forms.Label label38;
+        private System.Windows.Forms.Label labelCurPort;
         private System.Windows.Forms.ComboBox comboBoxVolTDMSerial;
         private System.Windows.Forms.Button BtnChargeRelay;
-        private System.Windows.Forms.Label label37;
+        private System.Windows.Forms.Label labelVolPort;
         private System.Windows.Forms.ComboBox comboBoxChargeRelayIndex;
         private System.Windows.Forms.Label label36;
         private System.Windows.Forms.GroupBox groupBox9;
@@ -1918,10 +2041,10 @@
         private System.Windows.Forms.TextBox textBoxImageServer;
         private System.Windows.Forms.Label label35;
         private System.Windows.Forms.ComboBox comboBoxRTOSPort;
-        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Label labelRTOSPort;
         private System.Windows.Forms.TabPage tabPagePrinter;
         private System.Windows.Forms.GroupBox groupBox1;
-        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Label labelPrinter;
         private System.Windows.Forms.ComboBox comboBoxPrinter;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label4;
@@ -1940,5 +2063,15 @@
         private System.Windows.Forms.Button BtnMotion;
         private System.Windows.Forms.NumericUpDown numericUpDownMotion;
         private System.Windows.Forms.Label label44;
+        private System.Windows.Forms.GroupBox groupBox4;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.CheckBox checkBoxWav_1;
+        private System.Windows.Forms.CheckBox checkBoxWav_8;
+        private System.Windows.Forms.CheckBox checkBoxWav_5;
+        private System.Windows.Forms.CheckBox checkBoxWav_4;
+        private System.Windows.Forms.CheckBox checkBoxWav_3;
+        private System.Windows.Forms.CheckBox checkBoxWav_2;
+        private System.Windows.Forms.CheckBox checkBoxWav_9;
+        private System.Windows.Forms.Button BtnAudioTest;
     }
 }

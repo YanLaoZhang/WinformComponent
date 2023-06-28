@@ -101,7 +101,7 @@ namespace FLUKE8808ALib
         {
             try
             {
-                if (_serialPort.IsOpen == false)
+                if (!_serialPort.IsOpen)
                 {
                     _serialPort.Open();
                 }
@@ -145,10 +145,7 @@ namespace FLUKE8808ALib
         {
             try
             {
-                if (_serialPort.IsOpen == false)
-                {
-                    _serialPort.Open();
-                }
+                OpenPort();
 
                 bool_exit_current_1 = false;
                 str_Receive_current = "";

@@ -279,5 +279,13 @@ namespace XDC01Action
         public string printer_name;
         public string sn_count;
         public string mac_count;
+
+        public string wav_1;
+        public string wav_2;
+        public string wav_3;
+        public string wav_4;
+        public string wav_5;
+        public string wav_8;
+        public string wav_9;
     }
 }
