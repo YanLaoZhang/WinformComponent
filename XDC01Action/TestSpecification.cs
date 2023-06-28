@@ -238,6 +238,8 @@ namespace XDC01Action
         public string ping_ip;
         public string ping_count;
         public string led_interval;
+        public string btn_timeout;
+        public string pir_timeout;
         public string mic_record_duration;
         public string mic_wave_file;
         public string cur_wifi_ssid;

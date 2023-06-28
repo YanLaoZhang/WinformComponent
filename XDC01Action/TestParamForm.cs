@@ -42,6 +42,8 @@ namespace XDC01Action
                     ping_count = ConfigFile.IniReadValue("wifi_param", "ping_count", Path_ini),
 
                     led_interval = ConfigFile.IniReadValue("led_color", "interval", Path_ini),
+                    btn_timeout = ConfigFile.IniReadValue("button", "button_test_timeout", Path_ini),
+                    pir_timeout = ConfigFile.IniReadValue("motion", "motion_test_timeout", Path_ini),
 
                     mic_record_duration = ConfigFile.IniReadValue("mic_param", "record_duration", Path_ini),
                     mic_wave_file = ConfigFile.IniReadValue("mic_param", "wave_file", Path_ini),
@@ -188,6 +190,10 @@ namespace XDC01Action
                 numericUpDownPingCount.Value = decimal.Parse(testParam.ping_count);
                 // led灯测试
                 numericUpDownLEDInterval.Value = decimal.Parse(testParam.led_interval);
+                // button测试
+                numericUpDownBtnTest.Value = decimal.Parse(testParam.btn_timeout);
+                // 移动感应测试
+                numericUpDownMotion.Value = decimal.Parse(testParam.pir_timeout);
 
                 // 麦克风测试
                 System.IO.DirectoryInfo _ini_file = new System.IO.DirectoryInfo(System.Windows.Forms.Application.StartupPath + @"\wav");
@@ -365,6 +371,35 @@ namespace XDC01Action
 
                 ConfigFile.IniWriteValue("rf_rx", "rf_rx_timeout", numericUpDownRFRXTimeout.Value.ToString(), Path_ini);
                 MessageBox.Show("RF RX测试保存成功");
+            }
+            catch (Exception ee)
+            {
+                MessageBox.Show("保存异常：" + ee.Message);
+            }
+        }
+
+
+        private void BtnbtnTest_Click(object sender, EventArgs e)
+        {
+            try
+            {
+
+                ConfigFile.IniWriteValue("button", "button_test_timeout", numericUpDownBtnTest.Value.ToString(), Path_ini);
+                MessageBox.Show("按键测试保存成功");
+            }
+            catch (Exception ee)
+            {
+                MessageBox.Show("保存异常：" + ee.Message);
+            }
+        }
+
+        private void BtnMotion_Click(object sender, EventArgs e)
+        {
+            try
+            {
+
+                ConfigFile.IniWriteValue("motion", "motion_test_timeout", numericUpDownMotion.Value.ToString(), Path_ini);
+                MessageBox.Show("移动感应测试保存成功");
             }
             catch (Exception ee)
             {

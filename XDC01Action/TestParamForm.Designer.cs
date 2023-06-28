@@ -155,6 +155,14 @@
             this.label2 = new System.Windows.Forms.Label();
             this.numericUpDownTriggerRelay = new System.Windows.Forms.NumericUpDown();
             this.label42 = new System.Windows.Forms.Label();
+            this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.BtnbtnTest = new System.Windows.Forms.Button();
+            this.numericUpDownBtnTest = new System.Windows.Forms.NumericUpDown();
+            this.label43 = new System.Windows.Forms.Label();
+            this.groupBox3 = new System.Windows.Forms.GroupBox();
+            this.BtnMotion = new System.Windows.Forms.Button();
+            this.numericUpDownMotion = new System.Windows.Forms.NumericUpDown();
+            this.label44 = new System.Windows.Forms.Label();
             this.tabControl1.SuspendLayout();
             this.tabPageCommon.SuspendLayout();
             this.groupBox16.SuspendLayout();
@@ -187,6 +195,10 @@
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownMacCount)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownSNCount)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownTriggerRelay)).BeginInit();
+            this.groupBox2.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownBtnTest)).BeginInit();
+            this.groupBox3.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownMotion)).BeginInit();
             this.SuspendLayout();
             // 
             // tabControl1
@@ -926,6 +938,8 @@
             // 
             // tabPageFunTest
             // 
+            this.tabPageFunTest.Controls.Add(this.groupBox3);
+            this.tabPageFunTest.Controls.Add(this.groupBox2);
             this.tabPageFunTest.Controls.Add(this.groupBox14);
             this.tabPageFunTest.Controls.Add(this.groupBox13);
             this.tabPageFunTest.Controls.Add(this.groupBox12);
@@ -945,9 +959,9 @@
             this.groupBox14.Controls.Add(this.BtnRFRX);
             this.groupBox14.Controls.Add(this.numericUpDownRFRXTimeout);
             this.groupBox14.Controls.Add(this.label28);
-            this.groupBox14.Location = new System.Drawing.Point(641, 142);
+            this.groupBox14.Location = new System.Drawing.Point(331, 294);
             this.groupBox14.Name = "groupBox14";
-            this.groupBox14.Size = new System.Drawing.Size(282, 302);
+            this.groupBox14.Size = new System.Drawing.Size(304, 150);
             this.groupBox14.TabIndex = 9;
             this.groupBox14.TabStop = false;
             this.groupBox14.Text = "RF RX灵敏度测试";
@@ -955,7 +969,7 @@
             // BtnRFRX
             // 
             this.BtnRFRX.BackColor = System.Drawing.Color.SeaGreen;
-            this.BtnRFRX.Location = new System.Drawing.Point(171, 143);
+            this.BtnRFRX.Location = new System.Drawing.Point(206, 82);
             this.BtnRFRX.Name = "BtnRFRX";
             this.BtnRFRX.Size = new System.Drawing.Size(85, 31);
             this.BtnRFRX.TabIndex = 38;
@@ -965,9 +979,15 @@
             // 
             // numericUpDownRFRXTimeout
             // 
-            this.numericUpDownRFRXTimeout.Location = new System.Drawing.Point(195, 36);
+            this.numericUpDownRFRXTimeout.DecimalPlaces = 3;
+            this.numericUpDownRFRXTimeout.Increment = new decimal(new int[] {
+            5,
+            0,
+            0,
+            65536});
+            this.numericUpDownRFRXTimeout.Location = new System.Drawing.Point(195, 33);
             this.numericUpDownRFRXTimeout.Name = "numericUpDownRFRXTimeout";
-            this.numericUpDownRFRXTimeout.Size = new System.Drawing.Size(61, 26);
+            this.numericUpDownRFRXTimeout.Size = new System.Drawing.Size(96, 26);
             this.numericUpDownRFRXTimeout.TabIndex = 15;
             this.numericUpDownRFRXTimeout.Value = new decimal(new int[] {
             1,
@@ -993,7 +1013,7 @@
             this.groupBox13.Controls.Add(this.label26);
             this.groupBox13.Location = new System.Drawing.Point(331, 142);
             this.groupBox13.Name = "groupBox13";
-            this.groupBox13.Size = new System.Drawing.Size(304, 302);
+            this.groupBox13.Size = new System.Drawing.Size(304, 146);
             this.groupBox13.TabIndex = 8;
             this.groupBox13.TabStop = false;
             this.groupBox13.Text = "RF TX测试";
@@ -1001,7 +1021,7 @@
             // BtnRFTX
             // 
             this.BtnRFTX.BackColor = System.Drawing.Color.SeaGreen;
-            this.BtnRFTX.Location = new System.Drawing.Point(206, 142);
+            this.BtnRFTX.Location = new System.Drawing.Point(206, 82);
             this.BtnRFTX.Name = "BtnRFTX";
             this.BtnRFTX.Size = new System.Drawing.Size(85, 31);
             this.BtnRFTX.TabIndex = 12;
@@ -1265,6 +1285,11 @@
             // numericUpDownLEDInterval
             // 
             this.numericUpDownLEDInterval.DecimalPlaces = 3;
+            this.numericUpDownLEDInterval.Increment = new decimal(new int[] {
+            5,
+            0,
+            0,
+            65536});
             this.numericUpDownLEDInterval.Location = new System.Drawing.Point(139, 37);
             this.numericUpDownLEDInterval.Name = "numericUpDownLEDInterval";
             this.numericUpDownLEDInterval.Size = new System.Drawing.Size(69, 26);
@@ -1587,9 +1612,14 @@
             // numericUpDownTriggerRelay
             // 
             this.numericUpDownTriggerRelay.DecimalPlaces = 3;
+            this.numericUpDownTriggerRelay.Increment = new decimal(new int[] {
+            5,
+            0,
+            0,
+            65536});
             this.numericUpDownTriggerRelay.Location = new System.Drawing.Point(163, 298);
             this.numericUpDownTriggerRelay.Name = "numericUpDownTriggerRelay";
-            this.numericUpDownTriggerRelay.Size = new System.Drawing.Size(69, 26);
+            this.numericUpDownTriggerRelay.Size = new System.Drawing.Size(104, 26);
             this.numericUpDownTriggerRelay.TabIndex = 53;
             this.numericUpDownTriggerRelay.Value = new decimal(new int[] {
             1,
@@ -1605,6 +1635,106 @@
             this.label42.Size = new System.Drawing.Size(127, 16);
             this.label42.TabIndex = 52;
             this.label42.Text = "继电器切换间隔:";
+            // 
+            // groupBox2
+            // 
+            this.groupBox2.Controls.Add(this.BtnbtnTest);
+            this.groupBox2.Controls.Add(this.numericUpDownBtnTest);
+            this.groupBox2.Controls.Add(this.label43);
+            this.groupBox2.Location = new System.Drawing.Point(641, 142);
+            this.groupBox2.Name = "groupBox2";
+            this.groupBox2.Size = new System.Drawing.Size(282, 146);
+            this.groupBox2.TabIndex = 39;
+            this.groupBox2.TabStop = false;
+            this.groupBox2.Text = "按键测试";
+            // 
+            // BtnbtnTest
+            // 
+            this.BtnbtnTest.BackColor = System.Drawing.Color.SeaGreen;
+            this.BtnbtnTest.Location = new System.Drawing.Point(171, 82);
+            this.BtnbtnTest.Name = "BtnbtnTest";
+            this.BtnbtnTest.Size = new System.Drawing.Size(85, 31);
+            this.BtnbtnTest.TabIndex = 38;
+            this.BtnbtnTest.Text = "保存";
+            this.BtnbtnTest.UseVisualStyleBackColor = false;
+            this.BtnbtnTest.Click += new System.EventHandler(this.BtnbtnTest_Click);
+            // 
+            // numericUpDownBtnTest
+            // 
+            this.numericUpDownBtnTest.DecimalPlaces = 3;
+            this.numericUpDownBtnTest.Increment = new decimal(new int[] {
+            5,
+            0,
+            0,
+            65536});
+            this.numericUpDownBtnTest.Location = new System.Drawing.Point(179, 35);
+            this.numericUpDownBtnTest.Name = "numericUpDownBtnTest";
+            this.numericUpDownBtnTest.Size = new System.Drawing.Size(77, 26);
+            this.numericUpDownBtnTest.TabIndex = 15;
+            this.numericUpDownBtnTest.Value = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            // 
+            // label43
+            // 
+            this.label43.AutoSize = true;
+            this.label43.Location = new System.Drawing.Point(6, 42);
+            this.label43.Name = "label43";
+            this.label43.Size = new System.Drawing.Size(167, 16);
+            this.label43.TabIndex = 14;
+            this.label43.Text = "等待按键超时时间(s):";
+            // 
+            // groupBox3
+            // 
+            this.groupBox3.Controls.Add(this.BtnMotion);
+            this.groupBox3.Controls.Add(this.numericUpDownMotion);
+            this.groupBox3.Controls.Add(this.label44);
+            this.groupBox3.Location = new System.Drawing.Point(641, 294);
+            this.groupBox3.Name = "groupBox3";
+            this.groupBox3.Size = new System.Drawing.Size(282, 150);
+            this.groupBox3.TabIndex = 40;
+            this.groupBox3.TabStop = false;
+            this.groupBox3.Text = "移动感应测试";
+            // 
+            // BtnMotion
+            // 
+            this.BtnMotion.BackColor = System.Drawing.Color.SeaGreen;
+            this.BtnMotion.Location = new System.Drawing.Point(171, 82);
+            this.BtnMotion.Name = "BtnMotion";
+            this.BtnMotion.Size = new System.Drawing.Size(85, 31);
+            this.BtnMotion.TabIndex = 38;
+            this.BtnMotion.Text = "保存";
+            this.BtnMotion.UseVisualStyleBackColor = false;
+            this.BtnMotion.Click += new System.EventHandler(this.BtnMotion_Click);
+            // 
+            // numericUpDownMotion
+            // 
+            this.numericUpDownMotion.DecimalPlaces = 3;
+            this.numericUpDownMotion.Increment = new decimal(new int[] {
+            5,
+            0,
+            0,
+            65536});
+            this.numericUpDownMotion.Location = new System.Drawing.Point(179, 36);
+            this.numericUpDownMotion.Name = "numericUpDownMotion";
+            this.numericUpDownMotion.Size = new System.Drawing.Size(77, 26);
+            this.numericUpDownMotion.TabIndex = 15;
+            this.numericUpDownMotion.Value = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            // 
+            // label44
+            // 
+            this.label44.AutoSize = true;
+            this.label44.Location = new System.Drawing.Point(6, 42);
+            this.label44.Name = "label44";
+            this.label44.Size = new System.Drawing.Size(167, 16);
+            this.label44.TabIndex = 14;
+            this.label44.Text = "等待挥手超时时间(s):";
             // 
             // TestParamForm
             // 
@@ -1663,6 +1793,12 @@
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownMacCount)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownSNCount)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownTriggerRelay)).EndInit();
+            this.groupBox2.ResumeLayout(false);
+            this.groupBox2.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownBtnTest)).EndInit();
+            this.groupBox3.ResumeLayout(false);
+            this.groupBox3.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownMotion)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -1796,5 +1932,13 @@
         private System.Windows.Forms.Label label41;
         private System.Windows.Forms.NumericUpDown numericUpDownTriggerRelay;
         private System.Windows.Forms.Label label42;
+        private System.Windows.Forms.GroupBox groupBox2;
+        private System.Windows.Forms.Button BtnbtnTest;
+        private System.Windows.Forms.NumericUpDown numericUpDownBtnTest;
+        private System.Windows.Forms.Label label43;
+        private System.Windows.Forms.GroupBox groupBox3;
+        private System.Windows.Forms.Button BtnMotion;
+        private System.Windows.Forms.NumericUpDown numericUpDownMotion;
+        private System.Windows.Forms.Label label44;
     }
 }

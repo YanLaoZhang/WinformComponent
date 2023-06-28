@@ -202,7 +202,7 @@ namespace XDC01Action
                 }
                 catch(Exception ee)
                 {
-                    
+                    logger.ShowLog($"继电器切换间隔参数异常：[{ee.Message}]");
                 }
                 
                 StringBuilder ng_items = new StringBuilder();
@@ -828,7 +828,7 @@ namespace XDC01Action
         /// <param name="logger"></param>
         /// <returns></returns>
         public List<TestItem> CheckButtonAndSpeaker(XDC01Serial xDC01Serial,
-            System.Windows.Forms.DataGridView dataGridView, Logger logger)
+            System.Windows.Forms.DataGridView dataGridView, Logger logger, TestParam testParam)
         {
             try
             {
@@ -836,15 +836,47 @@ namespace XDC01Action
                 List<TestItem> testItems = new List<TestItem>();
                 string str_error_log = "";
                 logger.ShowLog("-进行按键功能测试...");
+
+                int interval = 5000;
+                try
+                {
+                    decimal temp = decimal.Parse(testParam.btn_timeout) * 1000;
+                    interval = (int)temp;
+                }
+                catch (Exception ee)
+                {
+                    logger.ShowLog($"按键测试超时参数异常：[{ee.Message}]");
+                }
+
                 TestItem btnTestItem = new TestItem() { 
                     Name = "按键测试", 
                     NgItem = "button" 
                 };
                 xDC01Serial.SetPIR("off", ref str_error_log);
                 CustomDialog btnDialog = new CustomDialog("按键测试（人工）", "请按键！");
-                DialogResult result = btnDialog.ShowDialog();
+                //DialogResult result = btnDialog.ShowDialog();
+                btnDialog.Show();
 
-                if (result == DialogResult.Yes)
+                int numa = Environment.TickCount;
+                while (true)
+                {
+                    Application.DoEvents();
+                    if (Environment.TickCount - numa > interval)
+                    {
+                        logger.ShowLog($"--- 按键功能测试失败(超时)");
+                        btnTestItem.Result = "FAIL";
+                        break;
+                    }
+                    if (xDC01Serial.str_Receive_skybell.Contains("SystemParam.ButtonStatus = 1") && xDC01Serial.str_Receive_skybell.Contains("SystemParam.ButtonRelease Trigger = 1"))
+                    {
+                        logger.ShowLog($"--- 按键功能测试通过");
+                        btnTestItem.Result = "PASS";
+                        break;
+                    }
+                }
+                btnDialog.Close();
+
+                /*if (result == DialogResult.Yes)
                 {
                     Delay(1000);
                     if (xDC01Serial.str_Receive_skybell.Contains("SystemParam.ButtonStatus = 1") && xDC01Serial.str_Receive_skybell.Contains("SystemParam.ButtonRelease Trigger = 1"))
@@ -862,7 +894,7 @@ namespace XDC01Action
                 {
                     logger.ShowLog($"--- 按键功能测试失败(人工选择NO)");
                     btnTestItem.Result = "FAIL";
-                }
+                }*/
                 btnTestItem.Duration = (Environment.TickCount - start_time) / 1000.00f;
                 dataGridView.Rows.Add(btnTestItem.Name, "-", "-", "-", "-", "-", btnTestItem.Result, btnTestItem.Duration.ToString("F2"));
                 testItems.Add(btnTestItem);
@@ -905,21 +937,53 @@ namespace XDC01Action
         /// </summary>
         /// <returns></returns>
         public TestItem CheckPIRMotion(XDC01Serial xDC01Serial,
-            System.Windows.Forms.DataGridView dataGridView, Logger logger)
+            System.Windows.Forms.DataGridView dataGridView, Logger logger, TestParam testParam)
         {
             try
             {
                 int start_time = Environment.TickCount;
+                string str_error_log = "";
+                logger.ShowLog("-进行移动感应PIR测试...");
+
+                int interval = 5000;
+                try
+                {
+                    decimal temp = decimal.Parse(testParam.pir_timeout) * 1000;
+                    interval = (int)temp;
+                }
+                catch (Exception ee)
+                {
+                    logger.ShowLog($"移动感应测试超时参数异常：[{ee.Message}]");
+                }
+
                 TestItem testItem = new TestItem(){ 
                     Name = "移动感应", 
                     NgItem = "motion" 
                 };
-                string str_error_log = "";
-                logger.ShowLog("-进行移动感应PIR测试...");
                 xDC01Serial.SetPIR("on", ref str_error_log);
-                CustomDialog btnDialog = new CustomDialog("移动感应PIR测试（人工）", "请在PIR上方挥手!");
-                DialogResult result = btnDialog.ShowDialog();
+                CustomDialog pirbtnDialog = new CustomDialog("移动感应PIR测试（人工）", "请在PIR上方挥手!");
+                pirbtnDialog.Show();
 
+                int numa = Environment.TickCount;
+                while (true)
+                {
+                    Application.DoEvents();
+                    if (Environment.TickCount - numa > interval)
+                    {
+                        logger.ShowLog($"--- 移动感应功能测试失败(超时)");
+                        testItem.Result = "FAIL";
+                        break;
+                    }
+                    if (xDC01Serial.str_Receive_skybell.Contains("SystemParam.MotionTriggerEvent = 1 service_up 0"))
+                    {
+                        logger.ShowLog($"--- 移动感应功能测试通过");
+                        testItem.Result = "PASS";
+                        break;
+                    }
+                }
+                pirbtnDialog.Close();
+
+                /*DialogResult result = btnDialog.ShowDialog();
                 if (result == DialogResult.Yes)
                 {
                     if (xDC01Serial.str_Receive_skybell.Contains("SystemParam.MotionTriggerEvent = 1 service_up 0"))
@@ -937,7 +1001,7 @@ namespace XDC01Action
                 {
                     logger.ShowLog($"--- 移动感应功能测试失败(人工选择NO)");
                     testItem.Result = "FAIL";
-                }
+                }*/
                 testItem.Duration = (Environment.TickCount - start_time) / 1000.00f;
                 dataGridView.Rows.Add(testItem.Name, "-", "-", "-", "-", "-", testItem.Result, testItem.Duration.ToString("F2"));
                 return testItem;
@@ -1779,16 +1843,31 @@ namespace XDC01Action
             {
                 int start_time = Environment.TickCount;
                 TestItem testItem = new TestItem()
-                { Name = "RF接收灵敏度", NgItem = "rf_rx" };
+                {
+                    Name = "RF接收灵敏度", 
+                    NgItem = "rf_rx" 
+                };
                 string str_error_log = "";
                 logger.ShowLog("-进行灵敏度测试...");
+
+                int interval = 5000;
+                try
+                {
+                    decimal temp = decimal.Parse(testParam.rf_rx_timeout) * 1000;
+                    interval = (int)temp;
+                }
+                catch (Exception ee)
+                {
+                    logger.ShowLog($"RF RX测试超时参数异常：[{ee.Message}]");
+                }
+
                 xDC01Serial.SetRFMode("rcv", ref str_error_log);
 
                 int numa = Environment.TickCount;
                 while (true)
                 {
                     Application.DoEvents();
-                    if (Environment.TickCount - numa > int.Parse(testParam.rf_rx_timeout) * 1000)
+                    if (Environment.TickCount - numa > interval)
                     {
                         logger.ShowLog($"--- RF RX灵敏度测试失败");
                         testItem.Result = "FAIL";

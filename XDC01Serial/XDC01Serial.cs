@@ -1572,7 +1572,7 @@ namespace XDC01SerialLib
             {
                 string CMD_OPEN_RTSP = $"omfRtspServer_ &";
                 string str_ret_value = "";
-                if (SendCMDToXDC01(CMD_OPEN_RTSP, 5000, true, ref str_ret_value, ENDFLAG_1) == false)
+                if (SendCMDToXDC01(CMD_OPEN_RTSP, 5000, true, ref str_ret_value, "RtspServer()") == false)
                 {
                     str_error_log = $"发送打开RTSP流指令[{CMD_OPEN_RTSP}]失败";
                     return false;
