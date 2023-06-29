@@ -80,6 +80,8 @@
             this.label5 = new System.Windows.Forms.Label();
             this.tabPageVoltage = new System.Windows.Forms.TabPage();
             this.groupBox19 = new System.Windows.Forms.GroupBox();
+            this.numericUpDownTriggerRelay = new System.Windows.Forms.NumericUpDown();
+            this.label42 = new System.Windows.Forms.Label();
             this.comboBoxRelay = new System.Windows.Forms.ComboBox();
             this.labelRelayPort = new System.Windows.Forms.Label();
             this.comboBoxCurFluke = new System.Windows.Forms.ComboBox();
@@ -92,6 +94,24 @@
             this.comboBoxChargeRelayIndex = new System.Windows.Forms.ComboBox();
             this.label36 = new System.Windows.Forms.Label();
             this.tabPageFunTest = new System.Windows.Forms.TabPage();
+            this.groupBox4 = new System.Windows.Forms.GroupBox();
+            this.BtnAudioTest = new System.Windows.Forms.Button();
+            this.checkBoxWav_9 = new System.Windows.Forms.CheckBox();
+            this.checkBoxWav_8 = new System.Windows.Forms.CheckBox();
+            this.checkBoxWav_5 = new System.Windows.Forms.CheckBox();
+            this.checkBoxWav_4 = new System.Windows.Forms.CheckBox();
+            this.checkBoxWav_3 = new System.Windows.Forms.CheckBox();
+            this.checkBoxWav_2 = new System.Windows.Forms.CheckBox();
+            this.checkBoxWav_1 = new System.Windows.Forms.CheckBox();
+            this.label1 = new System.Windows.Forms.Label();
+            this.groupBox3 = new System.Windows.Forms.GroupBox();
+            this.BtnMotion = new System.Windows.Forms.Button();
+            this.numericUpDownMotion = new System.Windows.Forms.NumericUpDown();
+            this.label44 = new System.Windows.Forms.Label();
+            this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.BtnbtnTest = new System.Windows.Forms.Button();
+            this.numericUpDownBtnTest = new System.Windows.Forms.NumericUpDown();
+            this.label43 = new System.Windows.Forms.Label();
             this.groupBox14 = new System.Windows.Forms.GroupBox();
             this.BtnRFRX = new System.Windows.Forms.Button();
             this.numericUpDownRFRXTimeout = new System.Windows.Forms.NumericUpDown();
@@ -153,26 +173,8 @@
             this.label3 = new System.Windows.Forms.Label();
             this.comboBoxPrinter = new System.Windows.Forms.ComboBox();
             this.labelPrinter = new System.Windows.Forms.Label();
-            this.numericUpDownTriggerRelay = new System.Windows.Forms.NumericUpDown();
-            this.label42 = new System.Windows.Forms.Label();
-            this.groupBox2 = new System.Windows.Forms.GroupBox();
-            this.BtnbtnTest = new System.Windows.Forms.Button();
-            this.numericUpDownBtnTest = new System.Windows.Forms.NumericUpDown();
-            this.label43 = new System.Windows.Forms.Label();
-            this.groupBox3 = new System.Windows.Forms.GroupBox();
-            this.BtnMotion = new System.Windows.Forms.Button();
-            this.numericUpDownMotion = new System.Windows.Forms.NumericUpDown();
-            this.label44 = new System.Windows.Forms.Label();
-            this.groupBox4 = new System.Windows.Forms.GroupBox();
-            this.label1 = new System.Windows.Forms.Label();
-            this.checkBoxWav_1 = new System.Windows.Forms.CheckBox();
-            this.checkBoxWav_2 = new System.Windows.Forms.CheckBox();
-            this.checkBoxWav_3 = new System.Windows.Forms.CheckBox();
-            this.checkBoxWav_4 = new System.Windows.Forms.CheckBox();
-            this.checkBoxWav_5 = new System.Windows.Forms.CheckBox();
-            this.checkBoxWav_8 = new System.Windows.Forms.CheckBox();
-            this.checkBoxWav_9 = new System.Windows.Forms.CheckBox();
-            this.BtnAudioTest = new System.Windows.Forms.Button();
+            this.comboBoxSerialRelayIndex = new System.Windows.Forms.ComboBox();
+            this.label2 = new System.Windows.Forms.Label();
             this.tabControl1.SuspendLayout();
             this.tabPageCommon.SuspendLayout();
             this.groupBox16.SuspendLayout();
@@ -184,7 +186,13 @@
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownSpecId)).BeginInit();
             this.tabPageVoltage.SuspendLayout();
             this.groupBox19.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownTriggerRelay)).BeginInit();
             this.tabPageFunTest.SuspendLayout();
+            this.groupBox4.SuspendLayout();
+            this.groupBox3.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownMotion)).BeginInit();
+            this.groupBox2.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownBtnTest)).BeginInit();
             this.groupBox14.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownRFRXTimeout)).BeginInit();
             this.groupBox13.SuspendLayout();
@@ -204,12 +212,6 @@
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownMacCount)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownSNCount)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownTriggerRelay)).BeginInit();
-            this.groupBox2.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownBtnTest)).BeginInit();
-            this.groupBox3.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownMotion)).BeginInit();
-            this.groupBox4.SuspendLayout();
             this.SuspendLayout();
             // 
             // tabControl1
@@ -238,7 +240,7 @@
             this.tabPageCommon.Margin = new System.Windows.Forms.Padding(4);
             this.tabPageCommon.Name = "tabPageCommon";
             this.tabPageCommon.Padding = new System.Windows.Forms.Padding(4);
-            this.tabPageCommon.Size = new System.Drawing.Size(946, 509);
+            this.tabPageCommon.Size = new System.Drawing.Size(946, 531);
             this.tabPageCommon.TabIndex = 0;
             this.tabPageCommon.Text = "通用设置";
             this.tabPageCommon.UseVisualStyleBackColor = true;
@@ -800,13 +802,15 @@
             this.tabPageVoltage.Margin = new System.Windows.Forms.Padding(4);
             this.tabPageVoltage.Name = "tabPageVoltage";
             this.tabPageVoltage.Padding = new System.Windows.Forms.Padding(4);
-            this.tabPageVoltage.Size = new System.Drawing.Size(946, 509);
+            this.tabPageVoltage.Size = new System.Drawing.Size(946, 531);
             this.tabPageVoltage.TabIndex = 1;
             this.tabPageVoltage.Text = "电流电压测试";
             this.tabPageVoltage.UseVisualStyleBackColor = true;
             // 
             // groupBox19
             // 
+            this.groupBox19.Controls.Add(this.comboBoxSerialRelayIndex);
+            this.groupBox19.Controls.Add(this.label2);
             this.groupBox19.Controls.Add(this.numericUpDownTriggerRelay);
             this.groupBox19.Controls.Add(this.label42);
             this.groupBox19.Controls.Add(this.comboBoxRelay);
@@ -822,15 +826,42 @@
             this.groupBox19.Controls.Add(this.label36);
             this.groupBox19.Location = new System.Drawing.Point(7, 7);
             this.groupBox19.Name = "groupBox19";
-            this.groupBox19.Size = new System.Drawing.Size(302, 418);
+            this.groupBox19.Size = new System.Drawing.Size(302, 482);
             this.groupBox19.TabIndex = 13;
             this.groupBox19.TabStop = false;
             this.groupBox19.Text = "继电器";
             // 
+            // numericUpDownTriggerRelay
+            // 
+            this.numericUpDownTriggerRelay.DecimalPlaces = 3;
+            this.numericUpDownTriggerRelay.Increment = new decimal(new int[] {
+            5,
+            0,
+            0,
+            65536});
+            this.numericUpDownTriggerRelay.Location = new System.Drawing.Point(163, 250);
+            this.numericUpDownTriggerRelay.Name = "numericUpDownTriggerRelay";
+            this.numericUpDownTriggerRelay.Size = new System.Drawing.Size(104, 26);
+            this.numericUpDownTriggerRelay.TabIndex = 53;
+            this.numericUpDownTriggerRelay.Value = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            // 
+            // label42
+            // 
+            this.label42.AutoSize = true;
+            this.label42.Location = new System.Drawing.Point(22, 252);
+            this.label42.Name = "label42";
+            this.label42.Size = new System.Drawing.Size(127, 16);
+            this.label42.TabIndex = 52;
+            this.label42.Text = "继电器切换间隔:";
+            // 
             // comboBoxRelay
             // 
             this.comboBoxRelay.FormattingEnabled = true;
-            this.comboBoxRelay.Location = new System.Drawing.Point(163, 247);
+            this.comboBoxRelay.Location = new System.Drawing.Point(163, 199);
             this.comboBoxRelay.Name = "comboBoxRelay";
             this.comboBoxRelay.Size = new System.Drawing.Size(104, 24);
             this.comboBoxRelay.TabIndex = 51;
@@ -838,7 +869,7 @@
             // labelRelayPort
             // 
             this.labelRelayPort.AutoSize = true;
-            this.labelRelayPort.Location = new System.Drawing.Point(54, 250);
+            this.labelRelayPort.Location = new System.Drawing.Point(54, 202);
             this.labelRelayPort.Name = "labelRelayPort";
             this.labelRelayPort.Size = new System.Drawing.Size(103, 16);
             this.labelRelayPort.TabIndex = 50;
@@ -848,7 +879,7 @@
             // comboBoxCurFluke
             // 
             this.comboBoxCurFluke.FormattingEnabled = true;
-            this.comboBoxCurFluke.Location = new System.Drawing.Point(163, 191);
+            this.comboBoxCurFluke.Location = new System.Drawing.Point(163, 143);
             this.comboBoxCurFluke.Name = "comboBoxCurFluke";
             this.comboBoxCurFluke.Size = new System.Drawing.Size(104, 24);
             this.comboBoxCurFluke.TabIndex = 49;
@@ -856,7 +887,7 @@
             // labelFlukePort
             // 
             this.labelFlukePort.AutoSize = true;
-            this.labelFlukePort.Location = new System.Drawing.Point(22, 194);
+            this.labelFlukePort.Location = new System.Drawing.Point(22, 146);
             this.labelFlukePort.Name = "labelFlukePort";
             this.labelFlukePort.Size = new System.Drawing.Size(135, 16);
             this.labelFlukePort.TabIndex = 48;
@@ -866,7 +897,7 @@
             // comboBoxCurTDMSerial
             // 
             this.comboBoxCurTDMSerial.FormattingEnabled = true;
-            this.comboBoxCurTDMSerial.Location = new System.Drawing.Point(163, 134);
+            this.comboBoxCurTDMSerial.Location = new System.Drawing.Point(163, 86);
             this.comboBoxCurTDMSerial.Name = "comboBoxCurTDMSerial";
             this.comboBoxCurTDMSerial.Size = new System.Drawing.Size(104, 24);
             this.comboBoxCurTDMSerial.TabIndex = 47;
@@ -874,7 +905,7 @@
             // labelCurPort
             // 
             this.labelCurPort.AutoSize = true;
-            this.labelCurPort.Location = new System.Drawing.Point(54, 137);
+            this.labelCurPort.Location = new System.Drawing.Point(54, 89);
             this.labelCurPort.Name = "labelCurPort";
             this.labelCurPort.Size = new System.Drawing.Size(103, 16);
             this.labelCurPort.TabIndex = 46;
@@ -884,7 +915,7 @@
             // comboBoxVolTDMSerial
             // 
             this.comboBoxVolTDMSerial.FormattingEnabled = true;
-            this.comboBoxVolTDMSerial.Location = new System.Drawing.Point(163, 82);
+            this.comboBoxVolTDMSerial.Location = new System.Drawing.Point(163, 34);
             this.comboBoxVolTDMSerial.Name = "comboBoxVolTDMSerial";
             this.comboBoxVolTDMSerial.Size = new System.Drawing.Size(104, 24);
             this.comboBoxVolTDMSerial.TabIndex = 13;
@@ -892,7 +923,7 @@
             // BtnChargeRelay
             // 
             this.BtnChargeRelay.BackColor = System.Drawing.Color.SeaGreen;
-            this.BtnChargeRelay.Location = new System.Drawing.Point(179, 360);
+            this.BtnChargeRelay.Location = new System.Drawing.Point(179, 422);
             this.BtnChargeRelay.Name = "BtnChargeRelay";
             this.BtnChargeRelay.Size = new System.Drawing.Size(88, 30);
             this.BtnChargeRelay.TabIndex = 38;
@@ -903,7 +934,7 @@
             // labelVolPort
             // 
             this.labelVolPort.AutoSize = true;
-            this.labelVolPort.Location = new System.Drawing.Point(54, 85);
+            this.labelVolPort.Location = new System.Drawing.Point(54, 37);
             this.labelVolPort.Name = "labelVolPort";
             this.labelVolPort.Size = new System.Drawing.Size(103, 16);
             this.labelVolPort.TabIndex = 12;
@@ -938,7 +969,7 @@
             "14",
             "15",
             "16"});
-            this.comboBoxChargeRelayIndex.Location = new System.Drawing.Point(163, 36);
+            this.comboBoxChargeRelayIndex.Location = new System.Drawing.Point(163, 304);
             this.comboBoxChargeRelayIndex.Name = "comboBoxChargeRelayIndex";
             this.comboBoxChargeRelayIndex.Size = new System.Drawing.Size(104, 24);
             this.comboBoxChargeRelayIndex.TabIndex = 45;
@@ -946,11 +977,11 @@
             // label36
             // 
             this.label36.AutoSize = true;
-            this.label36.Location = new System.Drawing.Point(6, 39);
+            this.label36.Location = new System.Drawing.Point(6, 307);
             this.label36.Name = "label36";
             this.label36.Size = new System.Drawing.Size(151, 16);
             this.label36.TabIndex = 44;
-            this.label36.Text = "充电电流继电器通道";
+            this.label36.Text = "设备供电继电器通道";
             // 
             // tabPageFunTest
             // 
@@ -970,6 +1001,214 @@
             this.tabPageFunTest.TabIndex = 2;
             this.tabPageFunTest.Text = "功能测试";
             this.tabPageFunTest.UseVisualStyleBackColor = true;
+            // 
+            // groupBox4
+            // 
+            this.groupBox4.Controls.Add(this.BtnAudioTest);
+            this.groupBox4.Controls.Add(this.checkBoxWav_9);
+            this.groupBox4.Controls.Add(this.checkBoxWav_8);
+            this.groupBox4.Controls.Add(this.checkBoxWav_5);
+            this.groupBox4.Controls.Add(this.checkBoxWav_4);
+            this.groupBox4.Controls.Add(this.checkBoxWav_3);
+            this.groupBox4.Controls.Add(this.checkBoxWav_2);
+            this.groupBox4.Controls.Add(this.checkBoxWav_1);
+            this.groupBox4.Controls.Add(this.label1);
+            this.groupBox4.Location = new System.Drawing.Point(4, 451);
+            this.groupBox4.Name = "groupBox4";
+            this.groupBox4.Size = new System.Drawing.Size(919, 72);
+            this.groupBox4.TabIndex = 41;
+            this.groupBox4.TabStop = false;
+            this.groupBox4.Text = "喇叭测试";
+            // 
+            // BtnAudioTest
+            // 
+            this.BtnAudioTest.BackColor = System.Drawing.Color.SeaGreen;
+            this.BtnAudioTest.Location = new System.Drawing.Point(808, 27);
+            this.BtnAudioTest.Name = "BtnAudioTest";
+            this.BtnAudioTest.Size = new System.Drawing.Size(85, 31);
+            this.BtnAudioTest.TabIndex = 39;
+            this.BtnAudioTest.Text = "保存";
+            this.BtnAudioTest.UseVisualStyleBackColor = false;
+            this.BtnAudioTest.Click += new System.EventHandler(this.BtnAudioTest_Click);
+            // 
+            // checkBoxWav_9
+            // 
+            this.checkBoxWav_9.AutoSize = true;
+            this.checkBoxWav_9.Location = new System.Drawing.Point(627, 33);
+            this.checkBoxWav_9.Name = "checkBoxWav_9";
+            this.checkBoxWav_9.Size = new System.Drawing.Size(66, 20);
+            this.checkBoxWav_9.TabIndex = 7;
+            this.checkBoxWav_9.Text = "wav_9";
+            this.checkBoxWav_9.UseVisualStyleBackColor = true;
+            // 
+            // checkBoxWav_8
+            // 
+            this.checkBoxWav_8.AutoSize = true;
+            this.checkBoxWav_8.Location = new System.Drawing.Point(555, 33);
+            this.checkBoxWav_8.Name = "checkBoxWav_8";
+            this.checkBoxWav_8.Size = new System.Drawing.Size(66, 20);
+            this.checkBoxWav_8.TabIndex = 6;
+            this.checkBoxWav_8.Text = "wav_8";
+            this.checkBoxWav_8.UseVisualStyleBackColor = true;
+            // 
+            // checkBoxWav_5
+            // 
+            this.checkBoxWav_5.AutoSize = true;
+            this.checkBoxWav_5.Location = new System.Drawing.Point(483, 33);
+            this.checkBoxWav_5.Name = "checkBoxWav_5";
+            this.checkBoxWav_5.Size = new System.Drawing.Size(66, 20);
+            this.checkBoxWav_5.TabIndex = 5;
+            this.checkBoxWav_5.Text = "wav_5";
+            this.checkBoxWav_5.UseVisualStyleBackColor = true;
+            // 
+            // checkBoxWav_4
+            // 
+            this.checkBoxWav_4.AutoSize = true;
+            this.checkBoxWav_4.Location = new System.Drawing.Point(411, 33);
+            this.checkBoxWav_4.Name = "checkBoxWav_4";
+            this.checkBoxWav_4.Size = new System.Drawing.Size(66, 20);
+            this.checkBoxWav_4.TabIndex = 4;
+            this.checkBoxWav_4.Text = "wav_4";
+            this.checkBoxWav_4.UseVisualStyleBackColor = true;
+            // 
+            // checkBoxWav_3
+            // 
+            this.checkBoxWav_3.AutoSize = true;
+            this.checkBoxWav_3.Location = new System.Drawing.Point(339, 33);
+            this.checkBoxWav_3.Name = "checkBoxWav_3";
+            this.checkBoxWav_3.Size = new System.Drawing.Size(66, 20);
+            this.checkBoxWav_3.TabIndex = 3;
+            this.checkBoxWav_3.Text = "wav_3";
+            this.checkBoxWav_3.UseVisualStyleBackColor = true;
+            // 
+            // checkBoxWav_2
+            // 
+            this.checkBoxWav_2.AutoSize = true;
+            this.checkBoxWav_2.Location = new System.Drawing.Point(267, 33);
+            this.checkBoxWav_2.Name = "checkBoxWav_2";
+            this.checkBoxWav_2.Size = new System.Drawing.Size(66, 20);
+            this.checkBoxWav_2.TabIndex = 2;
+            this.checkBoxWav_2.Text = "wav_2";
+            this.checkBoxWav_2.UseVisualStyleBackColor = true;
+            // 
+            // checkBoxWav_1
+            // 
+            this.checkBoxWav_1.AutoSize = true;
+            this.checkBoxWav_1.Location = new System.Drawing.Point(195, 33);
+            this.checkBoxWav_1.Name = "checkBoxWav_1";
+            this.checkBoxWav_1.Size = new System.Drawing.Size(66, 20);
+            this.checkBoxWav_1.TabIndex = 1;
+            this.checkBoxWav_1.Text = "wav_1";
+            this.checkBoxWav_1.UseVisualStyleBackColor = true;
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(6, 37);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(183, 16);
+            this.label1.TabIndex = 0;
+            this.label1.Text = "选择要播放的音频文件：";
+            // 
+            // groupBox3
+            // 
+            this.groupBox3.Controls.Add(this.BtnMotion);
+            this.groupBox3.Controls.Add(this.numericUpDownMotion);
+            this.groupBox3.Controls.Add(this.label44);
+            this.groupBox3.Location = new System.Drawing.Point(641, 294);
+            this.groupBox3.Name = "groupBox3";
+            this.groupBox3.Size = new System.Drawing.Size(282, 150);
+            this.groupBox3.TabIndex = 40;
+            this.groupBox3.TabStop = false;
+            this.groupBox3.Text = "移动感应测试";
+            // 
+            // BtnMotion
+            // 
+            this.BtnMotion.BackColor = System.Drawing.Color.SeaGreen;
+            this.BtnMotion.Location = new System.Drawing.Point(171, 82);
+            this.BtnMotion.Name = "BtnMotion";
+            this.BtnMotion.Size = new System.Drawing.Size(85, 31);
+            this.BtnMotion.TabIndex = 38;
+            this.BtnMotion.Text = "保存";
+            this.BtnMotion.UseVisualStyleBackColor = false;
+            this.BtnMotion.Click += new System.EventHandler(this.BtnMotion_Click);
+            // 
+            // numericUpDownMotion
+            // 
+            this.numericUpDownMotion.DecimalPlaces = 3;
+            this.numericUpDownMotion.Increment = new decimal(new int[] {
+            5,
+            0,
+            0,
+            65536});
+            this.numericUpDownMotion.Location = new System.Drawing.Point(179, 36);
+            this.numericUpDownMotion.Name = "numericUpDownMotion";
+            this.numericUpDownMotion.Size = new System.Drawing.Size(77, 26);
+            this.numericUpDownMotion.TabIndex = 15;
+            this.numericUpDownMotion.Value = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            // 
+            // label44
+            // 
+            this.label44.AutoSize = true;
+            this.label44.Location = new System.Drawing.Point(6, 42);
+            this.label44.Name = "label44";
+            this.label44.Size = new System.Drawing.Size(167, 16);
+            this.label44.TabIndex = 14;
+            this.label44.Text = "等待挥手超时时间(s):";
+            // 
+            // groupBox2
+            // 
+            this.groupBox2.Controls.Add(this.BtnbtnTest);
+            this.groupBox2.Controls.Add(this.numericUpDownBtnTest);
+            this.groupBox2.Controls.Add(this.label43);
+            this.groupBox2.Location = new System.Drawing.Point(641, 142);
+            this.groupBox2.Name = "groupBox2";
+            this.groupBox2.Size = new System.Drawing.Size(282, 146);
+            this.groupBox2.TabIndex = 39;
+            this.groupBox2.TabStop = false;
+            this.groupBox2.Text = "按键测试";
+            // 
+            // BtnbtnTest
+            // 
+            this.BtnbtnTest.BackColor = System.Drawing.Color.SeaGreen;
+            this.BtnbtnTest.Location = new System.Drawing.Point(171, 82);
+            this.BtnbtnTest.Name = "BtnbtnTest";
+            this.BtnbtnTest.Size = new System.Drawing.Size(85, 31);
+            this.BtnbtnTest.TabIndex = 38;
+            this.BtnbtnTest.Text = "保存";
+            this.BtnbtnTest.UseVisualStyleBackColor = false;
+            this.BtnbtnTest.Click += new System.EventHandler(this.BtnbtnTest_Click);
+            // 
+            // numericUpDownBtnTest
+            // 
+            this.numericUpDownBtnTest.DecimalPlaces = 3;
+            this.numericUpDownBtnTest.Increment = new decimal(new int[] {
+            5,
+            0,
+            0,
+            65536});
+            this.numericUpDownBtnTest.Location = new System.Drawing.Point(179, 35);
+            this.numericUpDownBtnTest.Name = "numericUpDownBtnTest";
+            this.numericUpDownBtnTest.Size = new System.Drawing.Size(77, 26);
+            this.numericUpDownBtnTest.TabIndex = 15;
+            this.numericUpDownBtnTest.Value = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            // 
+            // label43
+            // 
+            this.label43.AutoSize = true;
+            this.label43.Location = new System.Drawing.Point(6, 42);
+            this.label43.Name = "label43";
+            this.label43.Size = new System.Drawing.Size(167, 16);
+            this.label43.TabIndex = 14;
+            this.label43.Text = "等待按键超时时间(s):";
             // 
             // groupBox14
             // 
@@ -1451,7 +1690,7 @@
             this.tabPageRTOS.Controls.Add(this.groupBox18);
             this.tabPageRTOS.Location = new System.Drawing.Point(4, 26);
             this.tabPageRTOS.Name = "tabPageRTOS";
-            this.tabPageRTOS.Size = new System.Drawing.Size(946, 509);
+            this.tabPageRTOS.Size = new System.Drawing.Size(946, 531);
             this.tabPageRTOS.TabIndex = 3;
             this.tabPageRTOS.Text = "RTOS镜头测试";
             this.tabPageRTOS.UseVisualStyleBackColor = true;
@@ -1520,7 +1759,7 @@
             this.tabPagePrinter.Controls.Add(this.groupBox1);
             this.tabPagePrinter.Location = new System.Drawing.Point(4, 26);
             this.tabPagePrinter.Name = "tabPagePrinter";
-            this.tabPagePrinter.Size = new System.Drawing.Size(946, 509);
+            this.tabPagePrinter.Size = new System.Drawing.Size(946, 531);
             this.tabPagePrinter.TabIndex = 4;
             this.tabPagePrinter.Text = "打印设置";
             this.tabPagePrinter.UseVisualStyleBackColor = true;
@@ -1622,240 +1861,47 @@
             this.labelPrinter.Text = "选择打印机：";
             this.labelPrinter.Click += new System.EventHandler(this.labelPrinter_Click);
             // 
-            // numericUpDownTriggerRelay
+            // comboBoxSerialRelayIndex
             // 
-            this.numericUpDownTriggerRelay.DecimalPlaces = 3;
-            this.numericUpDownTriggerRelay.Increment = new decimal(new int[] {
-            5,
-            0,
-            0,
-            65536});
-            this.numericUpDownTriggerRelay.Location = new System.Drawing.Point(163, 298);
-            this.numericUpDownTriggerRelay.Name = "numericUpDownTriggerRelay";
-            this.numericUpDownTriggerRelay.Size = new System.Drawing.Size(104, 26);
-            this.numericUpDownTriggerRelay.TabIndex = 53;
-            this.numericUpDownTriggerRelay.Value = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
+            this.comboBoxSerialRelayIndex.AutoCompleteCustomSource.AddRange(new string[] {
+            "1",
+            "2",
+            "3",
+            "4",
+            "5",
+            "6",
+            "7"});
+            this.comboBoxSerialRelayIndex.FormattingEnabled = true;
+            this.comboBoxSerialRelayIndex.Items.AddRange(new object[] {
+            "1",
+            "2",
+            "3",
+            "4",
+            "5",
+            "6",
+            "7",
+            "8",
+            "9",
+            "10",
+            "11",
+            "12",
+            "13",
+            "14",
+            "15",
+            "16"});
+            this.comboBoxSerialRelayIndex.Location = new System.Drawing.Point(163, 352);
+            this.comboBoxSerialRelayIndex.Name = "comboBoxSerialRelayIndex";
+            this.comboBoxSerialRelayIndex.Size = new System.Drawing.Size(104, 24);
+            this.comboBoxSerialRelayIndex.TabIndex = 55;
             // 
-            // label42
+            // label2
             // 
-            this.label42.AutoSize = true;
-            this.label42.Location = new System.Drawing.Point(22, 300);
-            this.label42.Name = "label42";
-            this.label42.Size = new System.Drawing.Size(127, 16);
-            this.label42.TabIndex = 52;
-            this.label42.Text = "继电器切换间隔:";
-            // 
-            // groupBox2
-            // 
-            this.groupBox2.Controls.Add(this.BtnbtnTest);
-            this.groupBox2.Controls.Add(this.numericUpDownBtnTest);
-            this.groupBox2.Controls.Add(this.label43);
-            this.groupBox2.Location = new System.Drawing.Point(641, 142);
-            this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(282, 146);
-            this.groupBox2.TabIndex = 39;
-            this.groupBox2.TabStop = false;
-            this.groupBox2.Text = "按键测试";
-            // 
-            // BtnbtnTest
-            // 
-            this.BtnbtnTest.BackColor = System.Drawing.Color.SeaGreen;
-            this.BtnbtnTest.Location = new System.Drawing.Point(171, 82);
-            this.BtnbtnTest.Name = "BtnbtnTest";
-            this.BtnbtnTest.Size = new System.Drawing.Size(85, 31);
-            this.BtnbtnTest.TabIndex = 38;
-            this.BtnbtnTest.Text = "保存";
-            this.BtnbtnTest.UseVisualStyleBackColor = false;
-            this.BtnbtnTest.Click += new System.EventHandler(this.BtnbtnTest_Click);
-            // 
-            // numericUpDownBtnTest
-            // 
-            this.numericUpDownBtnTest.DecimalPlaces = 3;
-            this.numericUpDownBtnTest.Increment = new decimal(new int[] {
-            5,
-            0,
-            0,
-            65536});
-            this.numericUpDownBtnTest.Location = new System.Drawing.Point(179, 35);
-            this.numericUpDownBtnTest.Name = "numericUpDownBtnTest";
-            this.numericUpDownBtnTest.Size = new System.Drawing.Size(77, 26);
-            this.numericUpDownBtnTest.TabIndex = 15;
-            this.numericUpDownBtnTest.Value = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
-            // 
-            // label43
-            // 
-            this.label43.AutoSize = true;
-            this.label43.Location = new System.Drawing.Point(6, 42);
-            this.label43.Name = "label43";
-            this.label43.Size = new System.Drawing.Size(167, 16);
-            this.label43.TabIndex = 14;
-            this.label43.Text = "等待按键超时时间(s):";
-            // 
-            // groupBox3
-            // 
-            this.groupBox3.Controls.Add(this.BtnMotion);
-            this.groupBox3.Controls.Add(this.numericUpDownMotion);
-            this.groupBox3.Controls.Add(this.label44);
-            this.groupBox3.Location = new System.Drawing.Point(641, 294);
-            this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(282, 150);
-            this.groupBox3.TabIndex = 40;
-            this.groupBox3.TabStop = false;
-            this.groupBox3.Text = "移动感应测试";
-            // 
-            // BtnMotion
-            // 
-            this.BtnMotion.BackColor = System.Drawing.Color.SeaGreen;
-            this.BtnMotion.Location = new System.Drawing.Point(171, 82);
-            this.BtnMotion.Name = "BtnMotion";
-            this.BtnMotion.Size = new System.Drawing.Size(85, 31);
-            this.BtnMotion.TabIndex = 38;
-            this.BtnMotion.Text = "保存";
-            this.BtnMotion.UseVisualStyleBackColor = false;
-            this.BtnMotion.Click += new System.EventHandler(this.BtnMotion_Click);
-            // 
-            // numericUpDownMotion
-            // 
-            this.numericUpDownMotion.DecimalPlaces = 3;
-            this.numericUpDownMotion.Increment = new decimal(new int[] {
-            5,
-            0,
-            0,
-            65536});
-            this.numericUpDownMotion.Location = new System.Drawing.Point(179, 36);
-            this.numericUpDownMotion.Name = "numericUpDownMotion";
-            this.numericUpDownMotion.Size = new System.Drawing.Size(77, 26);
-            this.numericUpDownMotion.TabIndex = 15;
-            this.numericUpDownMotion.Value = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
-            // 
-            // label44
-            // 
-            this.label44.AutoSize = true;
-            this.label44.Location = new System.Drawing.Point(6, 42);
-            this.label44.Name = "label44";
-            this.label44.Size = new System.Drawing.Size(167, 16);
-            this.label44.TabIndex = 14;
-            this.label44.Text = "等待挥手超时时间(s):";
-            // 
-            // groupBox4
-            // 
-            this.groupBox4.Controls.Add(this.BtnAudioTest);
-            this.groupBox4.Controls.Add(this.checkBoxWav_9);
-            this.groupBox4.Controls.Add(this.checkBoxWav_8);
-            this.groupBox4.Controls.Add(this.checkBoxWav_5);
-            this.groupBox4.Controls.Add(this.checkBoxWav_4);
-            this.groupBox4.Controls.Add(this.checkBoxWav_3);
-            this.groupBox4.Controls.Add(this.checkBoxWav_2);
-            this.groupBox4.Controls.Add(this.checkBoxWav_1);
-            this.groupBox4.Controls.Add(this.label1);
-            this.groupBox4.Location = new System.Drawing.Point(4, 451);
-            this.groupBox4.Name = "groupBox4";
-            this.groupBox4.Size = new System.Drawing.Size(919, 72);
-            this.groupBox4.TabIndex = 41;
-            this.groupBox4.TabStop = false;
-            this.groupBox4.Text = "喇叭测试";
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(6, 37);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(183, 16);
-            this.label1.TabIndex = 0;
-            this.label1.Text = "选择要播放的音频文件：";
-            // 
-            // checkBoxWav_1
-            // 
-            this.checkBoxWav_1.AutoSize = true;
-            this.checkBoxWav_1.Location = new System.Drawing.Point(195, 33);
-            this.checkBoxWav_1.Name = "checkBoxWav_1";
-            this.checkBoxWav_1.Size = new System.Drawing.Size(66, 20);
-            this.checkBoxWav_1.TabIndex = 1;
-            this.checkBoxWav_1.Text = "wav_1";
-            this.checkBoxWav_1.UseVisualStyleBackColor = true;
-            // 
-            // checkBoxWav_2
-            // 
-            this.checkBoxWav_2.AutoSize = true;
-            this.checkBoxWav_2.Location = new System.Drawing.Point(267, 33);
-            this.checkBoxWav_2.Name = "checkBoxWav_2";
-            this.checkBoxWav_2.Size = new System.Drawing.Size(66, 20);
-            this.checkBoxWav_2.TabIndex = 2;
-            this.checkBoxWav_2.Text = "wav_2";
-            this.checkBoxWav_2.UseVisualStyleBackColor = true;
-            // 
-            // checkBoxWav_3
-            // 
-            this.checkBoxWav_3.AutoSize = true;
-            this.checkBoxWav_3.Location = new System.Drawing.Point(339, 33);
-            this.checkBoxWav_3.Name = "checkBoxWav_3";
-            this.checkBoxWav_3.Size = new System.Drawing.Size(66, 20);
-            this.checkBoxWav_3.TabIndex = 3;
-            this.checkBoxWav_3.Text = "wav_3";
-            this.checkBoxWav_3.UseVisualStyleBackColor = true;
-            // 
-            // checkBoxWav_4
-            // 
-            this.checkBoxWav_4.AutoSize = true;
-            this.checkBoxWav_4.Location = new System.Drawing.Point(411, 33);
-            this.checkBoxWav_4.Name = "checkBoxWav_4";
-            this.checkBoxWav_4.Size = new System.Drawing.Size(66, 20);
-            this.checkBoxWav_4.TabIndex = 4;
-            this.checkBoxWav_4.Text = "wav_4";
-            this.checkBoxWav_4.UseVisualStyleBackColor = true;
-            // 
-            // checkBoxWav_5
-            // 
-            this.checkBoxWav_5.AutoSize = true;
-            this.checkBoxWav_5.Location = new System.Drawing.Point(483, 33);
-            this.checkBoxWav_5.Name = "checkBoxWav_5";
-            this.checkBoxWav_5.Size = new System.Drawing.Size(66, 20);
-            this.checkBoxWav_5.TabIndex = 5;
-            this.checkBoxWav_5.Text = "wav_5";
-            this.checkBoxWav_5.UseVisualStyleBackColor = true;
-            // 
-            // checkBoxWav_8
-            // 
-            this.checkBoxWav_8.AutoSize = true;
-            this.checkBoxWav_8.Location = new System.Drawing.Point(555, 33);
-            this.checkBoxWav_8.Name = "checkBoxWav_8";
-            this.checkBoxWav_8.Size = new System.Drawing.Size(66, 20);
-            this.checkBoxWav_8.TabIndex = 6;
-            this.checkBoxWav_8.Text = "wav_8";
-            this.checkBoxWav_8.UseVisualStyleBackColor = true;
-            // 
-            // checkBoxWav_9
-            // 
-            this.checkBoxWav_9.AutoSize = true;
-            this.checkBoxWav_9.Location = new System.Drawing.Point(627, 33);
-            this.checkBoxWav_9.Name = "checkBoxWav_9";
-            this.checkBoxWav_9.Size = new System.Drawing.Size(66, 20);
-            this.checkBoxWav_9.TabIndex = 7;
-            this.checkBoxWav_9.Text = "wav_9";
-            this.checkBoxWav_9.UseVisualStyleBackColor = true;
-            // 
-            // BtnAudioTest
-            // 
-            this.BtnAudioTest.BackColor = System.Drawing.Color.SeaGreen;
-            this.BtnAudioTest.Location = new System.Drawing.Point(808, 27);
-            this.BtnAudioTest.Name = "BtnAudioTest";
-            this.BtnAudioTest.Size = new System.Drawing.Size(85, 31);
-            this.BtnAudioTest.TabIndex = 39;
-            this.BtnAudioTest.Text = "保存";
-            this.BtnAudioTest.UseVisualStyleBackColor = false;
-            this.BtnAudioTest.Click += new System.EventHandler(this.BtnAudioTest_Click);
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(6, 355);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(151, 16);
+            this.label2.TabIndex = 54;
+            this.label2.Text = "串口供电继电器通道";
             // 
             // TestParamForm
             // 
@@ -1885,7 +1931,16 @@
             this.tabPageVoltage.ResumeLayout(false);
             this.groupBox19.ResumeLayout(false);
             this.groupBox19.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownTriggerRelay)).EndInit();
             this.tabPageFunTest.ResumeLayout(false);
+            this.groupBox4.ResumeLayout(false);
+            this.groupBox4.PerformLayout();
+            this.groupBox3.ResumeLayout(false);
+            this.groupBox3.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownMotion)).EndInit();
+            this.groupBox2.ResumeLayout(false);
+            this.groupBox2.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownBtnTest)).EndInit();
             this.groupBox14.ResumeLayout(false);
             this.groupBox14.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownRFRXTimeout)).EndInit();
@@ -1913,15 +1968,6 @@
             this.groupBox1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownMacCount)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownSNCount)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownTriggerRelay)).EndInit();
-            this.groupBox2.ResumeLayout(false);
-            this.groupBox2.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownBtnTest)).EndInit();
-            this.groupBox3.ResumeLayout(false);
-            this.groupBox3.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownMotion)).EndInit();
-            this.groupBox4.ResumeLayout(false);
-            this.groupBox4.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -2073,5 +2119,7 @@
         private System.Windows.Forms.CheckBox checkBoxWav_2;
         private System.Windows.Forms.CheckBox checkBoxWav_9;
         private System.Windows.Forms.Button BtnAudioTest;
+        private System.Windows.Forms.ComboBox comboBoxSerialRelayIndex;
+        private System.Windows.Forms.Label label2;
     }
 }

@@ -275,6 +275,7 @@ namespace XDC01Action
         public string current_fluke_port;
         public string relay_port;
         public string trigger_relay_interval;
+        public string serial_relay_index;
 
         public string printer_name;
         public string sn_count;

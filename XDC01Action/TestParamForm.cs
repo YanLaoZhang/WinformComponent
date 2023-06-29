@@ -83,6 +83,7 @@ namespace XDC01Action
                     current_fluke_port = ConfigFile.IniReadValue("voltage_current", "current_fluke_port", Path_ini),
                     relay_port = ConfigFile.IniReadValue("voltage_current", "relay_port", Path_ini),
                     trigger_relay_interval = ConfigFile.IniReadValue("voltage_current", "trigger_relay_interval", Path_ini),
+                    serial_relay_index = ConfigFile.IniReadValue("voltage_current", "serial_relay_index", Path_ini),
 
                     printer_name = ConfigFile.IniReadValue("printer", "printer_name", Path_ini),
                     sn_count = ConfigFile.IniReadValue("printer", "sn_count", Path_ini),
@@ -190,6 +191,8 @@ namespace XDC01Action
                 }
 
                 numericUpDownTriggerRelay.Value = decimal.Parse(testParam.trigger_relay_interval);
+
+                comboBoxSerialRelayIndex.SelectedItem = testParam.serial_relay_index;
             }
             if(tabControl1.SelectedTab == tabPageFunTest)
             {
@@ -503,6 +506,7 @@ namespace XDC01Action
                 ConfigFile.IniWriteValue("voltage_current", "current_fluke_port", comboBoxCurFluke.SelectedItem.ToString(), Path_ini);
                 ConfigFile.IniWriteValue("voltage_current", "relay_port", comboBoxRelay.SelectedItem.ToString(), Path_ini);
                 ConfigFile.IniWriteValue("voltage_current", "trigger_relay_interval", numericUpDownTriggerRelay.Value.ToString(), Path_ini);
+                ConfigFile.IniWriteValue("voltage_current", "serial_relay_index", comboBoxSerialRelayIndex.SelectedItem.ToString(), Path_ini);
                 MessageBox.Show("继电器设置保存成功");
             }
             catch (Exception ee)
