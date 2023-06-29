@@ -768,7 +768,7 @@ namespace XDC01Action
             }
             catch (Exception ee)
             {
-                logger.ShowLog($"麦克风测试(自动)发生异常：【{ee.Message}】");
+                logger.ShowLog($"麦克风测试(自动)发生异常：[{ee.Message}]");
                 return null;
             }
         }
@@ -815,7 +815,7 @@ namespace XDC01Action
             }
             catch (Exception ee)
             {
-                logger.ShowLog($"麦克风测试(人工)发生异常：【{ee.Message}】");
+                logger.ShowLog($"麦克风测试(人工)发生异常：[{ee.Message}]");
                 return null;
             }
         }
@@ -852,7 +852,7 @@ namespace XDC01Action
                     }
                     Delay(500);
                 }
-                if (testParam.wav_1 == "True")
+                if (testParam.wav_2 == "True")
                 {
                     logger.ShowLog("--- 设备正在播放音频 wav.2");
                     if (xDC01Serial.PlayWav("2", ref str_error_log) == false)
@@ -862,7 +862,7 @@ namespace XDC01Action
                     Delay(500);
                 }
 
-                if (testParam.wav_1 == "True")
+                if (testParam.wav_3 == "True")
                 {
                     logger.ShowLog("--- 设备正在播放音频 wav.3");
                     if (xDC01Serial.PlayWav("3", ref str_error_log) == false)
@@ -871,7 +871,7 @@ namespace XDC01Action
                     }
                     Delay(500);
                 }
-                if (testParam.wav_1 == "True")
+                if (testParam.wav_4 == "True")
                 {
                     logger.ShowLog("--- 设备正在播放音频 wav.4");
                     if (xDC01Serial.PlayWav("4", ref str_error_log) == false)
@@ -880,7 +880,7 @@ namespace XDC01Action
                     }
                     Delay(500);
                 }
-                if (testParam.wav_1 == "True")
+                if (testParam.wav_5 == "True")
                 {
                     logger.ShowLog("--- 设备正在播放音频 wav.5");
                     if (xDC01Serial.PlayWav("5", ref str_error_log) == false)
@@ -889,7 +889,7 @@ namespace XDC01Action
                     }
                     Delay(500);
                 }
-                if (testParam.wav_1 == "True")
+                if (testParam.wav_8 == "True")
                 {
                     logger.ShowLog("--- 设备正在播放音频 wav.8");
                     if (xDC01Serial.PlayWav("8", ref str_error_log) == false)
@@ -898,7 +898,7 @@ namespace XDC01Action
                     }
                     Delay(500);
                 }
-                if (testParam.wav_1 == "True")
+                if (testParam.wav_9 == "True")
                 {
                     logger.ShowLog("--- 设备正在播放音频 wav.9");
                     if (xDC01Serial.PlayWav("9", ref str_error_log) == false)
@@ -928,7 +928,7 @@ namespace XDC01Action
             }
             catch (Exception ee)
             {
-                logger.ShowLog($"喇叭功能测试(人工)发生异常：【{ee.Message}】");
+                logger.ShowLog($"喇叭功能测试(人工)发生异常：[{ee.Message}]");
                 return null;
             }
         }
@@ -1267,7 +1267,7 @@ namespace XDC01Action
                         Delay(interval);
                     }
                 }).ContinueWith(task => {
-                    xDC01Serial.SetBtnLEDColor("blue", ref str_error_log);
+                    xDC01Serial.SetBtnLEDColor("white", ref str_error_log);
                 });
 
                 CustomDialog customDialog = new CustomDialog("LED灯检查测试（人工）", "是否依次红、绿、蓝、白四种颜色？");
@@ -1636,7 +1636,7 @@ namespace XDC01Action
             }
             catch (Exception ee)
             {
-                logger.ShowLog($"设备信息检查发生异常：【{ee.Message}】");
+                logger.ShowLog($"设备信息检查发生异常：[{ee.Message}]");
                 return null;
             }
         }
@@ -2000,7 +2000,7 @@ namespace XDC01Action
             }
             catch (Exception e)
             {
-                logger.ShowLog($"DUT RF433性能测试发生异常：【{e.Message}】");
+                logger.ShowLog($"DUT RF433性能测试发生异常：[{e.Message}]");
                 return null;
             }
         }
@@ -2061,7 +2061,7 @@ namespace XDC01Action
             }
             catch (Exception ee)
             {
-                logger.ShowLog($"DUT RF433灵敏度测试发生异常：【{ee.Message}】");
+                logger.ShowLog($"DUT RF433灵敏度测试发生异常：[{ee.Message}]");
                 return null;
             }
             finally
