@@ -332,16 +332,17 @@ namespace XDC01Action
                     }
                     else
                     {
+                        float_current *= 1000;
                         testItem.Value = float_current;
                         // 判断电流数据情况
                         if (testItem.Value > testItem.MaxValue || testItem.Value < testItem.MinValue)
                         {
-                            logger.ShowLog($"---电流{testItem.Name}[{float_current.ToString("F3")}V],测试失败");
+                            logger.ShowLog($"---工作电流[{float_current.ToString("F3")}mA],测试失败");
                             testItem.Result = "FAIL";
                         }
                         else
                         {
-                            logger.ShowLog($"---电流{testItem.Name}[{float_current.ToString("F3")}V],测试通过");
+                            logger.ShowLog($"---工作电流[{float_current.ToString("F3")}mA],测试通过");
                             testItem.Result = "PASS";
                         }
                         testItem.Duration = (Environment.TickCount - start_time) / 1000.00f;
@@ -388,6 +389,7 @@ namespace XDC01Action
                 }
                 else
                 {
+                    Delay(2000);
                     float max_current = 0.00f;
                     //int count = int.Parse(_param_run.str_current_count);
                     for (int i = 0; i < 10; i++)
@@ -409,12 +411,12 @@ namespace XDC01Action
                     // 判断电流数据情况
                     if (testItem.Value > testItem.MaxValue || testItem.Value < testItem.MinValue)
                     {
-                        logger.ShowLog($"---漏电流{testItem.Name}[{max_current:F3}uA],测试失败");
+                        logger.ShowLog($"---漏电流[{max_current:F3}uA],测试失败");
                         testItem.Result = "FAIL";
                     }
                     else
                     {
-                        logger.ShowLog($"---漏电流{testItem.Name}[{max_current:F3}uA],测试通过");
+                        logger.ShowLog($"---漏电流[{max_current:F3}uA],测试通过");
                         testItem.Result = "PASS";
                     }
                     testItem.Duration = (Environment.TickCount - start_time) / 1000.00f;
@@ -426,6 +428,19 @@ namespace XDC01Action
             {
                 logger.ShowLog($"PCBA漏电流测试发生异常：[{ee.Message}]");
                 return null;
+            }
+            finally
+            {
+                string str_error_log = "";
+                // 切换量程为20mA
+                logger.ShowLog("万用表切换量程为200mA");
+                if (flukeSerial.SetRange("4", ref str_error_log) == false)
+                {
+                    logger.ShowLog($"FLUKE电流表切换量程为200mA失败");
+                }
+                else
+                {
+                }
             }
         }
 
@@ -450,18 +465,55 @@ namespace XDC01Action
                     StrVal = "-"
                 };
                 logger.ShowLog("-进行充电电流测试...");
-                // 切换量程为20mA
-                logger.ShowLog("万用表切换量程为20mA");
-                if (flukeSerial.SetRange("3", ref str_error_log) == false)
+
+                float max_current = 0.00f;
+                //int count = int.Parse(_param_run.str_current_count);
+                for (int i = 0; i < 10; i++)
                 {
-                    logger.ShowLog($"FLUKE电流表切换量程为20mA失败");
+                    string current_value = "";
+                    string unit = "";
+                    string error_log_current = "";
+                    if (flukeSerial.GetCurrent(ref current_value, ref unit, ref error_log_current))
+                    {
+                        Console.WriteLine(current_value);
+                        float f_current_value = Math.Abs(float.Parse(current_value));
+                        if (max_current <= f_current_value)
+                        {
+                            max_current = f_current_value;
+                        }
+                    }
+                }
+                testItem.Value = max_current;
+                // 判断电流数据情况
+                if (testItem.Value > testItem.MaxValue || testItem.Value < testItem.MinValue)
+                {
+                    logger.ShowLog($"---充电电流[{max_current:F3}mA],测试失败");
+                    testItem.Result = "FAIL";
+                }
+                else
+                {
+                    logger.ShowLog($"---充电电流[{max_current:F3}mA],测试通过");
+                    testItem.Result = "PASS";
+                }
+
+                testItem.Duration = (Environment.TickCount - start_time) / 1000.00f;
+                dataGridView.Rows.Add(testItem.Name, testItem.Standard, testItem.MinValue, testItem.MaxValue, testItem.Value, testItem.StrVal, testItem.Result, testItem.Duration.ToString("F2"));
+                return testItem;
+
+                /*// 切换量程为20mA
+                logger.ShowLog("万用表切换量程为200mA");
+                if (flukeSerial.SetRange("4", ref str_error_log) == false)
+                {
+                    logger.ShowLog($"FLUKE电流表切换量程为200mA失败");
                     float Duration = (Environment.TickCount - start_time) / 1000.00f;
                     dataGridView.Rows.Add("读取充电电流", "-", "-", "-", "-", "FLUKE电流表控制异常", "FAIL", Duration.ToString("F2"));
                     return null;
                 }
                 else
                 {
-                    // 继电器开关序号
+                    
+
+                    *//*// 继电器开关序号
                     ushort relayNum = ushort.Parse(testParam.charge_relay_index);
 
                     if (relaySerial.TriggerRelaySingle(relayNum, true) == false)
@@ -513,12 +565,12 @@ namespace XDC01Action
                         // 判断电流数据情况
                         if (testItem.Value > testItem.MaxValue || testItem.Value < testItem.MinValue)
                         {
-                            logger.ShowLog($"---充电电流{testItem.Name}[{max_current:F3}uA],测试失败");
+                            logger.ShowLog($"---充电电流[{max_current:F3}mA],测试失败");
                             testItem.Result = "FAIL";
                         }
                         else
                         {
-                            logger.ShowLog($"---充电电流{testItem.Name}[{max_current:F3}uA],测试通过");
+                            logger.ShowLog($"---充电电流[{max_current:F3}mA],测试通过");
                             testItem.Result = "PASS";
                         }
                     }
@@ -528,11 +580,9 @@ namespace XDC01Action
                         testItem.Result = "FAIL";
                         testItem.StrVal = "未打开上电开关";
                     }
-
-                    testItem.Duration = (Environment.TickCount - start_time) / 1000.00f;
-                    dataGridView.Rows.Add(testItem.Name, testItem.Standard, testItem.MinValue, testItem.MaxValue, testItem.Value, testItem.StrVal, testItem.Result, testItem.Duration.ToString("F2"));
-                    return testItem;
-                }
+                    *//*
+                    
+                }*/
             }
             catch (Exception ee)
             {
