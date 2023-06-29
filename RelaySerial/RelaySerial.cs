@@ -108,6 +108,26 @@ namespace RelaySerialLib
             }
         }
 
+        /// <summary>
+        /// 关闭串口
+        /// </summary>
+        /// <returns></returns>
+        public bool ClosePort()
+        {
+            try
+            {
+                if (_serialPort.IsOpen)
+                {
+                    _serialPort.Close();
+                }
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
         public bool ChangePort(string newPort)
         {
             try
