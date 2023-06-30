@@ -183,13 +183,13 @@ namespace XDC01Action
 
                 List<TestItem> volTestItems = new List<TestItem>
                 {
-                    new TestItem() { Name = "voltage_wifi", NgItem = "voltage_wifi", MinValue = testSpecMin.vol_wifi, MaxValue = testSpecMax.vol_wifi },
+                    new TestItem() { Name = "voltage_mcu", NgItem = "voltage_mcu", MinValue = testSpecMin.vol_mcu, MaxValue = testSpecMax.vol_mcu },
                     new TestItem() { Name = "voltage_vcc_core", NgItem = "voltage_vcc_core", MinValue = testSpecMin.vol_vcc_core, MaxValue = testSpecMax.vol_vcc_core },
                     new TestItem() { Name = "voltage_sensor1", NgItem = "voltage_sensor1", MinValue = testSpecMin.vol_sensor1, MaxValue = testSpecMax.vol_sensor1 },
                     new TestItem() { Name = "voltage_sensor2", NgItem = "voltage_sensor2", MinValue = testSpecMin.vol_sensor2, MaxValue = testSpecMax.vol_sensor2 },
                     new TestItem() { Name = "voltage_rtc", NgItem = "voltage_rtc", MinValue = testSpecMin.vol_rtc, MaxValue = testSpecMax.vol_rtc },
                     new TestItem() { Name = "voltage_vcc", NgItem = "voltage_vcc", MinValue = testSpecMin.vol_vcc, MaxValue = testSpecMax.vol_vcc },
-                    new TestItem() { Name = "voltage_mcu", NgItem = "voltage_mcu", MinValue = testSpecMin.vol_mcu, MaxValue = testSpecMax.vol_mcu },
+                    new TestItem() { Name = "voltage_wifi", NgItem = "voltage_wifi", MinValue = testSpecMin.vol_wifi, MaxValue = testSpecMax.vol_wifi },
                     new TestItem() { Name = "voltage_ddr", NgItem = "voltage_ddr", MinValue = testSpecMin.vol_ddr, MaxValue = testSpecMax.vol_ddr }
                 };
 
