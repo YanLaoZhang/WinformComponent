@@ -999,6 +999,31 @@ namespace XDC01SerialLib
         }
 
         /// <summary>
+        /// 重启设备
+        /// </summary>
+        /// <param name="str_error_log"></param>
+        /// <returns></returns>
+        public bool Reboot(ref string str_error_log)
+        {
+            try
+            {
+                string CMD_REBOOT = "ubus send d3_sys_setting  '{\"rebootall\":1}'";
+                string str_ret_value = "";
+                if (SendCMDToXDC01(CMD_REBOOT, 5000, true, ref str_ret_value, ENDFLAG_1) == false)
+                {
+                    str_error_log = $"发送进入产测模式指令[{CMD_REBOOT}]失败";
+                    return false;
+                }
+                return true;
+            }
+            catch (Exception ee)
+            {
+                str_error_log = $"Reboot发生异常：[{ee.Message}]";
+                return false;
+            }
+        }
+
+        /// <summary>
         /// 检查wifi是否进入产测模式
         /// </summary>
         /// <param name="str_error_log"></param>
