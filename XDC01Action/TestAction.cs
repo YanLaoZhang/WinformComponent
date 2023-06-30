@@ -2445,6 +2445,7 @@ namespace XDC01Action
                 }
 
                 //-----写入Mac address
+                logger.ShowLog("---写入MAC");
                 Delay(500);
                 TestItem writeMAC = new TestItem()
                 {
