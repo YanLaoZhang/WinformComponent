@@ -18,6 +18,34 @@ namespace XDC01Action
             _port = port;
         }
 
+        public bool IsConnected(uint timeout, ref string str_log) {
+            try
+            {
+                MySqlConnectionStringBuilder connectStr = new MySqlConnectionStringBuilder
+                {
+                    Server = _ip,
+                    Port = (uint)_port,
+                    Database = "xdc01_management",
+                    UserID = "rckxdc01",
+                    Password = "2022xdc01",
+                    SslMode = MySqlSslMode.None,
+                    ConnectionTimeout = timeout,
+                    //Pooling = true,
+                    //MinimumPoolSize = 5,
+                    //MaximumPoolSize = 200
+                };
+                using (var connection = new MySqlConnection(connectStr.ToString()))
+                {
+                    connection.Open();
+                    return true;
+                }
+            }
+            catch (Exception e)
+            {
+                str_log = e.Message;
+                return false;
+            }
+        }
 
         /// <summary>
         /// 读取规格参数
