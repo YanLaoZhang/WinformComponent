@@ -59,6 +59,10 @@
       <HintPath>..\XDC01_TestAction\bin\Debug\libs\DSA700Lib.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="FLUKE8808ALib, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Release\FLUKE8808ALib.exe</HintPath>
+    </Reference>
     <Reference Include="Interop.LabelManager2">
       <HintPath>..\..\..\..\CommonDLL\Interop.LabelManager2.dll</HintPath>
       <EmbedInteropTypes>False</EmbedInteropTypes>
@@ -84,18 +88,18 @@
       <HintPath>..\XDC01_TestAction\bin\Debug\libs\PCCommand.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="RelaySerial">
-      <HintPath>..\XDC01_TestAction\bin\Debug\libs\RelaySerial.dll</HintPath>
-      <Private>False</Private>
+    <Reference Include="RelaySerial, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Release\RelaySerial.exe</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
-    <Reference Include="TDMSerial">
-      <HintPath>..\XDC01_TestAction\bin\Debug\libs\TDMSerial.dll</HintPath>
-      <Private>False</Private>
+    <Reference Include="TDMSerial, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Release\TDMSerial.dll</HintPath>
     </Reference>
     <Reference Include="VLCForm">
       <HintPath>..\XDC01_TestAction\bin\Debug\libs\VLCForm.dll</HintPath>
@@ -115,11 +119,6 @@
     <ProjectReference Include="..\ConfigFileLib\ConfigFileLib.csproj">
       <Project>{9C361D8A-AF72-4539-A517-4A611EF93060}</Project>
       <Name>ConfigFileLib</Name>
-      <Private>False</Private>
-    </ProjectReference>
-    <ProjectReference Include="..\FLUKE8808ALib\FLUKE8808ALib.csproj">
-      <Project>{5389a472-e2f7-4fea-aea5-5c14e6c334df}</Project>
-      <Name>FLUKE8808ALib</Name>
       <Private>False</Private>
     </ProjectReference>
   </ItemGroup>

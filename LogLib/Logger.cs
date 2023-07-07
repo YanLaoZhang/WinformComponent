@@ -53,6 +53,16 @@ namespace LogLib
                             _richTextBox.SelectionColor = Color.FromArgb(255, 0, 0);
                             _count++;
                         }
+                        _i = 0;
+                        _count = 0;
+                        while (_richTextBox.Text.IndexOf("不通过", _i) != -1)
+                        {
+                            Application.DoEvents();
+                            _i = _richTextBox.Text.IndexOf("不通过", _i) + 1;
+                            _richTextBox.Select(_i - 1, 3);
+                            _richTextBox.SelectionColor = Color.Red;
+                            _count++;
+                        }
                     }
 
                 }));

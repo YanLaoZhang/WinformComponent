@@ -64,6 +64,11 @@ namespace FLUKE8808ALib
             }));
         }
 
+        public bool CheckStatus()
+        {
+            return _serialPort.IsOpen;
+        }
+
         public bool ChangePort(string newPort)
         {
             try

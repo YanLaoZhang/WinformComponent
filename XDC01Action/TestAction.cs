@@ -52,9 +52,9 @@ namespace XDC01Action
         {
             try
             {
+                logger.ShowLog("-等待设备开机...");
                 int numa = Environment.TickCount;
                 string str_error_log = "";
-                logger.ShowLog("等待设备开机...");
                 while (true)
                 {
                     Application.DoEvents();
@@ -86,6 +86,7 @@ namespace XDC01Action
         {
             try
             {
+                logger.ShowLog("-等待设备开机...");
                 string str_error_log = "";
                 int numa = Environment.TickCount;
                 while (true)
@@ -124,11 +125,34 @@ namespace XDC01Action
         {
             try
             {
-                _dataGridView = dataGridView;
-                #region 环境准备
-                int start_time = Environment.TickCount;
-                string str_error_log = "";
                 logger.ShowLog("-进行电压测试...");
+                int start_time = Environment.TickCount;
+                _dataGridView = dataGridView;
+                if (!relaySerial.CheckStatus())
+                {
+                    logger.ShowLog($"继电器串口未连接");
+                    float Duration = (Environment.TickCount - start_time) / 1000.00f;
+                    _dataGridView.Invoke((MethodInvoker)delegate
+                    {
+                        // 设置数据源
+                        _dataGridView.Rows.Add("电压测试", "-", "-", "-", "-", "继电器串口未连接", "FAIL", Duration.ToString("F2"));
+                    });
+                    return null;
+                }
+                if(!tDMVolSerial.CheckStatus())
+                {
+                    logger.ShowLog($"电压表串口未连接");
+                    float Duration = (Environment.TickCount - start_time) / 1000.00f;
+                    _dataGridView.Invoke((MethodInvoker)delegate
+                    {
+                        // 设置数据源
+                        _dataGridView.Rows.Add("电压测试", "-", "-", "-", "-", "电压表串口未连接", "FAIL", Duration.ToString("F2"));
+                    });
+                    return null;
+                }
+
+                #region 环境准备
+                string str_error_log = "";
                 //--------停止连续获取数据
                 if (tDMVolSerial._vol_stop_continuous() == false)
                 {
@@ -300,7 +324,16 @@ namespace XDC01Action
         {
             try
             {
+                logger.ShowLog("-进行工作电流测试...");
                 int start_time = Environment.TickCount;
+                if (!tDMCurSerial.CheckStatus())
+                {
+                    logger.ShowLog($"电流表串口未连接");
+                    float Duration = (Environment.TickCount - start_time) / 1000.00f;
+                    dataGridView.Rows.Add("读取工作电流", "-", "-", "-", "-", "电流表串口未连接", "FAIL", Duration.ToString("F2"));
+                    return null;
+                }
+
                 TestItem testItem = new TestItem() { 
                     Name = "工作电流", 
                     NgItem = "work_current",
@@ -309,7 +342,6 @@ namespace XDC01Action
                     MaxValue = testSpecMax.work_current,
                     StrVal = "-"
                 };
-                logger.ShowLog("-进行工作电流测试...");
                 //--------停止连续获取数据
                 if (tDMCurSerial._vol_stop_continuous() == false)
                 {
@@ -367,7 +399,15 @@ namespace XDC01Action
         {
             try
             {
+                logger.ShowLog("-进行漏电流测试...");
                 int start_time = Environment.TickCount;
+                if (!flukeSerial.CheckStatus())
+                {
+                    logger.ShowLog($"FLUKE电流表串口未连接");
+                    float Duration = (Environment.TickCount - start_time) / 1000.00f;
+                    dataGridView.Rows.Add("读取漏电流", "-", "-", "-", "-", "FLUKE电流表串口未连接", "FAIL", Duration.ToString("F2"));
+                    return null;
+                }
                 string str_error_log = "";
                 TestItem testItem = new TestItem()
                 {
@@ -378,7 +418,6 @@ namespace XDC01Action
                     MaxValue = testSpecMax.standby_current,
                     StrVal = "-"
                 };
-                logger.ShowLog("-进行漏电流测试...");
                 //--------切换量程为200uA
                 if (flukeSerial.SetRange("1", ref str_error_log) == false)
                 {
@@ -431,15 +470,18 @@ namespace XDC01Action
             }
             finally
             {
-                string str_error_log = "";
-                // 切换量程为20mA
-                logger.ShowLog("万用表切换量程为200mA");
-                if (flukeSerial.SetRange("4", ref str_error_log) == false)
+                if (flukeSerial.CheckStatus())
                 {
-                    logger.ShowLog($"FLUKE电流表切换量程为200mA失败");
-                }
-                else
-                {
+                    string str_error_log = "";
+                    // 切换量程为20mA
+                    logger.ShowLog("万用表切换量程为200mA");
+                    if (flukeSerial.SetRange("4", ref str_error_log) == false)
+                    {
+                        logger.ShowLog($"FLUKE电流表切换量程为200mA失败");
+                    }
+                    else
+                    {
+                    }
                 }
             }
         }
@@ -453,7 +495,15 @@ namespace XDC01Action
         {
             try
             {
+                logger.ShowLog("-进行充电电流测试...");
                 int start_time = Environment.TickCount;
+                if (!flukeSerial.CheckStatus())
+                {
+                    logger.ShowLog($"FLUKE电流表串口未连接");
+                    float Duration = (Environment.TickCount - start_time) / 1000.00f;
+                    dataGridView.Rows.Add("读取漏电流", "-", "-", "-", "-", "FLUKE电流表串口未连接", "FAIL", Duration.ToString("F2"));
+                    return null;
+                }
                 string str_error_log = "";
                 TestItem testItem = new TestItem()
                 {
@@ -464,7 +514,6 @@ namespace XDC01Action
                     MaxValue = testSpecMax.charge_current,
                     StrVal = "-"
                 };
-                logger.ShowLog("-进行充电电流测试...");
 
                 float max_current = 0.00f;
                 //int count = int.Parse(_param_run.str_current_count);
@@ -596,10 +645,10 @@ namespace XDC01Action
         {
             try
             {
+                logger.ShowLog("-读取RN和工序号...");
                 int start_time = Environment.TickCount;
                 List<TestItem> testItems = new List<TestItem>();
                 string str_error_log = "";
-                logger.ShowLog("-读取RN");
                 // 1、读取RN
                 string str_rn = "";
                 if (xDC01Serial.GetRN(ref str_rn, ref str_error_log) == false)
@@ -700,6 +749,7 @@ namespace XDC01Action
         {
             try
             {
+                logger.ShowLog("-进行Ping网测试...");
                 int start_time = Environment.TickCount;
                 if (testParam.ping_ip == "")
                 {
@@ -710,14 +760,23 @@ namespace XDC01Action
                 }
                 else
                 {
+                    string ip = "";
+                    string str_error_log = "";
+                    if (xDC01Serial.GetSystemIP(ref ip, ref str_error_log) == false)
+                    {
+                        logger.ShowLog($"读取IP失败：{str_error_log}");
+                        float Duration = (Environment.TickCount - start_time) / 1000.00f;
+                        dataGridView.Rows.Add("Ping网测试", "-", "-", "-", "-", "设备WiFi连接异常", "FAIL", Duration.ToString("F2"));
+                        return null;
+                    }
+
                     TestItem testItem = new TestItem() { 
                         Name = "Ping网测试", 
                         NgItem = "ping_rtt", 
                         MinValue = testSpecMin.ping_rtt, 
                         MaxValue = testSpecMax.ping_rtt 
                     };
-                    string str_error_log = "";
-                    logger.ShowLog("-进行WiFi连网测试...");
+                    
                     string str_rtt = "";
                     if (xDC01Serial.TestPingDelay(ref str_rtt, testParam.ping_ip, ref str_error_log, int.Parse(testParam.ping_count)) == false)
                     {
@@ -761,7 +820,7 @@ namespace XDC01Action
         }
 
         /// <summary>
-        /// 麦克风测试(自动)
+        /// 麦克风测试
         /// </summary>
         /// <param name="xDC01Serial"></param>
         /// <param name="pcCommand"></param>
@@ -770,18 +829,15 @@ namespace XDC01Action
         /// <param name="dataGridView"></param>
         /// <param name="logger"></param>
         /// <returns></returns>
-        public TestItem CheckMicrophoneAuto(XDC01Serial xDC01Serial, System.Windows.Forms.DataGridView dataGridView, Logger logger, 
+        public List<TestItem> CheckMicrophone(XDC01Serial xDC01Serial, System.Windows.Forms.DataGridView dataGridView, Logger logger,
             PCCommand pcCommand, AxWMPLib.AxWindowsMediaPlayer axWindowsMediaPlayer1, TestParam testParam)
         {
             try
             {
+                logger.ShowLog("-进行麦克风测试...");
                 int start_time = Environment.TickCount;
-                TestItem testItem = new TestItem(){ 
-                    Name = "麦克风测试(自动)", 
-                    NgItem = "mic_auto" 
-                };
+                List<TestItem> testItems = new List<TestItem>();
                 string str_error_log = "";
-                logger.ShowLog("--- 进行麦克风测试...");
 
                 // 打开麦克风
                 xDC01Serial.OpenMic(ref str_error_log);
@@ -795,77 +851,71 @@ namespace XDC01Action
                 pcCommand.PlayWavFile(axWindowsMediaPlayer1, "", false);
                 // 关闭麦克风
                 xDC01Serial.CloseMic(ref str_error_log);
-                string str_max_abs = "";
-                string str_delta = "";
-                string str_result = "";
-                xDC01Serial.TestRecordWav(ref str_max_abs, ref str_delta, ref str_result, ref str_error_log);
 
-                testItem.StrVal = $"max_abs:{str_max_abs},delta:{str_delta},result:{str_result}";
+                if(testParam.mic_test_mode.Contains("Auto"))   // 自动判断
+                {
+                    logger.ShowLog("-- 当前为自动判断方式...");
+                    TestItem AutoTestItem = new TestItem()
+                    {
+                        Name = "麦克风测试(自动)",
+                        NgItem = "mic_auto"
+                    };
+                    string str_max_abs = "";
+                    string str_delta = "";
+                    string str_result = "";
+                    xDC01Serial.TestRecordWav(ref str_max_abs, ref str_delta, ref str_result, ref str_error_log);
 
-                if(str_result == "True")
-                {
-                    logger.ShowLog($"--- 麦克风测试(自动)通过");
-                    testItem.Result = "PASS";
+                    AutoTestItem.StrVal = $"max_abs:{str_max_abs},delta:{str_delta},result:{str_result}";
+
+                    if (str_result == "True")
+                    {
+                        logger.ShowLog($"--- 麦克风测试(自动)通过");
+                        AutoTestItem.Result = "PASS";
+                    }
+                    else
+                    {
+                        logger.ShowLog($"--- 麦克风测试(自动)失败");
+                        AutoTestItem.Result = "FAIL";
+                    }
+                    AutoTestItem.Duration = (Environment.TickCount - start_time) / 1000.00f;
+                    dataGridView.Rows.Add(AutoTestItem.Name, "-", "-", "-", "-", AutoTestItem.StrVal, AutoTestItem.Result, AutoTestItem.Duration.ToString("F2"));
+                    testItems.Add(AutoTestItem);
                 }
-                else
+                if(testParam.mic_test_mode.Contains("Manual"))    // 人工判断
                 {
-                    logger.ShowLog($"--- 麦克风测试(自动)失败");
-                    testItem.Result = "FAIL";
+                    logger.ShowLog("-- 当前为人工判断方式...");
+                    TestItem ManualTestItem = new TestItem()
+                    {
+                        Name = "麦克风测试(人工)",
+                        NgItem = "mic_manual"
+                    };
+                    logger.ShowLog("--- 请检查播放的录音声音，音质正常OK请按[PASS]，音质有问题NG请按[FAIL]");
+                    // 播放录音文件
+                    xDC01Serial.PlayRecordWav(ref str_error_log);
+                    Delay(int.Parse(testParam.mic_record_duration));
+                    CustomDialog customDialog = new CustomDialog("麦克风测试（人工）", "麦克风录音是否正常？");
+                    DialogResult result = customDialog.ShowDialog();
+
+                    if (result == DialogResult.Yes)
+                    {
+                        logger.ShowLog($"--- 麦克风测试(人工)通过");
+                        ManualTestItem.Result = "PASS";
+                    }
+                    else
+                    {
+                        logger.ShowLog($"--- 麦克风测试(人工)失败");
+                        ManualTestItem.Result = "FAIL";
+                    }
+                    ManualTestItem.Duration = (Environment.TickCount - start_time) / 1000.00f;
+                    dataGridView.Rows.Add(ManualTestItem.Name, "-", "-", "-", "-", "-", ManualTestItem.Result, ManualTestItem.Duration.ToString("F2"));
+                    testItems.Add(ManualTestItem);
                 }
-                testItem.Duration = (Environment.TickCount - start_time) / 1000.00f;
-                dataGridView.Rows.Add(testItem.Name, "-", "-", "-", "-", testItem.StrVal, testItem.Result, testItem.Duration.ToString("F2"));
-                return testItem;
+
+                return testItems;
             }
             catch (Exception ee)
             {
-                logger.ShowLog($"麦克风测试(自动)发生异常：[{ee.Message}]");
-                return null;
-            }
-        }
-
-        /// <summary>
-        /// 麦克风测试（人工）
-        /// </summary>
-        /// <param name="xDC01Serial"></param>
-        /// <param name="duration"></param>
-        /// <param name="dataGridView"></param>
-        /// <param name="logger"></param>
-        /// <returns></returns>
-        public TestItem CheckMicrophoneManual(XDC01Serial xDC01Serial,
-            System.Windows.Forms.DataGridView dataGridView, Logger logger, TestParam testParam)
-        {
-            try
-            {
-                int start_time = Environment.TickCount;
-                TestItem testItem = new TestItem(){ 
-                    Name = "麦克风测试(人工)", 
-                    NgItem = "mic_manual" 
-                };
-                string str_error_log = "";
-                logger.ShowLog("--- 进行麦克风测试(人工)...");
-                logger.ShowLog("--- 请检查播放的录音声音，音质正常OK请按[PASS]，音质有问题NG请按[FAIL]");
-                // 播放录音文件
-                xDC01Serial.PlayRecordWav(ref str_error_log);
-                Delay(int.Parse(testParam.mic_record_duration));
-                CustomDialog customDialog = new CustomDialog("麦克风测试（人工）", "麦克风录音是否正常？");
-                DialogResult result = customDialog.ShowDialog();
-
-                if (result == DialogResult.Yes) {
-                    logger.ShowLog($"--- 麦克风测试(人工)通过");
-                    testItem.Result = "PASS";
-                }
-                else
-                {
-                    logger.ShowLog($"--- 麦克风测试(人工)失败");
-                    testItem.Result = "FAIL";
-                }
-                testItem.Duration = (Environment.TickCount - start_time) / 1000.00f;
-                dataGridView.Rows.Add(testItem.Name, "-", "-", "-", "-", "-", testItem.Result, testItem.Duration.ToString("F2"));
-                return testItem;
-            }
-            catch (Exception ee)
-            {
-                logger.ShowLog($"麦克风测试(人工)发生异常：[{ee.Message}]");
+                logger.ShowLog($"麦克风测试发生异常：[{ee.Message}]");
                 return null;
             }
         }
@@ -883,6 +933,7 @@ namespace XDC01Action
         {
             try
             {
+                logger.ShowLog("-进行喇叭功能测试(人工)...");
                 int start_time = Environment.TickCount;
                 TestItem testItem = new TestItem()
                 {
@@ -890,7 +941,6 @@ namespace XDC01Action
                     NgItem = "audio"
                 };
                 string str_error_log = "";
-                logger.ShowLog("--- 进行喇叭功能测试(人工)...");
                 logger.ShowLog("--- 请检查播放的音频声音，音质正常OK请按[PASS]，音质有问题NG请按[FAIL]");
                 // 播放音频文件
                 if (testParam.wav_1 == "True")
@@ -988,9 +1038,9 @@ namespace XDC01Action
         {
             try
             {
+                logger.ShowLog("-进行按键功能测试...");
                 int start_time = Environment.TickCount;
                 string str_error_log = "";
-                logger.ShowLog("-进行按键功能测试...");
 
                 int interval = 5000;
                 try
@@ -1055,10 +1105,10 @@ namespace XDC01Action
         {
             try
             {
+                logger.ShowLog("-进行按键功能测试...");
                 int start_time = Environment.TickCount;
                 List<TestItem> testItems = new List<TestItem>();
                 string str_error_log = "";
-                logger.ShowLog("-进行按键功能测试...");
 
                 int interval = 5000;
                 try
@@ -1254,13 +1304,13 @@ namespace XDC01Action
         {
             try
             {
+                logger.ShowLog("-进行LED灯颜色测试...");
                 int start_time = Environment.TickCount;
                 TestItem testItem = new TestItem(){ 
                     Name = "LED颜色测试", 
                     NgItem = "led_color" 
                 };
                 string str_error_log = "";
-                logger.ShowLog("-进行LED灯颜色测试...");
                 logger.ShowLog("--- 请检查LED灯颜色");
                 int interval = 1000;
                 try
@@ -1283,6 +1333,11 @@ namespace XDC01Action
                     {
                         Application.DoEvents();
 
+                        // 红色
+                        if (xDC01Serial.SetBtnLEDColor("red", ref str_error_log) == false)
+                        {
+
+                        }
                         // 检查取消标记
                         if (cancellationToken.IsCancellationRequested)
                         {
@@ -1290,17 +1345,18 @@ namespace XDC01Action
                             Console.WriteLine("任务被取消");
                             break;
                         }
-
-                        // 红色
-                        if (xDC01Serial.SetBtnLEDColor("red", ref str_error_log) == false)
-                        {
-
-                        }
                         Delay(interval);
                         // 绿色
                         if (xDC01Serial.SetBtnLEDColor("green", ref str_error_log) == false)
                         {
 
+                        }
+                        // 检查取消标记
+                        if (cancellationToken.IsCancellationRequested)
+                        {
+                            // 在需要停止任务的地方进行清理或处理
+                            Console.WriteLine("任务被取消");
+                            break;
                         }
                         Delay(interval);
                         // 蓝色
@@ -1308,11 +1364,25 @@ namespace XDC01Action
                         {
 
                         }
+                        // 检查取消标记
+                        if (cancellationToken.IsCancellationRequested)
+                        {
+                            // 在需要停止任务的地方进行清理或处理
+                            Console.WriteLine("任务被取消");
+                            break;
+                        }
                         Delay(interval);
                         // 白色
                         if (xDC01Serial.SetBtnLEDColor("white", ref str_error_log) == false)
                         {
 
+                        }
+                        // 检查取消标记
+                        if (cancellationToken.IsCancellationRequested)
+                        {
+                            // 在需要停止任务的地方进行清理或处理
+                            Console.WriteLine("任务被取消");
+                            break;
                         }
                         Delay(interval);
                     }
@@ -1359,6 +1429,7 @@ namespace XDC01Action
         {
             try
             {
+                logger.ShowLog("-进行VLC RTSP Video测试...");
                 int start_time = Environment.TickCount;
                 List<TestItem> testItems = new List<TestItem>();
                 string str_error_log = "";
@@ -1371,7 +1442,7 @@ namespace XDC01Action
                 {
                     logger.ShowLog($"读取IP失败：{str_error_log}");
                     float Duration = (Environment.TickCount - start_time) / 1000.00f;
-                    dataGridView.Rows.Add("RTSP视频检查", "-", "-", "-", "-", "串口指令发送异常", "FAIL", Duration.ToString("F2"));
+                    dataGridView.Rows.Add("RTSP视频检查", "-", "-", "-", "-", "设备WiFi连接异常", "FAIL", Duration.ToString("F2"));
                     return null;
                 }
                 else
@@ -1500,10 +1571,10 @@ namespace XDC01Action
         {
             try
             {
+                logger.ShowLog("-进行Light Sensor亮度值检查...");
                 int start_time = Environment.TickCount;
                 TestItem testItem = new TestItem() { Name = "亮度值", NgItem = "light", MinValue = testSpecMin.light_val, MaxValue = testSpecMax.light_val };
                 string str_error_log = "";
-                logger.ShowLog("-进行Light Sensor亮度值检查...");
                 string str_lightsensor = "";
                 if (xDC01Serial.GetLightSensor(ref str_lightsensor, ref str_error_log) == false)
                 {
@@ -1552,10 +1623,10 @@ namespace XDC01Action
         {
             try
             {
+                logger.ShowLog("-进行设备信息检查...");
                 int start_time = Environment.TickCount;
                 List<TestItem> testItems = new List<TestItem>();
                 string str_error_log = "";
-                logger.ShowLog("-进行设备信息检查...");
                 CameraInfo cameraInfo = new CameraInfo();
                 if (xDC01Serial.GetSystemParam(ref cameraInfo, ref str_error_log) == false)
                 {
@@ -1701,11 +1772,11 @@ namespace XDC01Action
         {
             try
             {
+                logger.ShowLog("-进行WiFi吞吐量测试...");
                 int start_time = Environment.TickCount;
                 List<TestItem> testItems = new List<TestItem>();
                 string str_error_log = "";
-                logger.ShowLog("-进行WiFi吞吐量测试...");
-                // 0、读取WiFi信息
+                /*// 0、读取WiFi信息
                 string str_wifi_ssid = "";
                 string str_wifi_password = "";
                 if(xDC01Serial.GetWiFiSSID(ref str_wifi_ssid, ref str_error_log))
@@ -1721,6 +1792,14 @@ namespace XDC01Action
                     logger.ShowLog("WiFi信息和设置的不一致");
                     float Duration = (Environment.TickCount - start_time) / 1000.00f;
                     dataGridView.Rows.Add("WiFI吞吐量测试", "-", "-", "-", "-", "WiFi信息和设置的不一致", "FAIL", Duration.ToString("F2"));
+                    return null;
+                }*/
+                string ip = "";
+                if (xDC01Serial.GetSystemIP(ref ip, ref str_error_log) == false)
+                {
+                    logger.ShowLog($"读取IP失败：{str_error_log}");
+                    float Duration = (Environment.TickCount - start_time) / 1000.00f;
+                    dataGridView.Rows.Add("WiFI吞吐量测试", "-", "-", "-", "-", "设备WiFi连接异常", "FAIL", Duration.ToString("F2"));
                     return null;
                 }
                 else
@@ -1901,11 +1980,11 @@ namespace XDC01Action
         {
             try
             {
+                logger.ShowLog("-进行RF433性能测试...");
                 List<TestItem> testItems = new List<TestItem>();
                 
                 int start_time = Environment.TickCount;
                 string str_error_log = "";
-                logger.ShowLog("-进行RF433性能测试...");
 
                 string str_ResourceName = "";
                 string str_dsa700_device = "";
@@ -2212,6 +2291,7 @@ namespace XDC01Action
         {
             try
             {
+                logger.ShowLog("-写入WiFi设置...");
                 int start_time = Environment.TickCount;
                 TestItem testItem = new TestItem(){ 
                     Name = "写下一站WIFI", 
@@ -2248,13 +2328,13 @@ namespace XDC01Action
         {
             try
             {
+                logger.ShowLog("-写当前站工序...");
                 int start_time = Environment.TickCount;
                 TestItem testItem = new TestItem(){ 
                     Name = "写当前站工序", 
                     NgItem = "write_tagnumber" 
                 };
                 string str_error_log = "";
-                logger.ShowLog("-写当前站工序...");
                 if (xDC01Serial.SetTagNumber(testParam.next_tagnumber, ref str_error_log))
                 {
                     logger.ShowLog("--- 当前站的工序号设置成功");
@@ -2363,7 +2443,7 @@ namespace XDC01Action
 
                 int start_time = Environment.TickCount;
                 string str_error_log = "";
-                logger.ShowLog("---写入SN/UID");
+                logger.ShowLog("-写入SN/UID");
                 TestItem writeSN = new TestItem()
                 {
                     Name = "写入SN",
@@ -2445,7 +2525,7 @@ namespace XDC01Action
                 }
 
                 //-----写入Mac address
-                logger.ShowLog("---写入MAC");
+                logger.ShowLog("-写入MAC");
                 Delay(500);
                 TestItem writeMAC = new TestItem()
                 {
@@ -2590,7 +2670,7 @@ namespace XDC01Action
                     NgItem = "print_sn"
                 };
                 string str_error_log = "";
-                logger.ShowLog("---打印SN和MAC");
+                logger.ShowLog("-打印SN和MAC");
 
                 if (Printer.Print_SN(logger, testParam.printer_name, cloudModel.str_sn, testParam.sn_count, ref str_error_log) == false)
                 {
@@ -2682,7 +2762,7 @@ namespace XDC01Action
                 int start_time = Environment.TickCount;
                 List<TestItem> testItems = new List<TestItem>();
                 string str_error_log = "";
-                logger.ShowLog("-读取RN");
+                logger.ShowLog("-读取RN和工序号");
                 // 1、读取RN
                 string str_rn = "";
                 if (xDC01Serial.GetRnRTOS(ref str_rn, ref str_error_log) == false)

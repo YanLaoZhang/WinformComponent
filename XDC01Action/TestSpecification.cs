@@ -242,6 +242,7 @@ namespace XDC01Action
         public string pir_timeout;
         public string mic_record_duration;
         public string mic_wave_file;
+        public string mic_test_mode;
         public string cur_wifi_ssid;
         public string cur_wifi_pwd;
         public string server_ip;

@@ -83,6 +83,11 @@ namespace TDMSerialLib
             }
         }
 
+        public bool CheckStatus()
+        {
+            return _serialPort.IsOpen;
+        }
+
         public bool OpenSerialPort()
         {
             try

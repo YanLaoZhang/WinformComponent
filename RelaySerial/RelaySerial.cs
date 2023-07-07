@@ -92,6 +92,11 @@ namespace RelaySerialLib
         }
         #endregion
 
+        public bool CheckStatus()
+        {
+            return _serialPort.IsOpen;
+        }
+
         public bool OpenRelayPort()
         {
             try

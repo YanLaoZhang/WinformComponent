@@ -80,6 +80,8 @@
             this.label5 = new System.Windows.Forms.Label();
             this.tabPageVoltage = new System.Windows.Forms.TabPage();
             this.groupBox19 = new System.Windows.Forms.GroupBox();
+            this.comboBoxSerialRelayIndex = new System.Windows.Forms.ComboBox();
+            this.label2 = new System.Windows.Forms.Label();
             this.numericUpDownTriggerRelay = new System.Windows.Forms.NumericUpDown();
             this.label42 = new System.Windows.Forms.Label();
             this.comboBoxRelay = new System.Windows.Forms.ComboBox();
@@ -173,8 +175,9 @@
             this.label3 = new System.Windows.Forms.Label();
             this.comboBoxPrinter = new System.Windows.Forms.ComboBox();
             this.labelPrinter = new System.Windows.Forms.Label();
-            this.comboBoxSerialRelayIndex = new System.Windows.Forms.ComboBox();
-            this.label2 = new System.Windows.Forms.Label();
+            this.comboBoxMicTestMode = new System.Windows.Forms.ComboBox();
+            this.label9 = new System.Windows.Forms.Label();
+            this.label37 = new System.Windows.Forms.Label();
             this.tabControl1.SuspendLayout();
             this.tabPageCommon.SuspendLayout();
             this.groupBox16.SuspendLayout();
@@ -831,6 +834,48 @@
             this.groupBox19.TabStop = false;
             this.groupBox19.Text = "继电器";
             // 
+            // comboBoxSerialRelayIndex
+            // 
+            this.comboBoxSerialRelayIndex.AutoCompleteCustomSource.AddRange(new string[] {
+            "1",
+            "2",
+            "3",
+            "4",
+            "5",
+            "6",
+            "7"});
+            this.comboBoxSerialRelayIndex.FormattingEnabled = true;
+            this.comboBoxSerialRelayIndex.Items.AddRange(new object[] {
+            "1",
+            "2",
+            "3",
+            "4",
+            "5",
+            "6",
+            "7",
+            "8",
+            "9",
+            "10",
+            "11",
+            "12",
+            "13",
+            "14",
+            "15",
+            "16"});
+            this.comboBoxSerialRelayIndex.Location = new System.Drawing.Point(163, 352);
+            this.comboBoxSerialRelayIndex.Name = "comboBoxSerialRelayIndex";
+            this.comboBoxSerialRelayIndex.Size = new System.Drawing.Size(104, 24);
+            this.comboBoxSerialRelayIndex.TabIndex = 55;
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(6, 355);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(151, 16);
+            this.label2.TabIndex = 54;
+            this.label2.Text = "串口供电继电器通道";
+            // 
             // numericUpDownTriggerRelay
             // 
             this.numericUpDownTriggerRelay.DecimalPlaces = 3;
@@ -1215,9 +1260,9 @@
             this.groupBox14.Controls.Add(this.BtnRFRX);
             this.groupBox14.Controls.Add(this.numericUpDownRFRXTimeout);
             this.groupBox14.Controls.Add(this.label28);
-            this.groupBox14.Location = new System.Drawing.Point(331, 294);
+            this.groupBox14.Location = new System.Drawing.Point(331, 326);
             this.groupBox14.Name = "groupBox14";
-            this.groupBox14.Size = new System.Drawing.Size(304, 150);
+            this.groupBox14.Size = new System.Drawing.Size(304, 118);
             this.groupBox14.TabIndex = 9;
             this.groupBox14.TabStop = false;
             this.groupBox14.Text = "RF RX灵敏度测试";
@@ -1261,9 +1306,9 @@
             this.groupBox13.Controls.Add(this.textBoxRFPowerRevise);
             this.groupBox13.Controls.Add(this.label27);
             this.groupBox13.Controls.Add(this.label26);
-            this.groupBox13.Location = new System.Drawing.Point(331, 142);
+            this.groupBox13.Location = new System.Drawing.Point(331, 187);
             this.groupBox13.Name = "groupBox13";
-            this.groupBox13.Size = new System.Drawing.Size(304, 146);
+            this.groupBox13.Size = new System.Drawing.Size(304, 133);
             this.groupBox13.TabIndex = 8;
             this.groupBox13.TabStop = false;
             this.groupBox13.Text = "RF TX测试";
@@ -1561,6 +1606,9 @@
             // 
             // groupBox11
             // 
+            this.groupBox11.Controls.Add(this.label37);
+            this.groupBox11.Controls.Add(this.comboBoxMicTestMode);
+            this.groupBox11.Controls.Add(this.label9);
             this.groupBox11.Controls.Add(this.BtnMic);
             this.groupBox11.Controls.Add(this.comboBoxWaveFile);
             this.groupBox11.Controls.Add(this.label16);
@@ -1568,7 +1616,7 @@
             this.groupBox11.Controls.Add(this.label15);
             this.groupBox11.Location = new System.Drawing.Point(331, 3);
             this.groupBox11.Name = "groupBox11";
-            this.groupBox11.Size = new System.Drawing.Size(304, 133);
+            this.groupBox11.Size = new System.Drawing.Size(304, 178);
             this.groupBox11.TabIndex = 5;
             this.groupBox11.TabStop = false;
             this.groupBox11.Text = "麦克风测试";
@@ -1576,7 +1624,7 @@
             // BtnMic
             // 
             this.BtnMic.BackColor = System.Drawing.Color.SeaGreen;
-            this.BtnMic.Location = new System.Drawing.Point(206, 83);
+            this.BtnMic.Location = new System.Drawing.Point(206, 136);
             this.BtnMic.Name = "BtnMic";
             this.BtnMic.Size = new System.Drawing.Size(85, 30);
             this.BtnMic.TabIndex = 11;
@@ -1603,7 +1651,7 @@
             // 
             // numericUpDownRecordDuration
             // 
-            this.numericUpDownRecordDuration.Location = new System.Drawing.Point(139, 87);
+            this.numericUpDownRecordDuration.Location = new System.Drawing.Point(137, 136);
             this.numericUpDownRecordDuration.Name = "numericUpDownRecordDuration";
             this.numericUpDownRecordDuration.Size = new System.Drawing.Size(61, 26);
             this.numericUpDownRecordDuration.TabIndex = 10;
@@ -1616,7 +1664,7 @@
             // label15
             // 
             this.label15.AutoSize = true;
-            this.label15.Location = new System.Drawing.Point(30, 89);
+            this.label15.Location = new System.Drawing.Point(28, 138);
             this.label15.Name = "label15";
             this.label15.Size = new System.Drawing.Size(103, 16);
             this.label15.TabIndex = 9;
@@ -1861,47 +1909,37 @@
             this.labelPrinter.Text = "选择打印机：";
             this.labelPrinter.Click += new System.EventHandler(this.labelPrinter_Click);
             // 
-            // comboBoxSerialRelayIndex
+            // comboBoxMicTestMode
             // 
-            this.comboBoxSerialRelayIndex.AutoCompleteCustomSource.AddRange(new string[] {
-            "1",
-            "2",
-            "3",
-            "4",
-            "5",
-            "6",
-            "7"});
-            this.comboBoxSerialRelayIndex.FormattingEnabled = true;
-            this.comboBoxSerialRelayIndex.Items.AddRange(new object[] {
-            "1",
-            "2",
-            "3",
-            "4",
-            "5",
-            "6",
-            "7",
-            "8",
-            "9",
-            "10",
-            "11",
-            "12",
-            "13",
-            "14",
-            "15",
-            "16"});
-            this.comboBoxSerialRelayIndex.Location = new System.Drawing.Point(163, 352);
-            this.comboBoxSerialRelayIndex.Name = "comboBoxSerialRelayIndex";
-            this.comboBoxSerialRelayIndex.Size = new System.Drawing.Size(104, 24);
-            this.comboBoxSerialRelayIndex.TabIndex = 55;
+            this.comboBoxMicTestMode.FormattingEnabled = true;
+            this.comboBoxMicTestMode.Items.AddRange(new object[] {
+            "Auto",
+            "Manual",
+            "Auto&Manual"});
+            this.comboBoxMicTestMode.Location = new System.Drawing.Point(139, 79);
+            this.comboBoxMicTestMode.Name = "comboBoxMicTestMode";
+            this.comboBoxMicTestMode.Size = new System.Drawing.Size(152, 24);
+            this.comboBoxMicTestMode.TabIndex = 13;
             // 
-            // label2
+            // label9
             // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(6, 355);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(151, 16);
-            this.label2.TabIndex = 54;
-            this.label2.Text = "串口供电继电器通道";
+            this.label9.AutoSize = true;
+            this.label9.Location = new System.Drawing.Point(54, 82);
+            this.label9.Name = "label9";
+            this.label9.Size = new System.Drawing.Size(79, 16);
+            this.label9.TabIndex = 12;
+            this.label9.Tag = "";
+            this.label9.Text = "判断方式:";
+            // 
+            // label37
+            // 
+            this.label37.AutoSize = true;
+            this.label37.Font = new System.Drawing.Font("宋体", 9F);
+            this.label37.Location = new System.Drawing.Point(17, 108);
+            this.label37.Name = "label37";
+            this.label37.Size = new System.Drawing.Size(281, 12);
+            this.label37.TabIndex = 14;
+            this.label37.Text = "Auto:自动; Manual:人工; Auto&Manual:自动加人工 ";
             // 
             // TestParamForm
             // 
@@ -2121,5 +2159,8 @@
         private System.Windows.Forms.Button BtnAudioTest;
         private System.Windows.Forms.ComboBox comboBoxSerialRelayIndex;
         private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.ComboBox comboBoxMicTestMode;
+        private System.Windows.Forms.Label label9;
+        private System.Windows.Forms.Label label37;
     }
 }

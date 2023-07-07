@@ -47,6 +47,7 @@ namespace XDC01Action
 
                     mic_record_duration = ConfigFile.IniReadValue("mic_param", "record_duration", Path_ini),
                     mic_wave_file = ConfigFile.IniReadValue("mic_param", "wave_file", Path_ini),
+                    mic_test_mode = ConfigFile.IniReadValue("mic_param", "test_mode", Path_ini),
 
                     cur_wifi_ssid = ConfigFile.IniReadValue("wifi_throughput", "cur_wifi_ssid", Path_ini),
                     cur_wifi_pwd = ConfigFile.IniReadValue("wifi_throughput", "cur_wifi_pwd", Path_ini),
@@ -220,6 +221,7 @@ namespace XDC01Action
                         }
                     }
                 }
+                comboBoxMicTestMode.SelectedItem = testParam.mic_test_mode;
                 numericUpDownRecordDuration.Value = int.Parse(testParam.mic_record_duration);
 
                 // wifi吞吐量测试
@@ -331,6 +333,7 @@ namespace XDC01Action
             {
                 ConfigFile.IniWriteValue("mic_param", "record_duration", numericUpDownRecordDuration.Text, Path_ini);
                 ConfigFile.IniWriteValue("mic_param", "wave_file", comboBoxWaveFile.SelectedItem.ToString(), Path_ini);
+                ConfigFile.IniWriteValue("mic_param", "test_mode", comboBoxMicTestMode.SelectedItem.ToString(), Path_ini);
                 MessageBox.Show("麦克风测试保存成功");
             }
             catch (Exception ee)

@@ -548,7 +548,7 @@ namespace XDC01SerialLib
         {
             try
             {
-                string CMD_SYS_IP = "ifconfig";
+                string CMD_SYS_IP = "ifconfig wlan0";
                 string str_ret_value = "";
                 if (SendCMDToXDC01(CMD_SYS_IP, 5000, true, ref str_ret_value, ENDFLAG_2) == false)
                 {
@@ -557,6 +557,12 @@ namespace XDC01SerialLib
                 }
                 if (!str_ret_value.Contains("inet addr:") && str_ret_value.Contains("Bcast:"))
                 {
+                    str_error_log = $"当前WiFi连接未分配IP";
+                    return false;
+                }
+                if (str_ret_value.Contains("192.168.77.1"))
+                {
+                    str_error_log = $"当前WiFi连接的IP为默认IP192.168.77.1, 请进行检查WiFi配置";
                     return false;
                 }
                 string[] striparr = str_ret_value.Split(new string[] { "\r\n" }, StringSplitOptions.None);
