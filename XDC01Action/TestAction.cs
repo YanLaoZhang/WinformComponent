@@ -2497,7 +2497,7 @@ namespace XDC01Action
                         dataGridView.Rows.Add(writeSN.Name, writeSN.Standard, "-", "-", "-", writeSN.StrVal, writeSN.Result, writeSN.Duration.ToString("F2"));
                         testItems.Add(writeSN);
                     }
-                    Delay(500);
+                    start_time = Environment.TickCount;
                     string str_read_uid = "";
                     str_error_log = "";
                     if (xDC01Serial.GetUID(ref str_read_uid, ref str_error_log) == false)
@@ -2528,7 +2528,7 @@ namespace XDC01Action
 
                 //-----写入Mac address
                 logger.ShowLog("-写入MAC");
-                Delay(500);
+                start_time = Environment.TickCount;
                 TestItem writeMAC = new TestItem()
                 {
                     Name = "写入MAC",
@@ -2540,6 +2540,10 @@ namespace XDC01Action
                 {
                     logger.ShowLog("--- 设备原MAC地址和云端相同，不再重新写入");
                     writeMAC.Result = "PASS";
+                    writeMAC.StrVal = cloudModel.str_mac_cloud;
+                    writeMAC.Duration = (Environment.TickCount - start_time) / 1000.00f;
+                    dataGridView.Rows.Add(writeMAC.Name, writeMAC.Standard, "-", "-", "-", writeMAC.StrVal, writeMAC.Result, writeMAC.Duration.ToString("F2"));
+                    testItems.Add(writeMAC);
                 }
                 else
                 {
@@ -2547,7 +2551,7 @@ namespace XDC01Action
                     {
                         logger.ShowLog("--- 写MAC地址失败：" + str_error_log);
                         float Duration = (Environment.TickCount - start_time) / 1000.00f;
-                        dataGridView.Rows.Add("写入SN和UID", "-", "-", "-", "-", "串口指令发送异常", "FAIL", Duration.ToString("F2"));
+                        dataGridView.Rows.Add("写入MAC", "-", "-", "-", "-", "串口指令发送异常", "FAIL", Duration.ToString("F2"));
                         return null;
                     }
                     else
@@ -2564,6 +2568,7 @@ namespace XDC01Action
                         }
                         else
                         {
+                            writeMAC.StrVal = str_read_mac;
                             if (string.Equals(str_read_mac.ToUpper(), cloudModel.str_mac_cloud.ToUpper()) == false)
                             {
                                 logger.ShowLog("--- 读到的MAC：" + str_read_mac.ToUpper() + "和写入的MAC：" + cloudModel.str_mac_cloud.ToUpper() + "不一致");
