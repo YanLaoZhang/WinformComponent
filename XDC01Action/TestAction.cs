@@ -829,7 +829,7 @@ namespace XDC01Action
         /// <param name="dataGridView"></param>
         /// <param name="logger"></param>
         /// <returns></returns>
-        public List<TestItem> CheckMicrophone(XDC01Serial xDC01Serial, System.Windows.Forms.DataGridView dataGridView, Logger logger,
+        public TestItem CheckMicrophone(XDC01Serial xDC01Serial, System.Windows.Forms.DataGridView dataGridView, Logger logger,
             PCCommand pcCommand, AxWMPLib.AxWindowsMediaPlayer axWindowsMediaPlayer1, TestParam testParam)
         {
             try
@@ -852,45 +852,43 @@ namespace XDC01Action
                 // 关闭麦克风
                 xDC01Serial.CloseMic(ref str_error_log);
 
+                TestItem MicTestItem = new TestItem()
+                {
+                    Name = "麦克风测试",
+                    NgItem = "mic_test",
+                    StrVal = ""
+                };
+
                 bool AutoPass = false;    // 用于控制自动加人工时，自动通过，不再进行人工测试
+                string auto_data = "";
                 if(testParam.mic_test_mode.Contains("Auto"))   // 自动判断
                 {
                     logger.ShowLog("-- 当前为自动判断方式...");
-                    TestItem AutoTestItem = new TestItem()
-                    {
-                        Name = "麦克风测试(自动)",
-                        NgItem = "mic_auto"
-                    };
                     string str_max_abs = "";
                     string str_delta = "";
                     string str_result = "";
                     xDC01Serial.TestRecordWav(ref str_max_abs, ref str_delta, ref str_result, ref str_error_log);
 
-                    AutoTestItem.StrVal = $"max_abs:{str_max_abs},delta:{str_delta},result:{str_result}";
+                    auto_data = MicTestItem.StrVal = $"max_abs:{str_max_abs},delta:{str_delta},result:{str_result}";
 
                     if (str_result == "True")
                     {
                         logger.ShowLog($"--- 麦克风测试(自动)通过");
-                        AutoTestItem.Result = "PASS";
                         AutoPass = true;
+                        // 自动判断通过，麦克风测试就通过
+                        MicTestItem.Result = "PASS";
+                        MicTestItem.Duration = (Environment.TickCount - start_time) / 1000.00f;
+                        dataGridView.Rows.Add(MicTestItem.Name, "-", "-", "-", "-", MicTestItem.StrVal, MicTestItem.Result, MicTestItem.Duration.ToString("F2"));
+                        return MicTestItem;
                     }
                     else
                     {
                         logger.ShowLog($"--- 麦克风测试(自动)失败");
-                        AutoTestItem.Result = "FAIL";
                     }
-                    AutoTestItem.Duration = (Environment.TickCount - start_time) / 1000.00f;
-                    dataGridView.Rows.Add(AutoTestItem.Name, "-", "-", "-", "-", AutoTestItem.StrVal, AutoTestItem.Result, AutoTestItem.Duration.ToString("F2"));
-                    testItems.Add(AutoTestItem);
                 }
                 if(!AutoPass && testParam.mic_test_mode.Contains("Manual"))    // 人工判断
                 {
                     logger.ShowLog("-- 当前为人工判断方式...");
-                    TestItem ManualTestItem = new TestItem()
-                    {
-                        Name = "麦克风测试(人工)",
-                        NgItem = "mic_manual"
-                    };
                     logger.ShowLog("--- 请检查播放的录音声音，音质正常OK请按[PASS]，音质有问题NG请按[FAIL]");
                     // 播放录音文件
                     xDC01Serial.PlayRecordWav(ref str_error_log);
@@ -901,19 +899,33 @@ namespace XDC01Action
                     if (result == DialogResult.Yes)
                     {
                         logger.ShowLog($"--- 麦克风测试(人工)通过");
-                        ManualTestItem.Result = "PASS";
+                        MicTestItem.StrVal = "Manual_Pass";
+                        MicTestItem.Result = "PASS";
                     }
                     else
                     {
                         logger.ShowLog($"--- 麦克风测试(人工)失败");
-                        ManualTestItem.Result = "FAIL";
+                        MicTestItem.StrVal = "Manual_Fail";
+                        MicTestItem.Result = "FAIL";
                     }
-                    ManualTestItem.Duration = (Environment.TickCount - start_time) / 1000.00f;
-                    dataGridView.Rows.Add(ManualTestItem.Name, "-", "-", "-", "-", "-", ManualTestItem.Result, ManualTestItem.Duration.ToString("F2"));
-                    testItems.Add(ManualTestItem);
-                }
 
-                return testItems;
+                    if(auto_data.Length > 0)
+                    {
+                        MicTestItem.StrVal += $"|{auto_data}";
+                    }
+
+                    MicTestItem.Duration = (Environment.TickCount - start_time) / 1000.00f;
+                    dataGridView.Rows.Add(MicTestItem.Name, "-", "-", "-", "-", MicTestItem.StrVal, MicTestItem.Result, MicTestItem.Duration.ToString("F2"));
+                    return MicTestItem;
+                }
+                else
+                {
+                    logger.ShowLog("当前未设置人工判断，自动判断不通过，麦克风测试不通过");
+                    MicTestItem.Result = "FAIL";
+                    MicTestItem.Duration = (Environment.TickCount - start_time) / 1000.00f;
+                    dataGridView.Rows.Add(MicTestItem.Name, "-", "-", "-", "-", MicTestItem.StrVal, MicTestItem.Result, MicTestItem.Duration.ToString("F2"));
+                    return MicTestItem;
+                }
             }
             catch (Exception ee)
             {
