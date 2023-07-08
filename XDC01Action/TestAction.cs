@@ -1061,7 +1061,7 @@ namespace XDC01Action
                     NgItem = "button"
                 };
                 xDC01Serial.SetPIR("off", ref str_error_log);
-                CustomDialog btnDialog = new CustomDialog("按键测试（人工）", "请按键！");
+                CustomDialog btnDialog = new CustomDialog("按键测试", "请按键！", false, false);
                 //DialogResult result = btnDialog.ShowDialog();
                 btnDialog.Show();
 
