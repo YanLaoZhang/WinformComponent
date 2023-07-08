@@ -76,9 +76,9 @@
       <HintPath>..\XDC01_TestAction\bin\Debug\libs\LogLib.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="MyCustomDialog">
-      <HintPath>..\XDC01_TestAction\bin\Debug\libs\MyCustomDialog.dll</HintPath>
-      <Private>False</Private>
+    <Reference Include="MyCustomDialog, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Release\MyCustomDialog.dll</HintPath>
     </Reference>
     <Reference Include="MySql.Data">
       <HintPath>..\XDC01_TestAction\bin\Debug\libs\MySql.Data.dll</HintPath>

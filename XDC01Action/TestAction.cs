@@ -852,6 +852,7 @@ namespace XDC01Action
                 // 关闭麦克风
                 xDC01Serial.CloseMic(ref str_error_log);
 
+                bool AutoPass = false;    // 用于控制自动加人工时，自动通过，不再进行人工测试
                 if(testParam.mic_test_mode.Contains("Auto"))   // 自动判断
                 {
                     logger.ShowLog("-- 当前为自动判断方式...");
@@ -871,6 +872,7 @@ namespace XDC01Action
                     {
                         logger.ShowLog($"--- 麦克风测试(自动)通过");
                         AutoTestItem.Result = "PASS";
+                        AutoPass = true;
                     }
                     else
                     {
@@ -881,7 +883,7 @@ namespace XDC01Action
                     dataGridView.Rows.Add(AutoTestItem.Name, "-", "-", "-", "-", AutoTestItem.StrVal, AutoTestItem.Result, AutoTestItem.Duration.ToString("F2"));
                     testItems.Add(AutoTestItem);
                 }
-                if(testParam.mic_test_mode.Contains("Manual"))    // 人工判断
+                if(!AutoPass && testParam.mic_test_mode.Contains("Manual"))    // 人工判断
                 {
                     logger.ShowLog("-- 当前为人工判断方式...");
                     TestItem ManualTestItem = new TestItem()
@@ -1126,7 +1128,7 @@ namespace XDC01Action
                     NgItem = "button" 
                 };
                 xDC01Serial.SetPIR("off", ref str_error_log);
-                CustomDialog btnDialog = new CustomDialog("按键测试（人工）", "请按键！");
+                CustomDialog btnDialog = new CustomDialog("按键测试", "请按键！", false, false);
                 //DialogResult result = btnDialog.ShowDialog();
                 btnDialog.Show();
 
@@ -1234,7 +1236,7 @@ namespace XDC01Action
                     NgItem = "motion" 
                 };
                 xDC01Serial.SetPIR("on", ref str_error_log);
-                CustomDialog pirbtnDialog = new CustomDialog("移动感应PIR测试（人工）", "请在PIR上方挥手!");
+                CustomDialog pirbtnDialog = new CustomDialog("移动感应PIR测试", "请在PIR上方挥手!", false, false);
                 pirbtnDialog.Show();
 
                 int numa = Environment.TickCount;

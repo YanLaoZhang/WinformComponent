@@ -14,7 +14,7 @@ namespace MyCustomDialog
     {
         public DialogResult Result { get; private set; }
 
-        public CustomDialog(string str_title, string str_content, bool isBottom=false)
+        public CustomDialog(string str_title, string str_content, bool isBottom=false, bool isButton=true)
         {
             InitializeComponent();
             this.Text = str_title;
@@ -25,6 +25,11 @@ namespace MyCustomDialog
                 int screenWidth = Screen.PrimaryScreen.WorkingArea.Width;
                 StartPosition = FormStartPosition.Manual;
                 Location = new Point((screenWidth-Width)/2, screenHight - Height);
+            }
+            if(isButton == false)
+            {
+                BtnPass.Visible = false;
+                BtnFail.Visible = false;
             }
         }
 
