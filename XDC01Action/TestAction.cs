@@ -1881,7 +1881,7 @@ namespace XDC01Action
                                 NgItem = "wifi_up_loss",
                                 MinValue = testSpecMin.wifi_up_loss,
                                 MaxValue = testSpecMax.wifi_up_loss,
-                                Value = float.Parse(str_up_loss)
+                                Value = float.Parse(str_up_loss)/100.00f
                             };
                             logger.ShowLog($"上行丢包率: [{WiFiUplosstestItem.Value}]");
                             if (WiFiUplosstestItem.Value > testSpecMax.wifi_up_loss)
@@ -1946,7 +1946,7 @@ namespace XDC01Action
                                 NgItem = "wifi_down_loss",
                                 MinValue = testSpecMin.wifi_down_loss,
                                 MaxValue = testSpecMax.wifi_down_loss,
-                                Value = float.Parse(str_down_loss)
+                                Value = float.Parse(str_down_loss)/100.00f
                             };
                             logger.ShowLog($"下行丢包率: [{WiFiDownlosstestItem.Value}]");
                             if (WiFiDownlosstestItem.Value > testSpecMax.wifi_down_loss)
@@ -1972,6 +1972,10 @@ namespace XDC01Action
             {
                 logger.ShowLog($"DUT WIFI吞吐量测试发生异常：[{e.Message}]");
                 return null;
+            }
+            finally
+            {
+                pcCommand.CheckIperf3(true);
             }
         }
 
@@ -2029,7 +2033,7 @@ namespace XDC01Action
                         {
 
                         }
-                        Delay(int.Parse(testParam.rf_tx_delay));
+                        Delay(int.Parse(testParam.rf_tx_delay) * 1000);
                         //-----WRITe：清除写入。  ----------
                         /*
                         if (_DSA700.TRACe_n_MODE("WRITe", false, ref str_dsa700_ret_value) == false)
@@ -2105,7 +2109,7 @@ namespace XDC01Action
                                 }
                                 logger.ShowLog($"频谱仪读数: [{dData}]");
                                 // 添加修正值
-                                float current_rf_db = rfPowertestItem.Value + float.Parse(testParam.rf_power_corrected);
+                                float current_rf_db = (float)dData + float.Parse(testParam.rf_power_corrected);
                                 rfPowertestItem.Value = current_rf_db;
                                 logger.ShowLog($"修正后: [{rfPowertestItem.Value}]");
                                 if (rfPowertestItem.Value > rfPowertestItem.MaxValue ||

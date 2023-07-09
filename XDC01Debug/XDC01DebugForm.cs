@@ -30,6 +30,7 @@ namespace XDC01Debug
         private void Form1_Load(object sender, EventArgs e)
         {
             RefreshPort();
+            RefreshLocalIP();
         }
 
         private void labelRefreshPort_Click(object sender, EventArgs e)
@@ -44,6 +45,21 @@ namespace XDC01Debug
             {
                 comboBoxCurPort.Items.Add(aa);
             }
+        }
+
+        private void RefreshLocalIP()
+        {
+            pcCommand = new PCCommand(richTextBoxPCCmd);
+            comboBoxServerIp.Items.Clear();
+            foreach (string ip in pcCommand.GetLocalIPAddress())
+            {
+                comboBoxServerIp.Items.Add(ip);
+            }
+        }
+
+        private void labelLocalIP_Click(object sender, EventArgs e)
+        {
+            RefreshLocalIP();
         }
 
         private void BtnOpenPort_Click(object sender, EventArgs e)
@@ -560,11 +576,6 @@ namespace XDC01Debug
             {
                 MessageBox.Show($"打开iPerf3失败：[{str_error_log}]");
             }
-            comboBoxServerIp.Items.Clear();
-            foreach( string ip in pcCommand.GetLocalIPAddress())
-            {
-                comboBoxServerIp.Items.Add(ip);
-            }
         }
 
         private void BtnWiFiUpT_Click(object sender, EventArgs e)
@@ -591,6 +602,16 @@ namespace XDC01Debug
                     MessageBox.Show("请先选择服务器IP");
                     return;
                 }
+
+                // 打开iperf3
+                pcCommand = new PCCommand(richTextBoxPCCmd);
+                str_error_log = "";
+                if (pcCommand.OpenIperf3(ref str_error_log) == false)
+                {
+                    MessageBox.Show($"打开iPerf3失败：[{str_error_log}]");
+                    return;
+                }
+
                 string str_duration = numericUpDownDuration.Text.Trim();
                 string str_bandwidth = numericUpDownBandWidth.Text.Trim() + comboBoxUnit.SelectedItem.ToString();
                 if(serial.TestWifiUpThroughput(ref str_rate, ref str_loss, ref str_error_log, str_ip, str_duration, str_bandwidth) == false)
@@ -607,6 +628,7 @@ namespace XDC01Debug
                 MessageBox.Show($"异常：{ee.Message}");
             }
             finally { 
+                pcCommand.CheckIperf3(true);
                 BtnWiFiUpT.Enabled = true;
             }
         }
@@ -635,6 +657,14 @@ namespace XDC01Debug
                     MessageBox.Show("请先选择服务器IP");
                     return;
                 }
+                // 打开iperf3
+                pcCommand = new PCCommand(richTextBoxPCCmd);
+                str_error_log = "";
+                if (pcCommand.OpenIperf3(ref str_error_log) == false)
+                {
+                    MessageBox.Show($"打开iPerf3失败：[{str_error_log}]");
+                    return;
+                }
                 string str_duration = numericUpDownDuration.Text.Trim();
                 string str_bandwidth = numericUpDownBandWidth.Text.Trim() + comboBoxUnit.SelectedItem.ToString();
                 serial.TestWifiDownThroughput(ref str_rate, ref str_loss, ref str_error_log, str_ip, str_duration, str_bandwidth);
@@ -647,6 +677,7 @@ namespace XDC01Debug
             }
             finally
             {
+                pcCommand.CheckIperf3(true);
                 BtnWifiDownT.Enabled = true;
             }
 
@@ -921,5 +952,6 @@ namespace XDC01Debug
                 }
             }
         }
+
     }
 }

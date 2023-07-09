@@ -1417,9 +1417,14 @@ namespace XDC01SerialLib
                 // -i指定每隔多少秒生成一次性能报告
                 string CMD_IPERF3_UP = $"iperf3 -c {str_ip} -u -i1 -t{str_duration} -b {str_bandwidth} -R";
                 string str_ret_value = "";
-                if (SendCMDToXDC01(CMD_IPERF3_UP, 38000, true, ref str_ret_value, "iperf Done") == false)
+                if (SendCMDToXDC01(CMD_IPERF3_UP, 38000, true, ref str_ret_value, ENDFLAG_2) == false)
                 {
                     str_error_log = $"发送iperf3上行吞吐量测试指令[{CMD_IPERF3_UP}]失败";
+                    return false;
+                }
+                if (str_ret_value.Contains("error"))
+                {
+                    str_error_log = $"指令发送异常:[{str_ret_value}]";
                     return false;
                 }
                 //[ID]    Interval          Transfer       Bitrate         Jitter    Lost/Total        Datagrams
@@ -1487,9 +1492,14 @@ namespace XDC01SerialLib
                 // -i指定每隔多少秒生成一次性能报告
                 string CMD_IPERF3_DOWN = $"iperf3 -c {str_ip} -u -i1 -t{str_duration} -b {str_bandwidth} -R";
                 string str_ret_value = "";
-                if (SendCMDToXDC01(CMD_IPERF3_DOWN, 38000, true, ref str_ret_value, "iperf Done") == false)
+                if (SendCMDToXDC01(CMD_IPERF3_DOWN, 38000, true, ref str_ret_value, ENDFLAG_2) == false)
                 {
                     str_error_log = $"发送iperf3下行吞吐量测试指令[{CMD_IPERF3_DOWN}]失败";
+                    return false;
+                }
+                if (str_ret_value.Contains("error"))
+                {
+                    str_error_log = $"指令发送异常:[{str_ret_value}]";
                     return false;
                 }
                 //[ID]    Interval          Transfer       Bitrate         Jitter    Lost/Total        Datagrams

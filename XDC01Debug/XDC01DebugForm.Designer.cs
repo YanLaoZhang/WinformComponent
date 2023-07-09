@@ -58,7 +58,7 @@
             this.label20 = new System.Windows.Forms.Label();
             this.label19 = new System.Windows.Forms.Label();
             this.label18 = new System.Windows.Forms.Label();
-            this.label17 = new System.Windows.Forms.Label();
+            this.labelLocalIP = new System.Windows.Forms.Label();
             this.label15 = new System.Windows.Forms.Label();
             this.textBoxDownLoss = new System.Windows.Forms.TextBox();
             this.label16 = new System.Windows.Forms.Label();
@@ -69,8 +69,6 @@
             this.label13 = new System.Windows.Forms.Label();
             this.textBoxUpRate = new System.Windows.Forms.TextBox();
             this.BtnWiFiUpT = new System.Windows.Forms.Button();
-            this.BtnCloseIperf3 = new System.Windows.Forms.Button();
-            this.BtnOpenIperf3 = new System.Windows.Forms.Button();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPageInfo = new System.Windows.Forms.TabPage();
             this.panel1 = new System.Windows.Forms.Panel();
@@ -393,7 +391,7 @@
             this.groupBox12.Controls.Add(this.label20);
             this.groupBox12.Controls.Add(this.label19);
             this.groupBox12.Controls.Add(this.label18);
-            this.groupBox12.Controls.Add(this.label17);
+            this.groupBox12.Controls.Add(this.labelLocalIP);
             this.groupBox12.Controls.Add(this.label15);
             this.groupBox12.Controls.Add(this.textBoxDownLoss);
             this.groupBox12.Controls.Add(this.label16);
@@ -404,8 +402,6 @@
             this.groupBox12.Controls.Add(this.label13);
             this.groupBox12.Controls.Add(this.textBoxUpRate);
             this.groupBox12.Controls.Add(this.BtnWiFiUpT);
-            this.groupBox12.Controls.Add(this.BtnCloseIperf3);
-            this.groupBox12.Controls.Add(this.BtnOpenIperf3);
             this.groupBox12.Location = new System.Drawing.Point(6, 342);
             this.groupBox12.Name = "groupBox12";
             this.groupBox12.Size = new System.Drawing.Size(348, 475);
@@ -420,7 +416,7 @@
             "K",
             "M",
             "G"});
-            this.comboBoxUnit.Location = new System.Drawing.Point(190, 192);
+            this.comboBoxUnit.Location = new System.Drawing.Point(190, 189);
             this.comboBoxUnit.Name = "comboBoxUnit";
             this.comboBoxUnit.Size = new System.Drawing.Size(36, 27);
             this.comboBoxUnit.TabIndex = 22;
@@ -430,20 +426,20 @@
             // 
             this.richTextBoxPCCmd.BackColor = System.Drawing.SystemColors.InfoText;
             this.richTextBoxPCCmd.ForeColor = System.Drawing.SystemColors.Info;
-            this.richTextBoxPCCmd.Location = new System.Drawing.Point(6, 91);
+            this.richTextBoxPCCmd.Location = new System.Drawing.Point(6, 28);
             this.richTextBoxPCCmd.Name = "richTextBoxPCCmd";
-            this.richTextBoxPCCmd.Size = new System.Drawing.Size(332, 96);
+            this.richTextBoxPCCmd.Size = new System.Drawing.Size(332, 109);
             this.richTextBoxPCCmd.TabIndex = 47;
             this.richTextBoxPCCmd.Text = "";
             // 
             // numericUpDownBandWidth
             // 
-            this.numericUpDownBandWidth.Location = new System.Drawing.Point(117, 193);
+            this.numericUpDownBandWidth.Location = new System.Drawing.Point(117, 190);
             this.numericUpDownBandWidth.Name = "numericUpDownBandWidth";
             this.numericUpDownBandWidth.Size = new System.Drawing.Size(67, 29);
             this.numericUpDownBandWidth.TabIndex = 21;
             this.numericUpDownBandWidth.Value = new decimal(new int[] {
-            10,
+            100,
             0,
             0,
             0});
@@ -463,7 +459,7 @@
             // comboBoxServerIp
             // 
             this.comboBoxServerIp.FormattingEnabled = true;
-            this.comboBoxServerIp.Location = new System.Drawing.Point(117, 58);
+            this.comboBoxServerIp.Location = new System.Drawing.Point(117, 149);
             this.comboBoxServerIp.Name = "comboBoxServerIp";
             this.comboBoxServerIp.Size = new System.Drawing.Size(177, 27);
             this.comboBoxServerIp.TabIndex = 19;
@@ -472,7 +468,7 @@
             // 
             this.label21.AutoSize = true;
             this.label21.Font = new System.Drawing.Font("宋体", 10F);
-            this.label21.Location = new System.Drawing.Point(232, 200);
+            this.label21.Location = new System.Drawing.Point(232, 197);
             this.label21.Name = "label21";
             this.label21.Size = new System.Drawing.Size(28, 14);
             this.label21.TabIndex = 18;
@@ -481,7 +477,7 @@
             // label20
             // 
             this.label20.AutoSize = true;
-            this.label20.Location = new System.Drawing.Point(7, 200);
+            this.label20.Location = new System.Drawing.Point(7, 197);
             this.label20.Name = "label20";
             this.label20.Size = new System.Drawing.Size(104, 19);
             this.label20.TabIndex = 16;
@@ -505,14 +501,15 @@
             this.label18.TabIndex = 15;
             this.label18.Text = "测试持续时间：";
             // 
-            // label17
+            // labelLocalIP
             // 
-            this.label17.AutoSize = true;
-            this.label17.Location = new System.Drawing.Point(6, 61);
-            this.label17.Name = "label17";
-            this.label17.Size = new System.Drawing.Size(105, 19);
-            this.label17.TabIndex = 13;
-            this.label17.Text = "服务端IP：";
+            this.labelLocalIP.AutoSize = true;
+            this.labelLocalIP.Location = new System.Drawing.Point(6, 152);
+            this.labelLocalIP.Name = "labelLocalIP";
+            this.labelLocalIP.Size = new System.Drawing.Size(105, 19);
+            this.labelLocalIP.TabIndex = 13;
+            this.labelLocalIP.Text = "服务端IP：";
+            this.labelLocalIP.Click += new System.EventHandler(this.labelLocalIP_Click);
             // 
             // label15
             // 
@@ -597,26 +594,6 @@
             this.BtnWiFiUpT.Text = "WiFi上行";
             this.BtnWiFiUpT.UseVisualStyleBackColor = true;
             this.BtnWiFiUpT.Click += new System.EventHandler(this.BtnWiFiUpT_Click);
-            // 
-            // BtnCloseIperf3
-            // 
-            this.BtnCloseIperf3.Location = new System.Drawing.Point(154, 26);
-            this.BtnCloseIperf3.Name = "BtnCloseIperf3";
-            this.BtnCloseIperf3.Size = new System.Drawing.Size(147, 26);
-            this.BtnCloseIperf3.TabIndex = 1;
-            this.BtnCloseIperf3.Text = "关闭iPerf3";
-            this.BtnCloseIperf3.UseVisualStyleBackColor = true;
-            this.BtnCloseIperf3.Click += new System.EventHandler(this.BtnCloseIperf3_Click);
-            // 
-            // BtnOpenIperf3
-            // 
-            this.BtnOpenIperf3.Location = new System.Drawing.Point(7, 26);
-            this.BtnOpenIperf3.Name = "BtnOpenIperf3";
-            this.BtnOpenIperf3.Size = new System.Drawing.Size(141, 26);
-            this.BtnOpenIperf3.TabIndex = 0;
-            this.BtnOpenIperf3.Text = "打开iPerf3";
-            this.BtnOpenIperf3.UseVisualStyleBackColor = true;
-            this.BtnOpenIperf3.Click += new System.EventHandler(this.BtnOpenIperf3_Click);
             // 
             // tabControl1
             // 
@@ -1131,7 +1108,7 @@
             this.tabPageFuncTest.Location = new System.Drawing.Point(4, 29);
             this.tabPageFuncTest.Name = "tabPageFuncTest";
             this.tabPageFuncTest.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageFuncTest.Size = new System.Drawing.Size(339, 823);
+            this.tabPageFuncTest.Size = new System.Drawing.Size(360, 823);
             this.tabPageFuncTest.TabIndex = 3;
             this.tabPageFuncTest.Text = "功能测试";
             this.tabPageFuncTest.UseVisualStyleBackColor = true;
@@ -1540,7 +1517,7 @@
             this.tabPageRTOS.Location = new System.Drawing.Point(4, 29);
             this.tabPageRTOS.Name = "tabPageRTOS";
             this.tabPageRTOS.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageRTOS.Size = new System.Drawing.Size(339, 823);
+            this.tabPageRTOS.Size = new System.Drawing.Size(360, 823);
             this.tabPageRTOS.TabIndex = 2;
             this.tabPageRTOS.Text = "RTOS指令";
             this.tabPageRTOS.UseVisualStyleBackColor = true;
@@ -1734,7 +1711,7 @@
         private System.Windows.Forms.Label label20;
         private System.Windows.Forms.Label label19;
         private System.Windows.Forms.Label label18;
-        private System.Windows.Forms.Label label17;
+        private System.Windows.Forms.Label labelLocalIP;
         private System.Windows.Forms.Label label15;
         private System.Windows.Forms.TextBox textBoxDownLoss;
         private System.Windows.Forms.Label label16;
@@ -1745,8 +1722,6 @@
         private System.Windows.Forms.Label label13;
         private System.Windows.Forms.TextBox textBoxUpRate;
         private System.Windows.Forms.Button BtnWiFiUpT;
-        private System.Windows.Forms.Button BtnCloseIperf3;
-        private System.Windows.Forms.Button BtnOpenIperf3;
         private System.Windows.Forms.RichTextBox richTextBoxPCCmd;
         private System.Windows.Forms.ComboBox comboBoxServerIp;
         private System.Windows.Forms.NumericUpDown numericUpDownDuration;
