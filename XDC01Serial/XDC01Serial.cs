@@ -789,7 +789,7 @@ namespace XDC01SerialLib
         {
             try
             {
-                string CMD_GET_RN = "cat /mnt/diskc/rn";
+                string CMD_GET_RN = "cat /mnt/diskb/rn";
                 string str_ret_value = "";
                 if (SendCMDToXDC01(CMD_GET_RN, 5000, true, ref str_ret_value, ENDFLAG_2) == false)
                 {
@@ -823,7 +823,7 @@ namespace XDC01SerialLib
         {
             try
             {
-                string CMD_SET_RN = $"echo {str_rn} > /mnt/diskc/rn";
+                string CMD_SET_RN = $"echo {str_rn} > /mnt/diskb/rn";
                 string str_ret_value = "";
                 if (SendCMDToXDC01(CMD_SET_RN, 5000, true, ref str_ret_value, ENDFLAG_2) == false)
                 {
@@ -1970,14 +1970,14 @@ namespace XDC01SerialLib
         {
             try
             {
-                string CMD_GET_RN_RTOS = $"factorytest readrn";
+                string CMD_GET_RN_RTOS = $"factorytest ReadRn";
                 string str_ret_value = "";
                 if (SendCMDToXDC01(CMD_GET_RN_RTOS, 5000, true, ref str_ret_value, $"cmd>") == false)
                 {
                     str_error_log = $"RTOS发送读取Rn号指令[{CMD_GET_RN_RTOS}]失败";
                     return false;
                 }
-                if (!str_ret_value.Contains("read factorytest_rn"))
+                if (!str_ret_value.Contains("read Rn ="))
                 {
                     return false;
                 }
@@ -1986,12 +1986,12 @@ namespace XDC01SerialLib
                 for (int i = 0; i < striparr.Length; i++)
                 {
                     Application.DoEvents();
-                    if (striparr[i].Contains("read factorytest_rn"))
+                    if (striparr[i].Contains("read Rn ="))
                     {
                         str_rn_temp = striparr[i].Replace("\r\n", "").Replace(">cmd", "").TrimEnd();
                     }
                 }
-                str_rn = str_rn_temp.Replace("read factorytest_rn =", "").Trim();
+                str_rn = str_rn_temp.Replace("read Rn =", "").Trim();
                 if (str_rn.ToLower().Contains("error"))
                 {
                     str_error_log = "异常:" + str_rn;
@@ -2120,24 +2120,26 @@ namespace XDC01SerialLib
         {
             try
             {
-                string str_check_1 = "";
+                //string str_check_1 = "";
                 string str_check_2 = "";
+                string CMD_SWITCH_IRCUT_RTOS = "";
                 if (str_state == IR_CUT_ON)
                 {
-                    str_check_1 = "rcv system statu = 1";
+                    //str_check_1 = "rcv system statu = 1";
                     str_check_2 = "open led lv2";
+                    CMD_SWITCH_IRCUT_RTOS = $"xdc02_cmd day_night 1";
                 }
                 else if (str_state == IR_CUT_OFF)
                 {
-                    str_check_1 = "rcv system statu = 2";
+                    //str_check_1 = "rcv system statu = 2";
                     str_check_2 = "close led";
+                    CMD_SWITCH_IRCUT_RTOS = $"xdc02_cmd day_night 0";
                 }
                 else
                 {
                     str_error_log = $"参数str_state{str_state}错误,仅支持{IR_CUT_ON}和{IR_CUT_OFF}";
                     return false;
                 }
-                string CMD_SWITCH_IRCUT_RTOS = $"factorytest ircut-{str_state}";
                 string str_ret_value = "";
                 if (SendCMDToXDC01(CMD_SWITCH_IRCUT_RTOS, 5000, true, ref str_ret_value, "Digital Effect") == false)
                 {
@@ -2145,7 +2147,7 @@ namespace XDC01SerialLib
                     return false;
                 }
 
-                if (!str_ret_value.Contains(str_check_1) || !str_ret_value.Contains(str_check_2))
+                if (/*!str_ret_value.Contains(str_check_1) || */!str_ret_value.Contains(str_check_2))
                 {
                     str_error_log = $"摄像头{str_state}夜视模式失败";
                     return false;
