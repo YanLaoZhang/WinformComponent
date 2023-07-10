@@ -844,10 +844,12 @@ namespace XDC01Action
                 // 启动录音
                 xDC01Serial.RecordMic(testParam.mic_record_duration, ref str_error_log);
                 // PC播放音频文件
+                logger.ShowLog("PC开始播放音频");
                 pcCommand.PlayWavFile(axWindowsMediaPlayer1, "", true);
                 // 播放
-                Delay(int.Parse(testParam.mic_record_duration));
+                Delay(int.Parse(testParam.mic_record_duration)*1000);
                 // PC停止播放音频文件
+                logger.ShowLog("PC停止播放音频");
                 pcCommand.PlayWavFile(axWindowsMediaPlayer1, "", false);
                 // 关闭麦克风
                 xDC01Serial.CloseMic(ref str_error_log);

@@ -44,18 +44,19 @@
             this.RichTextBoxContent.Name = "RichTextBoxContent";
             this.RichTextBoxContent.ReadOnly = true;
             this.RichTextBoxContent.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.None;
-            this.RichTextBoxContent.Size = new System.Drawing.Size(486, 77);
+            this.RichTextBoxContent.Size = new System.Drawing.Size(486, 91);
             this.RichTextBoxContent.TabIndex = 1;
             this.RichTextBoxContent.Text = "麦克风录音是否正常？麦克风录音是否正常？麦克风录音是否正常？麦克风录音是否正常？";
             // 
             // BtnPass
             // 
+            this.BtnPass.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
             this.BtnPass.BackColor = System.Drawing.Color.MediumSeaGreen;
             this.BtnPass.DialogResult = System.Windows.Forms.DialogResult.Yes;
             this.BtnPass.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
             this.BtnPass.Font = new System.Drawing.Font("宋体", 20F);
             this.BtnPass.ForeColor = System.Drawing.Color.WhiteSmoke;
-            this.BtnPass.Location = new System.Drawing.Point(81, 95);
+            this.BtnPass.Location = new System.Drawing.Point(112, 109);
             this.BtnPass.Name = "BtnPass";
             this.BtnPass.Size = new System.Drawing.Size(98, 35);
             this.BtnPass.TabIndex = 2;
@@ -65,12 +66,13 @@
             // 
             // BtnFail
             // 
+            this.BtnFail.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
             this.BtnFail.BackColor = System.Drawing.Color.Tomato;
             this.BtnFail.DialogResult = System.Windows.Forms.DialogResult.No;
             this.BtnFail.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
             this.BtnFail.Font = new System.Drawing.Font("宋体", 20F);
             this.BtnFail.ForeColor = System.Drawing.Color.Black;
-            this.BtnFail.Location = new System.Drawing.Point(269, 95);
+            this.BtnFail.Location = new System.Drawing.Point(273, 109);
             this.BtnFail.Name = "BtnFail";
             this.BtnFail.Size = new System.Drawing.Size(98, 35);
             this.BtnFail.TabIndex = 3;
@@ -89,6 +91,7 @@
             this.Controls.Add(this.BtnPass);
             this.Controls.Add(this.RichTextBoxContent);
             this.Font = new System.Drawing.Font("宋体", 16F);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Margin = new System.Windows.Forms.Padding(6, 5, 6, 5);
             this.MaximizeBox = false;
             this.MinimizeBox = false;

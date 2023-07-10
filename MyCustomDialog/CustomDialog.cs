@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 namespace MyCustomDialog
 {
@@ -19,6 +20,15 @@ namespace MyCustomDialog
             InitializeComponent();
             this.Text = str_title;
             RichTextBoxContent.Text = str_content;
+
+            int lineCount = RichTextBoxContent.GetLineFromCharIndex(RichTextBoxContent.TextLength) + 1;
+            int lineHeight = RichTextBoxContent.Font.Height;
+            int padding = 10; // 为了给文本框内容添加一些额外的间距
+
+            int newHeight = lineCount * lineHeight + padding;
+            RichTextBoxContent.Height = newHeight;
+
+            this.Height = RichTextBoxContent.Height + BtnPass.Height + 80; 
             if(isBottom)
             {
                 int screenHight = Screen.PrimaryScreen.WorkingArea.Height;
@@ -31,6 +41,8 @@ namespace MyCustomDialog
                 BtnPass.Visible = false;
                 BtnFail.Visible = false;
             }
+
+
         }
 
         private void BtnPass_Click(object sender, EventArgs e)
