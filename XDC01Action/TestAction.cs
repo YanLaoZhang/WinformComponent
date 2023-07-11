@@ -2846,7 +2846,7 @@ namespace XDC01Action
                 if (testParam.test_mode == "operator")
                 {
                     string str_tagNumber = "";
-                    if (xDC01Serial.GetTagNumber(ref str_tagNumber, ref str_error_log) == false)
+                    if (xDC01Serial.GetTagNumberRTOS(ref str_tagNumber, ref str_error_log) == false)
                     {
                         logger.ShowLog($"--- 读工序号失败：{str_error_log}");
                         float Duration = (Environment.TickCount - start_time) / 1000.00f;
