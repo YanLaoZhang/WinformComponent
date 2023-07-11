@@ -550,12 +550,12 @@ namespace XDC01SerialLib
             {
                 string CMD_SYS_IP = "ifconfig wlan0";
                 string str_ret_value = "";
-                if (SendCMDToXDC01(CMD_SYS_IP, 5000, true, ref str_ret_value, ENDFLAG_2) == false)
+                if (SendCMDToXDC01(CMD_SYS_IP, 5000, true, ref str_ret_value, "UP BROADCAST") == false)
                 {
                     str_error_log = $"发送获取IP信息指令[{CMD_SYS_IP}]失败";
                     return false;
                 }
-                if (!str_ret_value.Contains("inet addr:") && str_ret_value.Contains("Bcast:"))
+                if (!str_ret_value.Contains("inet addr:") && !str_ret_value.Contains("Bcast:"))
                 {
                     str_error_log = $"当前WiFi连接未分配IP";
                     return false;
@@ -789,7 +789,7 @@ namespace XDC01SerialLib
         {
             try
             {
-                string CMD_GET_RN = "cat /mnt/diskb/rn";
+                string CMD_GET_RN = "cat /mnt/diskc/factorytest_rn";
                 string str_ret_value = "";
                 if (SendCMDToXDC01(CMD_GET_RN, 5000, true, ref str_ret_value, ENDFLAG_2) == false)
                 {
@@ -823,7 +823,7 @@ namespace XDC01SerialLib
         {
             try
             {
-                string CMD_SET_RN = $"echo {str_rn} > /mnt/diskb/rn";
+                string CMD_SET_RN = $"echo {str_rn} > /mnt/diskc/factorytest_rn && sync";
                 string str_ret_value = "";
                 if (SendCMDToXDC01(CMD_SET_RN, 5000, true, ref str_ret_value, ENDFLAG_2) == false)
                 {

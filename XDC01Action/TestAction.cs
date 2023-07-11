@@ -841,11 +841,14 @@ namespace XDC01Action
 
                 // 打开麦克风
                 xDC01Serial.OpenMic(ref str_error_log);
-                // 启动录音
-                xDC01Serial.RecordMic(testParam.mic_record_duration, ref str_error_log);
                 // PC播放音频文件
                 logger.ShowLog("PC开始播放音频");
                 pcCommand.PlayWavFile(axWindowsMediaPlayer1, "", true);
+
+                Task recordMicTask = Task.Run(() => {
+                    // 启动录音
+                    xDC01Serial.RecordMic(testParam.mic_record_duration, ref str_error_log);
+                });
                 // 播放
                 Delay(int.Parse(testParam.mic_record_duration)*1000);
                 // PC停止播放音频文件
@@ -853,6 +856,7 @@ namespace XDC01Action
                 pcCommand.PlayWavFile(axWindowsMediaPlayer1, "", false);
                 // 关闭麦克风
                 xDC01Serial.CloseMic(ref str_error_log);
+                recordMicTask.Wait();
 
                 TestItem MicTestItem = new TestItem()
                 {
@@ -1345,72 +1349,87 @@ namespace XDC01Action
                 Task ledTask = Task.Run(() =>
                 {
                     // 循环控制LED灯颜色，监测人工是否完成判定
-                    while (!cancellationToken.IsCancellationRequested)
+                    while (true)
                     {
-                        Application.DoEvents();
+                        //Application.DoEvents();
 
+                        // 检查取消标记
+                        if (cancellationToken.IsCancellationRequested)
+                        {
+                            // 在需要停止任务的地方进行清理或处理
+                            Console.WriteLine("任务被取消");
+                            logger.ShowLog("取消循环变灯");
+                            break;
+                        }
                         // 红色
                         if (xDC01Serial.SetBtnLEDColor("red", ref str_error_log) == false)
                         {
 
                         }
+                        Delay(interval);
                         // 检查取消标记
                         if (cancellationToken.IsCancellationRequested)
                         {
                             // 在需要停止任务的地方进行清理或处理
                             Console.WriteLine("任务被取消");
+                            logger.ShowLog("取消循环变灯");
                             break;
                         }
-                        Delay(interval);
                         // 绿色
                         if (xDC01Serial.SetBtnLEDColor("green", ref str_error_log) == false)
                         {
 
                         }
+                        Delay(interval);
                         // 检查取消标记
                         if (cancellationToken.IsCancellationRequested)
                         {
                             // 在需要停止任务的地方进行清理或处理
                             Console.WriteLine("任务被取消");
+                            logger.ShowLog("取消循环变灯");
                             break;
                         }
-                        Delay(interval);
                         // 蓝色
                         if (xDC01Serial.SetBtnLEDColor("blue", ref str_error_log) == false)
                         {
 
                         }
+                        Delay(interval);
                         // 检查取消标记
                         if (cancellationToken.IsCancellationRequested)
                         {
                             // 在需要停止任务的地方进行清理或处理
                             Console.WriteLine("任务被取消");
+                            logger.ShowLog("取消循环变灯");
                             break;
                         }
-                        Delay(interval);
                         // 白色
                         if (xDC01Serial.SetBtnLEDColor("white", ref str_error_log) == false)
                         {
 
                         }
-                        // 检查取消标记
-                        if (cancellationToken.IsCancellationRequested)
-                        {
-                            // 在需要停止任务的地方进行清理或处理
-                            Console.WriteLine("任务被取消");
-                            break;
-                        }
                         Delay(interval);
                     }
-                }).ContinueWith(task => {
+                    logger.ShowLog("循环变灯结束");
+                })/*.ContinueWith(task =>
+                {
                     xDC01Serial.SetBtnLEDColor("white", ref str_error_log);
-                });
+                    logger.ShowLog("已设置回白灯");
+                })*/;
 
                 CustomDialog customDialog = new CustomDialog("LED灯检查测试（人工）", "是否依次红、绿、蓝、白四种颜色？");
                 DialogResult result = customDialog.ShowDialog();
 
+                logger.ShowLog("停止切换灯光");
                 // 停止切换灯光
                 cancellationTokenSource.Cancel();
+
+                while(ledTask.Status != TaskStatus.RanToCompletion)
+                {
+                    Delay(500);
+                }
+                xDC01Serial.SetBtnLEDColor("white", ref str_error_log);
+                logger.ShowLog("已设置回白灯");
 
                 if (result == DialogResult.Yes)
                 {
