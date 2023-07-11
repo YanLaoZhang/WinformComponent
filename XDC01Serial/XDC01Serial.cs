@@ -1415,7 +1415,7 @@ namespace XDC01SerialLib
             try
             {
                 // -i指定每隔多少秒生成一次性能报告
-                string CMD_IPERF3_UP = $"iperf3 -c {str_ip} -u -i1 -t{str_duration} -b {str_bandwidth} -R";
+                string CMD_IPERF3_UP = $"iperf3 -c {str_ip} -u -i1 -t{str_duration} -b {str_bandwidth}";
                 string str_ret_value = "";
                 if (SendCMDToXDC01(CMD_IPERF3_UP, 38000, true, ref str_ret_value, ENDFLAG_2) == false)
                 {

@@ -1840,8 +1840,25 @@ namespace XDC01Action
                 else
                 {
                     str_error_log = "";
-                    pcCommand.CheckIperf3(true);
-                    if (pcCommand.OpenIperf3(ref str_error_log) == false)
+                    pcCommand.OpenIperf3(ref str_error_log);
+
+                    logger.ShowLog("等待iperf3启动");
+                    Delay(1000);
+                    bool Isiperf3 = false;
+                    for(int i = 0; i < 3; i++)
+                    {
+                        if (pcCommand.CheckIperf3(false))
+                        {
+                            Isiperf3 = true;
+                            break;
+                        }
+                        else
+                        {
+                            Delay(500);
+                        }
+                    }
+
+                    if (Isiperf3 == false)
                     {
                         logger.ShowLog($"打开iPerf3失败：[{str_error_log}]");
                         float Duration = (Environment.TickCount - start_time) / 1000.00f;
