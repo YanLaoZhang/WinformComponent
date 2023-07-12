@@ -40,6 +40,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Printer.cs" />
+    <Compile Include="TestAction1.cs" />
     <Compile Include="TestAction.cs" />
     <Compile Include="TestItem.cs" />
     <Compile Include="TestParamForm.cs">
