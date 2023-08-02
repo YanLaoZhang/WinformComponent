@@ -539,52 +539,52 @@ namespace XDC01Action
             tabControl1_SelectedIndexChanged(tabControl1, EventArgs.Empty);
         }
 
-        private void labelSerialPort_Click(object sender, EventArgs e)
+        private void comboBoxSerialPort_DropDown(object sender, EventArgs e)
         {
             comboBoxSerialPort.Items.Clear();
-            foreach(string a in System.IO.Ports.SerialPort.GetPortNames())
+            foreach (string a in System.IO.Ports.SerialPort.GetPortNames())
             {
                 comboBoxSerialPort.Items.Add(a);
             }
         }
 
-        private void labelVolPort_Click(object sender, EventArgs e)
+        private void comboBoxVolTDMSerial_DropDown(object sender, EventArgs e)
         {
             comboBoxVolTDMSerial.Items.Clear();
-            foreach(string a in System.IO.Ports.SerialPort.GetPortNames())
+            foreach (string a in System.IO.Ports.SerialPort.GetPortNames())
             {
                 comboBoxVolTDMSerial.Items.Add(a);
             }
         }
 
-        private void labelCurPort_Click(object sender, EventArgs e)
+        private void comboBoxCurTDMSerial_DropDown(object sender, EventArgs e)
         {
             comboBoxCurTDMSerial.Items.Clear();
-            foreach(string a in System.IO.Ports.SerialPort.GetPortNames())
+            foreach (string a in System.IO.Ports.SerialPort.GetPortNames())
             {
                 comboBoxCurTDMSerial.Items.Add(a);
             }
         }
 
-        private void labelFlukePort_Click(object sender, EventArgs e)
+        private void comboBoxCurFluke_DropDown(object sender, EventArgs e)
         {
             comboBoxCurFluke.Items.Clear();
-            foreach(string a in System.IO.Ports.SerialPort.GetPortNames())
+            foreach (string a in System.IO.Ports.SerialPort.GetPortNames())
             {
                 comboBoxCurFluke.Items.Add(a);
             }
         }
 
-        private void labelRelayPort_Click(object sender, EventArgs e)
+        private void comboBoxRelay_DropDown(object sender, EventArgs e)
         {
             comboBoxRelay.Items.Clear();
-            foreach(string a in System.IO.Ports.SerialPort.GetPortNames())
+            foreach (string a in System.IO.Ports.SerialPort.GetPortNames())
             {
                 comboBoxRelay.Items.Add(a);
             }
         }
 
-        private void labelRTOSPort_Click(object sender, EventArgs e)
+        private void comboBoxRTOSPort_DropDown(object sender, EventArgs e)
         {
             comboBoxRTOSPort.Items.Clear();
             foreach (string aa in System.IO.Ports.SerialPort.GetPortNames())
@@ -593,7 +593,7 @@ namespace XDC01Action
             }
         }
 
-        private void labelPrinter_Click(object sender, EventArgs e)
+        private void comboBoxPrinter_DropDown(object sender, EventArgs e)
         {
             comboBoxPrinter.Items.Clear();
             foreach (string printer in System.Drawing.Printing.PrinterSettings.InstalledPrinters)
@@ -601,7 +601,5 @@ namespace XDC01Action
                 comboBoxPrinter.Items.Add(printer);
             }
         }
-
-        
     }
 }
