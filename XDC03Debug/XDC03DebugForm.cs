@@ -435,7 +435,7 @@ namespace XDC03Debug
                 MessageBox.Show($"打开iPerf3失败：[{str_error_log}]");
             }
             comboBoxServerIp.Items.Clear();
-            foreach (string ip in pcCommand.GetLocalIPAddress())
+            foreach (string ip in PCCommand.GetLocalIPAddress())
             {
                 comboBoxServerIp.Items.Add(ip);
             }

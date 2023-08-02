@@ -151,7 +151,7 @@ namespace PCCommandLib
 
         }
 
-        public List<string> GetLocalIPAddress()
+        public static List<string> GetLocalIPAddress()
         {
             string ipAddress = "";
             List<string> all = new List<string>();

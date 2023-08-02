@@ -51,7 +51,7 @@ namespace XDC01Debug
         {
             pcCommand = new PCCommand(richTextBoxPCCmd);
             comboBoxServerIp.Items.Clear();
-            foreach (string ip in pcCommand.GetLocalIPAddress())
+            foreach (string ip in PCCommand.GetLocalIPAddress())
             {
                 comboBoxServerIp.Items.Add(ip);
             }

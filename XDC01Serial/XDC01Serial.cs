@@ -796,13 +796,24 @@ namespace XDC01SerialLib
                     str_error_log = $"发送获取RN号信息指令[{CMD_GET_RN}]失败";
                     return false;
                 }
-                string[] array = str_ret_value.Split(new string[1] { "\r\n" }, StringSplitOptions.None);
-                str_rn = array[1].Replace("\r\n", "").Trim();
-                if (str_rn.ToLower().Contains("error"))
+
+                if (!str_ret_value.Contains("XDC01"))
                 {
-                    str_error_log = "异常:" + str_rn;
                     return false;
                 }
+                string[] striparr = str_ret_value.Split(new string[] { "\r\n" }, StringSplitOptions.None);
+                string str_rn_temp = "";
+                for (int i = 0; i < striparr.Length; i++)
+                {
+                    if (striparr[i].Contains("XDC01"))
+                    {
+                        str_rn_temp = striparr[i];
+                        break;
+                    }
+                }
+                int start = str_rn_temp.IndexOf("XDC01");
+                str_rn_temp = str_rn_temp.Substring(start, 15);
+                str_rn = str_rn_temp.Replace("\r\n", "").Trim();
 
                 return true;
             }
