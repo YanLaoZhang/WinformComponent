@@ -1851,7 +1851,7 @@ namespace XDC01SerialLib
                     str_error_log = $"发送写入UID和SN指令[{CMD_SET_SN_UID}]失败";
                     return false;
                 }
-                Delay(1000);
+                Delay(3000);
                 string str_cur_sn = "";
                 GetSN(ref str_cur_sn, ref str_error_log);
                 if (str_cur_sn == str_sn)
