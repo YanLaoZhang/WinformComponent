@@ -2951,16 +2951,33 @@ namespace XDC01Action1
                 string str_error_log = "";
                 logger.ShowLog("-打印SN和MAC");
 
-                if (Printer.Print_SN(logger, testParam.printer_name, cloudModel.str_sn, testParam.sn_count, ref str_error_log) == false)
+                if(testParam.sn_print == "True")
                 {
-                    logger.ShowLog("--- 打印SN失败：" + str_error_log);
-                    SNtestItem.Result = "FAIL";
+                    if (Printer.Print_SN_with_Code(testParam.printer_name, testParam.customer_code, testParam.version_code, cloudModel.str_sn, testParam.sn_count, ref str_error_log) == false)
+                    {
+                        logger.ShowLog("--- 打印SN(有Code)失败：" + str_error_log);
+                        SNtestItem.Result = "FAIL";
+                    }
+                    else
+                    {
+                        logger.ShowLog("--- 打印SN(有Code)成功");
+                        SNtestItem.Result = "PASS";
+                    }
                 }
                 else
                 {
-                    logger.ShowLog("--- 打印SN成功");
-                    SNtestItem.Result = "PASS";
+                    if (Printer.Print_SN(testParam.printer_name, cloudModel.str_sn, testParam.sn_count, ref str_error_log) == false)
+                    {
+                        logger.ShowLog("--- 打印SN(无Code)失败：" + str_error_log);
+                        SNtestItem.Result = "FAIL";
+                    }
+                    else
+                    {
+                        logger.ShowLog("--- 打印SN(无Code)成功");
+                        SNtestItem.Result = "PASS";
+                    }
                 }
+
                 SNtestItem.Duration = (Environment.TickCount - start_time) / 1000.00f;
                 //dataGridView.Rows.Add(SNtestItem.Name, "-", "-", "-", "-", "-", SNtestItem.Result, SNtestItem.Duration.ToString("F2"));
                 dataGridView.Rows[rowIndex].Cells[6].Value = SNtestItem.Result;
@@ -2974,7 +2991,7 @@ namespace XDC01Action1
                     NgItem = "print_mac"
                 };
                 str_error_log = "";
-                if (Printer.Print_MAC(logger, testParam.printer_name, cloudModel.str_mac_cloud, testParam.mac_count, ref str_error_log) == false)
+                if (Printer.Print_MAC(testParam.printer_name, cloudModel.str_mac_cloud, testParam.mac_count, ref str_error_log) == false)
                 {
                     logger.ShowLog("--- 打印MAC地址失败：" + str_error_log);
                     MACtestItem.Result = "FAIL";

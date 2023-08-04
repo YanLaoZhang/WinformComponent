@@ -309,6 +309,10 @@ namespace XDC01Action
         public string printer_name;
         public string sn_count;
         public string mac_count;
+        public string customer_code;
+        public string version_code;
+        public string sn_apply;
+        public string sn_print;
 
         public string wav_1;
         public string wav_2;

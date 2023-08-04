@@ -2733,7 +2733,7 @@ namespace XDC01Action
                 string str_error_log = "";
                 logger.ShowLog("-打印SN和MAC");
 
-                if (Printer.Print_SN(logger, testParam.printer_name, cloudModel.str_sn, testParam.sn_count, ref str_error_log) == false)
+                if (Printer.Print_SN(testParam.printer_name, cloudModel.str_sn, testParam.sn_count, ref str_error_log) == false)
                 {
                     logger.ShowLog("--- 打印SN失败：" + str_error_log);
                     SNtestItem.Result = "FAIL";
@@ -2753,7 +2753,7 @@ namespace XDC01Action
                     NgItem = "print_mac"
                 };
                 str_error_log = "";
-                if (Printer.Print_MAC(logger, testParam.printer_name, cloudModel.str_mac_cloud, testParam.mac_count, ref str_error_log) == false)
+                if (Printer.Print_MAC(testParam.printer_name, cloudModel.str_mac_cloud, testParam.mac_count, ref str_error_log) == false)
                 {
                     logger.ShowLog("--- 打印MAC地址失败：" + str_error_log);
                     MACtestItem.Result = "FAIL";

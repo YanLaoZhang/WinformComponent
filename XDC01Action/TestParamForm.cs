@@ -89,6 +89,10 @@ namespace XDC01Action
                     printer_name = ConfigFile.IniReadValue("printer", "printer_name", Path_ini),
                     sn_count = ConfigFile.IniReadValue("printer", "sn_count", Path_ini),
                     mac_count = ConfigFile.IniReadValue("printer", "mac_count", Path_ini),
+                    customer_code = ConfigFile.IniReadValue("printer", "customer_code", Path_ini),
+                    version_code = ConfigFile.IniReadValue("printer", "version_code", Path_ini),
+                    sn_apply = ConfigFile.IniReadValue("printer", "sn_apply", Path_ini),
+                    sn_print = ConfigFile.IniReadValue("printer", "sn_print", Path_ini),
 
                     wav_1 = ConfigFile.IniReadValue("audio", "wav_1", Path_ini),
                     wav_2 = ConfigFile.IniReadValue("audio", "wav_2", Path_ini),
@@ -276,6 +280,12 @@ namespace XDC01Action
                 }
                 numericUpDownSNCount.Value = decimal.Parse(testParam.sn_count);
                 numericUpDownMacCount.Value = decimal.Parse(testParam.mac_count);
+
+                comboBoxCustomerCode.SelectedItem = testParam.customer_code;
+                textBoxVersionCode.Text = testParam.version_code;
+
+                checkBoxSNApply.Checked = testParam.sn_apply == "True";
+                checkBoxSNPrint.Checked = testParam.sn_print == "True";
             }
         }
 
@@ -525,6 +535,12 @@ namespace XDC01Action
                 ConfigFile.IniWriteValue("printer", "printer_name", comboBoxPrinter.SelectedItem.ToString(), Path_ini);
                 ConfigFile.IniWriteValue("printer", "sn_count", numericUpDownSNCount.Value.ToString(), Path_ini);
                 ConfigFile.IniWriteValue("printer", "mac_count", numericUpDownMacCount.Value.ToString(), Path_ini);
+
+                ConfigFile.IniWriteValue("printer", "customer_code", comboBoxCustomerCode.SelectedItem.ToString(), Path_ini);
+                ConfigFile.IniWriteValue("printer", "version_code", textBoxVersionCode.Text.ToString(), Path_ini);
+
+                ConfigFile.IniWriteValue("printer", "sn_apply", checkBoxSNApply.Checked.ToString(), Path_ini);
+                ConfigFile.IniWriteValue("printer", "sn_print", checkBoxSNPrint.Checked.ToString(), Path_ini);
                 MessageBox.Show("打印设置保存成功");
             }
             catch (Exception ee)
@@ -601,5 +617,65 @@ namespace XDC01Action
                 comboBoxPrinter.Items.Add(printer);
             }
         }
+
+        private void BtnPrintSN_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                string printerName = comboBoxPrinter.SelectedItem.ToString();
+                string sn_count = numericUpDownSNCount.Value.ToString();
+                string sn = textBoxPrintSN.Text.Trim();
+                string str_error_log = "";
+                if(!Printer.Print_SN(printerName, sn, sn_count, ref str_error_log))
+                {
+                    MessageBox.Show($"{str_error_log}");
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"打印SN(无code)异常：[{ex.Message}]");
+            }
+        }
+
+        private void BtnPrintSNCode_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                string printerName = comboBoxPrinter.SelectedItem.ToString();
+                string sn_count = numericUpDownSNCount.Value.ToString();
+                string customer_code = comboBoxCustomerCode.Text.Trim();
+                string version_code = textBoxVersionCode.Text.Trim();
+                string sn = textBoxPrintSN.Text.Trim();
+                string str_error_log = "";
+                if (!Printer.Print_SN_with_Code(printerName, customer_code, version_code, sn, sn_count, ref str_error_log))
+                {
+                    MessageBox.Show($"{str_error_log}");
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"打印SN(有code)异常：[{ex.Message}]");
+            }
+        }
+
+        private void BtnPrintMAC_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                string printerName = comboBoxPrinter.SelectedItem.ToString();
+                string mac_count = numericUpDownMacCount.Value.ToString();
+                string mac = textBoxPrintSN.Text.Trim();
+                string str_error_log = "";
+                if (!Printer.Print_MAC(printerName, mac, mac_count, ref str_error_log))
+                {
+                    MessageBox.Show($"{str_error_log}");
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"打印MAC异常：[{ex.Message}]");
+            }
+        }
+
     }
 }

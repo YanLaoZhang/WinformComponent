@@ -148,6 +148,10 @@ namespace CloudAPILib
                 dictionary.Add("productId", str_save_value[4]);
                 dictionary.Add("modelId", str_save_value[5]);
                 dictionary.Add("productType", str_save_value[6]);
+                if (str_save_value[7] != "")
+                {
+                    dictionary.Add("customerId", str_save_value[6]);
+                }
                 string postdata = JsonConvert.SerializeObject((object)dictionary);
                 string responseString = null;
                 if (!DealPost_creat_sn_uid(posturl_creat_SN_UID, postdata, ref responseString, str_token))

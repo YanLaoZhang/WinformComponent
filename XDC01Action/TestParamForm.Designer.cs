@@ -170,7 +170,21 @@
             this.textBoxImageServer = new System.Windows.Forms.TextBox();
             this.label35 = new System.Windows.Forms.Label();
             this.tabPagePrinter = new System.Windows.Forms.TabPage();
+            this.groupBox5 = new System.Windows.Forms.GroupBox();
+            this.BtnPrintMAC = new System.Windows.Forms.Button();
+            this.textBoxPrintMAC = new System.Windows.Forms.TextBox();
+            this.label47 = new System.Windows.Forms.Label();
+            this.BtnPrintSNCode = new System.Windows.Forms.Button();
+            this.BtnPrintSN = new System.Windows.Forms.Button();
+            this.textBoxPrintSN = new System.Windows.Forms.TextBox();
+            this.label46 = new System.Windows.Forms.Label();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.comboBoxCustomerCode = new System.Windows.Forms.ComboBox();
+            this.checkBoxSNPrint = new System.Windows.Forms.CheckBox();
+            this.checkBoxSNApply = new System.Windows.Forms.CheckBox();
+            this.textBoxVersionCode = new System.Windows.Forms.TextBox();
+            this.label39 = new System.Windows.Forms.Label();
+            this.label38 = new System.Windows.Forms.Label();
             this.BtnPrinter = new System.Windows.Forms.Button();
             this.numericUpDownMacCount = new System.Windows.Forms.NumericUpDown();
             this.numericUpDownSNCount = new System.Windows.Forms.NumericUpDown();
@@ -178,6 +192,7 @@
             this.label3 = new System.Windows.Forms.Label();
             this.comboBoxPrinter = new System.Windows.Forms.ComboBox();
             this.labelPrinter = new System.Windows.Forms.Label();
+            this.backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
             this.tabControl1.SuspendLayout();
             this.tabPageCommon.SuspendLayout();
             this.groupBox16.SuspendLayout();
@@ -212,6 +227,7 @@
             this.tabPageRTOS.SuspendLayout();
             this.groupBox18.SuspendLayout();
             this.tabPagePrinter.SuspendLayout();
+            this.groupBox5.SuspendLayout();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownMacCount)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownSNCount)).BeginInit();
@@ -1836,6 +1852,7 @@
             // 
             // tabPagePrinter
             // 
+            this.tabPagePrinter.Controls.Add(this.groupBox5);
             this.tabPagePrinter.Controls.Add(this.groupBox1);
             this.tabPagePrinter.Location = new System.Drawing.Point(4, 26);
             this.tabPagePrinter.Name = "tabPagePrinter";
@@ -1844,8 +1861,92 @@
             this.tabPagePrinter.Text = "打印设置";
             this.tabPagePrinter.UseVisualStyleBackColor = true;
             // 
+            // groupBox5
+            // 
+            this.groupBox5.Controls.Add(this.BtnPrintMAC);
+            this.groupBox5.Controls.Add(this.textBoxPrintMAC);
+            this.groupBox5.Controls.Add(this.label47);
+            this.groupBox5.Controls.Add(this.BtnPrintSNCode);
+            this.groupBox5.Controls.Add(this.BtnPrintSN);
+            this.groupBox5.Controls.Add(this.textBoxPrintSN);
+            this.groupBox5.Controls.Add(this.label46);
+            this.groupBox5.Location = new System.Drawing.Point(444, 4);
+            this.groupBox5.Name = "groupBox5";
+            this.groupBox5.Size = new System.Drawing.Size(494, 384);
+            this.groupBox5.TabIndex = 1;
+            this.groupBox5.TabStop = false;
+            this.groupBox5.Text = "打印调试";
+            // 
+            // BtnPrintMAC
+            // 
+            this.BtnPrintMAC.Location = new System.Drawing.Point(67, 185);
+            this.BtnPrintMAC.Name = "BtnPrintMAC";
+            this.BtnPrintMAC.Size = new System.Drawing.Size(140, 29);
+            this.BtnPrintMAC.TabIndex = 21;
+            this.BtnPrintMAC.Text = "打印MAC";
+            this.BtnPrintMAC.UseVisualStyleBackColor = true;
+            this.BtnPrintMAC.Click += new System.EventHandler(this.BtnPrintMAC_Click);
+            // 
+            // textBoxPrintMAC
+            // 
+            this.textBoxPrintMAC.Location = new System.Drawing.Point(67, 135);
+            this.textBoxPrintMAC.Name = "textBoxPrintMAC";
+            this.textBoxPrintMAC.Size = new System.Drawing.Size(286, 26);
+            this.textBoxPrintMAC.TabIndex = 20;
+            // 
+            // label47
+            // 
+            this.label47.AutoSize = true;
+            this.label47.Location = new System.Drawing.Point(14, 138);
+            this.label47.Name = "label47";
+            this.label47.Size = new System.Drawing.Size(47, 16);
+            this.label47.TabIndex = 19;
+            this.label47.Text = "MAC：";
+            // 
+            // BtnPrintSNCode
+            // 
+            this.BtnPrintSNCode.Location = new System.Drawing.Point(213, 77);
+            this.BtnPrintSNCode.Name = "BtnPrintSNCode";
+            this.BtnPrintSNCode.Size = new System.Drawing.Size(140, 29);
+            this.BtnPrintSNCode.TabIndex = 18;
+            this.BtnPrintSNCode.Text = "打印SN(带code)";
+            this.BtnPrintSNCode.UseVisualStyleBackColor = true;
+            this.BtnPrintSNCode.Click += new System.EventHandler(this.BtnPrintSNCode_Click);
+            // 
+            // BtnPrintSN
+            // 
+            this.BtnPrintSN.Location = new System.Drawing.Point(67, 77);
+            this.BtnPrintSN.Name = "BtnPrintSN";
+            this.BtnPrintSN.Size = new System.Drawing.Size(140, 29);
+            this.BtnPrintSN.TabIndex = 17;
+            this.BtnPrintSN.Text = "打印SN(无code)";
+            this.BtnPrintSN.UseVisualStyleBackColor = true;
+            this.BtnPrintSN.Click += new System.EventHandler(this.BtnPrintSN_Click);
+            // 
+            // textBoxPrintSN
+            // 
+            this.textBoxPrintSN.Location = new System.Drawing.Point(67, 29);
+            this.textBoxPrintSN.Name = "textBoxPrintSN";
+            this.textBoxPrintSN.Size = new System.Drawing.Size(286, 26);
+            this.textBoxPrintSN.TabIndex = 16;
+            // 
+            // label46
+            // 
+            this.label46.AutoSize = true;
+            this.label46.Location = new System.Drawing.Point(22, 34);
+            this.label46.Name = "label46";
+            this.label46.Size = new System.Drawing.Size(39, 16);
+            this.label46.TabIndex = 15;
+            this.label46.Text = "SN：";
+            // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.comboBoxCustomerCode);
+            this.groupBox1.Controls.Add(this.checkBoxSNPrint);
+            this.groupBox1.Controls.Add(this.checkBoxSNApply);
+            this.groupBox1.Controls.Add(this.textBoxVersionCode);
+            this.groupBox1.Controls.Add(this.label39);
+            this.groupBox1.Controls.Add(this.label38);
             this.groupBox1.Controls.Add(this.BtnPrinter);
             this.groupBox1.Controls.Add(this.numericUpDownMacCount);
             this.groupBox1.Controls.Add(this.numericUpDownSNCount);
@@ -1855,10 +1956,90 @@
             this.groupBox1.Controls.Add(this.labelPrinter);
             this.groupBox1.Location = new System.Drawing.Point(9, 4);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(428, 182);
+            this.groupBox1.Size = new System.Drawing.Size(428, 384);
             this.groupBox1.TabIndex = 0;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "打印机设置";
+            // 
+            // comboBoxCustomerCode
+            // 
+            this.comboBoxCustomerCode.FormattingEnabled = true;
+            this.comboBoxCustomerCode.Items.AddRange(new object[] {
+            "A",
+            "B",
+            "C",
+            "D",
+            "E",
+            "F",
+            "G",
+            "H",
+            "I",
+            "J",
+            "K",
+            "L",
+            "M",
+            "N",
+            "O",
+            "P",
+            "Q",
+            "R",
+            "S",
+            "T",
+            "U",
+            "V",
+            "W",
+            "X",
+            "Y",
+            "Z"});
+            this.comboBoxCustomerCode.Location = new System.Drawing.Point(158, 195);
+            this.comboBoxCustomerCode.Name = "comboBoxCustomerCode";
+            this.comboBoxCustomerCode.Size = new System.Drawing.Size(100, 24);
+            this.comboBoxCustomerCode.TabIndex = 15;
+            // 
+            // checkBoxSNPrint
+            // 
+            this.checkBoxSNPrint.AutoSize = true;
+            this.checkBoxSNPrint.Location = new System.Drawing.Point(41, 339);
+            this.checkBoxSNPrint.Name = "checkBoxSNPrint";
+            this.checkBoxSNPrint.Size = new System.Drawing.Size(210, 20);
+            this.checkBoxSNPrint.TabIndex = 14;
+            this.checkBoxSNPrint.Text = "SN打印时带Customer Code";
+            this.checkBoxSNPrint.UseVisualStyleBackColor = true;
+            // 
+            // checkBoxSNApply
+            // 
+            this.checkBoxSNApply.AutoSize = true;
+            this.checkBoxSNApply.Location = new System.Drawing.Point(41, 301);
+            this.checkBoxSNApply.Name = "checkBoxSNApply";
+            this.checkBoxSNApply.Size = new System.Drawing.Size(210, 20);
+            this.checkBoxSNApply.TabIndex = 12;
+            this.checkBoxSNApply.Text = "SN申请时带Customer Code";
+            this.checkBoxSNApply.UseVisualStyleBackColor = true;
+            // 
+            // textBoxVersionCode
+            // 
+            this.textBoxVersionCode.Location = new System.Drawing.Point(158, 246);
+            this.textBoxVersionCode.Name = "textBoxVersionCode";
+            this.textBoxVersionCode.Size = new System.Drawing.Size(100, 26);
+            this.textBoxVersionCode.TabIndex = 10;
+            // 
+            // label39
+            // 
+            this.label39.AutoSize = true;
+            this.label39.Location = new System.Drawing.Point(38, 249);
+            this.label39.Name = "label39";
+            this.label39.Size = new System.Drawing.Size(111, 16);
+            this.label39.TabIndex = 9;
+            this.label39.Text = "Vesion Code：";
+            // 
+            // label38
+            // 
+            this.label38.AutoSize = true;
+            this.label38.Location = new System.Drawing.Point(22, 198);
+            this.label38.Name = "label38";
+            this.label38.Size = new System.Drawing.Size(127, 16);
+            this.label38.TabIndex = 7;
+            this.label38.Text = "Customer Code：";
             // 
             // BtnPrinter
             // 
@@ -2002,6 +2183,8 @@
             this.groupBox18.ResumeLayout(false);
             this.groupBox18.PerformLayout();
             this.tabPagePrinter.ResumeLayout(false);
+            this.groupBox5.ResumeLayout(false);
+            this.groupBox5.PerformLayout();
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownMacCount)).EndInit();
@@ -2162,5 +2345,20 @@
         private System.Windows.Forms.ComboBox comboBoxMicTestMode;
         private System.Windows.Forms.Label label9;
         private System.Windows.Forms.Label label37;
+        private System.Windows.Forms.Label label38;
+        private System.ComponentModel.BackgroundWorker backgroundWorker1;
+        private System.Windows.Forms.TextBox textBoxVersionCode;
+        private System.Windows.Forms.Label label39;
+        private System.Windows.Forms.CheckBox checkBoxSNApply;
+        private System.Windows.Forms.CheckBox checkBoxSNPrint;
+        private System.Windows.Forms.GroupBox groupBox5;
+        private System.Windows.Forms.Label label46;
+        private System.Windows.Forms.TextBox textBoxPrintSN;
+        private System.Windows.Forms.Button BtnPrintSN;
+        private System.Windows.Forms.Button BtnPrintSNCode;
+        private System.Windows.Forms.TextBox textBoxPrintMAC;
+        private System.Windows.Forms.Label label47;
+        private System.Windows.Forms.Button BtnPrintMAC;
+        private System.Windows.Forms.ComboBox comboBoxCustomerCode;
     }
 }

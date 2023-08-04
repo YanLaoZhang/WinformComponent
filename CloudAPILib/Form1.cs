@@ -97,7 +97,8 @@ namespace CloudAPILib
                     cloudModel.str_factoryId,
                     cloudModel.str_productId,
                     cloudModel.str_modeId,
-                    cloudModel.str_productType
+                    cloudModel.str_productType,
+                    cloudModel.str_customerId
                 };
                 if (_cloud_up.cloud_up_Creat_SN_UID(str_save_value,
                                                     ref str_error_log,
@@ -194,6 +195,7 @@ namespace CloudAPILib
         public string str_modeId = string.Empty;
         public string str_colorId = string.Empty;
         public string str_productType = string.Empty;
+        public string str_customerId = string.Empty;
         public string str_token_login = string.Empty;
         public string str_token_creat = string.Empty;
         public List<string> list_product_info = new List<string>();
