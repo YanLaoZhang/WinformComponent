@@ -1491,7 +1491,7 @@ namespace XDC01Action1
         /// <param name="logger"></param>
         /// <returns></returns>
         public List<TestItem> CheckRTSP(XDC01Serial xDC01Serial,
-            System.Windows.Forms.DataGridView dataGridView, int rowIndex, Logger logger)
+            System.Windows.Forms.DataGridView dataGridView, int rowIndex, Logger logger, bool ir_led=true, bool ir_cut=true)
         {
             try
             {
@@ -1561,64 +1561,70 @@ namespace XDC01Action1
                         dataGridView.Rows[rowIndex].Cells[7].Value = vlcTestItem.Duration.ToString("F2");
                         testItems.Add(vlcTestItem);
 
-                        rowIndex++;
-                        start_time = Environment.TickCount;
-                        //------12 通过vlc video确认IR Cut IR LED
-                        Delay(500);
-                        TestItem IRLedTestItem = new TestItem() { 
-                            Name = "IR_LED", 
-                            NgItem = "ir_led" 
-                        };
-                        str_error_log = "";
-                        if (xDC01Serial.SwitchIR_CUT("on", ref str_error_log) == false)
+                        if (ir_led)
                         {
-                            logger.ShowLog($"切换夜视模式异常：[{str_error_log}]");
-                        }
-                        logger.ShowLog("--- 请检查IR_LED灯功能");
-                        CustomDialog IRLedDialog = new CustomDialog("IR_LED检查测试（人工）", "请检查六颗红外灯是否全亮？", true);
-                        DialogResult IRLedresult = IRLedDialog.ShowDialog();
+                            rowIndex++;
+                            start_time = Environment.TickCount;
+                            //------12 通过vlc video确认IR Cut IR LED
+                            Delay(500);
+                            TestItem IRLedTestItem = new TestItem() { 
+                                Name = "IR_LED", 
+                                NgItem = "ir_led" 
+                            };
+                            str_error_log = "";
+                            if (xDC01Serial.SwitchIR_CUT("on", ref str_error_log) == false)
+                            {
+                                logger.ShowLog($"切换夜视模式异常：[{str_error_log}]");
+                            }
+                            logger.ShowLog("--- 请检查IR_LED灯功能");
+                            CustomDialog IRLedDialog = new CustomDialog("IR_LED检查测试（人工）", "请检查六颗红外灯是否全亮？", true);
+                            DialogResult IRLedresult = IRLedDialog.ShowDialog();
 
-                        if (IRLedresult == DialogResult.Yes)
-                        {
-                            logger.ShowLog($"--- IR_LED检查测试(人工)通过");
-                            IRLedTestItem.Result = "PASS";
+                            if (IRLedresult == DialogResult.Yes)
+                            {
+                                logger.ShowLog($"--- IR_LED检查测试(人工)通过");
+                                IRLedTestItem.Result = "PASS";
+                            }
+                            else
+                            {
+                                logger.ShowLog($"--- IR_LED检查测试(人工)失败");
+                                IRLedTestItem.Result = "FAIL";
+                            }
+                            IRLedTestItem.Duration = (Environment.TickCount - start_time) / 1000.00f;
+                            //dataGridView.Rows.Add(IRLedTestItem.Name, "-", "-", "-", "-", "-", IRLedTestItem.Result, IRLedTestItem.Duration.ToString("F2"));
+                            dataGridView.Rows[rowIndex].Cells[6].Value = IRLedTestItem.Result;
+                            dataGridView.Rows[rowIndex].Cells[7].Value = IRLedTestItem.Duration.ToString("F2");
+                            testItems.Add(IRLedTestItem);
                         }
-                        else
-                        {
-                            logger.ShowLog($"--- IR_LED检查测试(人工)失败");
-                            IRLedTestItem.Result = "FAIL";
-                        }
-                        IRLedTestItem.Duration = (Environment.TickCount - start_time) / 1000.00f;
-                        //dataGridView.Rows.Add(IRLedTestItem.Name, "-", "-", "-", "-", "-", IRLedTestItem.Result, IRLedTestItem.Duration.ToString("F2"));
-                        dataGridView.Rows[rowIndex].Cells[6].Value = IRLedTestItem.Result;
-                        dataGridView.Rows[rowIndex].Cells[7].Value = IRLedTestItem.Duration.ToString("F2");
-                        testItems.Add(IRLedTestItem);
 
-                        rowIndex++;
-                        start_time = Environment.TickCount;
-                        TestItem IRCutTestItem = new TestItem() { 
-                            Name = "IR_CUT", 
-                            NgItem = "ir_cut" 
-                        };
-                        logger.ShowLog("--- 请检查IR_CUT夜视功能");
-                        CustomDialog IRCutDialog = new CustomDialog("IR_CUT检查测试（人工）", "是否已切换到夜视模式？", true);
-                        DialogResult IRCutresult = IRCutDialog.ShowDialog();
+                        if (ir_cut)
+                        {
+                            rowIndex++;
+                            start_time = Environment.TickCount;
+                            TestItem IRCutTestItem = new TestItem() { 
+                                Name = "IR_CUT", 
+                                NgItem = "ir_cut" 
+                            };
+                            logger.ShowLog("--- 请检查IR_CUT夜视功能");
+                            CustomDialog IRCutDialog = new CustomDialog("IR_CUT检查测试（人工）", "是否已切换到夜视模式？", true);
+                            DialogResult IRCutresult = IRCutDialog.ShowDialog();
 
-                        if (IRCutresult == DialogResult.Yes)
-                        {
-                            logger.ShowLog($"--- IR_CUT检查测试(人工)通过");
-                            IRCutTestItem.Result = "PASS";
+                            if (IRCutresult == DialogResult.Yes)
+                            {
+                                logger.ShowLog($"--- IR_CUT检查测试(人工)通过");
+                                IRCutTestItem.Result = "PASS";
+                            }
+                            else
+                            {
+                                logger.ShowLog($"--- IR_CUT检查测试(人工)失败");
+                                IRCutTestItem.Result = "FAIL";
+                            }
+                            IRCutTestItem.Duration = (Environment.TickCount - start_time) / 1000.00f;
+                            //dataGridView.Rows.Add(IRCutTestItem.Name, "-", "-", "-", "-", "-", IRCutTestItem.Result, IRCutTestItem.Duration.ToString("F2"));
+                            dataGridView.Rows[rowIndex].Cells[6].Value = IRCutTestItem.Result;
+                            dataGridView.Rows[rowIndex].Cells[7].Value = IRCutTestItem.Duration.ToString("F2");
+                            testItems.Add(IRCutTestItem);
                         }
-                        else
-                        {
-                            logger.ShowLog($"--- IR_CUT检查测试(人工)失败");
-                            IRCutTestItem.Result = "FAIL";
-                        }
-                        IRCutTestItem.Duration = (Environment.TickCount - start_time) / 1000.00f;
-                        //dataGridView.Rows.Add(IRCutTestItem.Name, "-", "-", "-", "-", "-", IRCutTestItem.Result, IRCutTestItem.Duration.ToString("F2"));
-                        dataGridView.Rows[rowIndex].Cells[6].Value = IRCutTestItem.Result;
-                        dataGridView.Rows[rowIndex].Cells[7].Value = IRCutTestItem.Duration.ToString("F2");
-                        testItems.Add(IRCutTestItem);
                         vLC.Close();
 
                         return testItems;
@@ -2047,6 +2053,7 @@ namespace XDC01Action1
                             dataGridView.Rows[rowIndex].Cells[6].Value = WiFiUplosstestItem.Result;
                             dataGridView.Rows[rowIndex].Cells[7].Value = WiFiUplosstestItem.Duration.ToString("F2");
                             testItems.Add(WiFiUplosstestItem);
+                            rowIndex++;
                         }
 
                         // 下行速率
@@ -2069,7 +2076,6 @@ namespace XDC01Action1
                         }
                         else
                         {
-                            rowIndex++;
                             TestItem WiFiDownRatetestItem = new TestItem()
                             {
                                 Name = "WIFI下行速率",

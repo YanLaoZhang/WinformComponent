@@ -65,8 +65,10 @@ namespace VLCForm
 
         private async void FormVLC_FormClosing(object sender, FormClosingEventArgs e)
         {
-            await Task.Run(() => vlcControl1.Stop());
-            this.Close();
+            //await Task.Run(() => vlcControl1.Stop());
+            vlcControl1.Stop();
+            vlcControl1.Dispose();
+            //this.Close();
         }
 
     }
