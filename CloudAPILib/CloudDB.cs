@@ -150,7 +150,7 @@ namespace CloudAPILib
                 dictionary.Add("productType", str_save_value[6]);
                 if (str_save_value[7] != "")
                 {
-                    dictionary.Add("customerId", str_save_value[6]);
+                    dictionary.Add("customerId", str_save_value[7]);
                 }
                 string postdata = JsonConvert.SerializeObject((object)dictionary);
                 string responseString = null;
