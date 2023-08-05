@@ -3371,7 +3371,7 @@ namespace XDC01Action1
                 else
                 {
                     logger.ShowLog("--- 请检查IR_LED灯功能");
-                    CustomDialog IRLedDialog = new CustomDialog("IR_LED检查测试（人工）", "请确认\r\n1、是否听到切换的动作音？\r\n2、六颗红外LED灯是否全亮？", true);
+                    CustomDialog IRLedDialog = new CustomDialog("IR_LED检查测试（人工）", "请确认\r\n六颗红外LED灯是否全亮？", true);
                     DialogResult IRLedresult = IRLedDialog.ShowDialog();
 
                     if (IRLedresult == DialogResult.Yes)
@@ -3398,7 +3398,7 @@ namespace XDC01Action1
                         NgItem = "ir_cut"
                     };
                     logger.ShowLog("--- 请检查IR_CUT夜视功能");
-                    CustomDialog IRCutDialog = new CustomDialog("IR_CUT检查测试（人工）", "是否已切换到夜视模式？", true);
+                    CustomDialog IRCutDialog = new CustomDialog("IR_CUT检查测试（人工）", "请确认\r\n1、是否听到切换的动作音？\r\n2、是否已切换到夜视模式？", true);
                     DialogResult IRCutresult = IRCutDialog.ShowDialog();
 
                     if (IRCutresult == DialogResult.Yes)
