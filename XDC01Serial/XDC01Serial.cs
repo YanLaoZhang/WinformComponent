@@ -309,7 +309,7 @@ namespace XDC01SerialLib
             {
                 string CMD_SYS_INFO = "ubus send \"d3_sys_info\" '{}'";
                 string str_ret_value = "";
-                if (SendCMDToXDC01(CMD_SYS_INFO, 3000, true, ref str_ret_value, ENDFLAG_1) == false)
+                if (SendCMDToXDC01(CMD_SYS_INFO, 3000, true, ref str_ret_value, "SystemParam.Backend =") == false)
                 {
                     str_error_log = $"发送获取系统信息指令[{CMD_SYS_INFO}]失败";
                     return false;
@@ -1846,7 +1846,7 @@ namespace XDC01SerialLib
             {
                 string CMD_SET_SN_UID = $"burn_UID_SN.sh {str_uid} {str_sn}";
                 string str_ret_value = "";
-                if (SendCMDToXDC01(CMD_SET_SN_UID, 5000, true, ref str_ret_value, ENDFLAG_1) == false)
+                if (SendCMDToXDC01(CMD_SET_SN_UID, 5000, true, ref str_ret_value, "{\"reg_data\":{") == false)
                 {
                     str_error_log = $"发送写入UID和SN指令[{CMD_SET_SN_UID}]失败";
                     return false;

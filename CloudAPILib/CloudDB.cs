@@ -22,6 +22,8 @@ namespace CloudAPILib
 
         private string posturl_check_SN_UID = "http://120.78.224.26:8080/XDC01Management/api/product/checkKey";
 
+        private string posturl_replace_SN_UID = "http://120.78.224.26:8080/XDC01Management/api/replacementSerialNumber";
+
         private string posturl_S030_pcba = "http://120.78.224.26:8080/XDC01Management/product-test-report/pcba";
 
         private string posturl_S130_focus = "http://120.78.224.26:8080/XDC01Management/product-test-report/focusing";
@@ -239,7 +241,7 @@ namespace CloudAPILib
                 dictionary.Add("uid", str_save_value[3]);
                 dictionary.Add("customerId", str_save_value[4]);
                 string postdata = JsonConvert.SerializeObject((object)dictionary);
-                if (!DealPost_replace_sn(posturl_check_SN_UID, postdata, ref responseString, str_token))
+                if (!DealPost_replace_sn(posturl_replace_SN_UID, postdata, ref responseString, str_token))
                 {
                     str_error_log = responseString;
                     return false;

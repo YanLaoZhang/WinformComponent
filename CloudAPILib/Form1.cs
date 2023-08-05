@@ -212,8 +212,8 @@ namespace CloudAPILib
                 {
                     return false;
                 }
-                cloudModel.str_mac_cloud = cloudModel.str_mac_cloud.Replace("macAddress:", "").Replace("sn:", "").Trim();
-                cloudModel.str_sn = cloudModel.str_sn.Replace("sn:", "").Replace("macAddress:", "").Trim();
+                //cloudModel.str_replace_mac = cloudModel.str_replace_mac.Replace("macAddress:", "").Replace("sn:", "").Trim();
+                //cloudModel.str_replace_sn = cloudModel.str_replace_sn.Replace("sn:", "").Replace("macAddress:", "").Trim();
                 return true;
             }
             catch (Exception ee)

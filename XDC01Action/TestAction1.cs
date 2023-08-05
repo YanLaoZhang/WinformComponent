@@ -2704,10 +2704,10 @@ namespace XDC01Action1
                         }
                         else
                         {
-                            logger.ShowLog($"--- 云端分配替换SN:{cloudModel.str_sn}");
-                            logger.ShowLog($"--- 云端分配替换UID:{cloudModel.str_uid}");
-                            logger.ShowLog($"--- 云端分配替换MAC:{cloudModel.str_mac_cloud}");
-                            testItem.StrVal = $"SN:{cloudModel.str_sn};UID:{cloudModel.str_uid};MAC:{cloudModel.str_mac_cloud}";
+                            logger.ShowLog($"--- 云端分配替换SN:{cloudModel.str_replace_sn}");
+                            logger.ShowLog($"--- 云端分配替换UID:{cloudModel.str_replace_uid}");
+                            logger.ShowLog($"--- 云端分配替换MAC:{cloudModel.str_replace_mac}");
+                            testItem.StrVal = $"SN:{cloudModel.str_replace_sn};UID:{cloudModel.str_replace_uid};MAC:{cloudModel.str_replace_mac}";
                             testItem.Result = "PASS";
                         }
                     }
@@ -2742,7 +2742,7 @@ namespace XDC01Action1
         /// </summary>
         /// <returns></returns>
         public List<TestItem> WriteSnUidToDUT(XDC01Serial xDC01Serial,
-            System.Windows.Forms.DataGridView dataGridView, int rowIndex, Logger logger, CloudModel cloudModel)
+            System.Windows.Forms.DataGridView dataGridView, int rowIndex, Logger logger, string str_write_sn, string str_write_uid, string str_cur_mac, string str_write_mac)
         {
             try
             {
@@ -2755,16 +2755,16 @@ namespace XDC01Action1
                 {
                     Name = "写入SN",
                     NgItem = "write_sn",
-                    Standard = cloudModel.str_sn,
+                    Standard = str_write_sn,
                 };
                 TestItem writeUID = new TestItem()
                 {
                     Name = "写入UID",
                     NgItem = "write_uid",
-                    Standard = cloudModel.str_uid,
+                    Standard = str_write_uid,
                 };
                 //-----写入SN/UID 
-                if (xDC01Serial.SetUIDandSN(cloudModel.str_uid, cloudModel.str_sn, ref str_error_log) == false)
+                if (xDC01Serial.SetUIDandSN(str_write_uid, str_write_sn, ref str_error_log) == false)
                 {
                     logger.ShowLog("-- 写SN或UID失败：" + str_error_log);
                     float Duration = (Environment.TickCount - start_time) / 1000.00f;
@@ -2781,7 +2781,7 @@ namespace XDC01Action1
                 else
                 {
                     logger.ShowLog("-- 写SN和UID完成");
-                    writeSN.StrVal = cloudModel.str_sn;
+                    writeSN.StrVal = str_write_sn;
                     writeSN.Result = "PASS";
                     writeSN.Duration = (Environment.TickCount - start_time) / 1000.00f;
                     dataGridView.Rows[rowIndex].Cells[5].Value = writeSN.StrVal;
@@ -2790,7 +2790,7 @@ namespace XDC01Action1
                     testItems.Add(writeSN);
 
                     rowIndex++;
-                    writeUID.StrVal = cloudModel.str_uid;
+                    writeUID.StrVal = str_write_uid;
                     writeUID.Result = "PASS";
                     writeUID.Duration = (Environment.TickCount - start_time) / 1000.00f;
                     //dataGridView.Rows.Add(writeUID.Name, writeUID.Standard, "-", "-", "-", writeUID.StrVal, writeUID.Result, writeUID.Duration.ToString("F2"));
@@ -2876,14 +2876,14 @@ namespace XDC01Action1
                 {
                     Name = "写入MAC",
                     NgItem = "write_mac",
-                    Standard = cloudModel.str_mac,
+                    Standard = str_write_mac,
                 };
                 str_error_log = "";
-                if (string.Equals(cloudModel.str_mac.ToUpper(), cloudModel.str_mac_cloud.ToUpper()))
+                if (string.Equals(str_cur_mac.ToUpper(), str_write_mac.ToUpper()))
                 {
                     logger.ShowLog("--- 设备原MAC地址和云端相同，不再重新写入");
                     writeMAC.Result = "PASS";
-                    writeMAC.StrVal = cloudModel.str_mac_cloud;
+                    writeMAC.StrVal = str_write_mac;
                     writeMAC.Duration = (Environment.TickCount - start_time) / 1000.00f;
                     //dataGridView.Rows.Add(writeMAC.Name, writeMAC.Standard, "-", "-", "-", writeMAC.StrVal, writeMAC.Result, writeMAC.Duration.ToString("F2"));
                     //dataGridView.Rows[rowIndex].Cells[1].Value = writeMAC.Standard;
@@ -2894,7 +2894,7 @@ namespace XDC01Action1
                 }
                 else
                 {
-                    if (xDC01Serial.SetSystemMac(cloudModel.str_mac_cloud, ref str_error_log) == false)
+                    if (xDC01Serial.SetSystemMac(str_write_mac, ref str_error_log) == false)
                     {
                         logger.ShowLog("--- 写MAC地址失败：" + str_error_log);
                         float Duration = (Environment.TickCount - start_time) / 1000.00f;
@@ -2922,14 +2922,14 @@ namespace XDC01Action1
                         else
                         {
                             writeMAC.StrVal = str_read_mac;
-                            if (string.Equals(str_read_mac.ToUpper(), cloudModel.str_mac_cloud.ToUpper()) == false)
+                            if (string.Equals(str_read_mac.ToUpper(), str_write_mac.ToUpper()) == false)
                             {
-                                logger.ShowLog("--- 读到的MAC：" + str_read_mac.ToUpper() + "和写入的MAC：" + cloudModel.str_mac_cloud.ToUpper() + "不一致");
+                                logger.ShowLog("--- 读到的MAC：" + str_read_mac.ToUpper() + "和写入的MAC：" + str_write_mac.ToUpper() + "不一致");
                                 writeMAC.Result = "FAIL";
                             }
                             else
                             {
-                                logger.ShowLog("--- 读到的MAC：" + str_read_mac.ToUpper() + "和写入的MAC：" + cloudModel.str_mac_cloud.ToUpper() + "一致");
+                                logger.ShowLog("--- 读到的MAC：" + str_read_mac.ToUpper() + "和写入的MAC：" + str_write_mac.ToUpper() + "一致");
                                 writeMAC.Result = "PASS";
                             }
                             writeMAC.Duration = (Environment.TickCount - start_time) / 1000.00f;
