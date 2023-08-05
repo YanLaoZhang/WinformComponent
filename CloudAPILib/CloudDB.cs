@@ -226,6 +226,49 @@ namespace CloudAPILib
                 return false;
             }
         }
+        
+        public bool cloud_up_Replace_SN(List<string> str_save_value, ref string str_error_log, ref string str_ret_sn, ref string str_ret_macaddress, ref string str_uid, string str_token)
+        {
+            string responseString = null;
+            try
+            {
+                Dictionary<string, string> dictionary = new Dictionary<string, string>();
+                dictionary.Add("pcbaRn", str_save_value[0]);
+                dictionary.Add("sn", str_save_value[1]);
+                dictionary.Add("macAddress", str_save_value[2]);
+                dictionary.Add("uid", str_save_value[3]);
+                dictionary.Add("customerId", str_save_value[4]);
+                string postdata = JsonConvert.SerializeObject((object)dictionary);
+                if (!DealPost_replace_sn(posturl_check_SN_UID, postdata, ref responseString, str_token))
+                {
+                    str_error_log = responseString;
+                    return false;
+                }
+
+                string[] array = responseString.Replace("{", "").Replace("}", "").Replace("\"", "")
+                    .Split(',');
+                string text = array[0].Replace("result:", "").ToLower();
+                string text2 = array[1].Replace("error:", "");
+                if (text.Trim() != "true")
+                {
+                    str_error_log = "result:false_error_code:" + text2;
+                    return false;
+                }
+
+                str_ret_sn = array[2].Replace("data:", "").Replace("sn:", "").Replace("\r", "")
+                    .Replace("\n", "")
+                    .Trim();
+                str_ret_macaddress = array[3].Replace("macAddress:", "");
+                str_uid = array[4].Replace("uid:", "");
+                str_error_log = responseString;
+                return true;
+            }
+            catch (Exception ex)
+            {
+                str_error_log = "check user error:[" + responseString + "]" + ex.Message.Replace("\r\n", "");
+                return false;
+            }
+        }
 
         public bool cloud_Find_Product_Key(List<string> str_save_value, ref string str_error_log, string str_token, ref string str_result, ref string str_ret_pcbaRN, ref string str_ret_SN, ref string str_ret_mac_Address, ref string str_ret_UID)
         {
@@ -849,6 +892,33 @@ namespace CloudAPILib
         }
 
         private bool DealPost_creat_sn_uid(string posturl, string postdata, ref string responseString, string str_header_value)
+        {
+            try
+            {
+                HttpWebRequest httpWebRequest = (HttpWebRequest)WebRequest.Create(posturl);
+                httpWebRequest.Method = "POST";
+                httpWebRequest.Timeout = 5800;
+                httpWebRequest.ContentType = "application/json";
+                httpWebRequest.Headers.Add(str_header_key, str_header_value);
+                byte[] bytes = Encoding.UTF8.GetBytes(postdata);
+                int num = bytes.Length;
+                httpWebRequest.ContentLength = num;
+                Stream requestStream = httpWebRequest.GetRequestStream();
+                requestStream.Write(bytes, 0, num);
+                requestStream.Close();
+                HttpWebResponse httpWebResponse = (HttpWebResponse)httpWebRequest.GetResponse();
+                string text = new StreamReader(httpWebResponse.GetResponseStream(), Encoding.GetEncoding("utf-8")).ReadToEnd();
+                responseString = text.ToString();
+                return true;
+            }
+            catch (Exception ex)
+            {
+                responseString = "DealPost--" + ex.Message + "Error";
+                return false;
+            }
+        }
+
+        private bool DealPost_replace_sn(string posturl, string postdata, ref string responseString, string str_header_value)
         {
             try
             {

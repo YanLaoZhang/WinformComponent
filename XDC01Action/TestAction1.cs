@@ -2658,6 +2658,86 @@ namespace XDC01Action1
         }
 
         /// <summary>
+        /// 申请替换SN/UID/MAC
+        /// </summary>
+        /// <param name="cloudLoginForm"></param>
+        /// <param name="dataGridView"></param>
+        /// <param name="logger"></param>
+        /// <param name="cloudModel"></param>
+        /// <returns></returns>
+        public TestItem ReplaceSNandUIDFromCloud(CloudLoginForm cloudLoginForm, System.Windows.Forms.DataGridView dataGridView, int rowIndex, Logger logger, CloudModel cloudModel)
+        {
+            try
+            {
+                int start_time = Environment.TickCount;
+                Font font = new Font("宋体", 9);
+                dataGridView.Rows[rowIndex].Cells[5].Style.Font = font;
+                TestItem testItem = new TestItem()
+                {
+                    Name = "申请替换SN/UID/MAC",
+                    NgItem = "replace_sn_uid_mac"
+                };
+                string str_error_log = "";
+                logger.ShowLog("-从云端申请替换SN\\UID\\MAC...");
+                // Setup4. 从云端申请SN\UID\MAC
+                string str_respone = "";
+                if (cloudLoginForm.cloud_token(cloudModel, ref str_respone))
+                {
+                    logger.ShowLog("--- 登录成功");
+                    str_respone = "";
+                    if (cloudLoginForm.cloud_create_token(cloudModel, ref str_respone))
+                    {
+                        logger.ShowLog("--- token创建成功");
+                        Delay(500);
+                        str_error_log = "";
+                        if (cloudLoginForm.ReplacementSNFromCloud(cloudModel, ref str_error_log) == false)
+                        {
+                            logger.ShowLog("--- 从云端获取替换MAC、SN和UID失败：" + str_error_log);
+                            //if (str_error_log.Contains("2017"))
+                            //{
+                            //    logger.ShowLog("解绑mac");
+                            //    cloudLoginForm.UnbindMAC(cloudModel, ref str_error_log);
+                            //    logger.ShowLog(str_error_log);
+                            //}
+                            //logger.ShowLog($"RN:{cloudModel.str_rn}需要云端解绑\r\nSN:{cloudModel.str_sn}");
+                            testItem.Result = "FAIL";
+                        }
+                        else
+                        {
+                            logger.ShowLog($"--- 云端分配替换SN:{cloudModel.str_sn}");
+                            logger.ShowLog($"--- 云端分配替换UID:{cloudModel.str_uid}");
+                            logger.ShowLog($"--- 云端分配替换MAC:{cloudModel.str_mac_cloud}");
+                            testItem.StrVal = $"SN:{cloudModel.str_sn};UID:{cloudModel.str_uid};MAC:{cloudModel.str_mac_cloud}";
+                            testItem.Result = "PASS";
+                        }
+                    }
+                    else
+                    {
+                        logger.ShowLog("--- token创建失败：" + str_respone);
+                        testItem.Result = "FAIL";
+                    }
+                }
+                else
+                {
+                    logger.ShowLog($"--- 登录失败：{str_respone}");
+                    testItem.Result = "FAIL";
+                }
+
+                testItem.Duration = (Environment.TickCount - start_time) / 1000.00f;
+                //dataGridView.Rows.Add(testItem.Name, "-", "-", "-", "-", "-", testItem.Result, testItem.Duration.ToString("F2"));
+                dataGridView.Rows[rowIndex].Cells[5].Value = testItem.StrVal;
+                dataGridView.Rows[rowIndex].Cells[6].Value = testItem.Result;
+                dataGridView.Rows[rowIndex].Cells[7].Value = testItem.Duration.ToString("F2");
+                return testItem;
+            }
+            catch (Exception ee)
+            {
+                logger.ShowLog($"从云端申请替换SN/UID/MAC发生异常：[{ee.Message}]");
+                return null;
+            }
+        }
+
+        /// <summary>
         /// SN/UID写入DUT
         /// </summary>
         /// <returns></returns>

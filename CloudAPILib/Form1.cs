@@ -184,6 +184,44 @@ namespace CloudAPILib
                 return false;
             }
         }
+
+        /// <summary>
+        /// 替换新SN
+        /// </summary>
+        /// <param name="str_error_log"></param>
+        /// <returns></returns>
+        public bool ReplacementSNFromCloud(CloudModel cloudModel, ref string str_error_log)
+        {
+            try
+            {
+                System_Cloud _cloud_up = new System_Cloud();
+                List<string> str_save_value = new List<string>
+                {
+                    cloudModel.str_rn,
+                    cloudModel.str_sn,
+                    cloudModel.str_mac,
+                    cloudModel.str_uid,
+                    cloudModel.str_customerId
+                };
+                if (_cloud_up.cloud_up_Replace_SN(str_save_value,
+                                                    ref str_error_log,
+                                                    ref cloudModel.str_replace_sn,
+                                                    ref cloudModel.str_replace_mac,
+                                                    ref cloudModel.str_replace_uid,
+                                                    cloudModel.str_token_creat) == false)
+                {
+                    return false;
+                }
+                cloudModel.str_mac_cloud = cloudModel.str_mac_cloud.Replace("macAddress:", "").Replace("sn:", "").Trim();
+                cloudModel.str_sn = cloudModel.str_sn.Replace("sn:", "").Replace("macAddress:", "").Trim();
+                return true;
+            }
+            catch (Exception ee)
+            {
+                str_error_log = ee.Message.Replace("\r", "").Replace("\n", "");
+                return false;
+            }
+        }
     }
 
     public class CloudModel
@@ -204,5 +242,8 @@ namespace CloudAPILib
         public string str_sn=string.Empty;
         public string str_uid=string.Empty;
         public string str_mac_cloud = string.Empty;
+        public string str_replace_mac = string.Empty;
+        public string str_replace_sn = string.Empty;
+        public string str_replace_uid = string.Empty;
     }
 }
