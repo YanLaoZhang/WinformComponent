@@ -664,7 +664,7 @@ namespace XDC01Action
             {
                 string printerName = comboBoxPrinter.SelectedItem.ToString();
                 string mac_count = numericUpDownMacCount.Value.ToString();
-                string mac = textBoxPrintSN.Text.Trim();
+                string mac = textBoxPrintMAC.Text.Trim();
                 string str_error_log = "";
                 if (!Printer.Print_MAC(printerName, mac, mac_count, ref str_error_log))
                 {
