@@ -3348,11 +3348,7 @@ namespace XDC01Action1
                 List<TestItem> testItems = new List<TestItem>();
                 logger.ShowLog("-进行夜视切换检查...");
                 //------12 通过vlc video确认IR Cut IR LED
-                TestItem IRLedTestItem = new TestItem()
-                {
-                    Name = "IR_LED",
-                    NgItem = "ir_led"
-                };
+                
                 string str_error_log = "";
                 if (xDC01Serial.SwitchIR_CUT_RTOS("on", ref str_error_log) == false)
                 {
@@ -3370,34 +3366,13 @@ namespace XDC01Action1
                 }
                 else
                 {
-                    logger.ShowLog("--- 请检查IR_LED灯功能");
-                    CustomDialog IRLedDialog = new CustomDialog("IR_LED检查测试（人工）", "请确认\r\n六颗红外LED灯是否全亮？", true);
-                    DialogResult IRLedresult = IRLedDialog.ShowDialog();
-
-                    if (IRLedresult == DialogResult.Yes)
-                    {
-                        logger.ShowLog($"--- IR_LED检查测试(人工)通过");
-                        IRLedTestItem.Result = "PASS";
-                    }
-                    else
-                    {
-                        logger.ShowLog($"--- IR_LED检查测试(人工)失败");
-                        IRLedTestItem.Result = "FAIL";
-                    }
-                    IRLedTestItem.Duration = (Environment.TickCount - start_time) / 1000.00f;
-                    //dataGridView.Rows.Add(IRLedTestItem.Name, "-", "-", "-", "-", "-", IRLedTestItem.Result, IRLedTestItem.Duration.ToString("F2"));
-                    dataGridView.Rows[rowIndex].Cells[6].Value = IRLedTestItem.Result;
-                    dataGridView.Rows[rowIndex].Cells[7].Value = IRLedTestItem.Duration.ToString("F2");
-                    testItems.Add(IRLedTestItem);
-
-                    rowIndex++;
+                    logger.ShowLog("--- 请检查IR_CUT夜视功能");
                     start_time = Environment.TickCount;
                     TestItem IRCutTestItem = new TestItem()
                     {
                         Name = "IR_CUT",
                         NgItem = "ir_cut"
                     };
-                    logger.ShowLog("--- 请检查IR_CUT夜视功能");
                     CustomDialog IRCutDialog = new CustomDialog("IR_CUT检查测试（人工）", "请确认\r\n1、是否听到切换的动作音？\r\n2、是否已切换到夜视模式？", true);
                     DialogResult IRCutresult = IRCutDialog.ShowDialog();
 
@@ -3416,6 +3391,33 @@ namespace XDC01Action1
                     dataGridView.Rows[rowIndex].Cells[6].Value = IRCutTestItem.Result;
                     dataGridView.Rows[rowIndex].Cells[7].Value = IRCutTestItem.Duration.ToString("F2");
                     testItems.Add(IRCutTestItem);
+
+                    rowIndex++;
+
+                    logger.ShowLog("--- 请检查IR_LED灯功能");
+                    TestItem IRLedTestItem = new TestItem()
+                    {
+                        Name = "IR_LED",
+                        NgItem = "ir_led"
+                    };
+                    CustomDialog IRLedDialog = new CustomDialog("IR_LED检查测试（人工）", "请确认\r\n六颗红外LED灯是否全亮？", true);
+                    DialogResult IRLedresult = IRLedDialog.ShowDialog();
+
+                    if (IRLedresult == DialogResult.Yes)
+                    {
+                        logger.ShowLog($"--- IR_LED检查测试(人工)通过");
+                        IRLedTestItem.Result = "PASS";
+                    }
+                    else
+                    {
+                        logger.ShowLog($"--- IR_LED检查测试(人工)失败");
+                        IRLedTestItem.Result = "FAIL";
+                    }
+                    IRLedTestItem.Duration = (Environment.TickCount - start_time) / 1000.00f;
+                    //dataGridView.Rows.Add(IRLedTestItem.Name, "-", "-", "-", "-", "-", IRLedTestItem.Result, IRLedTestItem.Duration.ToString("F2"));
+                    dataGridView.Rows[rowIndex].Cells[6].Value = IRLedTestItem.Result;
+                    dataGridView.Rows[rowIndex].Cells[7].Value = IRLedTestItem.Duration.ToString("F2");
+                    testItems.Add(IRLedTestItem);
 
                     return testItems;
                 }
