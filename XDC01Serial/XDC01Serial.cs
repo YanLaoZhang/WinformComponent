@@ -152,9 +152,9 @@ namespace XDC01SerialLib
                 _serialPort.PortName = newPort;
 
                 // 打开串口
-                _serialPort.Open();
                 _richTextBox.Text = string.Empty;
                 _serialPort.DataReceived += SerialPort_DataReceived;
+                _serialPort.Open();
 
                 return true;
             }
@@ -245,6 +245,10 @@ namespace XDC01SerialLib
             {
                 MessageBox.Show(ee.Message);
                 return false;
+            }
+            finally
+            {
+                ClosePort();
             }
         }
 

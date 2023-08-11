@@ -60,7 +60,7 @@ namespace TDMSerialLib
             _N = N;
 
             // 绑定 DataReceived 事件处理程序
-            serialPort.DataReceived += SerialPort_DataReceived;
+            _serialPort.DataReceived += SerialPort_DataReceived;
         }
 
         // DataReceived 事件处理程序
@@ -129,10 +129,10 @@ namespace TDMSerialLib
                 // 切换串口号
                 _serialPort.PortName = newPort;
 
-                // 打开串口
-                _serialPort.Open();
                 //_richTextBox.Text = string.Empty;
                 _serialPort.DataReceived += SerialPort_DataReceived;
+                // 打开串口
+                _serialPort.Open();
 
                 return true;
             }
