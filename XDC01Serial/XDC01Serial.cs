@@ -248,7 +248,7 @@ namespace XDC01SerialLib
             }
             finally
             {
-                ClosePort();
+                //ClosePort();
             }
         }
 

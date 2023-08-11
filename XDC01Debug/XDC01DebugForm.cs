@@ -523,7 +523,7 @@ namespace XDC01Debug
             serial.SetPIR("off", ref str_error_log);
         }
 
-        private void BtnPCBARfTx_Click(object sender, EventArgs e)
+        /*private void BtnPCBARfTx_Click(object sender, EventArgs e)
         {
             if (serial == null)
             {
@@ -540,7 +540,7 @@ namespace XDC01Debug
             string str_index = CbxPCBARfIndex.SelectedIndex.ToString();
             string str_error_log = "";
             serial.PCBA_RFTX(str_index, ref str_error_log);
-        }
+        }*/
 
         private void BtnRfTx_Click(object sender, EventArgs e)
         {
@@ -853,8 +853,13 @@ namespace XDC01Debug
                 comboBoxCurPort.Focus();
                 return;
             }
-            string str_wifi_ssid = textBoxWriteWiFiSSID.Text;
-            string str_wifi_pwd = textBoxWriteWiFiPWD.Text;
+            string str_wifi_ssid = textBoxWriteWiFiSSID.Text.Trim();
+            string str_wifi_pwd = textBoxWriteWiFiPWD.Text.Trim();
+            if (str_wifi_ssid.Length == 0 || str_wifi_pwd.Length == 0)
+            {
+                MessageBox.Show("WiFi账号或密码不能为空");
+                return;
+            }
             string str_error_log = "";
             if(serial.SetWIFIConfig(str_wifi_ssid, str_wifi_pwd, ref str_error_log))
             {
@@ -953,5 +958,161 @@ namespace XDC01Debug
             }
         }
 
+        private void BtnOpenMaxHold_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                BtnOpenMaxHold.Enabled = false;
+                DSA700Lib.CVisaOpt_control _DSA700 = new DSA700Lib.CVisaOpt_control();
+                string str_ResourceName = "";
+                string str_dsa700_device = "";
+                if (_DSA700.Connect_device(ref str_ResourceName, ref str_dsa700_device) == false)
+                {
+                    MessageBox.Show("--- 连接频谱仪失败...");
+                }
+                else
+                {
+                    string str_dsa700_ret_value = "";
+                    if (_DSA700.TRACe_n_MODE("MAXHold", false, ref str_dsa700_ret_value) == false)
+                    {
+                        MessageBox.Show($"打开最大保持失败[{str_dsa700_ret_value}]");
+                    }
+                }
+            }
+            catch (Exception ee)
+            {
+                MessageBox.Show($"频谱仪打开最大保持发生异常{ee.Message}");
+            }
+            finally
+            {
+                BtnOpenMaxHold.Enabled = true;
+            }
+        }
+
+        private void BtnCloseMaxHold_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                BtnCloseMaxHold.Enabled = false;
+                DSA700Lib.CVisaOpt_control _DSA700 = new DSA700Lib.CVisaOpt_control();
+                string str_ResourceName = "";
+                string str_dsa700_device = "";
+                if (_DSA700.Connect_device(ref str_ResourceName, ref str_dsa700_device) == false)
+                {
+                    MessageBox.Show("--- 连接频谱仪失败...");
+                }
+                else
+                {
+                    string str_dsa700_ret_value = "";
+                    if (_DSA700.TRACe_n_MODE("WRITe", false, ref str_dsa700_ret_value) == false)
+                    {
+                        MessageBox.Show($"清除写入失败[{str_dsa700_ret_value}]");
+                    }
+                }
+            }
+            catch (Exception ee)
+            {
+                MessageBox.Show($"频谱仪清除写入发生异常{ee.Message}");
+            }
+            finally
+            {
+                BtnCloseMaxHold.Enabled = true;
+            }
+        }
+
+        private void BtnReadRFrefrequence_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                BtnReadRFrefrequence.Enabled = false;
+                textBoxRFrefrequence.Text = string.Empty;
+                DSA700Lib.CVisaOpt_control _DSA700 = new DSA700Lib.CVisaOpt_control();
+                string str_ResourceName = "";
+                string str_dsa700_device = "";
+                if (_DSA700.Connect_device(ref str_ResourceName, ref str_dsa700_device) == false)
+                {
+                    MessageBox.Show("--- 连接频谱仪失败...");
+                }
+                else
+                {
+                    string str_rf_frequency = "";
+                    if (_DSA700.read_read_frequency(ref str_rf_frequency))
+                    {
+                        str_rf_frequency = str_rf_frequency.Replace("\r\n", "");
+                        if (str_rf_frequency != "0")
+                        {
+                            float val = (float)Math.Round(double.Parse(str_rf_frequency) / 1000000, 2);
+                            textBoxRFrefrequence.Text = val.ToString();
+                        }
+                        else
+                        {
+                            MessageBox.Show("--- RF频率测试异常");
+                        }
+                        
+                    }
+                    else
+                    {
+                        MessageBox.Show("--- 读取频谱仪频率失败");
+                    }
+                }
+            }
+            catch (Exception ee)
+            {
+                MessageBox.Show($"发生异常{ee.Message}");
+            }
+            finally
+            {
+                BtnReadRFrefrequence.Enabled = true;
+            }
+        }
+
+        private void BtnReadRFpower_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                BtnReadRFpower.Enabled = false;
+                textBoxRFpower.Text = string.Empty;
+                DSA700Lib.CVisaOpt_control _DSA700 = new DSA700Lib.CVisaOpt_control();
+                string str_ResourceName = "";
+                string str_dsa700_device = "";
+                if (_DSA700.Connect_device(ref str_ResourceName, ref str_dsa700_device) == false)
+                {
+                    MessageBox.Show("--- 连接频谱仪失败...");
+                }
+                else
+                {
+                    string str_rf_power = "";
+                    if (_DSA700.read_read_dbm(ref str_rf_power))
+                    {
+                        str_rf_power = str_rf_power.Replace("\r\n", "");
+                        if (str_rf_power != "0" && str_rf_power.ToUpper().Contains("E"))
+                        {
+                            Decimal dData = 0.0M;
+                            if (str_rf_power.Contains("E"))
+                            {
+                                dData = Decimal.Parse(str_rf_power, System.Globalization.NumberStyles.Float);
+                            }
+                            textBoxRFpower.Text = dData.ToString();
+                        }
+                        else
+                        {
+                            MessageBox.Show("--- RF功率测试异常");
+                        }
+                    }
+                    else
+                    {
+                        MessageBox.Show("--- 读取频谱仪功率失败");
+                    }
+                }
+            }
+            catch (Exception ee)
+            {
+                MessageBox.Show($"发生异常{ee.Message}");
+            }
+            finally
+            {
+                BtnReadRFpower.Enabled = true;
+            }
+        }
     }
 }

@@ -1509,7 +1509,16 @@ namespace XDC01Action1
                     logger.ShowLog($"读取IP失败：{str_error_log}");
                     float Duration = (Environment.TickCount - start_time) / 1000.00f;
                     //dataGridView.Rows.Add("RTSP视频检查", "-", "-", "-", "-", "设备WiFi连接异常", "FAIL", Duration.ToString("F2"));
-                    for (int i = 0; i < 3; i++)
+                    int row = 1;
+                    if (ir_led)
+                    {
+                        row++;
+                    }
+                    if (ir_cut)
+                    {
+                        row++;
+                    }
+                    for (int i = 0; i < row; i++)
                     {
                         dataGridView.Rows[rowIndex+i].Cells[5].Value = "设备WiFi连接异常";
                         dataGridView.Rows[rowIndex+i].Cells[6].Value = "FAIL";
@@ -1527,7 +1536,16 @@ namespace XDC01Action1
                         logger.ShowLog($"打开实时影像失败:{str_error_log}");
                         float Duration = (Environment.TickCount - start_time) / 1000.00f;
                         //dataGridView.Rows.Add("RTSP视频检查", "-", "-", "-", "-", "串口指令发送异常", "FAIL", Duration.ToString("F2"));
-                        for (int i = 0; i < 3; i++)
+                        int row = 1;
+                        if (ir_led)
+                        {
+                            row++;
+                        }
+                        if (ir_cut)
+                        {
+                            row++;
+                        }
+                        for (int i = 0; i < row; i++)
                         {
                             dataGridView.Rows[rowIndex+i].Cells[5].Value = "串口指令发送异常";
                             dataGridView.Rows[rowIndex+i].Cells[6].Value = "FAIL";
@@ -1561,6 +1579,35 @@ namespace XDC01Action1
                         dataGridView.Rows[rowIndex].Cells[7].Value = vlcTestItem.Duration.ToString("F2");
                         testItems.Add(vlcTestItem);
 
+                        if (ir_cut)
+                        {
+                            rowIndex++;
+                            start_time = Environment.TickCount;
+                            TestItem IRCutTestItem = new TestItem()
+                            {
+                                Name = "IR_CUT",
+                                NgItem = "ir_cut"
+                            };
+                            logger.ShowLog("--- 请检查IR_CUT夜视功能");
+                            CustomDialog IRCutDialog = new CustomDialog("IR_CUT检查测试（人工）", "是否已切换到夜视模式？", true);
+                            DialogResult IRCutresult = IRCutDialog.ShowDialog();
+
+                            if (IRCutresult == DialogResult.Yes)
+                            {
+                                logger.ShowLog($"--- IR_CUT检查测试(人工)通过");
+                                IRCutTestItem.Result = "PASS";
+                            }
+                            else
+                            {
+                                logger.ShowLog($"--- IR_CUT检查测试(人工)失败");
+                                IRCutTestItem.Result = "FAIL";
+                            }
+                            IRCutTestItem.Duration = (Environment.TickCount - start_time) / 1000.00f;
+                            //dataGridView.Rows.Add(IRCutTestItem.Name, "-", "-", "-", "-", "-", IRCutTestItem.Result, IRCutTestItem.Duration.ToString("F2"));
+                            dataGridView.Rows[rowIndex].Cells[6].Value = IRCutTestItem.Result;
+                            dataGridView.Rows[rowIndex].Cells[7].Value = IRCutTestItem.Duration.ToString("F2");
+                            testItems.Add(IRCutTestItem);
+                        }
                         if (ir_led)
                         {
                             rowIndex++;
@@ -1597,34 +1644,6 @@ namespace XDC01Action1
                             testItems.Add(IRLedTestItem);
                         }
 
-                        if (ir_cut)
-                        {
-                            rowIndex++;
-                            start_time = Environment.TickCount;
-                            TestItem IRCutTestItem = new TestItem() { 
-                                Name = "IR_CUT", 
-                                NgItem = "ir_cut" 
-                            };
-                            logger.ShowLog("--- 请检查IR_CUT夜视功能");
-                            CustomDialog IRCutDialog = new CustomDialog("IR_CUT检查测试（人工）", "是否已切换到夜视模式？", true);
-                            DialogResult IRCutresult = IRCutDialog.ShowDialog();
-
-                            if (IRCutresult == DialogResult.Yes)
-                            {
-                                logger.ShowLog($"--- IR_CUT检查测试(人工)通过");
-                                IRCutTestItem.Result = "PASS";
-                            }
-                            else
-                            {
-                                logger.ShowLog($"--- IR_CUT检查测试(人工)失败");
-                                IRCutTestItem.Result = "FAIL";
-                            }
-                            IRCutTestItem.Duration = (Environment.TickCount - start_time) / 1000.00f;
-                            //dataGridView.Rows.Add(IRCutTestItem.Name, "-", "-", "-", "-", "-", IRCutTestItem.Result, IRCutTestItem.Duration.ToString("F2"));
-                            dataGridView.Rows[rowIndex].Cells[6].Value = IRCutTestItem.Result;
-                            dataGridView.Rows[rowIndex].Cells[7].Value = IRCutTestItem.Duration.ToString("F2");
-                            testItems.Add(IRCutTestItem);
-                        }
                         vLC.Close();
 
                         return testItems;
@@ -2783,7 +2802,7 @@ namespace XDC01Action1
                     logger.ShowLog("-- 写SN和UID完成");
                     writeSN.StrVal = str_write_sn;
                     writeSN.Result = "PASS";
-                    writeSN.Duration = (Environment.TickCount - start_time) / 1000.00f;
+                    writeSN.Duration = 0.00f;
                     dataGridView.Rows[rowIndex].Cells[5].Value = writeSN.StrVal;
                     dataGridView.Rows[rowIndex].Cells[6].Value = writeSN.Result;
                     dataGridView.Rows[rowIndex].Cells[7].Value = writeSN.Duration.ToString("F2");

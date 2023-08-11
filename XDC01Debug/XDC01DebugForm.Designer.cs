@@ -122,10 +122,8 @@
             this.BtnReadLight = new System.Windows.Forms.Button();
             this.textBoxReadLight = new System.Windows.Forms.TextBox();
             this.groupBox14 = new System.Windows.Forms.GroupBox();
-            this.CbxPCBARfIndex = new System.Windows.Forms.ComboBox();
             this.BtnRfRx = new System.Windows.Forms.Button();
             this.BtnRfTx = new System.Windows.Forms.Button();
-            this.BtnPCBARfTx = new System.Windows.Forms.Button();
             this.groupBox9 = new System.Windows.Forms.GroupBox();
             this.BtnClosePIR = new System.Windows.Forms.Button();
             this.BtnOpenPIR = new System.Windows.Forms.Button();
@@ -165,6 +163,12 @@
             this.BtnOpenPort = new System.Windows.Forms.Button();
             this.labelRefreshPort = new System.Windows.Forms.Label();
             this.comboBoxCurPort = new System.Windows.Forms.ComboBox();
+            this.BtnOpenMaxHold = new System.Windows.Forms.Button();
+            this.BtnCloseMaxHold = new System.Windows.Forms.Button();
+            this.BtnReadRFrefrequence = new System.Windows.Forms.Button();
+            this.textBoxRFrefrequence = new System.Windows.Forms.TextBox();
+            this.BtnReadRFpower = new System.Windows.Forms.Button();
+            this.textBoxRFpower = new System.Windows.Forms.TextBox();
             this.groupBox5.SuspendLayout();
             this.groupBox17.SuspendLayout();
             this.groupBox12.SuspendLayout();
@@ -1117,9 +1121,9 @@
             // 
             this.groupBox6.Controls.Add(this.BtnReadLight);
             this.groupBox6.Controls.Add(this.textBoxReadLight);
-            this.groupBox6.Location = new System.Drawing.Point(6, 730);
+            this.groupBox6.Location = new System.Drawing.Point(6, 744);
             this.groupBox6.Name = "groupBox6";
-            this.groupBox6.Size = new System.Drawing.Size(337, 67);
+            this.groupBox6.Size = new System.Drawing.Size(337, 70);
             this.groupBox6.TabIndex = 62;
             this.groupBox6.TabStop = false;
             this.groupBox6.Text = "亮度值";
@@ -1144,33 +1148,24 @@
             // 
             // groupBox14
             // 
-            this.groupBox14.Controls.Add(this.CbxPCBARfIndex);
+            this.groupBox14.Controls.Add(this.textBoxRFpower);
+            this.groupBox14.Controls.Add(this.BtnReadRFpower);
+            this.groupBox14.Controls.Add(this.textBoxRFrefrequence);
+            this.groupBox14.Controls.Add(this.BtnReadRFrefrequence);
+            this.groupBox14.Controls.Add(this.BtnCloseMaxHold);
+            this.groupBox14.Controls.Add(this.BtnOpenMaxHold);
             this.groupBox14.Controls.Add(this.BtnRfRx);
             this.groupBox14.Controls.Add(this.BtnRfTx);
-            this.groupBox14.Controls.Add(this.BtnPCBARfTx);
-            this.groupBox14.Location = new System.Drawing.Point(6, 316);
+            this.groupBox14.Location = new System.Drawing.Point(6, 304);
             this.groupBox14.Name = "groupBox14";
-            this.groupBox14.Size = new System.Drawing.Size(337, 123);
+            this.groupBox14.Size = new System.Drawing.Size(337, 165);
             this.groupBox14.TabIndex = 61;
             this.groupBox14.TabStop = false;
             this.groupBox14.Text = "RF Mode";
             // 
-            // CbxPCBARfIndex
-            // 
-            this.CbxPCBARfIndex.FormattingEnabled = true;
-            this.CbxPCBARfIndex.Items.AddRange(new object[] {
-            "1",
-            "2",
-            "3",
-            "4"});
-            this.CbxPCBARfIndex.Location = new System.Drawing.Point(8, 41);
-            this.CbxPCBARfIndex.Name = "CbxPCBARfIndex";
-            this.CbxPCBARfIndex.Size = new System.Drawing.Size(103, 27);
-            this.CbxPCBARfIndex.TabIndex = 3;
-            // 
             // BtnRfRx
             // 
-            this.BtnRfRx.Location = new System.Drawing.Point(143, 83);
+            this.BtnRfRx.Location = new System.Drawing.Point(141, 28);
             this.BtnRfRx.Name = "BtnRfRx";
             this.BtnRfRx.Size = new System.Drawing.Size(128, 30);
             this.BtnRfRx.TabIndex = 2;
@@ -1180,7 +1175,7 @@
             // 
             // BtnRfTx
             // 
-            this.BtnRfTx.Location = new System.Drawing.Point(8, 83);
+            this.BtnRfTx.Location = new System.Drawing.Point(6, 28);
             this.BtnRfTx.Name = "BtnRfTx";
             this.BtnRfTx.Size = new System.Drawing.Size(129, 30);
             this.BtnRfTx.TabIndex = 1;
@@ -1188,30 +1183,20 @@
             this.BtnRfTx.UseVisualStyleBackColor = true;
             this.BtnRfTx.Click += new System.EventHandler(this.BtnRfTx_Click);
             // 
-            // BtnPCBARfTx
-            // 
-            this.BtnPCBARfTx.Location = new System.Drawing.Point(117, 38);
-            this.BtnPCBARfTx.Name = "BtnPCBARfTx";
-            this.BtnPCBARfTx.Size = new System.Drawing.Size(133, 30);
-            this.BtnPCBARfTx.TabIndex = 0;
-            this.BtnPCBARfTx.Text = "PCBA RF TX";
-            this.BtnPCBARfTx.UseVisualStyleBackColor = true;
-            this.BtnPCBARfTx.Click += new System.EventHandler(this.BtnPCBARfTx_Click);
-            // 
             // groupBox9
             // 
             this.groupBox9.Controls.Add(this.BtnClosePIR);
             this.groupBox9.Controls.Add(this.BtnOpenPIR);
-            this.groupBox9.Location = new System.Drawing.Point(6, 640);
+            this.groupBox9.Location = new System.Drawing.Point(6, 670);
             this.groupBox9.Name = "groupBox9";
-            this.groupBox9.Size = new System.Drawing.Size(337, 84);
+            this.groupBox9.Size = new System.Drawing.Size(337, 68);
             this.groupBox9.TabIndex = 60;
             this.groupBox9.TabStop = false;
             this.groupBox9.Text = "PIR切换";
             // 
             // BtnClosePIR
             // 
-            this.BtnClosePIR.Location = new System.Drawing.Point(164, 38);
+            this.BtnClosePIR.Location = new System.Drawing.Point(162, 28);
             this.BtnClosePIR.Name = "BtnClosePIR";
             this.BtnClosePIR.Size = new System.Drawing.Size(147, 30);
             this.BtnClosePIR.TabIndex = 1;
@@ -1221,7 +1206,7 @@
             // 
             // BtnOpenPIR
             // 
-            this.BtnOpenPIR.Location = new System.Drawing.Point(11, 38);
+            this.BtnOpenPIR.Location = new System.Drawing.Point(7, 28);
             this.BtnOpenPIR.Name = "BtnOpenPIR";
             this.BtnOpenPIR.Size = new System.Drawing.Size(147, 30);
             this.BtnOpenPIR.TabIndex = 0;
@@ -1233,7 +1218,7 @@
             // 
             this.groupBox8.Controls.Add(this.CbxLedColor);
             this.groupBox8.Controls.Add(this.BtnSetLEDColor);
-            this.groupBox8.Location = new System.Drawing.Point(6, 567);
+            this.groupBox8.Location = new System.Drawing.Point(6, 597);
             this.groupBox8.Name = "groupBox8";
             this.groupBox8.Size = new System.Drawing.Size(337, 67);
             this.groupBox8.TabIndex = 59;
@@ -1270,7 +1255,7 @@
             this.groupBox13.Controls.Add(this.BtnOpenIRLed);
             this.groupBox13.Controls.Add(this.BtnQuitBW);
             this.groupBox13.Controls.Add(this.BtnEnterBW);
-            this.groupBox13.Location = new System.Drawing.Point(6, 445);
+            this.groupBox13.Location = new System.Drawing.Point(6, 475);
             this.groupBox13.Name = "groupBox13";
             this.groupBox13.Size = new System.Drawing.Size(337, 116);
             this.groupBox13.TabIndex = 58;
@@ -1342,14 +1327,14 @@
             this.groupBox11.Controls.Add(this.BtnOpenMic);
             this.groupBox11.Location = new System.Drawing.Point(6, 87);
             this.groupBox11.Name = "groupBox11";
-            this.groupBox11.Size = new System.Drawing.Size(337, 223);
+            this.groupBox11.Size = new System.Drawing.Size(337, 211);
             this.groupBox11.TabIndex = 57;
             this.groupBox11.TabStop = false;
             this.groupBox11.Text = "麦克风测试";
             // 
             // textBoxMicResult
             // 
-            this.textBoxMicResult.Location = new System.Drawing.Point(243, 187);
+            this.textBoxMicResult.Location = new System.Drawing.Point(244, 174);
             this.textBoxMicResult.Name = "textBoxMicResult";
             this.textBoxMicResult.Size = new System.Drawing.Size(80, 29);
             this.textBoxMicResult.TabIndex = 15;
@@ -1357,7 +1342,7 @@
             // label12
             // 
             this.label12.AutoSize = true;
-            this.label12.Location = new System.Drawing.Point(168, 190);
+            this.label12.Location = new System.Drawing.Point(169, 177);
             this.label12.Name = "label12";
             this.label12.Size = new System.Drawing.Size(69, 19);
             this.label12.TabIndex = 14;
@@ -1365,7 +1350,7 @@
             // 
             // textBoxMicDelta
             // 
-            this.textBoxMicDelta.Location = new System.Drawing.Point(243, 152);
+            this.textBoxMicDelta.Location = new System.Drawing.Point(243, 139);
             this.textBoxMicDelta.Name = "textBoxMicDelta";
             this.textBoxMicDelta.Size = new System.Drawing.Size(80, 29);
             this.textBoxMicDelta.TabIndex = 13;
@@ -1373,7 +1358,7 @@
             // label11
             // 
             this.label11.AutoSize = true;
-            this.label11.Location = new System.Drawing.Point(178, 155);
+            this.label11.Location = new System.Drawing.Point(178, 145);
             this.label11.Name = "label11";
             this.label11.Size = new System.Drawing.Size(59, 19);
             this.label11.TabIndex = 12;
@@ -1381,7 +1366,7 @@
             // 
             // textBoxMicMaxAbs
             // 
-            this.textBoxMicMaxAbs.Location = new System.Drawing.Point(242, 117);
+            this.textBoxMicMaxAbs.Location = new System.Drawing.Point(243, 104);
             this.textBoxMicMaxAbs.Name = "textBoxMicMaxAbs";
             this.textBoxMicMaxAbs.Size = new System.Drawing.Size(81, 29);
             this.textBoxMicMaxAbs.TabIndex = 11;
@@ -1389,7 +1374,7 @@
             // label10
             // 
             this.label10.AutoSize = true;
-            this.label10.Location = new System.Drawing.Point(157, 120);
+            this.label10.Location = new System.Drawing.Point(158, 108);
             this.label10.Name = "label10";
             this.label10.Size = new System.Drawing.Size(79, 19);
             this.label10.TabIndex = 10;
@@ -1397,7 +1382,7 @@
             // 
             // BtnAutoTestMic
             // 
-            this.BtnAutoTestMic.Location = new System.Drawing.Point(6, 164);
+            this.BtnAutoTestMic.Location = new System.Drawing.Point(6, 139);
             this.BtnAutoTestMic.Name = "BtnAutoTestMic";
             this.BtnAutoTestMic.Size = new System.Drawing.Size(145, 31);
             this.BtnAutoTestMic.TabIndex = 9;
@@ -1408,7 +1393,7 @@
             // label9
             // 
             this.label9.AutoSize = true;
-            this.label9.Location = new System.Drawing.Point(205, 79);
+            this.label9.Location = new System.Drawing.Point(205, 75);
             this.label9.Name = "label9";
             this.label9.Size = new System.Drawing.Size(28, 19);
             this.label9.TabIndex = 8;
@@ -1416,14 +1401,14 @@
             // 
             // textBoxRecordDuration
             // 
-            this.textBoxRecordDuration.Location = new System.Drawing.Point(139, 76);
+            this.textBoxRecordDuration.Location = new System.Drawing.Point(139, 65);
             this.textBoxRecordDuration.Name = "textBoxRecordDuration";
             this.textBoxRecordDuration.Size = new System.Drawing.Size(60, 29);
             this.textBoxRecordDuration.TabIndex = 4;
             // 
             // BtnPlayRecord
             // 
-            this.BtnPlayRecord.Location = new System.Drawing.Point(6, 111);
+            this.BtnPlayRecord.Location = new System.Drawing.Point(6, 102);
             this.BtnPlayRecord.Name = "BtnPlayRecord";
             this.BtnPlayRecord.Size = new System.Drawing.Size(127, 31);
             this.BtnPlayRecord.TabIndex = 3;
@@ -1433,7 +1418,7 @@
             // 
             // BtnRecordMic
             // 
-            this.BtnRecordMic.Location = new System.Drawing.Point(6, 74);
+            this.BtnRecordMic.Location = new System.Drawing.Point(6, 65);
             this.BtnRecordMic.Name = "BtnRecordMic";
             this.BtnRecordMic.Size = new System.Drawing.Size(127, 31);
             this.BtnRecordMic.TabIndex = 2;
@@ -1624,6 +1609,64 @@
             this.comboBoxCurPort.TabIndex = 30;
             this.comboBoxCurPort.SelectedValueChanged += new System.EventHandler(this.comboBoxCurPort_SelectedValueChanged);
             // 
+            // BtnOpenMaxHold
+            // 
+            this.BtnOpenMaxHold.Font = new System.Drawing.Font("宋体", 10F);
+            this.BtnOpenMaxHold.Location = new System.Drawing.Point(7, 64);
+            this.BtnOpenMaxHold.Name = "BtnOpenMaxHold";
+            this.BtnOpenMaxHold.Size = new System.Drawing.Size(129, 30);
+            this.BtnOpenMaxHold.TabIndex = 3;
+            this.BtnOpenMaxHold.Text = "打开最大保持";
+            this.BtnOpenMaxHold.UseVisualStyleBackColor = true;
+            this.BtnOpenMaxHold.Click += new System.EventHandler(this.BtnOpenMaxHold_Click);
+            // 
+            // BtnCloseMaxHold
+            // 
+            this.BtnCloseMaxHold.Font = new System.Drawing.Font("宋体", 10F);
+            this.BtnCloseMaxHold.Location = new System.Drawing.Point(142, 64);
+            this.BtnCloseMaxHold.Name = "BtnCloseMaxHold";
+            this.BtnCloseMaxHold.Size = new System.Drawing.Size(129, 30);
+            this.BtnCloseMaxHold.TabIndex = 4;
+            this.BtnCloseMaxHold.Text = "关闭最大保持";
+            this.BtnCloseMaxHold.UseVisualStyleBackColor = true;
+            this.BtnCloseMaxHold.Click += new System.EventHandler(this.BtnCloseMaxHold_Click);
+            // 
+            // BtnReadRFrefrequence
+            // 
+            this.BtnReadRFrefrequence.Font = new System.Drawing.Font("宋体", 10F);
+            this.BtnReadRFrefrequence.Location = new System.Drawing.Point(7, 100);
+            this.BtnReadRFrefrequence.Name = "BtnReadRFrefrequence";
+            this.BtnReadRFrefrequence.Size = new System.Drawing.Size(70, 30);
+            this.BtnReadRFrefrequence.TabIndex = 5;
+            this.BtnReadRFrefrequence.Text = "读频率";
+            this.BtnReadRFrefrequence.UseVisualStyleBackColor = true;
+            this.BtnReadRFrefrequence.Click += new System.EventHandler(this.BtnReadRFrefrequence_Click);
+            // 
+            // textBoxRFrefrequence
+            // 
+            this.textBoxRFrefrequence.Location = new System.Drawing.Point(83, 102);
+            this.textBoxRFrefrequence.Name = "textBoxRFrefrequence";
+            this.textBoxRFrefrequence.Size = new System.Drawing.Size(77, 29);
+            this.textBoxRFrefrequence.TabIndex = 9;
+            // 
+            // BtnReadRFpower
+            // 
+            this.BtnReadRFpower.Font = new System.Drawing.Font("宋体", 10F);
+            this.BtnReadRFpower.Location = new System.Drawing.Point(177, 101);
+            this.BtnReadRFpower.Name = "BtnReadRFpower";
+            this.BtnReadRFpower.Size = new System.Drawing.Size(71, 30);
+            this.BtnReadRFpower.TabIndex = 10;
+            this.BtnReadRFpower.Text = "读功率";
+            this.BtnReadRFpower.UseVisualStyleBackColor = true;
+            this.BtnReadRFpower.Click += new System.EventHandler(this.BtnReadRFpower_Click);
+            // 
+            // textBoxRFpower
+            // 
+            this.textBoxRFpower.Location = new System.Drawing.Point(254, 101);
+            this.textBoxRFpower.Name = "textBoxRFpower";
+            this.textBoxRFpower.Size = new System.Drawing.Size(77, 29);
+            this.textBoxRFpower.TabIndex = 11;
+            // 
             // XDC01DebugForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
@@ -1667,6 +1710,7 @@
             this.groupBox6.ResumeLayout(false);
             this.groupBox6.PerformLayout();
             this.groupBox14.ResumeLayout(false);
+            this.groupBox14.PerformLayout();
             this.groupBox9.ResumeLayout(false);
             this.groupBox8.ResumeLayout(false);
             this.groupBox13.ResumeLayout(false);
@@ -1796,10 +1840,8 @@
         private System.Windows.Forms.ComboBox CbxWavIndex;
         private System.Windows.Forms.Button BtnPlayWav;
         private System.Windows.Forms.GroupBox groupBox14;
-        private System.Windows.Forms.ComboBox CbxPCBARfIndex;
         private System.Windows.Forms.Button BtnRfRx;
         private System.Windows.Forms.Button BtnRfTx;
-        private System.Windows.Forms.Button BtnPCBARfTx;
         private System.Windows.Forms.GroupBox groupBox9;
         private System.Windows.Forms.Button BtnClosePIR;
         private System.Windows.Forms.Button BtnOpenPIR;
@@ -1823,6 +1865,12 @@
         private System.Windows.Forms.GroupBox groupBox16;
         private System.Windows.Forms.GroupBox groupBox18;
         private System.Windows.Forms.GroupBox groupBox19;
+        private System.Windows.Forms.Button BtnOpenMaxHold;
+        private System.Windows.Forms.Button BtnCloseMaxHold;
+        private System.Windows.Forms.Button BtnReadRFrefrequence;
+        private System.Windows.Forms.TextBox textBoxRFrefrequence;
+        private System.Windows.Forms.TextBox textBoxRFpower;
+        private System.Windows.Forms.Button BtnReadRFpower;
     }
 }
 
