@@ -493,6 +493,7 @@ namespace XDC01SerialLib
                 if (!mac_check(str_mac, 17))
                 {
                     str_error_log = $"mac格式错误:[{str_mac}]";
+                    str_mac = "error";
                     return false;
                 }
 
