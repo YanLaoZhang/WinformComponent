@@ -1579,6 +1579,16 @@ namespace XDC01Action1
                         dataGridView.Rows[rowIndex].Cells[7].Value = vlcTestItem.Duration.ToString("F2");
                         testItems.Add(vlcTestItem);
 
+                        if(ir_cut || ir_led)
+                        {
+                            logger.ShowLog($"切换夜视");
+                            str_error_log = "";
+                            if (xDC01Serial.SwitchIR_CUT("on", ref str_error_log) == false)
+                            {
+                                logger.ShowLog($"切换夜视模式异常：[{str_error_log}]");
+                            }
+                        }
+
                         if (ir_cut)
                         {
                             rowIndex++;
@@ -1618,11 +1628,6 @@ namespace XDC01Action1
                                 Name = "IR_LED", 
                                 NgItem = "ir_led" 
                             };
-                            str_error_log = "";
-                            if (xDC01Serial.SwitchIR_CUT("on", ref str_error_log) == false)
-                            {
-                                logger.ShowLog($"切换夜视模式异常：[{str_error_log}]");
-                            }
                             logger.ShowLog("--- 请检查IR_LED灯功能");
                             CustomDialog IRLedDialog = new CustomDialog("IR_LED检查测试（人工）", "请检查六颗红外灯是否全亮？", true);
                             DialogResult IRLedresult = IRLedDialog.ShowDialog();
@@ -1644,6 +1649,7 @@ namespace XDC01Action1
                             testItems.Add(IRLedTestItem);
                         }
 
+                        logger.ShowLog($"关闭vlc界面");
                         vLC.Close();
 
                         return testItems;

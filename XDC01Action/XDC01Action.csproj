@@ -102,8 +102,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\Release\TDMSerial.dll</HintPath>
     </Reference>
-    <Reference Include="VLCForm">
-      <HintPath>..\XDC01_TestAction\bin\Debug\libs\VLCForm.dll</HintPath>
+    <Reference Include="VLCForm, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Release\VLCForm.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="XDC01Serial">
