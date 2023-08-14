@@ -22,6 +22,23 @@ namespace XDC01Debug
 
         private PCCommand pcCommand;
 
+        /// <summary>
+        /// 非阻塞式等待
+        /// </summary>
+        /// <param name="t"></param>
+        public void Delay(int t)
+        {
+            int numa = Environment.TickCount;
+            while (true)
+            {
+                Application.DoEvents();
+                if (Environment.TickCount - numa > t)
+                {
+                    break;
+                }
+            }
+        }
+
         public XDC01DebugForm()
         {
             InitializeComponent();
@@ -596,7 +613,23 @@ namespace XDC01Debug
                 // 打开iperf3
                 pcCommand = new PCCommand(richTextBoxPCCmd);
                 str_error_log = "";
-                if (pcCommand.OpenIperf3(ref str_error_log) == false)
+                pcCommand.OpenIperf3(ref str_error_log);
+
+                Delay(1000);
+                bool Isiperf3 = false;
+                for (int i = 0; i < 3; i++)
+                {
+                    if (pcCommand.CheckIperf3(false))
+                    {
+                        Isiperf3 = true;
+                        break;
+                    }
+                    else
+                    {
+                        Delay(500);
+                    }
+                }
+                if (Isiperf3 == false)
                 {
                     MessageBox.Show($"打开iPerf3失败：[{str_error_log}]");
                     return;
@@ -650,7 +683,23 @@ namespace XDC01Debug
                 // 打开iperf3
                 pcCommand = new PCCommand(richTextBoxPCCmd);
                 str_error_log = "";
-                if (pcCommand.OpenIperf3(ref str_error_log) == false)
+                pcCommand.OpenIperf3(ref str_error_log);
+
+                Delay(1000);
+                bool Isiperf3 = false;
+                for (int i = 0; i < 3; i++)
+                {
+                    if (pcCommand.CheckIperf3(false))
+                    {
+                        Isiperf3 = true;
+                        break;
+                    }
+                    else
+                    {
+                        Delay(500);
+                    }
+                }
+                if (Isiperf3 == false)
                 {
                     MessageBox.Show($"打开iPerf3失败：[{str_error_log}]");
                     return;
