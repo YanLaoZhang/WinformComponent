@@ -33,11 +33,6 @@ namespace XDC01Debug
             RefreshLocalIP();
         }
 
-        private void labelRefreshPort_Click(object sender, EventArgs e)
-        {
-            RefreshPort();
-        }
-
         private void RefreshPort()
         {
             comboBoxCurPort.Items.Clear();
@@ -55,11 +50,6 @@ namespace XDC01Debug
             {
                 comboBoxServerIp.Items.Add(ip);
             }
-        }
-
-        private void labelLocalIP_Click(object sender, EventArgs e)
-        {
-            RefreshLocalIP();
         }
 
         private void BtnOpenPort_Click(object sender, EventArgs e)
@@ -1113,6 +1103,20 @@ namespace XDC01Debug
             {
                 BtnReadRFpower.Enabled = true;
             }
+        }
+
+        private void comboBoxCurPort_DropDown(object sender, EventArgs e)
+        {
+            comboBoxCurPort.Items.Clear();
+            foreach(string port in System.IO.Ports.SerialPort.GetPortNames())
+            {
+                comboBoxCurPort.Items.Add(port);
+            }
+        }
+
+        private void comboBoxServerIp_DropDown(object sender, EventArgs e)
+        {
+            RefreshLocalIP();
         }
     }
 }

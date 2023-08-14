@@ -122,6 +122,12 @@
             this.BtnReadLight = new System.Windows.Forms.Button();
             this.textBoxReadLight = new System.Windows.Forms.TextBox();
             this.groupBox14 = new System.Windows.Forms.GroupBox();
+            this.textBoxRFpower = new System.Windows.Forms.TextBox();
+            this.BtnReadRFpower = new System.Windows.Forms.Button();
+            this.textBoxRFrefrequence = new System.Windows.Forms.TextBox();
+            this.BtnReadRFrefrequence = new System.Windows.Forms.Button();
+            this.BtnCloseMaxHold = new System.Windows.Forms.Button();
+            this.BtnOpenMaxHold = new System.Windows.Forms.Button();
             this.BtnRfRx = new System.Windows.Forms.Button();
             this.BtnRfTx = new System.Windows.Forms.Button();
             this.groupBox9 = new System.Windows.Forms.GroupBox();
@@ -163,12 +169,6 @@
             this.BtnOpenPort = new System.Windows.Forms.Button();
             this.labelRefreshPort = new System.Windows.Forms.Label();
             this.comboBoxCurPort = new System.Windows.Forms.ComboBox();
-            this.BtnOpenMaxHold = new System.Windows.Forms.Button();
-            this.BtnCloseMaxHold = new System.Windows.Forms.Button();
-            this.BtnReadRFrefrequence = new System.Windows.Forms.Button();
-            this.textBoxRFrefrequence = new System.Windows.Forms.TextBox();
-            this.BtnReadRFpower = new System.Windows.Forms.Button();
-            this.textBoxRFpower = new System.Windows.Forms.TextBox();
             this.groupBox5.SuspendLayout();
             this.groupBox17.SuspendLayout();
             this.groupBox12.SuspendLayout();
@@ -326,12 +326,7 @@
             "T020",
             "T030",
             "T040",
-            "T050",
-            "T060",
-            "T070",
-            "T080",
-            "T100",
-            "T110"});
+            "T050"});
             this.CbxWriteTagNumRTOS.Location = new System.Drawing.Point(141, 82);
             this.CbxWriteTagNumRTOS.Name = "CbxWriteTagNumRTOS";
             this.CbxWriteTagNumRTOS.Size = new System.Drawing.Size(89, 27);
@@ -467,6 +462,7 @@
             this.comboBoxServerIp.Name = "comboBoxServerIp";
             this.comboBoxServerIp.Size = new System.Drawing.Size(177, 27);
             this.comboBoxServerIp.TabIndex = 19;
+            this.comboBoxServerIp.DropDown += new System.EventHandler(this.comboBoxServerIp_DropDown);
             // 
             // label21
             // 
@@ -513,7 +509,6 @@
             this.labelLocalIP.Size = new System.Drawing.Size(105, 19);
             this.labelLocalIP.TabIndex = 13;
             this.labelLocalIP.Text = "服务端IP：";
-            this.labelLocalIP.Click += new System.EventHandler(this.labelLocalIP_Click);
             // 
             // label15
             // 
@@ -720,12 +715,7 @@
             "T020",
             "T030",
             "T040",
-            "T050",
-            "T060",
-            "T070",
-            "T080",
-            "T100",
-            "T110"});
+            "T050"});
             this.comboBoxWriteTagNum.Location = new System.Drawing.Point(132, 62);
             this.comboBoxWriteTagNum.Name = "comboBoxWriteTagNum";
             this.comboBoxWriteTagNum.Size = new System.Drawing.Size(116, 27);
@@ -1163,6 +1153,64 @@
             this.groupBox14.TabStop = false;
             this.groupBox14.Text = "RF Mode";
             // 
+            // textBoxRFpower
+            // 
+            this.textBoxRFpower.Location = new System.Drawing.Point(254, 101);
+            this.textBoxRFpower.Name = "textBoxRFpower";
+            this.textBoxRFpower.Size = new System.Drawing.Size(77, 29);
+            this.textBoxRFpower.TabIndex = 11;
+            // 
+            // BtnReadRFpower
+            // 
+            this.BtnReadRFpower.Font = new System.Drawing.Font("宋体", 10F);
+            this.BtnReadRFpower.Location = new System.Drawing.Point(177, 101);
+            this.BtnReadRFpower.Name = "BtnReadRFpower";
+            this.BtnReadRFpower.Size = new System.Drawing.Size(71, 30);
+            this.BtnReadRFpower.TabIndex = 10;
+            this.BtnReadRFpower.Text = "读功率";
+            this.BtnReadRFpower.UseVisualStyleBackColor = true;
+            this.BtnReadRFpower.Click += new System.EventHandler(this.BtnReadRFpower_Click);
+            // 
+            // textBoxRFrefrequence
+            // 
+            this.textBoxRFrefrequence.Location = new System.Drawing.Point(83, 102);
+            this.textBoxRFrefrequence.Name = "textBoxRFrefrequence";
+            this.textBoxRFrefrequence.Size = new System.Drawing.Size(77, 29);
+            this.textBoxRFrefrequence.TabIndex = 9;
+            // 
+            // BtnReadRFrefrequence
+            // 
+            this.BtnReadRFrefrequence.Font = new System.Drawing.Font("宋体", 10F);
+            this.BtnReadRFrefrequence.Location = new System.Drawing.Point(7, 100);
+            this.BtnReadRFrefrequence.Name = "BtnReadRFrefrequence";
+            this.BtnReadRFrefrequence.Size = new System.Drawing.Size(70, 30);
+            this.BtnReadRFrefrequence.TabIndex = 5;
+            this.BtnReadRFrefrequence.Text = "读频率";
+            this.BtnReadRFrefrequence.UseVisualStyleBackColor = true;
+            this.BtnReadRFrefrequence.Click += new System.EventHandler(this.BtnReadRFrefrequence_Click);
+            // 
+            // BtnCloseMaxHold
+            // 
+            this.BtnCloseMaxHold.Font = new System.Drawing.Font("宋体", 10F);
+            this.BtnCloseMaxHold.Location = new System.Drawing.Point(142, 64);
+            this.BtnCloseMaxHold.Name = "BtnCloseMaxHold";
+            this.BtnCloseMaxHold.Size = new System.Drawing.Size(129, 30);
+            this.BtnCloseMaxHold.TabIndex = 4;
+            this.BtnCloseMaxHold.Text = "关闭最大保持";
+            this.BtnCloseMaxHold.UseVisualStyleBackColor = true;
+            this.BtnCloseMaxHold.Click += new System.EventHandler(this.BtnCloseMaxHold_Click);
+            // 
+            // BtnOpenMaxHold
+            // 
+            this.BtnOpenMaxHold.Font = new System.Drawing.Font("宋体", 10F);
+            this.BtnOpenMaxHold.Location = new System.Drawing.Point(7, 64);
+            this.BtnOpenMaxHold.Name = "BtnOpenMaxHold";
+            this.BtnOpenMaxHold.Size = new System.Drawing.Size(129, 30);
+            this.BtnOpenMaxHold.TabIndex = 3;
+            this.BtnOpenMaxHold.Text = "打开最大保持";
+            this.BtnOpenMaxHold.UseVisualStyleBackColor = true;
+            this.BtnOpenMaxHold.Click += new System.EventHandler(this.BtnOpenMaxHold_Click);
+            // 
             // BtnRfRx
             // 
             this.BtnRfRx.Location = new System.Drawing.Point(141, 28);
@@ -1597,7 +1645,6 @@
             this.labelRefreshPort.Size = new System.Drawing.Size(47, 19);
             this.labelRefreshPort.TabIndex = 31;
             this.labelRefreshPort.Text = "串口";
-            this.labelRefreshPort.Click += new System.EventHandler(this.labelRefreshPort_Click);
             // 
             // comboBoxCurPort
             // 
@@ -1607,65 +1654,8 @@
             this.comboBoxCurPort.Name = "comboBoxCurPort";
             this.comboBoxCurPort.Size = new System.Drawing.Size(87, 27);
             this.comboBoxCurPort.TabIndex = 30;
+            this.comboBoxCurPort.DropDown += new System.EventHandler(this.comboBoxCurPort_DropDown);
             this.comboBoxCurPort.SelectedValueChanged += new System.EventHandler(this.comboBoxCurPort_SelectedValueChanged);
-            // 
-            // BtnOpenMaxHold
-            // 
-            this.BtnOpenMaxHold.Font = new System.Drawing.Font("宋体", 10F);
-            this.BtnOpenMaxHold.Location = new System.Drawing.Point(7, 64);
-            this.BtnOpenMaxHold.Name = "BtnOpenMaxHold";
-            this.BtnOpenMaxHold.Size = new System.Drawing.Size(129, 30);
-            this.BtnOpenMaxHold.TabIndex = 3;
-            this.BtnOpenMaxHold.Text = "打开最大保持";
-            this.BtnOpenMaxHold.UseVisualStyleBackColor = true;
-            this.BtnOpenMaxHold.Click += new System.EventHandler(this.BtnOpenMaxHold_Click);
-            // 
-            // BtnCloseMaxHold
-            // 
-            this.BtnCloseMaxHold.Font = new System.Drawing.Font("宋体", 10F);
-            this.BtnCloseMaxHold.Location = new System.Drawing.Point(142, 64);
-            this.BtnCloseMaxHold.Name = "BtnCloseMaxHold";
-            this.BtnCloseMaxHold.Size = new System.Drawing.Size(129, 30);
-            this.BtnCloseMaxHold.TabIndex = 4;
-            this.BtnCloseMaxHold.Text = "关闭最大保持";
-            this.BtnCloseMaxHold.UseVisualStyleBackColor = true;
-            this.BtnCloseMaxHold.Click += new System.EventHandler(this.BtnCloseMaxHold_Click);
-            // 
-            // BtnReadRFrefrequence
-            // 
-            this.BtnReadRFrefrequence.Font = new System.Drawing.Font("宋体", 10F);
-            this.BtnReadRFrefrequence.Location = new System.Drawing.Point(7, 100);
-            this.BtnReadRFrefrequence.Name = "BtnReadRFrefrequence";
-            this.BtnReadRFrefrequence.Size = new System.Drawing.Size(70, 30);
-            this.BtnReadRFrefrequence.TabIndex = 5;
-            this.BtnReadRFrefrequence.Text = "读频率";
-            this.BtnReadRFrefrequence.UseVisualStyleBackColor = true;
-            this.BtnReadRFrefrequence.Click += new System.EventHandler(this.BtnReadRFrefrequence_Click);
-            // 
-            // textBoxRFrefrequence
-            // 
-            this.textBoxRFrefrequence.Location = new System.Drawing.Point(83, 102);
-            this.textBoxRFrefrequence.Name = "textBoxRFrefrequence";
-            this.textBoxRFrefrequence.Size = new System.Drawing.Size(77, 29);
-            this.textBoxRFrefrequence.TabIndex = 9;
-            // 
-            // BtnReadRFpower
-            // 
-            this.BtnReadRFpower.Font = new System.Drawing.Font("宋体", 10F);
-            this.BtnReadRFpower.Location = new System.Drawing.Point(177, 101);
-            this.BtnReadRFpower.Name = "BtnReadRFpower";
-            this.BtnReadRFpower.Size = new System.Drawing.Size(71, 30);
-            this.BtnReadRFpower.TabIndex = 10;
-            this.BtnReadRFpower.Text = "读功率";
-            this.BtnReadRFpower.UseVisualStyleBackColor = true;
-            this.BtnReadRFpower.Click += new System.EventHandler(this.BtnReadRFpower_Click);
-            // 
-            // textBoxRFpower
-            // 
-            this.textBoxRFpower.Location = new System.Drawing.Point(254, 101);
-            this.textBoxRFpower.Name = "textBoxRFpower";
-            this.textBoxRFpower.Size = new System.Drawing.Size(77, 29);
-            this.textBoxRFpower.TabIndex = 11;
             // 
             // XDC01DebugForm
             // 

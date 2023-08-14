@@ -249,6 +249,10 @@ namespace XDC01Action1
                 }
                 
                 StringBuilder ng_items = new StringBuilder();
+                // 提前读取一遍继电器状态
+                int[] relay_status_first = new int[16];
+                relaySerial.GetRelayStatus(ref str_error_log, ref relay_status_first);
+
                 for (int i = 0; i < itemNum; i++)
                 {
                     TestItem testItem = volTestItems[i];
@@ -278,9 +282,13 @@ namespace XDC01Action1
                         logger.ShowLog($"继电器状态错误：[通道{relayNum}未打开]");
                         float Duration = (Environment.TickCount - start_time) / 1000.00f;
                         //dataGridView.Rows.Add(testItem.Name, "-", "-", "-", "-", "继电器控制异常", "FAIL", Duration.ToString("F2"));
-                        dataGridView.Rows[rowIndex + i].Cells[5].Value = "继电器控制异常";
+                        dataGridView.Rows[rowIndex + i].Cells[5].Value = $"通道{relayNum}未打开";
                         dataGridView.Rows[rowIndex + i].Cells[6].Value = "FAIL";
                         dataGridView.Rows[rowIndex + i].Cells[7].Value = Duration.ToString("F2");
+                        // 关闭继电器
+                        if (relaySerial.TriggerRelaySingle(relayNum, false) == false)
+                        {
+                        }
                         Delay(300);
                         continue;
                     }
