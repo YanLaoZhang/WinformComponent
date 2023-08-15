@@ -5,6 +5,7 @@ using System.Data;
 using System.Drawing;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Vlc.DotNet.Forms;
@@ -63,12 +64,29 @@ namespace VLCForm
             }
         }
 
-        private async void FormVLC_FormClosing(object sender, FormClosingEventArgs e)
+        private void FormVLC_FormClosing(object sender, FormClosingEventArgs e)
         {
-            //await Task.Run(() => vlcControl1.Stop());
-            vlcControl1.Stop();
-            vlcControl1.Dispose();
-            //this.Close();
+            //try
+            //{
+            //    // 在后台线程中执行停止播放操作
+            //    Thread stopThread = new Thread(() =>
+            //    {
+            //        if (vlcControl1 != null)
+            //        {
+            //            System.Diagnostics.Trace.WriteLine("开始停止播放");
+            //            vlcControl1.Stop();
+            //            System.Diagnostics.Trace.WriteLine("完成停止播放");
+            //            vlcControl1.Dispose();
+            //            vlcControl1 = null;
+            //            System.Diagnostics.Trace.WriteLine("释放LibVLC实例");
+            //        }
+            //    });
+            //    stopThread.Start();
+            //}
+            //catch (Exception ee)
+            //{
+            //    System.Diagnostics.Trace.WriteLine($"发生异常[{ee.Message}]");
+            //}
         }
 
     }

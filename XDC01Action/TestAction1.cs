@@ -127,6 +127,7 @@ namespace XDC01Action1
             try
             {
                 logger.ShowLog("-进行电压测试...");
+                Delay(5000);
                 int start_time = Environment.TickCount;
                 _dataGridView = dataGridView;
                 if (!relaySerial.CheckStatus())
@@ -242,6 +243,7 @@ namespace XDC01Action1
                 try
                 {
                     trigger_interval = (int)decimal.Parse(testParam.trigger_relay_interval) * 1000;
+                    logger.ShowLog($"继电器切换间隔[{trigger_interval}]ms");
                 }
                 catch(Exception ee)
                 {
@@ -270,9 +272,10 @@ namespace XDC01Action1
                     {
                         logger.ShowLog($"获取继电器状态发生异常[{str_error_log}]");
                         float Duration = (Environment.TickCount - start_time) / 1000.00f;
+                        testItem.Result = "FAIL";
                         //dataGridView.Rows.Add(testItem.Name, "-", "-", "-", "-", "继电器控制异常", "FAIL", Duration.ToString("F2"));
                         dataGridView.Rows[rowIndex+i].Cells[5].Value = "继电器控制异常";
-                        dataGridView.Rows[rowIndex+i].Cells[6].Value = "FAIL";
+                        dataGridView.Rows[rowIndex+i].Cells[6].Value = testItem.Result;
                         dataGridView.Rows[rowIndex+i].Cells[7].Value = Duration.ToString("F2");
                         Delay(300);
                         continue;
@@ -281,9 +284,10 @@ namespace XDC01Action1
                     {
                         logger.ShowLog($"继电器状态错误：[通道{relayNum}未打开]");
                         float Duration = (Environment.TickCount - start_time) / 1000.00f;
+                        testItem.Result = "FAIL";
                         //dataGridView.Rows.Add(testItem.Name, "-", "-", "-", "-", "继电器控制异常", "FAIL", Duration.ToString("F2"));
                         dataGridView.Rows[rowIndex + i].Cells[5].Value = $"通道{relayNum}未打开";
-                        dataGridView.Rows[rowIndex + i].Cells[6].Value = "FAIL";
+                        dataGridView.Rows[rowIndex + i].Cells[6].Value = testItem.Result;
                         dataGridView.Rows[rowIndex + i].Cells[7].Value = Duration.ToString("F2");
                         // 关闭继电器
                         if (relaySerial.TriggerRelaySingle(relayNum, false) == false)
@@ -302,9 +306,10 @@ namespace XDC01Action1
                         {
                             logger.ShowLog($"读取电压表数据失败");
                             float Duration = (Environment.TickCount - start_time) / 1000.00f;
+                            testItem.Result = "FAIL";
                             //dataGridView.Rows.Add(testItem.Name, "-", "-", "-", "-", "电压表控制异常", "FAIL", Duration.ToString("F2"));
                             dataGridView.Rows[rowIndex + i].Cells[5].Value = "电压表控制异常";
-                            dataGridView.Rows[rowIndex + i].Cells[6].Value = "FAIL";
+                            dataGridView.Rows[rowIndex + i].Cells[6].Value = testItem.Result;
                             dataGridView.Rows[rowIndex + i].Cells[7].Value = Duration.ToString("F2");
                         }
                     }
@@ -462,7 +467,6 @@ namespace XDC01Action1
                     dataGridView.Rows[rowIndex].Cells[7].Value = Duration.ToString("F2");
                     return null;
                 }
-                string str_error_log = "";
                 TestItem testItem = new TestItem()
                 {
                     Name = "漏电流",
@@ -472,7 +476,44 @@ namespace XDC01Action1
                     MaxValue = testSpecMax.standby_current,
                     StrVal = "-"
                 };
-                //--------切换量程为200uA
+
+                float max_current = 0.00f;
+                //int count = int.Parse(_param_run.str_current_count);
+                for (int i = 0; i < 10; i++)
+                {
+                    string current_value = "";
+                    string unit = "";
+                    string error_log_current = "";
+                    if (flukeSerial.GetCurrent(ref current_value, ref unit, ref error_log_current))
+                    {
+                        Console.WriteLine(current_value);
+                        float f_current_value = float.Parse(current_value);
+                        if (max_current <= f_current_value)
+                        {
+                            max_current = f_current_value;
+                        }
+                    }
+                }
+                testItem.Value = max_current * 1000.00f;
+                // 判断电流数据情况
+                if (testItem.Value > testItem.MaxValue || testItem.Value < testItem.MinValue)
+                {
+                    logger.ShowLog($"---漏电流[{testItem.Value:F3}uA],测试失败");
+                    testItem.Result = "FAIL";
+                }
+                else
+                {
+                    logger.ShowLog($"---漏电流[{testItem.Value:F3}uA],测试通过");
+                    testItem.Result = "PASS";
+                }
+                testItem.Duration = (Environment.TickCount - start_time) / 1000.00f;
+                //dataGridView.Rows.Add(testItem.Name, testItem.Standard, testItem.MinValue, testItem.MaxValue, testItem.Value, testItem.StrVal, testItem.Result, testItem.Duration.ToString("F2"));
+                dataGridView.Rows[rowIndex].Cells[4].Value = testItem.Value;
+                dataGridView.Rows[rowIndex].Cells[6].Value = testItem.Result;
+                dataGridView.Rows[rowIndex].Cells[7].Value = testItem.Duration.ToString("F2");
+                return testItem;
+
+                /*//--------切换量程为200uA
                 if (flukeSerial.SetRange("1", ref str_error_log) == false)
                 {
                     logger.ShowLog($"FLUKE电流表切换量程为200uA失败");
@@ -521,7 +562,7 @@ namespace XDC01Action1
                     dataGridView.Rows[rowIndex].Cells[6].Value = testItem.Result;
                     dataGridView.Rows[rowIndex].Cells[7].Value = testItem.Duration.ToString("F2");
                     return testItem;
-                }
+                }*/
             }
             catch (Exception ee)
             {
@@ -530,10 +571,10 @@ namespace XDC01Action1
             }
             finally
             {
-                if (flukeSerial.CheckStatus())
+                /*if (flukeSerial.CheckStatus())
                 {
                     string str_error_log = "";
-                    // 切换量程为20mA
+                    *//*// 切换量程为20mA
                     logger.ShowLog("万用表切换量程为200mA");
                     if (flukeSerial.SetRange("4", ref str_error_log) == false)
                     {
@@ -541,8 +582,8 @@ namespace XDC01Action1
                     }
                     else
                     {
-                    }
-                }
+                    }*//*
+                }*/
             }
         }
 
@@ -1607,7 +1648,7 @@ namespace XDC01Action1
                                 NgItem = "ir_cut"
                             };
                             logger.ShowLog("--- 请检查IR_CUT夜视功能");
-                            CustomDialog IRCutDialog = new CustomDialog("IR_CUT检查测试（人工）", "是否已切换到夜视模式？", true);
+                            CustomDialog IRCutDialog = new CustomDialog("IR_CUT检查测试（人工）", "请确认\r\n1、是否听到切换的动作音？\r\n2、是否已切换到夜视模式？", true);
                             DialogResult IRCutresult = IRCutDialog.ShowDialog();
 
                             if (IRCutresult == DialogResult.Yes)
