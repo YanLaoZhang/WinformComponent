@@ -312,9 +312,34 @@ namespace XDC01Debug
                 return;
             }
             string write_rn = textBoxWriteRN.Text;
-            if(write_rn.Length != 15)
+
+            if(write_rn.Length == 15)
             {
-                MessageBox.Show("RN必须为15位");
+                if (write_rn.StartsWith("XDC01"))
+                {
+
+                }
+                else
+                {
+                    MessageBox.Show("15位的RN开头必须为XDC01");
+                    return;
+                }
+            }
+            else if(write_rn.Length == 11)
+            {
+                if (write_rn.StartsWith("XD01"))
+                {
+
+                }
+                else
+                {
+                    MessageBox.Show("11位的RN开头必须为XD01");
+                    return;
+                }
+            }
+            else
+            {
+                MessageBox.Show("RN必须为15位或11位");
                 return;
             }
             string str_error_log = "";
