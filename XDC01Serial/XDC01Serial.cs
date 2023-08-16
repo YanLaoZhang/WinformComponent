@@ -802,8 +802,9 @@ namespace XDC01SerialLib
                     return false;
                 }
 
-                if (!str_ret_value.Contains("XDC01"))
+                if (!(str_ret_value.Contains("XDC01") || str_ret_value.Contains("XD01")))
                 {
+                    str_error_log = $"读取RN失败[{str_ret_value}]";
                     return false;
                 }
                 string[] striparr = str_ret_value.Split(new string[] { "\r\n" }, StringSplitOptions.None);
@@ -813,14 +814,30 @@ namespace XDC01SerialLib
                     if (striparr[i].Contains("XDC01"))
                     {
                         str_rn_temp = striparr[i];
+                        int start = str_rn_temp.IndexOf("XDC01");
+                        str_rn_temp = str_rn_temp.Substring(start, 15);
+                        break;
+                    }
+                    else if (striparr[i].Contains("XD01"))
+                    {
+                        str_rn_temp = striparr[i];
+                        int start = str_rn_temp.IndexOf("XD01");
+                        str_rn_temp = str_rn_temp.Substring(start, 11);
                         break;
                     }
                 }
-                int start = str_rn_temp.IndexOf("XDC01");
-                str_rn_temp = str_rn_temp.Substring(start, 15);
-                str_rn = str_rn_temp.Replace("\r\n", "").Trim();
+                
+                if(str_rn_temp == "")
+                {
+                    str_error_log = $"读取RN失败[{str_ret_value}]";
+                    return false;
+                }
+                else
+                {
+                    str_rn = str_rn_temp.Replace("\r\n", "").Trim();
+                    return true;
+                }
 
-                return true;
             }
             catch (Exception ee)
             {
