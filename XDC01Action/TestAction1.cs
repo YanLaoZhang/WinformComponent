@@ -2816,7 +2816,7 @@ namespace XDC01Action1
         /// </summary>
         /// <returns></returns>
         public List<TestItem> WriteSnUidToDUT(XDC01Serial xDC01Serial,
-            System.Windows.Forms.DataGridView dataGridView, int rowIndex, Logger logger, string str_write_sn, string str_write_uid, string str_cur_mac, string str_write_mac)
+            System.Windows.Forms.DataGridView dataGridView, int rowIndex, Logger logger, string str_cur_sn, string str_write_sn, string str_cur_uid, string str_write_uid, string str_cur_mac, string str_write_mac)
         {
             try
             {
@@ -2837,109 +2837,76 @@ namespace XDC01Action1
                     NgItem = "write_uid",
                     Standard = str_write_uid,
                 };
-                //-----写入SN/UID 
-                if (xDC01Serial.SetUIDandSN(str_write_uid, str_write_sn, ref str_error_log) == false)
-                {
-                    logger.ShowLog("-- 写SN或UID失败：" + str_error_log);
-                    float Duration = (Environment.TickCount - start_time) / 1000.00f;
-                    //dataGridView.Rows.Add("写入SN和UID", "-", "-", "-", "-", "串口指令发送异常", "FAIL", Duration.ToString("F2"));
-                    for (int i = 0; i < 2; i++)
-                    {
-                        dataGridView.Rows[rowIndex+i].Cells[5].Value = "串口指令发送异常";
-                        dataGridView.Rows[rowIndex+i].Cells[6].Value = "FAIL";
-                        dataGridView.Rows[rowIndex+i].Cells[7].Value = Duration.ToString("F2");
-                    }
 
-                    return null;
-                }
-                else
+                if (string.Equals(str_cur_sn.ToUpper(), str_write_sn.ToUpper()))
                 {
-                    logger.ShowLog("-- 写SN和UID完成");
-                    writeSN.StrVal = str_write_sn;
+                    logger.ShowLog($"--- 设备原SN地址[{str_cur_sn}]和云端[{str_write_sn}]相同，不再重新写入");
                     writeSN.Result = "PASS";
+                    writeSN.StrVal = str_write_sn;
                     writeSN.Duration = 0.00f;
                     dataGridView.Rows[rowIndex].Cells[5].Value = writeSN.StrVal;
                     dataGridView.Rows[rowIndex].Cells[6].Value = writeSN.Result;
                     dataGridView.Rows[rowIndex].Cells[7].Value = writeSN.Duration.ToString("F2");
                     testItems.Add(writeSN);
-
+                }
+                else if (string.Equals(str_cur_uid.ToUpper(), str_write_uid.ToUpper()))
+                {
+                    logger.ShowLog($"--- 设备原UID地址[{str_cur_uid}]和云端[{str_write_uid}]相同，不再重新写入");
                     rowIndex++;
-                    writeUID.StrVal = str_write_uid;
                     writeUID.Result = "PASS";
+                    writeUID.StrVal = str_write_uid;
                     writeUID.Duration = (Environment.TickCount - start_time) / 1000.00f;
-                    //dataGridView.Rows.Add(writeUID.Name, writeUID.Standard, "-", "-", "-", writeUID.StrVal, writeUID.Result, writeUID.Duration.ToString("F2"));
                     dataGridView.Rows[rowIndex].Cells[5].Value = writeUID.StrVal;
                     dataGridView.Rows[rowIndex].Cells[6].Value = writeUID.Result;
                     dataGridView.Rows[rowIndex].Cells[7].Value = writeUID.Duration.ToString("F2");
                     testItems.Add(writeUID);
-/*
-                    // 确认写入是否成功
-                    string str_read_sn = "";
-                    //string str_read_bell_mac = "";
-                    str_error_log = "";
-                    if (xDC01Serial.GetSN(ref str_read_sn, ref str_error_log) == false)
+                }
+                else
+                {
+                    //-----写入SN/UID 
+                    if (xDC01Serial.SetUIDandSN(str_write_uid, str_write_sn, ref str_error_log) == false)
                     {
-                        logger.ShowLog("--- 读SN失败");
-                        float Duration = (Environment.TickCount - start_time) / 1000.00f;
-                        //dataGridView.Rows.Add("读SN", "-", "-", "-", "-", "串口指令发送异常", "FAIL", Duration.ToString("F2"));
-                        dataGridView.Rows[rowIndex].Cells[5].Value = "串口指令发送异常";
-                        dataGridView.Rows[rowIndex].Cells[6].Value = "FAIL";
-                        dataGridView.Rows[rowIndex].Cells[7].Value = Duration.ToString("F2");
-                        return null;
-                    }
-                    else
-                    {
-                        writeSN.StrVal = str_read_sn;
-                        if (string.Equals(str_read_sn.ToUpper(), cloudModel.str_sn.ToUpper()) == false)
-                        {
-                            logger.ShowLog("--- 读到的SN：" + str_read_sn.ToUpper() + "和写入的SN：" + cloudModel.str_sn.ToUpper() + "不一致");
-                            writeSN.Result = "FAIL";
-                        }
-                        else
-                        {
-                            logger.ShowLog("--- 读到的SN：" + str_read_sn.ToUpper() + "和写入的SN：" + cloudModel.str_sn.ToUpper() + "一致");
-                            writeSN.Result = "PASS";
-                        }
-                        writeSN.Duration = (Environment.TickCount - start_time) / 1000.00f;
-                        //dataGridView.Rows.Add(writeSN.Name, writeSN.Standard, "-", "-", "-", writeSN.StrVal, writeSN.Result, writeSN.Duration.ToString("F2"));
+                        logger.ShowLog("-- 写SN和UID失败：" + str_error_log);
+
+                        writeSN.StrVal = "写SN和UID失败"; ;
+                        writeSN.Result = "FAIL";
+                        writeSN.Duration = 0.00f;
                         dataGridView.Rows[rowIndex].Cells[5].Value = writeSN.StrVal;
                         dataGridView.Rows[rowIndex].Cells[6].Value = writeSN.Result;
                         dataGridView.Rows[rowIndex].Cells[7].Value = writeSN.Duration.ToString("F2");
                         testItems.Add(writeSN);
-                    }
-                    start_time = Environment.TickCount;
-                    string str_read_uid = "";
-                    str_error_log = "";
-                    if (xDC01Serial.GetUID(ref str_read_uid, ref str_error_log) == false)
-                    {
-                        logger.ShowLog("--- 读UID失败");
-                        float Duration = (Environment.TickCount - start_time) / 1000.00f;
-                        //dataGridView.Rows.Add("读UID", "-", "-", "-", "-", "串口指令发送异常", "FAIL", Duration.ToString("F2"));
-                        dataGridView.Rows[rowIndex].Cells[5].Value = "串口指令发送异常";
-                        dataGridView.Rows[rowIndex].Cells[6].Value = "FAIL";
-                        dataGridView.Rows[rowIndex].Cells[7].Value = Duration.ToString("F2");
-                        return null;
-                    }
-                    else
-                    {
-                        writeUID.StrVal = str_read_uid;
-                        if (string.Equals(str_read_uid.ToUpper(), cloudModel.str_uid.ToUpper()) == false)
-                        {
-                            logger.ShowLog("--- 读到的UID：" + str_read_uid.ToUpper() + "和写入的UID：" + cloudModel.str_uid.ToUpper() + "不一致");
-                            writeUID.Result = "FAIL";
-                        }
-                        else
-                        {
-                            logger.ShowLog("--- 读到的UID：" + str_read_uid.ToUpper() + "和写入的UID：" + cloudModel.str_uid.ToUpper() + "一致");
-                            writeUID.Result = "PASS";
-                        }
+
+                        rowIndex++;
+                        writeUID.StrVal = "写SN和UID失败";
+                        writeUID.Result = "FAIL";
                         writeUID.Duration = (Environment.TickCount - start_time) / 1000.00f;
-                        //dataGridView.Rows.Add(writeUID.Name, writeUID.Standard, "-", "-", "-", writeUID.StrVal, writeUID.Result, writeUID.Duration.ToString("F2"));
                         dataGridView.Rows[rowIndex].Cells[5].Value = writeUID.StrVal;
                         dataGridView.Rows[rowIndex].Cells[6].Value = writeUID.Result;
                         dataGridView.Rows[rowIndex].Cells[7].Value = writeUID.Duration.ToString("F2");
                         testItems.Add(writeUID);
-                    }*/
+
+                        return null;
+                    }
+                    else
+                    {
+                        logger.ShowLog("-- 写SN和UID完成");
+                        writeSN.StrVal = str_write_sn;
+                        writeSN.Result = "PASS";
+                        writeSN.Duration = 0.00f;
+                        dataGridView.Rows[rowIndex].Cells[5].Value = writeSN.StrVal;
+                        dataGridView.Rows[rowIndex].Cells[6].Value = writeSN.Result;
+                        dataGridView.Rows[rowIndex].Cells[7].Value = writeSN.Duration.ToString("F2");
+                        testItems.Add(writeSN);
+
+                        rowIndex++;
+                        writeUID.StrVal = str_write_uid;
+                        writeUID.Result = "PASS";
+                        writeUID.Duration = (Environment.TickCount - start_time) / 1000.00f;
+                        dataGridView.Rows[rowIndex].Cells[5].Value = writeUID.StrVal;
+                        dataGridView.Rows[rowIndex].Cells[6].Value = writeUID.Result;
+                        dataGridView.Rows[rowIndex].Cells[7].Value = writeUID.Duration.ToString("F2");
+                        testItems.Add(writeUID);
+                    }
                 }
 
                 rowIndex++;
@@ -2959,8 +2926,6 @@ namespace XDC01Action1
                     writeMAC.Result = "PASS";
                     writeMAC.StrVal = str_write_mac;
                     writeMAC.Duration = (Environment.TickCount - start_time) / 1000.00f;
-                    //dataGridView.Rows.Add(writeMAC.Name, writeMAC.Standard, "-", "-", "-", writeMAC.StrVal, writeMAC.Result, writeMAC.Duration.ToString("F2"));
-                    //dataGridView.Rows[rowIndex].Cells[1].Value = writeMAC.Standard;
                     dataGridView.Rows[rowIndex].Cells[5].Value = writeMAC.StrVal;
                     dataGridView.Rows[rowIndex].Cells[6].Value = writeMAC.Result;
                     dataGridView.Rows[rowIndex].Cells[7].Value = writeMAC.Duration.ToString("F2");
@@ -2970,44 +2935,65 @@ namespace XDC01Action1
                 {
                     if (xDC01Serial.SetSystemMac(str_write_mac, ref str_error_log) == false)
                     {
-                        logger.ShowLog("--- 写MAC地址失败：" + str_error_log);
-                        float Duration = (Environment.TickCount - start_time) / 1000.00f;
-                        //dataGridView.Rows.Add("写入MAC", "-", "-", "-", "-", "串口指令发送异常", "FAIL", Duration.ToString("F2"));
-                        dataGridView.Rows[rowIndex].Cells[5].Value = "串口指令发送异常";
-                        dataGridView.Rows[rowIndex].Cells[6].Value = "FAIL";
-                        dataGridView.Rows[rowIndex].Cells[7].Value = Duration.ToString("F2");
-                        return null;
+                        logger.ShowLog($"--- 写MAC地址失败：[{str_error_log}]");
+                        writeMAC.Result = "FAIL";
+                        writeMAC.StrVal = "写MAC地址失败";
+                        writeMAC.Duration = (Environment.TickCount - start_time) / 1000.00f;
+                        dataGridView.Rows[rowIndex].Cells[5].Value = writeMAC.StrVal;
+                        dataGridView.Rows[rowIndex].Cells[6].Value = writeMAC.Result;
+                        dataGridView.Rows[rowIndex].Cells[7].Value = writeMAC.Duration.ToString("F2");
+                        testItems.Add(writeMAC);
                     }
                     else
                     {
-                        logger.ShowLog("--- 写MAC地址完成");
+                        logger.ShowLog("--- 写MAC地址已完成，进行读取比对");
                         str_error_log = "";
                         string str_read_mac = "";
-                        if (xDC01Serial.GetSystemMac(ref str_read_mac, ref str_error_log) == false)
+
+                        // 多次读取MAC
+                        int count = 3;
+                        bool IsReadMac = false;
+                        for (int i = 0; i < count; i++)
                         {
-                            logger.ShowLog("--- 读MAC地址失败"); 
-                            float Duration = (Environment.TickCount - start_time) / 1000.00f;
-                            //dataGridView.Rows.Add("读MAC", "-", "-", "-", "-", "串口指令发送异常", "FAIL", Duration.ToString("F2"));
-                            dataGridView.Rows[rowIndex].Cells[5].Value = "串口指令发送异常";
-                            dataGridView.Rows[rowIndex].Cells[6].Value = "FAIL";
-                            dataGridView.Rows[rowIndex].Cells[7].Value = Duration.ToString("F2");
-                            return null;
+                            if (xDC01Serial.GetSystemMac(ref str_read_mac, ref str_error_log))
+                            {
+                                logger.ShowLog($"已成功读取到MAC[{str_read_mac}]");
+                                IsReadMac = true;
+                                break;
+                            }
+                            else
+                            {
+                                logger.ShowLog($"-- 第{i + 1}次读取mac失败，等待1s后重试");
+                                Delay(1000);
+                            }
+                        }
+
+                        if (!IsReadMac)
+                        {
+                            logger.ShowLog($"--- 读MAC地址失败:[{str_error_log}]"); 
+                            writeMAC.Result = "FAIL";
+                            writeMAC.StrVal = "读MAC地址失败";
+                            writeMAC.Duration = (Environment.TickCount - start_time) / 1000.00f;
+                            dataGridView.Rows[rowIndex].Cells[5].Value = writeMAC.StrVal;
+                            dataGridView.Rows[rowIndex].Cells[6].Value = writeMAC.Result;
+                            dataGridView.Rows[rowIndex].Cells[7].Value = writeMAC.Duration.ToString("F2");
+                            testItems.Add(writeMAC);
                         }
                         else
                         {
-                            writeMAC.StrVal = str_read_mac;
                             if (string.Equals(str_read_mac.ToUpper(), str_write_mac.ToUpper()) == false)
                             {
                                 logger.ShowLog("--- 读到的MAC：" + str_read_mac.ToUpper() + "和写入的MAC：" + str_write_mac.ToUpper() + "不一致");
                                 writeMAC.Result = "FAIL";
+                                writeMAC.StrVal = "写入MAC未生效";
                             }
                             else
                             {
                                 logger.ShowLog("--- 读到的MAC：" + str_read_mac.ToUpper() + "和写入的MAC：" + str_write_mac.ToUpper() + "一致");
                                 writeMAC.Result = "PASS";
+                                writeMAC.StrVal = str_read_mac;
                             }
                             writeMAC.Duration = (Environment.TickCount - start_time) / 1000.00f;
-                            //dataGridView.Rows.Add(writeMAC.Name, writeMAC.Standard, "-", "-", "-", writeMAC.StrVal, writeMAC.Result, writeMAC.Duration.ToString("F2"));
                             dataGridView.Rows[rowIndex].Cells[5].Value = writeMAC.StrVal;
                             dataGridView.Rows[rowIndex].Cells[6].Value = writeMAC.Result;
                             dataGridView.Rows[rowIndex].Cells[7].Value = writeMAC.Duration.ToString("F2");
