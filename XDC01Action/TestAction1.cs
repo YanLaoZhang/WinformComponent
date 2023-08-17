@@ -2840,7 +2840,7 @@ namespace XDC01Action1
 
                 if (string.Equals(str_cur_sn.ToUpper(), str_write_sn.ToUpper()))
                 {
-                    logger.ShowLog($"--- 设备原SN地址[{str_cur_sn}]和云端[{str_write_sn}]相同，不再重新写入");
+                    logger.ShowLog($"--- 设备原SN地址[{str_cur_sn}]和云端下发[{str_write_sn}]相同，不再重新写入");
                     writeSN.Result = "PASS";
                     writeSN.StrVal = str_write_sn;
                     writeSN.Duration = 0.00f;
@@ -2848,18 +2848,30 @@ namespace XDC01Action1
                     dataGridView.Rows[rowIndex].Cells[6].Value = writeSN.Result;
                     dataGridView.Rows[rowIndex].Cells[7].Value = writeSN.Duration.ToString("F2");
                     testItems.Add(writeSN);
-                }
-                else if (string.Equals(str_cur_uid.ToUpper(), str_write_uid.ToUpper()))
-                {
-                    logger.ShowLog($"--- 设备原UID地址[{str_cur_uid}]和云端[{str_write_uid}]相同，不再重新写入");
-                    rowIndex++;
-                    writeUID.Result = "PASS";
-                    writeUID.StrVal = str_write_uid;
-                    writeUID.Duration = (Environment.TickCount - start_time) / 1000.00f;
-                    dataGridView.Rows[rowIndex].Cells[5].Value = writeUID.StrVal;
-                    dataGridView.Rows[rowIndex].Cells[6].Value = writeUID.Result;
-                    dataGridView.Rows[rowIndex].Cells[7].Value = writeUID.Duration.ToString("F2");
-                    testItems.Add(writeUID);
+                    if (string.Equals(str_cur_uid.ToUpper(), str_write_uid.ToUpper()))
+                    {
+                        logger.ShowLog($"--- 设备原UID地址[{str_cur_uid}]和云端下发[{str_write_uid}]相同，不再重新写入");
+                        rowIndex++;
+                        writeUID.Result = "PASS";
+                        writeUID.StrVal = str_write_uid;
+                        writeUID.Duration = (Environment.TickCount - start_time) / 1000.00f;
+                        dataGridView.Rows[rowIndex].Cells[5].Value = writeUID.StrVal;
+                        dataGridView.Rows[rowIndex].Cells[6].Value = writeUID.Result;
+                        dataGridView.Rows[rowIndex].Cells[7].Value = writeUID.Duration.ToString("F2");
+                        testItems.Add(writeUID);
+                    }
+                    else
+                    {
+                        logger.ShowLog($"出现异常情况：--- SN相同，但设备原UID地址[{str_cur_uid}]和云端下发[{str_write_uid}]不相同，请检查");
+                        rowIndex++;
+                        writeUID.Result = "FAIL";
+                        writeUID.StrVal = str_write_uid;
+                        writeUID.Duration = (Environment.TickCount - start_time) / 1000.00f;
+                        dataGridView.Rows[rowIndex].Cells[5].Value = writeUID.StrVal;
+                        dataGridView.Rows[rowIndex].Cells[6].Value = writeUID.Result;
+                        dataGridView.Rows[rowIndex].Cells[7].Value = writeUID.Duration.ToString("F2");
+                        testItems.Add(writeUID);
+                    }
                 }
                 else
                 {
@@ -2922,7 +2934,7 @@ namespace XDC01Action1
                 str_error_log = "";
                 if (string.Equals(str_cur_mac.ToUpper(), str_write_mac.ToUpper()))
                 {
-                    logger.ShowLog("--- 设备原MAC地址和云端相同，不再重新写入");
+                    logger.ShowLog($"--- 设备原MAC地址[{str_cur_mac}]和云端下发[{str_write_mac}]相同，不再重新写入");
                     writeMAC.Result = "PASS";
                     writeMAC.StrVal = str_write_mac;
                     writeMAC.Duration = (Environment.TickCount - start_time) / 1000.00f;

@@ -580,17 +580,26 @@ namespace XDC01SerialLib
                         break;
                     }
                 }
-                int int_inet = str_ip_temp.IndexOf("inet addr:");
-                int int_Bcast = str_ip_temp.IndexOf("Bcast");
-                str_ip = str_ip_temp.Substring(int_inet + 10, int_Bcast - int_inet - 10).Trim();
-
-                System.Net.IPAddress ipAddress;
-                if (System.Net.IPAddress.TryParse(str_ip, out ipAddress) == false)
+                if (str_ip_temp == "")
                 {
-                    str_error_log = "IP地址格式错误";
+                    str_error_log = $"读取IP失败[{str_ret_value}]";
                     return false;
                 }
-                return true;
+                else
+                {
+                    int int_inet = str_ip_temp.IndexOf("inet addr:");
+                    int int_Bcast = str_ip_temp.IndexOf("Bcast");
+                    str_ip = str_ip_temp.Substring(int_inet + 10, int_Bcast - int_inet - 10).Trim();
+
+                    System.Net.IPAddress ipAddress;
+                    if (System.Net.IPAddress.TryParse(str_ip, out ipAddress) == false)
+                    {
+                        str_error_log = "IP地址格式错误";
+                        return false;
+                    }
+                    return true;
+                }
+
             }
             catch (Exception ee)
             {
@@ -736,9 +745,17 @@ namespace XDC01SerialLib
                         break;
                     }
                 }
-                int startIndex = str_tagnumber_temp.IndexOf("T");
-                str_tagNumber = str_tagnumber_temp.Replace("\r\n", "").Trim().Substring(startIndex, 4);
-                return true;
+                if (str_tagnumber_temp == "")
+                {
+                    str_error_log = $"读取工序号失败[{str_ret_value}]";
+                    return false;
+                }
+                else
+                {
+                    int startIndex = str_tagnumber_temp.IndexOf("T");
+                    str_tagNumber = str_tagnumber_temp.Replace("\r\n", "").Trim().Substring(startIndex, 4);
+                    return true;
+                }
             }
             catch (Exception ee)
             {
@@ -1798,17 +1815,32 @@ namespace XDC01SerialLib
                 }
                 string[] striparr = str_ret_value.Split(new string[] { "\r\n" }, StringSplitOptions.None);
                 string str_temp_value = "";
-                Regex regex = new Regex(@"\d{16}");
+                Regex regex_16 = new Regex(@"\d{16}");
+                Regex regex_15 = new Regex(@"\w{15}");
                 for (int i = 0; i < striparr.Length; i++)
                 {
-                    if (regex.IsMatch(striparr[i]))
+                    if (regex_16.IsMatch(striparr[i]))
+                    {
+                        str_temp_value = striparr[i];
+                        break;
+                    }
+                    if (regex_15.IsMatch(striparr[i]))
                     {
                         str_temp_value = striparr[i];
                         break;
                     }
                 }
-                str_sn = str_temp_value.Trim();
-                return true;
+
+                if (str_temp_value == "")
+                {
+                    str_error_log = $"读取SN失败[{str_ret_value}]";
+                    return false;
+                }
+                else
+                {
+                    str_sn = str_temp_value.Trim();
+                    return true;
+                }
             }
             catch (Exception ee)
             {
@@ -1845,8 +1877,18 @@ namespace XDC01SerialLib
                         break;
                     }
                 }
-                str_uid = str_temp_value.Trim();
-                return true;
+
+                if (str_temp_value == "")
+                {
+                    str_error_log = $"读取UID失败[{str_ret_value}]";
+                    return false;
+                }
+                else
+                {
+                    str_uid = str_temp_value.Trim();
+                    return true;
+                }
+
             }
             catch (Exception ee)
             {
@@ -2022,19 +2064,28 @@ namespace XDC01SerialLib
                     if (striparr[i].Contains("read Rn ="))
                     {
                         str_rn_temp = striparr[i].Replace("\r\n", "").Replace(">cmd", "").TrimEnd();
+                        break;
                     }
                 }
-                str_rn = str_rn_temp.Replace("read Rn =", "").Trim();
-                if (str_rn.ToLower().Contains("error"))
+                if (str_rn_temp == "")
                 {
-                    str_error_log = "异常:" + str_rn;
+                    str_error_log = $"RTOS读取Rn号失败[{str_ret_value}]";
                     return false;
                 }
-                return true;
+                else
+                {
+                    str_rn = str_rn_temp.Replace("read Rn =", "").Trim();
+                    if (str_rn.ToLower().Contains("error"))
+                    {
+                        str_error_log = "异常:" + str_rn;
+                        return false;
+                    }
+                    return true;
+                }
             }
             catch (Exception ee)
             {
-                str_error_log = $"GetRnRTO发生异常：[{ee.Message}]";
+                str_error_log = $"GetRnRTOS发生异常：[{ee.Message}]";
                 return false;
             }
         }
@@ -2071,8 +2122,16 @@ namespace XDC01SerialLib
                         break;
                     }
                 }
-                str_tagnumber = str_tagnumber_temp.Substring(str_tagnumber_temp.Length - 4, 4);
-                return true;
+                if (str_tagnumber_temp == "")
+                {
+                    str_error_log = $"RTOS读取工序号失败[{str_ret_value}]";
+                    return false;
+                }
+                else
+                {
+                    str_tagnumber = str_tagnumber_temp.Substring(str_tagnumber_temp.Length - 4, 4);
+                    return true;
+                }
             }
             catch (Exception ee)
             {
