@@ -1496,23 +1496,25 @@ namespace XDC01SerialLib
                 // 丢包率
                 str_loss = result[7].Substring(result[7].IndexOf("(") + 1).Replace(")", "");
 
-                str_rate = str_rate.Split()[0].Trim();
-                //if(check_int_double(str_rate) == false)
-                //{
-                //    str_error = "up_rate";
-                //    return false;
-                //}
-                //else
-                //{
-                //    // MBytes换算成MBits 1MBytes = 8MBits
-                //    str_rate = (double.Parse(str_rate) * 8.0).ToString();
-                //}
+                string str_rate_num = str_rate.Split()[0].Trim();
+                if (check_int_double(str_rate_num) == false)
+                {
+                    str_error_log = $"速率[{str_rate_num}]格式错误";
+                    return false;
+                }
+                else
+                {
+                    if (str_rate.Contains("Kbits/sec"))
+                    {
+                        str_rate_num = (double.Parse(str_rate_num) / 1024.0).ToString("F3");
+                    }
+                    str_rate = str_rate_num;
+                }
 
                 str_loss = str_loss.Replace("%", "").Trim();
-
-                if (check_int_double(str_rate) == false || check_int_double(str_loss) == false)
+                if (check_int_double(str_loss) == false)
                 {
-                    str_error_log = $"rate[{str_rate}]或loss[{str_loss}]格式错误";
+                    str_error_log = $"丢包率[{str_loss}]格式错误";
                     return false;
                 }
 
@@ -1571,23 +1573,25 @@ namespace XDC01SerialLib
                 // 丢包率
                 str_loss = result[7].Substring(result[7].IndexOf("(") + 1).Replace(")", "");
 
-                str_rate = str_rate.Split()[0].Trim();
-                //if(check_int_double(str_rate) == false)
-                //{
-                //    str_error = "up_rate";
-                //    return false;
-                //}
-                //else
-                //{
-                //    // MBytes换算成MBits 1MBytes = 8MBits
-                //    str_rate = (double.Parse(str_rate) * 8.0).ToString();
-                //}
+                string str_rate_num = str_rate.Split()[0].Trim();
+                if (check_int_double(str_rate_num) == false)
+                {
+                    str_error_log = $"速率[{str_rate_num}]格式错误";
+                    return false;
+                }
+                else
+                {
+                    if (str_rate.Contains("Kbits/sec"))
+                    {
+                        str_rate_num = (double.Parse(str_rate_num) / 1024.0).ToString("F3");
+                    }
+                    str_rate = str_rate_num;
+                }
 
                 str_loss = str_loss.Replace("%", "").Trim();
-
-                if (check_int_double(str_rate) == false || check_int_double(str_loss) == false)
+                if (check_int_double(str_loss) == false)
                 {
-                    str_error_log = $"rate[{str_rate}]或loss[{str_loss}]格式错误";
+                    str_error_log = $"丢包率[{str_loss}]格式错误";
                     return false;
                 }
 
