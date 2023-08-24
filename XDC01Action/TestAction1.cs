@@ -1553,7 +1553,28 @@ namespace XDC01Action1
                     Name = "RTSP视频检查", 
                     NgItem = "vlc_rtsp" 
                 };
-                if (xDC01Serial.GetSystemIP(ref ip, ref str_error_log) == false)
+
+                // 多次读取IP
+                int count = 5;
+                int interval = 2000;
+                bool IsReadIP = false;
+                for (int i = 0; i < count; i++)
+                {
+                    str_error_log = "";
+                    if (xDC01Serial.GetSystemIP(ref ip, ref str_error_log))
+                    {
+                        logger.ShowLog($"已成功读取到ip[{ip}]");
+                        IsReadIP = true;
+                        break;
+                    }
+                    else
+                    {
+                        logger.ShowLog($"-- 第{i + 1}次读取ip失败[{str_error_log}]，等待{interval/1000}s后重试");
+                        Delay(interval);
+                    }
+                }
+
+                if (IsReadIP == false)
                 {
                     logger.ShowLog($"读取IP失败：{str_error_log}");
                     float Duration = (Environment.TickCount - start_time) / 1000.00f;
@@ -1713,14 +1734,16 @@ namespace XDC01Action1
             }
             finally
             {
-                string str_error_log = "";
-                if (xDC01Serial.SwitchIR_CUT("off", ref str_error_log) == false)
-                {
-                    logger.ShowLog($"关闭夜视发生异常[{str_error_log}]");
-                }
-                else
-                {
-                    logger.ShowLog($"已关闭夜视");
+                if (ir_cut || ir_led) { 
+                    string str_error_log = "";
+                    if (xDC01Serial.SwitchIR_CUT("off", ref str_error_log) == false)
+                    {
+                        logger.ShowLog($"关闭夜视发生异常[{str_error_log}]");
+                    }
+                    else
+                    {
+                        logger.ShowLog($"已关闭夜视");
+                    }
                 }
             }
         }
