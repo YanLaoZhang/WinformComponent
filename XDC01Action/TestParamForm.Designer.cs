@@ -613,9 +613,10 @@
             "T030",
             "T040",
             "T050",
-            "T060",
-            "T070",
-            "T080"});
+            "S130",
+            "S140",
+            "S150",
+            "S160"});
             this.comboBoxTagNumber.Location = new System.Drawing.Point(137, 35);
             this.comboBoxTagNumber.Name = "comboBoxTagNumber";
             this.comboBoxTagNumber.Size = new System.Drawing.Size(104, 24);
@@ -656,9 +657,10 @@
             "T030",
             "T040",
             "T050",
-            "T060",
-            "T070",
-            "T080"});
+            "S130",
+            "S140",
+            "S150",
+            "S160"});
             this.comboBoxNextTagNumber.Location = new System.Drawing.Point(137, 82);
             this.comboBoxNextTagNumber.Name = "comboBoxNextTagNumber";
             this.comboBoxNextTagNumber.Size = new System.Drawing.Size(104, 24);

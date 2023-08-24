@@ -710,7 +710,7 @@ namespace XDC01SerialLib
         {
             try
             {
-                string[] tagnumbers = new string[11] { "T010", "T020", "T030", "T040", "T050", "T060", "T070", "T080", "T090", "T100", "T110" };
+                string[] tagnumbers = new string[9] { "T010", "T020", "T030", "T040", "T050", "S130", "S140", "S150", "S160" };
                 bool isContains = false;
                 for (int i = 0; i < tagnumbers.Length; i++)
                 {
@@ -768,6 +768,10 @@ namespace XDC01SerialLib
                 else
                 {
                     int startIndex = str_tagnumber_temp.IndexOf("T");
+                    if(startIndex == -1)
+                    {
+                        startIndex = str_tagnumber_temp.IndexOf("S");
+                    }
                     str_tagNumber = str_tagnumber_temp.Replace("\r\n", "").Trim().Substring(startIndex, 4);
                     return true;
                 }

@@ -715,7 +715,11 @@
             "T020",
             "T030",
             "T040",
-            "T050"});
+            "T050",
+            "S130",
+            "S140",
+            "S150",
+            "S160"});
             this.comboBoxWriteTagNum.Location = new System.Drawing.Point(132, 62);
             this.comboBoxWriteTagNum.Name = "comboBoxWriteTagNum";
             this.comboBoxWriteTagNum.Size = new System.Drawing.Size(116, 27);
