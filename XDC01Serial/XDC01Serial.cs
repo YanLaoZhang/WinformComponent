@@ -141,11 +141,20 @@ namespace XDC01SerialLib
             {
                 if (_serialPort != null && _serialPort.IsOpen)
                 {
+                    System.Diagnostics.Trace.WriteLine("解绑数据处理函数-start");
                     _serialPort.DataReceived -= SerialPort_DataReceived;
+                    System.Diagnostics.Trace.WriteLine("解绑数据处理函数-end");
+
+                    _serialPort.DiscardInBuffer();
+                    _serialPort.DiscardOutBuffer();
+
+                    System.Diagnostics.Trace.WriteLine("关闭端口-start");
+                    _serialPort.Close();
+                    System.Diagnostics.Trace.WriteLine("关闭端口-end");
                 }
                 if (_serialPort != null && _serialPort.IsOpen)
                 {
-                    _serialPort.Close();
+                    
                 }
 
                 // 切换串口号
@@ -153,8 +162,14 @@ namespace XDC01SerialLib
 
                 // 打开串口
                 _richTextBox.Text = string.Empty;
+
+                System.Diagnostics.Trace.WriteLine("重新绑定数据处理函数-start");
                 _serialPort.DataReceived += SerialPort_DataReceived;
+                System.Diagnostics.Trace.WriteLine("重新绑定数据处理函数-end");
+
+                System.Diagnostics.Trace.WriteLine("重新打开端口-start");
                 _serialPort.Open();
+                System.Diagnostics.Trace.WriteLine("重新打开端口-end");
 
                 return true;
             }
