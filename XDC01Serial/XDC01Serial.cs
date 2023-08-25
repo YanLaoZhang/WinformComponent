@@ -241,7 +241,7 @@ namespace XDC01SerialLib
                 _serialPort.DiscardOutBuffer(); // \r回车 \n换行
                 string str_Send_X = str_send_cmd + "\r"; //str_Send_X代表要发送的字符串
                 _serialPort.Write(str_Send_X);
-
+                System.Diagnostics.Trace.WriteLine($"发送：{str_Send_X}");
                 if (Respone == false)
                 {
                     return true;
@@ -253,10 +253,18 @@ namespace XDC01SerialLib
                     Application.DoEvents();
                     if (Environment.TickCount - numa > t)
                     {
+                        str_receive_data = str_Receive_skybell;
+                        System.Diagnostics.Trace.WriteLine($"接收Timeout：{str_Receive_skybell}");
+                        if (str_Receive_skybell.Contains(endFlag))
+                        {
+                            System.Diagnostics.Trace.WriteLine($"最后的挣扎：{str_Receive_skybell}");
+                            return true;
+                        }
                         return false;
                     }
                 }
                 str_receive_data = str_Receive_skybell;
+                System.Diagnostics.Trace.WriteLine($"接收OK：{str_Receive_skybell}");
                 return true;
             }
             catch (Exception ee)
@@ -2261,7 +2269,7 @@ namespace XDC01SerialLib
                 string str_ret_value = "";
                 if (SendCMDToXDC01(CMD_SWITCH_IRCUT_RTOS, 5000, true, ref str_ret_value, "Digital Effect") == false)
                 {
-                    str_error_log = $"RTOS发送切换IR CUT指令[{CMD_SWITCH_IRCUT_RTOS}]失败";
+                    str_error_log = $"RTOS发送切换IR CUT指令[{CMD_SWITCH_IRCUT_RTOS}]失败:[{str_ret_value}]";
                     return false;
                 }
 

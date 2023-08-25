@@ -14,12 +14,24 @@ namespace MyCustomDialog
     public partial class CustomDialog : Form
     {
         public DialogResult Result { get; private set; }
+        private string _str_title;
+        private string _str_content;
+        private bool _isBottom;
+        private bool _isButton;
 
         public CustomDialog(string str_title, string str_content, bool isBottom=false, bool isButton=true)
         {
             InitializeComponent();
-            this.Text = str_title;
-            RichTextBoxContent.Text = str_content;
+            _str_title = str_title;
+            _str_content = str_content; 
+            _isBottom = isBottom;
+            _isButton = isButton;
+        }
+
+        private void CustomDialog_Load(object sender, EventArgs e)
+        {
+            this.Text = _str_title;
+            RichTextBoxContent.Text = _str_content;
 
             int lineCount = RichTextBoxContent.GetLineFromCharIndex(RichTextBoxContent.TextLength) + 1;
             int lineHeight = RichTextBoxContent.Font.Height;
@@ -28,20 +40,19 @@ namespace MyCustomDialog
             int newHeight = lineCount * lineHeight + padding;
             RichTextBoxContent.Height = newHeight;
 
-            this.Height = RichTextBoxContent.Height + BtnPass.Height + 80; 
-            if(isBottom)
+            this.Height = RichTextBoxContent.Height + BtnPass.Height + 80;
+            if (_isBottom)
             {
                 int screenHight = Screen.PrimaryScreen.WorkingArea.Height;
                 int screenWidth = Screen.PrimaryScreen.WorkingArea.Width;
                 StartPosition = FormStartPosition.Manual;
-                Location = new Point((screenWidth-Width)/2, screenHight - Height);
+                Location = new Point((screenWidth - Width) / 2, screenHight - Height);
             }
-            if(isButton == false)
+            if (_isButton == false)
             {
                 BtnPass.Visible = false;
                 BtnFail.Visible = false;
             }
-
 
         }
 
