@@ -140,9 +140,9 @@ namespace XDC01Action1
                         //_dataGridView.Rows.Add("电压测试", "-", "-", "-", "-", "继电器串口未连接", "FAIL", Duration.ToString("F2"));
                         for (int i = 0; i < 8; i++)
                         {
-                            _dataGridView.Rows[rowIndex+i].Cells[5].Value = "继电器串口未连接";
-                            _dataGridView.Rows[rowIndex+i].Cells[6].Value = "FAIL";
-                            _dataGridView.Rows[rowIndex+i].Cells[7].Value = Duration.ToString("F2");
+                            _dataGridView.Rows[rowIndex+i].Cells[6].Value = "继电器串口未连接";
+                            _dataGridView.Rows[rowIndex+i].Cells[7].Value = "FAIL";
+                            _dataGridView.Rows[rowIndex+i].Cells[8].Value = Duration.ToString("F2");
                         }
                     });
                     return null;
@@ -157,9 +157,9 @@ namespace XDC01Action1
                         //_dataGridView.Rows.Add("电压测试", "-", "-", "-", "-", "电压表串口未连接", "FAIL", Duration.ToString("F2"));
                         for (int i = 0; i < 8; i++)
                         {
-                            _dataGridView.Rows[rowIndex+i].Cells[5].Value = "电压表串口未连接";
-                            _dataGridView.Rows[rowIndex+i].Cells[6].Value = "FAIL";
-                            _dataGridView.Rows[rowIndex+i].Cells[7].Value = Duration.ToString("F2");
+                            _dataGridView.Rows[rowIndex+i].Cells[6].Value = "电压表串口未连接";
+                            _dataGridView.Rows[rowIndex+i].Cells[7].Value = "FAIL";
+                            _dataGridView.Rows[rowIndex+i].Cells[8].Value = Duration.ToString("F2");
                         }
                     });
                     return null;
@@ -182,9 +182,9 @@ namespace XDC01Action1
                         //_dataGridView.Rows.Add("电压测试", "-", "-", "-", "-", "电压表控制异常", "FAIL", Duration.ToString("F2"));
                         for (int i = 0; i < 8; i++)
                         {
-                            _dataGridView.Rows[rowIndex+i].Cells[5].Value = "电压表控制异常";
-                            _dataGridView.Rows[rowIndex+i].Cells[6].Value = "FAIL";
-                            _dataGridView.Rows[rowIndex+i].Cells[7].Value = Duration.ToString("F2");
+                            _dataGridView.Rows[rowIndex+i].Cells[6].Value = "电压表控制异常";
+                            _dataGridView.Rows[rowIndex+i].Cells[7].Value = "FAIL";
+                            _dataGridView.Rows[rowIndex+i].Cells[8].Value = Duration.ToString("F2");
                         }
                     });
                     return null;
@@ -274,9 +274,9 @@ namespace XDC01Action1
                         float Duration = (Environment.TickCount - start_time) / 1000.00f;
                         testItem.Result = "FAIL";
                         //dataGridView.Rows.Add(testItem.Name, "-", "-", "-", "-", "继电器控制异常", "FAIL", Duration.ToString("F2"));
-                        dataGridView.Rows[rowIndex+i].Cells[5].Value = "继电器控制异常";
-                        dataGridView.Rows[rowIndex+i].Cells[6].Value = testItem.Result;
-                        dataGridView.Rows[rowIndex+i].Cells[7].Value = Duration.ToString("F2");
+                        dataGridView.Rows[rowIndex+i].Cells[6].Value = "继电器控制异常";
+                        dataGridView.Rows[rowIndex+i].Cells[7].Value = testItem.Result;
+                        dataGridView.Rows[rowIndex+i].Cells[8].Value = Duration.ToString("F2");
                         Delay(300);
                         continue;
                     }
@@ -286,9 +286,9 @@ namespace XDC01Action1
                         float Duration = (Environment.TickCount - start_time) / 1000.00f;
                         testItem.Result = "FAIL";
                         //dataGridView.Rows.Add(testItem.Name, "-", "-", "-", "-", "继电器控制异常", "FAIL", Duration.ToString("F2"));
-                        dataGridView.Rows[rowIndex + i].Cells[5].Value = $"通道{relayNum}未打开";
-                        dataGridView.Rows[rowIndex + i].Cells[6].Value = testItem.Result;
-                        dataGridView.Rows[rowIndex + i].Cells[7].Value = Duration.ToString("F2");
+                        dataGridView.Rows[rowIndex + i].Cells[6].Value = $"通道{relayNum}未打开";
+                        dataGridView.Rows[rowIndex + i].Cells[7].Value = testItem.Result;
+                        dataGridView.Rows[rowIndex + i].Cells[8].Value = Duration.ToString("F2");
                         // 关闭继电器
                         if (relaySerial.TriggerRelaySingle(relayNum, false) == false)
                         {
@@ -308,9 +308,9 @@ namespace XDC01Action1
                             float Duration = (Environment.TickCount - start_time) / 1000.00f;
                             testItem.Result = "FAIL";
                             //dataGridView.Rows.Add(testItem.Name, "-", "-", "-", "-", "电压表控制异常", "FAIL", Duration.ToString("F2"));
-                            dataGridView.Rows[rowIndex + i].Cells[5].Value = "电压表控制异常";
-                            dataGridView.Rows[rowIndex + i].Cells[6].Value = testItem.Result;
-                            dataGridView.Rows[rowIndex + i].Cells[7].Value = Duration.ToString("F2");
+                            dataGridView.Rows[rowIndex + i].Cells[6].Value = "电压表控制异常";
+                            dataGridView.Rows[rowIndex + i].Cells[7].Value = testItem.Result;
+                            dataGridView.Rows[rowIndex + i].Cells[8].Value = Duration.ToString("F2");
                         }
                     }
                     else
@@ -335,9 +335,9 @@ namespace XDC01Action1
                         Delay(trigger_interval);  // 间隔0.5秒
                         testItem.Duration = (Environment.TickCount - start_time) / 1000.00f;
                         //dataGridView.Rows.Add(testItem.Name, testItem.Standard, testItem.MinValue, testItem.MaxValue, testItem.Value, testItem.StrVal,testItem.Result, testItem.Duration.ToString("F2"));
-                        dataGridView.Rows[rowIndex + i].Cells[4].Value = testItem.Value;
-                        dataGridView.Rows[rowIndex + i].Cells[6].Value = testItem.Result;
-                        dataGridView.Rows[rowIndex + i].Cells[7].Value = testItem.Duration.ToString("F2");
+                        dataGridView.Rows[rowIndex + i].Cells[5].Value = testItem.Value;
+                        dataGridView.Rows[rowIndex + i].Cells[7].Value = testItem.Result;
+                        dataGridView.Rows[rowIndex + i].Cells[8].Value = testItem.Duration.ToString("F2");
                     }
                 }
 
@@ -375,9 +375,9 @@ namespace XDC01Action1
                     logger.ShowLog($"电流表串口未连接");
                     float Duration = (Environment.TickCount - start_time) / 1000.00f;
                     //dataGridView.Rows.Add("读取工作电流", "-", "-", "-", "-", "电流表串口未连接", "FAIL", Duration.ToString("F2"));
-                    dataGridView.Rows[rowIndex].Cells[5].Value = "电流表串口未连接";
-                    dataGridView.Rows[rowIndex].Cells[6].Value = "FAIL";
-                    dataGridView.Rows[rowIndex].Cells[7].Value = Duration.ToString("F2");
+                    dataGridView.Rows[rowIndex].Cells[6].Value = "电流表串口未连接";
+                    dataGridView.Rows[rowIndex].Cells[7].Value = "FAIL";
+                    dataGridView.Rows[rowIndex].Cells[8].Value = Duration.ToString("F2");
                     return null;
                 }
 
@@ -395,9 +395,9 @@ namespace XDC01Action1
                     logger.ShowLog($"初始化电流表失败");
                     float Duration = (Environment.TickCount - start_time) / 1000.00f;
                     //dataGridView.Rows.Add("读取工作电流", "-", "-", "-", "-", "电流表控制异常", "FAIL", Duration.ToString("F2"));
-                    dataGridView.Rows[rowIndex].Cells[5].Value = "电流表控制异常";
-                    dataGridView.Rows[rowIndex].Cells[6].Value = "FAIL";
-                    dataGridView.Rows[rowIndex].Cells[7].Value = Duration.ToString("F2");
+                    dataGridView.Rows[rowIndex].Cells[6].Value = "电流表控制异常";
+                    dataGridView.Rows[rowIndex].Cells[7].Value = "FAIL";
+                    dataGridView.Rows[rowIndex].Cells[8].Value = Duration.ToString("F2");
                     return null;
                 }
                 else
@@ -410,9 +410,9 @@ namespace XDC01Action1
                         logger.ShowLog($"读取电流表数据失败");
                         float Duration = (Environment.TickCount - start_time) / 1000.00f;
                         //dataGridView.Rows.Add("读取工作电流", "-", "-", "-", "-", "电流表控制异常", "FAIL", Duration.ToString("F2"));
-                        dataGridView.Rows[rowIndex].Cells[5].Value = "电流表控制异常";
-                        dataGridView.Rows[rowIndex].Cells[6].Value = "FAIL";
-                        dataGridView.Rows[rowIndex].Cells[7].Value = Duration.ToString("F2");
+                        dataGridView.Rows[rowIndex].Cells[6].Value = "电流表控制异常";
+                        dataGridView.Rows[rowIndex].Cells[7].Value = "FAIL";
+                        dataGridView.Rows[rowIndex].Cells[8].Value = Duration.ToString("F2");
                         return null;
                     }
                     else
@@ -432,9 +432,9 @@ namespace XDC01Action1
                         }
                         testItem.Duration = (Environment.TickCount - start_time) / 1000.00f;
                         //dataGridView.Rows.Add(testItem.Name, testItem.Standard, testItem.MinValue, testItem.MaxValue, testItem.Value, testItem.StrVal, testItem.Result, testItem.Duration.ToString("F2"));
-                        dataGridView.Rows[rowIndex].Cells[4].Value = testItem.Value;
-                        dataGridView.Rows[rowIndex].Cells[6].Value = testItem.Result;
-                        dataGridView.Rows[rowIndex].Cells[7].Value = testItem.Duration.ToString("F2");
+                        dataGridView.Rows[rowIndex].Cells[5].Value = testItem.Value;
+                        dataGridView.Rows[rowIndex].Cells[7].Value = testItem.Result;
+                        dataGridView.Rows[rowIndex].Cells[8].Value = testItem.Duration.ToString("F2");
                         return testItem;
                     }
                 }
@@ -462,9 +462,9 @@ namespace XDC01Action1
                     logger.ShowLog($"FLUKE电流表串口未连接");
                     float Duration = (Environment.TickCount - start_time) / 1000.00f;
                     //dataGridView.Rows.Add("读取漏电流", "-", "-", "-", "-", "FLUKE电流表串口未连接", "FAIL", Duration.ToString("F2"));
-                    dataGridView.Rows[rowIndex].Cells[5].Value = "FLUKE电流表串口未连接";
-                    dataGridView.Rows[rowIndex].Cells[6].Value = "FAIL";
-                    dataGridView.Rows[rowIndex].Cells[7].Value = Duration.ToString("F2");
+                    dataGridView.Rows[rowIndex].Cells[6].Value = "FLUKE电流表串口未连接";
+                    dataGridView.Rows[rowIndex].Cells[7].Value = "FAIL";
+                    dataGridView.Rows[rowIndex].Cells[8].Value = Duration.ToString("F2");
                     return null;
                 }
                 TestItem testItem = new TestItem()
@@ -494,7 +494,7 @@ namespace XDC01Action1
                         }
                     }
                 }
-                testItem.Value = max_current * 1000.00f;
+                testItem.Value = max_current * 1000000.00f;
                 // 判断电流数据情况
                 if (testItem.Value > testItem.MaxValue || testItem.Value < testItem.MinValue)
                 {
@@ -508,9 +508,9 @@ namespace XDC01Action1
                 }
                 testItem.Duration = (Environment.TickCount - start_time) / 1000.00f;
                 //dataGridView.Rows.Add(testItem.Name, testItem.Standard, testItem.MinValue, testItem.MaxValue, testItem.Value, testItem.StrVal, testItem.Result, testItem.Duration.ToString("F2"));
-                dataGridView.Rows[rowIndex].Cells[4].Value = testItem.Value;
-                dataGridView.Rows[rowIndex].Cells[6].Value = testItem.Result;
-                dataGridView.Rows[rowIndex].Cells[7].Value = testItem.Duration.ToString("F2");
+                dataGridView.Rows[rowIndex].Cells[5].Value = testItem.Value;
+                dataGridView.Rows[rowIndex].Cells[7].Value = testItem.Result;
+                dataGridView.Rows[rowIndex].Cells[8].Value = testItem.Duration.ToString("F2");
                 return testItem;
 
                 /*//--------切换量程为200uA
@@ -519,9 +519,9 @@ namespace XDC01Action1
                     logger.ShowLog($"FLUKE电流表切换量程为200uA失败");
                     float Duration = (Environment.TickCount - start_time) / 1000.00f;
                     //dataGridView.Rows.Add("读取漏电流", "-", "-", "-", "-", "FLUKE电流表控制异常", "FAIL", Duration.ToString("F2"));
-                    dataGridView.Rows[rowIndex].Cells[5].Value = "FLUKE电流表控制异常";
-                    dataGridView.Rows[rowIndex].Cells[6].Value = "FAIL";
-                    dataGridView.Rows[rowIndex].Cells[7].Value = Duration.ToString("F2");
+                    dataGridView.Rows[rowIndex].Cells[6].Value = "FLUKE电流表控制异常";
+                    dataGridView.Rows[rowIndex].Cells[7].Value = "FAIL";
+                    dataGridView.Rows[rowIndex].Cells[8].Value = Duration.ToString("F2");
                     return null;
                 }
                 else
@@ -558,9 +558,9 @@ namespace XDC01Action1
                     }
                     testItem.Duration = (Environment.TickCount - start_time) / 1000.00f;
                     //dataGridView.Rows.Add(testItem.Name, testItem.Standard, testItem.MinValue, testItem.MaxValue, testItem.Value, testItem.StrVal, testItem.Result, testItem.Duration.ToString("F2"));
-                    dataGridView.Rows[rowIndex].Cells[4].Value = testItem.Value;
-                    dataGridView.Rows[rowIndex].Cells[6].Value = testItem.Result;
-                    dataGridView.Rows[rowIndex].Cells[7].Value = testItem.Duration.ToString("F2");
+                    dataGridView.Rows[rowIndex].Cells[5].Value = testItem.Value;
+                    dataGridView.Rows[rowIndex].Cells[7].Value = testItem.Result;
+                    dataGridView.Rows[rowIndex].Cells[8].Value = testItem.Duration.ToString("F2");
                     return testItem;
                 }*/
             }
@@ -603,9 +603,9 @@ namespace XDC01Action1
                     logger.ShowLog($"FLUKE电流表串口未连接");
                     float Duration = (Environment.TickCount - start_time) / 1000.00f;
                     //dataGridView.Rows.Add("读取充电电流", "-", "-", "-", "-", "FLUKE电流表串口未连接", "FAIL", Duration.ToString("F2"));
-                    dataGridView.Rows[rowIndex].Cells[5].Value = "FLUKE电流表串口未连接";
-                    dataGridView.Rows[rowIndex].Cells[6].Value = "FAIL";
-                    dataGridView.Rows[rowIndex].Cells[7].Value = Duration.ToString("F2");
+                    dataGridView.Rows[rowIndex].Cells[6].Value = "FLUKE电流表串口未连接";
+                    dataGridView.Rows[rowIndex].Cells[7].Value = "FAIL";
+                    dataGridView.Rows[rowIndex].Cells[8].Value = Duration.ToString("F2");
                     return null;
                 }
                 TestItem testItem = new TestItem()
@@ -635,7 +635,7 @@ namespace XDC01Action1
                         }
                     }
                 }
-                testItem.Value = max_current;
+                testItem.Value = max_current * 1000.00f;
                 // 判断电流数据情况
                 if (testItem.Value > testItem.MaxValue || testItem.Value < testItem.MinValue)
                 {
@@ -650,9 +650,9 @@ namespace XDC01Action1
 
                 testItem.Duration = (Environment.TickCount - start_time) / 1000.00f;
                 //dataGridView.Rows.Add(testItem.Name, testItem.Standard, testItem.MinValue, testItem.MaxValue, testItem.Value, testItem.StrVal, testItem.Result, testItem.Duration.ToString("F2"));
-                dataGridView.Rows[rowIndex].Cells[4].Value = testItem.Value;
-                dataGridView.Rows[rowIndex].Cells[6].Value = testItem.Result;
-                dataGridView.Rows[rowIndex].Cells[7].Value = testItem.Duration.ToString("F2");
+                dataGridView.Rows[rowIndex].Cells[5].Value = testItem.Value;
+                dataGridView.Rows[rowIndex].Cells[7].Value = testItem.Result;
+                dataGridView.Rows[rowIndex].Cells[8].Value = testItem.Duration.ToString("F2");
                 return testItem;
             }
             catch (Exception ee)
@@ -678,9 +678,9 @@ namespace XDC01Action1
                     logger.ShowLog($"--- 读RN失败：{str_error_log}");
                     float Duration = (Environment.TickCount - start_time) / 1000.00f;
                     //dataGridView.Rows.Add("读取RN号", "-", "-", "-", "-", "串口指令发送异常", "FAIL", Duration.ToString("F2"));
-                    dataGridView.Rows[rowIndex].Cells[5].Value = "串口指令发送异常";
-                    dataGridView.Rows[rowIndex].Cells[6].Value = "FAIL";
-                    dataGridView.Rows[rowIndex].Cells[7].Value = Duration.ToString("F2");
+                    dataGridView.Rows[rowIndex].Cells[6].Value = "串口指令发送异常";
+                    dataGridView.Rows[rowIndex].Cells[7].Value = "FAIL";
+                    dataGridView.Rows[rowIndex].Cells[8].Value = Duration.ToString("F2");
                     return null;
                 }
                 else
@@ -705,9 +705,9 @@ namespace XDC01Action1
                     }
                     RNtestItem.Duration = (Environment.TickCount - start_time) / 1000.00f;
                     //dataGridView.Rows.Add(RNtestItem.Name, RNtestItem.Standard, "-", "-", "-", RNtestItem.StrVal, RNtestItem.Result, RNtestItem.Duration.ToString("F2"));
-                    dataGridView.Rows[rowIndex].Cells[5].Value = RNtestItem.StrVal;
-                    dataGridView.Rows[rowIndex].Cells[6].Value = RNtestItem.Result;
-                    dataGridView.Rows[rowIndex].Cells[7].Value = RNtestItem.Duration.ToString("F2");
+                    dataGridView.Rows[rowIndex].Cells[6].Value = RNtestItem.StrVal;
+                    dataGridView.Rows[rowIndex].Cells[7].Value = RNtestItem.Result;
+                    dataGridView.Rows[rowIndex].Cells[8].Value = RNtestItem.Duration.ToString("F2");
                     testItems.Add(RNtestItem);
                 }
 
@@ -722,9 +722,9 @@ namespace XDC01Action1
                         logger.ShowLog($"--- 读工序号失败：{str_error_log}");
                         float Duration = (Environment.TickCount - start_time) / 1000.00f;
                         //dataGridView.Rows.Add("读取工序号", "-", "-", "-", "-", "串口指令发送异常", "FAIL", Duration.ToString("F2"));
-                        dataGridView.Rows[rowIndex].Cells[5].Value = "串口指令发送异常";
-                        dataGridView.Rows[rowIndex].Cells[6].Value = "FAIL";
-                        dataGridView.Rows[rowIndex].Cells[7].Value = Duration.ToString("F2");
+                        dataGridView.Rows[rowIndex].Cells[6].Value = "串口指令发送异常";
+                        dataGridView.Rows[rowIndex].Cells[7].Value = "FAIL";
+                        dataGridView.Rows[rowIndex].Cells[8].Value = Duration.ToString("F2");
                         return null;
                     }
                     else
@@ -749,9 +749,9 @@ namespace XDC01Action1
                         }
                         tagNumbertestItem.Duration = (Environment.TickCount - start_time) / 1000.00f;
                         //dataGridView.Rows.Add(tagNumbertestItem.Name, tagNumbertestItem.Standard, "-", "-", "-", tagNumbertestItem.StrVal, tagNumbertestItem.Result, tagNumbertestItem.Duration.ToString("F2"));
-                        dataGridView.Rows[rowIndex].Cells[5].Value = tagNumbertestItem.StrVal;
-                        dataGridView.Rows[rowIndex].Cells[6].Value = tagNumbertestItem.Result;
-                        dataGridView.Rows[rowIndex].Cells[7].Value = tagNumbertestItem.Duration.ToString("F2");
+                        dataGridView.Rows[rowIndex].Cells[6].Value = tagNumbertestItem.StrVal;
+                        dataGridView.Rows[rowIndex].Cells[7].Value = tagNumbertestItem.Result;
+                        dataGridView.Rows[rowIndex].Cells[8].Value = tagNumbertestItem.Duration.ToString("F2");
                         testItems.Add(tagNumbertestItem);
                     }
                 }
@@ -791,9 +791,9 @@ namespace XDC01Action1
                     logger.ShowLog($"必须指定要ping的IP");
                     float Duration = (Environment.TickCount - start_time) / 1000.00f;
                     //dataGridView.Rows.Add("Ping网测试", "-", "-", "-", "-", "未指定IP", "FAIL", Duration.ToString("F2"));
-                    dataGridView.Rows[rowIndex].Cells[5].Value = "未指定IP";
-                    dataGridView.Rows[rowIndex].Cells[6].Value = "FAIL";
-                    dataGridView.Rows[rowIndex].Cells[7].Value = Duration.ToString("F2");
+                    dataGridView.Rows[rowIndex].Cells[6].Value = "未指定IP";
+                    dataGridView.Rows[rowIndex].Cells[7].Value = "FAIL";
+                    dataGridView.Rows[rowIndex].Cells[8].Value = Duration.ToString("F2");
                     return null;
                 }
                 else
@@ -805,9 +805,9 @@ namespace XDC01Action1
                         logger.ShowLog($"读取IP失败：{str_error_log}");
                         float Duration = (Environment.TickCount - start_time) / 1000.00f;
                         //dataGridView.Rows.Add("Ping网测试", "-", "-", "-", "-", "设备WiFi连接异常", "FAIL", Duration.ToString("F2"));
-                        dataGridView.Rows[rowIndex].Cells[5].Value = "设备WiFi连接异常";
-                        dataGridView.Rows[rowIndex].Cells[6].Value = "FAIL";
-                        dataGridView.Rows[rowIndex].Cells[7].Value = Duration.ToString("F2");
+                        dataGridView.Rows[rowIndex].Cells[6].Value = "设备WiFi连接异常";
+                        dataGridView.Rows[rowIndex].Cells[7].Value = "FAIL";
+                        dataGridView.Rows[rowIndex].Cells[8].Value = Duration.ToString("F2");
                         return null;
                     }
 
@@ -824,9 +824,9 @@ namespace XDC01Action1
                         logger.ShowLog($"ping网测试异常：[{str_error_log}]");
                         float Duration = (Environment.TickCount - start_time) / 1000.00f;
                         //dataGridView.Rows.Add("Ping网测试", "-", "-", "-", "-", "串口指令发送异常", "FAIL", Duration.ToString("F2"));
-                        dataGridView.Rows[rowIndex].Cells[5].Value = "串口指令发送异常";
-                        dataGridView.Rows[rowIndex].Cells[6].Value = "FAIL";
-                        dataGridView.Rows[rowIndex].Cells[7].Value = Duration.ToString("F2");
+                        dataGridView.Rows[rowIndex].Cells[6].Value = "串口指令发送异常";
+                        dataGridView.Rows[rowIndex].Cells[7].Value = "FAIL";
+                        dataGridView.Rows[rowIndex].Cells[8].Value = Duration.ToString("F2");
                         return null;
                     }
                     else
@@ -852,9 +852,9 @@ namespace XDC01Action1
                         }
                         testItem.Duration = (Environment.TickCount - start_time) / 1000.00f;
                         //dataGridView.Rows.Add(testItem.Name, "-", testItem.MinValue, testItem.MaxValue, testItem.Value, "-", testItem.Result, testItem.Duration.ToString("F2"));
-                        dataGridView.Rows[rowIndex].Cells[4].Value = testItem.Value;
-                        dataGridView.Rows[rowIndex].Cells[6].Value = testItem.Result;
-                        dataGridView.Rows[rowIndex].Cells[7].Value = testItem.Duration.ToString("F2");
+                        dataGridView.Rows[rowIndex].Cells[5].Value = testItem.Value;
+                        dataGridView.Rows[rowIndex].Cells[7].Value = testItem.Result;
+                        dataGridView.Rows[rowIndex].Cells[8].Value = testItem.Duration.ToString("F2");
                         return testItem;
                     }
                 }
@@ -913,7 +913,7 @@ namespace XDC01Action1
                 };
 
                 Font font = new Font("宋体", 12);
-                dataGridView.Rows[rowIndex].Cells[5].Style.Font = font;
+                dataGridView.Rows[rowIndex].Cells[6].Style.Font = font;
 
                 bool AutoPass = false;    // 用于控制自动加人工时，自动通过，不再进行人工测试
                 string auto_data = "";
@@ -935,9 +935,9 @@ namespace XDC01Action1
                         MicTestItem.Result = "PASS";
                         MicTestItem.Duration = (Environment.TickCount - start_time) / 1000.00f;
                         //dataGridView.Rows.Add(MicTestItem.Name, "-", "-", "-", "-", MicTestItem.StrVal, MicTestItem.Result, MicTestItem.Duration.ToString("F2"));
-                        dataGridView.Rows[rowIndex].Cells[5].Value = MicTestItem.StrVal;
-                        dataGridView.Rows[rowIndex].Cells[6].Value = MicTestItem.Result;
-                        dataGridView.Rows[rowIndex].Cells[7].Value = MicTestItem.Duration.ToString("F2");
+                        dataGridView.Rows[rowIndex].Cells[6].Value = MicTestItem.StrVal;
+                        dataGridView.Rows[rowIndex].Cells[7].Value = MicTestItem.Result;
+                        dataGridView.Rows[rowIndex].Cells[8].Value = MicTestItem.Duration.ToString("F2");
                         return MicTestItem;
                     }
                     else
@@ -975,9 +975,9 @@ namespace XDC01Action1
 
                     MicTestItem.Duration = (Environment.TickCount - start_time) / 1000.00f;
                     //dataGridView.Rows.Add(MicTestItem.Name, "-", "-", "-", "-", MicTestItem.StrVal, MicTestItem.Result, MicTestItem.Duration.ToString("F2"));
-                    dataGridView.Rows[rowIndex].Cells[5].Value = MicTestItem.StrVal;
-                    dataGridView.Rows[rowIndex].Cells[6].Value = MicTestItem.Result;
-                    dataGridView.Rows[rowIndex].Cells[7].Value = MicTestItem.Duration.ToString("F2");
+                    dataGridView.Rows[rowIndex].Cells[6].Value = MicTestItem.StrVal;
+                    dataGridView.Rows[rowIndex].Cells[7].Value = MicTestItem.Result;
+                    dataGridView.Rows[rowIndex].Cells[8].Value = MicTestItem.Duration.ToString("F2");
                     return MicTestItem;
                 }
                 else
@@ -986,9 +986,9 @@ namespace XDC01Action1
                     MicTestItem.Result = "FAIL";
                     MicTestItem.Duration = (Environment.TickCount - start_time) / 1000.00f;
                     //dataGridView.Rows.Add(MicTestItem.Name, "-", "-", "-", "-", MicTestItem.StrVal, MicTestItem.Result, MicTestItem.Duration.ToString("F2"));
-                    dataGridView.Rows[rowIndex].Cells[5].Value = MicTestItem.StrVal;
-                    dataGridView.Rows[rowIndex].Cells[6].Value = MicTestItem.Result;
-                    dataGridView.Rows[rowIndex].Cells[7].Value = MicTestItem.Duration.ToString("F2");
+                    dataGridView.Rows[rowIndex].Cells[6].Value = MicTestItem.StrVal;
+                    dataGridView.Rows[rowIndex].Cells[7].Value = MicTestItem.Result;
+                    dataGridView.Rows[rowIndex].Cells[8].Value = MicTestItem.Duration.ToString("F2");
                     return MicTestItem;
                 }
             }
@@ -1103,8 +1103,8 @@ namespace XDC01Action1
                 }
                 testItem.Duration = (Environment.TickCount - start_time) / 1000.00f;
                 //dataGridView.Rows.Add(testItem.Name, "-", "-", "-", "-", "-", testItem.Result, testItem.Duration.ToString("F2"));
-                dataGridView.Rows[rowIndex].Cells[6].Value = testItem.Result;
-                dataGridView.Rows[rowIndex].Cells[7].Value = testItem.Duration.ToString("F2");
+                dataGridView.Rows[rowIndex].Cells[7].Value = testItem.Result;
+                dataGridView.Rows[rowIndex].Cells[8].Value = testItem.Duration.ToString("F2");
                 return testItem;
             }
             catch (Exception ee)
@@ -1167,9 +1167,9 @@ namespace XDC01Action1
 
                 btnTestItem.Duration = (Environment.TickCount - start_time) / 1000.00f;
                 //dataGridView.Rows.Add(btnTestItem.Name, "-", "-", "-", "-", "-", btnTestItem.Result, btnTestItem.Duration.ToString("F2"));
-                dataGridView.Rows[rowIndex].Cells[5].Value = btnTestItem.StrVal;
-                dataGridView.Rows[rowIndex].Cells[6].Value = btnTestItem.Result;
-                dataGridView.Rows[rowIndex].Cells[7].Value = btnTestItem.Duration.ToString("F2");
+                dataGridView.Rows[rowIndex].Cells[6].Value = btnTestItem.StrVal;
+                dataGridView.Rows[rowIndex].Cells[7].Value = btnTestItem.Result;
+                dataGridView.Rows[rowIndex].Cells[8].Value = btnTestItem.Duration.ToString("F2");
                 return btnTestItem;
             }
             catch (Exception ee)
@@ -1258,9 +1258,9 @@ namespace XDC01Action1
                 }*/
                 btnTestItem.Duration = (Environment.TickCount - start_time) / 1000.00f;
                 //dataGridView.Rows.Add(btnTestItem.Name, "-", "-", "-", "-", "-", btnTestItem.Result, btnTestItem.Duration.ToString("F2"));
-                dataGridView.Rows[rowIndex].Cells[5].Value = btnTestItem.StrVal;
-                dataGridView.Rows[rowIndex].Cells[6].Value = btnTestItem.Result;
-                dataGridView.Rows[rowIndex].Cells[7].Value = btnTestItem.Duration.ToString("F2");
+                dataGridView.Rows[rowIndex].Cells[6].Value = btnTestItem.StrVal;
+                dataGridView.Rows[rowIndex].Cells[7].Value = btnTestItem.Result;
+                dataGridView.Rows[rowIndex].Cells[8].Value = btnTestItem.Duration.ToString("F2");
                 testItems.Add(btnTestItem);
 
                 start_time = Environment.TickCount;
@@ -1285,8 +1285,8 @@ namespace XDC01Action1
                 }
                 speakerTestItem.Duration = (Environment.TickCount - start_time) / 1000.00f;
                 //dataGridView.Rows.Add(speakerTestItem.Name, "-", "-", "-", "-", "-", speakerTestItem.Result, speakerTestItem.Duration.ToString("F2"));
-                dataGridView.Rows[rowIndex+1].Cells[6].Value = speakerTestItem.Result;
-                dataGridView.Rows[rowIndex+1].Cells[7].Value = speakerTestItem.Duration.ToString("F2");
+                dataGridView.Rows[rowIndex+1].Cells[7].Value = speakerTestItem.Result;
+                dataGridView.Rows[rowIndex+1].Cells[8].Value = speakerTestItem.Duration.ToString("F2");
                 testItems.Add(speakerTestItem);
 
                 return testItems;
@@ -1372,9 +1372,9 @@ namespace XDC01Action1
                 }*/
                 testItem.Duration = (Environment.TickCount - start_time) / 1000.00f;
                 //dataGridView.Rows.Add(testItem.Name, "-", "-", "-", "-", "-", testItem.Result, testItem.Duration.ToString("F2"));
-                dataGridView.Rows[rowIndex].Cells[5].Value = testItem.StrVal;
-                dataGridView.Rows[rowIndex].Cells[6].Value = testItem.Result;
-                dataGridView.Rows[rowIndex].Cells[7].Value = testItem.Duration.ToString("F2");
+                dataGridView.Rows[rowIndex].Cells[6].Value = testItem.StrVal;
+                dataGridView.Rows[rowIndex].Cells[7].Value = testItem.Result;
+                dataGridView.Rows[rowIndex].Cells[8].Value = testItem.Duration.ToString("F2");
                 return testItem;
             }
             catch (Exception ee)
@@ -1521,8 +1521,8 @@ namespace XDC01Action1
                 }
                 testItem.Duration = (Environment.TickCount - start_time) / 1000.00f;
                 //dataGridView.Rows.Add(testItem.Name, "-", "-", "-", "-", "-", testItem.Result, testItem.Duration.ToString("F2"));
-                dataGridView.Rows[rowIndex].Cells[6].Value = testItem.Result;
-                dataGridView.Rows[rowIndex].Cells[7].Value = testItem.Duration.ToString("F2");
+                dataGridView.Rows[rowIndex].Cells[7].Value = testItem.Result;
+                dataGridView.Rows[rowIndex].Cells[8].Value = testItem.Duration.ToString("F2");
                 return testItem;
             }
             catch (Exception ee)
@@ -1590,9 +1590,9 @@ namespace XDC01Action1
                     }
                     for (int i = 0; i < row; i++)
                     {
-                        dataGridView.Rows[rowIndex+i].Cells[5].Value = "设备WiFi连接异常";
-                        dataGridView.Rows[rowIndex+i].Cells[6].Value = "FAIL";
-                        dataGridView.Rows[rowIndex+i].Cells[7].Value = Duration.ToString("F2");
+                        dataGridView.Rows[rowIndex+i].Cells[6].Value = "设备WiFi连接异常";
+                        dataGridView.Rows[rowIndex+i].Cells[7].Value = "FAIL";
+                        dataGridView.Rows[rowIndex+i].Cells[8].Value = Duration.ToString("F2");
                     }
 
                     return null;
@@ -1617,9 +1617,9 @@ namespace XDC01Action1
                         }
                         for (int i = 0; i < row; i++)
                         {
-                            dataGridView.Rows[rowIndex+i].Cells[5].Value = "串口指令发送异常";
-                            dataGridView.Rows[rowIndex+i].Cells[6].Value = "FAIL";
-                            dataGridView.Rows[rowIndex+i].Cells[7].Value = Duration.ToString("F2");
+                            dataGridView.Rows[rowIndex+i].Cells[6].Value = "串口指令发送异常";
+                            dataGridView.Rows[rowIndex+i].Cells[7].Value = "FAIL";
+                            dataGridView.Rows[rowIndex+i].Cells[8].Value = Duration.ToString("F2");
                         }
 
                         return null;
@@ -1645,8 +1645,8 @@ namespace XDC01Action1
                         }
                         vlcTestItem.Duration = (Environment.TickCount - start_time) / 1000.00f;
                         //dataGridView.Rows.Add(vlcTestItem.Name, "-", "-", "-", "-", "-", vlcTestItem.Result, vlcTestItem.Duration.ToString("F2"));
-                        dataGridView.Rows[rowIndex].Cells[6].Value = vlcTestItem.Result;
-                        dataGridView.Rows[rowIndex].Cells[7].Value = vlcTestItem.Duration.ToString("F2");
+                        dataGridView.Rows[rowIndex].Cells[7].Value = vlcTestItem.Result;
+                        dataGridView.Rows[rowIndex].Cells[8].Value = vlcTestItem.Duration.ToString("F2");
                         testItems.Add(vlcTestItem);
 
                         if(ir_cut || ir_led)
@@ -1684,8 +1684,8 @@ namespace XDC01Action1
                             }
                             IRCutTestItem.Duration = (Environment.TickCount - start_time) / 1000.00f;
                             //dataGridView.Rows.Add(IRCutTestItem.Name, "-", "-", "-", "-", "-", IRCutTestItem.Result, IRCutTestItem.Duration.ToString("F2"));
-                            dataGridView.Rows[rowIndex].Cells[6].Value = IRCutTestItem.Result;
-                            dataGridView.Rows[rowIndex].Cells[7].Value = IRCutTestItem.Duration.ToString("F2");
+                            dataGridView.Rows[rowIndex].Cells[7].Value = IRCutTestItem.Result;
+                            dataGridView.Rows[rowIndex].Cells[8].Value = IRCutTestItem.Duration.ToString("F2");
                             testItems.Add(IRCutTestItem);
                         }
                         if (ir_led)
@@ -1714,8 +1714,8 @@ namespace XDC01Action1
                             }
                             IRLedTestItem.Duration = (Environment.TickCount - start_time) / 1000.00f;
                             //dataGridView.Rows.Add(IRLedTestItem.Name, "-", "-", "-", "-", "-", IRLedTestItem.Result, IRLedTestItem.Duration.ToString("F2"));
-                            dataGridView.Rows[rowIndex].Cells[6].Value = IRLedTestItem.Result;
-                            dataGridView.Rows[rowIndex].Cells[7].Value = IRLedTestItem.Duration.ToString("F2");
+                            dataGridView.Rows[rowIndex].Cells[7].Value = IRLedTestItem.Result;
+                            dataGridView.Rows[rowIndex].Cells[8].Value = IRLedTestItem.Duration.ToString("F2");
                             testItems.Add(IRLedTestItem);
                         }
 
@@ -1772,9 +1772,9 @@ namespace XDC01Action1
                     logger.ShowLog("--- 读取亮度值失败：" + str_error_log);
                     float Duration = (Environment.TickCount - start_time) / 1000.00f;
                     //dataGridView.Rows.Add("读取亮度值", "-", "-", "-", "-", "串口指令发送异常", "FAIL", Duration.ToString("F2"));
-                    dataGridView.Rows[rowIndex].Cells[5].Value = "串口指令发送异常";
-                    dataGridView.Rows[rowIndex].Cells[6].Value = "FAIL";
-                    dataGridView.Rows[rowIndex].Cells[7].Value = Duration.ToString("F2");
+                    dataGridView.Rows[rowIndex].Cells[6].Value = "串口指令发送异常";
+                    dataGridView.Rows[rowIndex].Cells[7].Value = "FAIL";
+                    dataGridView.Rows[rowIndex].Cells[8].Value = Duration.ToString("F2");
                     return null;
                 }
                 else
@@ -1792,9 +1792,9 @@ namespace XDC01Action1
                     }
                     testItem.Duration = (Environment.TickCount - start_time) / 1000.00f;
                     //dataGridView.Rows.Add(testItem.Name, "-", testItem.MinValue, testItem.MaxValue, testItem.Value, "-", testItem.Result, testItem.Duration.ToString("F2"));
-                    dataGridView.Rows[rowIndex].Cells[4].Value = testItem.Value;
-                    dataGridView.Rows[rowIndex].Cells[6].Value = testItem.Result;
-                    dataGridView.Rows[rowIndex].Cells[7].Value = testItem.Duration.ToString("F2");
+                    dataGridView.Rows[rowIndex].Cells[5].Value = testItem.Value;
+                    dataGridView.Rows[rowIndex].Cells[7].Value = testItem.Result;
+                    dataGridView.Rows[rowIndex].Cells[8].Value = testItem.Duration.ToString("F2");
                     return testItem;
                 }
             }
@@ -1832,9 +1832,9 @@ namespace XDC01Action1
                     //dataGridView.Rows.Add("读取设备信息", "-", "-", "-", "-", "串口指令发送异常", "FAIL", Duration.ToString("F2"));
                     for(int i = 0; i < 5; i++)
                     {
-                        dataGridView.Rows[rowIndex+i].Cells[5].Value = "串口指令发送异常";
-                        dataGridView.Rows[rowIndex+i].Cells[6].Value = "FAIL";
-                        dataGridView.Rows[rowIndex+i].Cells[7].Value = Duration.ToString("F2");
+                        dataGridView.Rows[rowIndex+i].Cells[6].Value = "串口指令发送异常";
+                        dataGridView.Rows[rowIndex+i].Cells[7].Value = "FAIL";
+                        dataGridView.Rows[rowIndex+i].Cells[8].Value = Duration.ToString("F2");
                     }
                     return null;
                 }
@@ -1860,9 +1860,9 @@ namespace XDC01Action1
                     }
                     FWtestItem.Duration = (Environment.TickCount - start_time) / 1000.00f;
                     //dataGridView.Rows.Add(FWtestItem.Name, FWtestItem.Standard, "-", "-", "-", FWtestItem.StrVal, FWtestItem.Result, FWtestItem.Duration.ToString("F2"));
-                    dataGridView.Rows[rowIndex].Cells[5].Value = FWtestItem.StrVal;
-                    dataGridView.Rows[rowIndex].Cells[6].Value = FWtestItem.Result;
-                    dataGridView.Rows[rowIndex].Cells[7].Value = FWtestItem.Duration.ToString("F2");
+                    dataGridView.Rows[rowIndex].Cells[6].Value = FWtestItem.StrVal;
+                    dataGridView.Rows[rowIndex].Cells[7].Value = FWtestItem.Result;
+                    dataGridView.Rows[rowIndex].Cells[8].Value = FWtestItem.Duration.ToString("F2");
                     testItems.Add(FWtestItem);
 
                     rowIndex++;
@@ -1885,9 +1885,9 @@ namespace XDC01Action1
                     }
                     HWtestItem.Duration = (Environment.TickCount - start_time) / 1000.00f;
                     //dataGridView.Rows.Add(HWtestItem.Name, HWtestItem.Standard, "-", "-", "-", HWtestItem.StrVal, HWtestItem.Result, HWtestItem.Duration.ToString("F2"));
-                    dataGridView.Rows[rowIndex].Cells[5].Value = HWtestItem.StrVal;
-                    dataGridView.Rows[rowIndex].Cells[6].Value = HWtestItem.Result;
-                    dataGridView.Rows[rowIndex].Cells[7].Value = HWtestItem.Duration.ToString("F2");
+                    dataGridView.Rows[rowIndex].Cells[6].Value = HWtestItem.StrVal;
+                    dataGridView.Rows[rowIndex].Cells[7].Value = HWtestItem.Result;
+                    dataGridView.Rows[rowIndex].Cells[8].Value = HWtestItem.Duration.ToString("F2");
                     testItems.Add(HWtestItem);
 
                     rowIndex++; ;
@@ -1910,9 +1910,9 @@ namespace XDC01Action1
                     }
                     MCUtestItem.Duration = (Environment.TickCount - start_time) / 1000.00f;
                     //dataGridView.Rows.Add(MCUtestItem.Name, MCUtestItem.Standard, "-", "-", "-", MCUtestItem.StrVal, MCUtestItem.Result, MCUtestItem.Duration.ToString("F2"));
-                    dataGridView.Rows[rowIndex].Cells[5].Value = MCUtestItem.StrVal;
-                    dataGridView.Rows[rowIndex].Cells[6].Value = MCUtestItem.Result;
-                    dataGridView.Rows[rowIndex].Cells[7].Value = MCUtestItem.Duration.ToString("F2");
+                    dataGridView.Rows[rowIndex].Cells[6].Value = MCUtestItem.StrVal;
+                    dataGridView.Rows[rowIndex].Cells[7].Value = MCUtestItem.Result;
+                    dataGridView.Rows[rowIndex].Cells[8].Value = MCUtestItem.Duration.ToString("F2");
                     testItems.Add(MCUtestItem);
 
                     rowIndex++;
@@ -1939,9 +1939,9 @@ namespace XDC01Action1
                     }
                     BatteryVoltestItem.Duration = (Environment.TickCount - start_time) / 1000.00f;
                     //dataGridView.Rows.Add(BatteryVoltestItem.Name, "-", BatteryVoltestItem.MinValue, BatteryVoltestItem.MaxValue, BatteryVoltestItem.Value, "-", BatteryVoltestItem.Result, BatteryVoltestItem.Duration.ToString("F2"));
-                    dataGridView.Rows[rowIndex].Cells[4].Value = BatteryVoltestItem.Value;
-                    dataGridView.Rows[rowIndex].Cells[6].Value = BatteryVoltestItem.Result;
-                    dataGridView.Rows[rowIndex].Cells[7].Value = BatteryVoltestItem.Duration.ToString("F2");
+                    dataGridView.Rows[rowIndex].Cells[5].Value = BatteryVoltestItem.Value;
+                    dataGridView.Rows[rowIndex].Cells[7].Value = BatteryVoltestItem.Result;
+                    dataGridView.Rows[rowIndex].Cells[8].Value = BatteryVoltestItem.Duration.ToString("F2");
                     testItems.Add(BatteryVoltestItem);
 
                     rowIndex++;
@@ -1969,9 +1969,9 @@ namespace XDC01Action1
                     }
                     CPUTempVoltestItem.Duration = (Environment.TickCount - start_time) / 1000.00f;
                     //dataGridView.Rows.Add(CPUTempVoltestItem.Name, "-", CPUTempVoltestItem.MinValue, CPUTempVoltestItem.MaxValue, CPUTempVoltestItem.Value, "-", CPUTempVoltestItem.Result, CPUTempVoltestItem.Duration.ToString("F2"));
-                    dataGridView.Rows[rowIndex].Cells[4].Value = CPUTempVoltestItem.Value;
-                    dataGridView.Rows[rowIndex].Cells[6].Value = CPUTempVoltestItem.Result;
-                    dataGridView.Rows[rowIndex].Cells[7].Value = CPUTempVoltestItem.Duration.ToString("F2");
+                    dataGridView.Rows[rowIndex].Cells[5].Value = CPUTempVoltestItem.Value;
+                    dataGridView.Rows[rowIndex].Cells[7].Value = CPUTempVoltestItem.Result;
+                    dataGridView.Rows[rowIndex].Cells[8].Value = CPUTempVoltestItem.Duration.ToString("F2");
                     testItems.Add(CPUTempVoltestItem);
 
                     return testItems;
@@ -2024,9 +2024,9 @@ namespace XDC01Action1
                     //dataGridView.Rows.Add("WiFI吞吐量测试", "-", "-", "-", "-", "设备WiFi连接异常", "FAIL", Duration.ToString("F2"));
                     for (int i = 0; i < 4; i++)
                     {
-                        dataGridView.Rows[rowIndex+i].Cells[5].Value = "设备WiFi连接异常";
-                        dataGridView.Rows[rowIndex+i].Cells[6].Value = "FAIL";
-                        dataGridView.Rows[rowIndex+i].Cells[7].Value = Duration.ToString("F2");
+                        dataGridView.Rows[rowIndex+i].Cells[6].Value = "设备WiFi连接异常";
+                        dataGridView.Rows[rowIndex+i].Cells[7].Value = "FAIL";
+                        dataGridView.Rows[rowIndex+i].Cells[8].Value = Duration.ToString("F2");
                     }
 
                     return null;
@@ -2059,9 +2059,9 @@ namespace XDC01Action1
                         //dataGridView.Rows.Add("WiFI吞吐量测试", "-", "-", "-", "-", "打开iPerf3失败", "FAIL", Duration.ToString("F2"));
                         for (int i = 0; i < 4; i++)
                         {
-                            dataGridView.Rows[rowIndex+i].Cells[5].Value = "打开iPerf3失败";
-                            dataGridView.Rows[rowIndex+i].Cells[6].Value = "FAIL";
-                            dataGridView.Rows[rowIndex+i].Cells[7].Value = Duration.ToString("F2");
+                            dataGridView.Rows[rowIndex+i].Cells[6].Value = "打开iPerf3失败";
+                            dataGridView.Rows[rowIndex+i].Cells[7].Value = "FAIL";
+                            dataGridView.Rows[rowIndex+i].Cells[8].Value = Duration.ToString("F2");
                         }
 
                         return null;
@@ -2085,9 +2085,9 @@ namespace XDC01Action1
                             //dataGridView.Rows.Add("WiFI吞吐量测试", "-", "-", "-", "-", "串口指令发送异常", "FAIL", Duration.ToString("F2"));
                             for (int i = 0; i < 4; i++)
                             {
-                                dataGridView.Rows[rowIndex+i].Cells[5].Value = "串口指令发送异常";
-                                dataGridView.Rows[rowIndex+i].Cells[6].Value = "FAIL";
-                                dataGridView.Rows[rowIndex+i].Cells[7].Value = Duration.ToString("F2");
+                                dataGridView.Rows[rowIndex+i].Cells[6].Value = "串口指令发送异常";
+                                dataGridView.Rows[rowIndex+i].Cells[7].Value = "FAIL";
+                                dataGridView.Rows[rowIndex+i].Cells[8].Value = Duration.ToString("F2");
                             }
 
                             return null;
@@ -2118,9 +2118,9 @@ namespace XDC01Action1
                             }
                             WiFiUpRatetestItem.Duration = (Environment.TickCount - start_time) / 1000.00f;
                             //dataGridView.Rows.Add(WiFiUpRatetestItem.Name, "-", WiFiUpRatetestItem.MinValue, WiFiUpRatetestItem.MaxValue, WiFiUpRatetestItem.Value, "-", WiFiUpRatetestItem.Result, WiFiUpRatetestItem.Duration.ToString("F2"));
-                            dataGridView.Rows[rowIndex].Cells[4].Value = WiFiUpRatetestItem.Value;
-                            dataGridView.Rows[rowIndex].Cells[6].Value = WiFiUpRatetestItem.Result;
-                            dataGridView.Rows[rowIndex].Cells[7].Value = WiFiUpRatetestItem.Duration.ToString("F2");
+                            dataGridView.Rows[rowIndex].Cells[5].Value = WiFiUpRatetestItem.Value;
+                            dataGridView.Rows[rowIndex].Cells[7].Value = WiFiUpRatetestItem.Result;
+                            dataGridView.Rows[rowIndex].Cells[8].Value = WiFiUpRatetestItem.Duration.ToString("F2");
                             testItems.Add(WiFiUpRatetestItem);
                             rowIndex++;
                             // 上行丢包率
@@ -2146,9 +2146,9 @@ namespace XDC01Action1
                             }
                             WiFiUplosstestItem.Duration = (Environment.TickCount - start_time) / 1000.00f;
                             //dataGridView.Rows.Add(WiFiUplosstestItem.Name, "-", WiFiUplosstestItem.MinValue, WiFiUplosstestItem.MaxValue, WiFiUplosstestItem.Value, "-", WiFiUplosstestItem.Result, WiFiUplosstestItem.Duration.ToString("F2"));
-                            dataGridView.Rows[rowIndex].Cells[4].Value = WiFiUplosstestItem.Value;
-                            dataGridView.Rows[rowIndex].Cells[6].Value = WiFiUplosstestItem.Result;
-                            dataGridView.Rows[rowIndex].Cells[7].Value = WiFiUplosstestItem.Duration.ToString("F2");
+                            dataGridView.Rows[rowIndex].Cells[5].Value = WiFiUplosstestItem.Value;
+                            dataGridView.Rows[rowIndex].Cells[7].Value = WiFiUplosstestItem.Result;
+                            dataGridView.Rows[rowIndex].Cells[8].Value = WiFiUplosstestItem.Duration.ToString("F2");
                             testItems.Add(WiFiUplosstestItem);
                             rowIndex++;
                         }
@@ -2164,9 +2164,9 @@ namespace XDC01Action1
                             //dataGridView.Rows.Add("WiFI吞吐量测试", "-", "-", "-", "-", "串口指令发送异常", "FAIL", Duration.ToString("F2"));
                             for (int i = 0; i < 2; i++)
                             {
-                                dataGridView.Rows[rowIndex+i].Cells[5].Value = "串口指令发送异常";
-                                dataGridView.Rows[rowIndex+i].Cells[6].Value = "FAIL";
-                                dataGridView.Rows[rowIndex+i].Cells[7].Value = Duration.ToString("F2");
+                                dataGridView.Rows[rowIndex+i].Cells[6].Value = "串口指令发送异常";
+                                dataGridView.Rows[rowIndex+i].Cells[7].Value = "FAIL";
+                                dataGridView.Rows[rowIndex+i].Cells[8].Value = Duration.ToString("F2");
                             }
 
                             return null;
@@ -2197,9 +2197,9 @@ namespace XDC01Action1
                             }
                             WiFiDownRatetestItem.Duration = (Environment.TickCount - start_time) / 1000.00f;
                             //dataGridView.Rows.Add(WiFiDownRatetestItem.Name, "-", WiFiDownRatetestItem.MinValue, WiFiDownRatetestItem.MaxValue, WiFiDownRatetestItem.Value, "-", WiFiDownRatetestItem.Result, WiFiDownRatetestItem.Duration.ToString("F2"));
-                            dataGridView.Rows[rowIndex].Cells[4].Value = WiFiDownRatetestItem.Value;
-                            dataGridView.Rows[rowIndex].Cells[6].Value = WiFiDownRatetestItem.Result;
-                            dataGridView.Rows[rowIndex].Cells[7].Value = WiFiDownRatetestItem.Duration.ToString("F2");
+                            dataGridView.Rows[rowIndex].Cells[5].Value = WiFiDownRatetestItem.Value;
+                            dataGridView.Rows[rowIndex].Cells[7].Value = WiFiDownRatetestItem.Result;
+                            dataGridView.Rows[rowIndex].Cells[8].Value = WiFiDownRatetestItem.Duration.ToString("F2");
                             testItems.Add(WiFiDownRatetestItem);
 
                             rowIndex++;
@@ -2226,9 +2226,9 @@ namespace XDC01Action1
                             }
                             WiFiDownlosstestItem.Duration = (Environment.TickCount - start_time) / 1000.00f;
                             //dataGridView.Rows.Add(WiFiDownlosstestItem.Name, "-", WiFiDownlosstestItem.MinValue, WiFiDownlosstestItem.MaxValue, WiFiDownlosstestItem.Value, "-", WiFiDownlosstestItem.Result, WiFiDownlosstestItem.Duration.ToString("F2"));
-                            dataGridView.Rows[rowIndex].Cells[4].Value = WiFiDownlosstestItem.Value;
-                            dataGridView.Rows[rowIndex].Cells[6].Value = WiFiDownlosstestItem.Result;
-                            dataGridView.Rows[rowIndex].Cells[7].Value = WiFiDownlosstestItem.Duration.ToString("F2");
+                            dataGridView.Rows[rowIndex].Cells[5].Value = WiFiDownlosstestItem.Value;
+                            dataGridView.Rows[rowIndex].Cells[7].Value = WiFiDownlosstestItem.Result;
+                            dataGridView.Rows[rowIndex].Cells[8].Value = WiFiDownlosstestItem.Duration.ToString("F2");
                             testItems.Add(WiFiDownlosstestItem);
                         }
 
@@ -2281,9 +2281,9 @@ namespace XDC01Action1
                     //dataGridView.Rows.Add("RF发送测试", "-", "-", "-", "-", "连接频谱仪失败", "FAIL", Duration.ToString("F2"));
                     for (int i = 0; i < 2; i++)
                     {
-                        dataGridView.Rows[rowIndex+i].Cells[5].Value = "连接频谱仪失败";
-                        dataGridView.Rows[rowIndex+i].Cells[6].Value = "FAIL";
-                        dataGridView.Rows[rowIndex+i].Cells[7].Value = Duration.ToString("F2");
+                        dataGridView.Rows[rowIndex+i].Cells[6].Value = "连接频谱仪失败";
+                        dataGridView.Rows[rowIndex+i].Cells[7].Value = "FAIL";
+                        dataGridView.Rows[rowIndex+i].Cells[8].Value = Duration.ToString("F2");
                     }
 
                     return null;
@@ -2300,9 +2300,9 @@ namespace XDC01Action1
                         //dataGridView.Rows.Add("RF发送测试", "-", "-", "-", "-", "串口指令发送异常", "FAIL", Duration.ToString("F2"));
                         for (int i = 0; i < 2; i++)
                         {
-                            dataGridView.Rows[rowIndex+i].Cells[5].Value = "串口指令发送异常";
-                            dataGridView.Rows[rowIndex+i].Cells[6].Value = "FAIL";
-                            dataGridView.Rows[rowIndex+i].Cells[7].Value = Duration.ToString("F2");
+                            dataGridView.Rows[rowIndex+i].Cells[6].Value = "串口指令发送异常";
+                            dataGridView.Rows[rowIndex+i].Cells[7].Value = "FAIL";
+                            dataGridView.Rows[rowIndex+i].Cells[8].Value = Duration.ToString("F2");
                         }
 
                         return null;
@@ -2365,9 +2365,9 @@ namespace XDC01Action1
                         }
                         rfFrequencytestItem.Duration = (Environment.TickCount - start_time) / 1000.00f;
                         //dataGridView.Rows.Add(rfFrequencytestItem.Name, "-", rfFrequencytestItem.MinValue, rfFrequencytestItem.MaxValue, rfFrequencytestItem.Value, rfFrequencytestItem.StrVal, rfFrequencytestItem.Result, rfFrequencytestItem.Duration.ToString("F2"));
-                        dataGridView.Rows[rowIndex].Cells[4].Value = rfFrequencytestItem.Value;
-                        dataGridView.Rows[rowIndex].Cells[6].Value = rfFrequencytestItem.Result;
-                        dataGridView.Rows[rowIndex].Cells[7].Value = rfFrequencytestItem.Duration.ToString("F2");
+                        dataGridView.Rows[rowIndex].Cells[5].Value = rfFrequencytestItem.Value;
+                        dataGridView.Rows[rowIndex].Cells[7].Value = rfFrequencytestItem.Result;
+                        dataGridView.Rows[rowIndex].Cells[8].Value = rfFrequencytestItem.Duration.ToString("F2");
                         testItems.Add(rfFrequencytestItem);
 
                         rowIndex++;
@@ -2425,9 +2425,9 @@ namespace XDC01Action1
                         }
                         rfPowertestItem.Duration = (Environment.TickCount - start_time) / 1000.00f;
                         //dataGridView.Rows.Add(rfPowertestItem.Name, "-", rfPowertestItem.MinValue, rfPowertestItem.MaxValue, rfPowertestItem.Value, rfPowertestItem.StrVal, rfPowertestItem.Result, rfPowertestItem.Duration.ToString("F2"));
-                        dataGridView.Rows[rowIndex].Cells[4].Value = rfPowertestItem.Value;
-                        dataGridView.Rows[rowIndex].Cells[6].Value = rfPowertestItem.Result;
-                        dataGridView.Rows[rowIndex].Cells[7].Value = rfPowertestItem.Duration.ToString("F2");
+                        dataGridView.Rows[rowIndex].Cells[5].Value = rfPowertestItem.Value;
+                        dataGridView.Rows[rowIndex].Cells[7].Value = rfPowertestItem.Result;
+                        dataGridView.Rows[rowIndex].Cells[8].Value = rfPowertestItem.Duration.ToString("F2");
                         testItems.Add(rfPowertestItem);
 
                         return testItems;
@@ -2493,8 +2493,8 @@ namespace XDC01Action1
 
                 testItem.Duration = (Environment.TickCount - start_time) / 1000.00f;
                 //dataGridView.Rows.Add(testItem.Name, "-", "-", "-", "-", "-", testItem.Result, testItem.Duration.ToString("F2"));
-                dataGridView.Rows[rowIndex].Cells[6].Value = testItem.Result;
-                dataGridView.Rows[rowIndex].Cells[7].Value = testItem.Duration.ToString("F2");
+                dataGridView.Rows[rowIndex].Cells[7].Value = testItem.Result;
+                dataGridView.Rows[rowIndex].Cells[8].Value = testItem.Duration.ToString("F2");
                 return testItem;
             }
             catch (Exception ee)
@@ -2546,8 +2546,8 @@ namespace XDC01Action1
                 }
                 testItem.Duration = (Environment.TickCount - start_time) / 1000.00f;
                 //dataGridView.Rows.Add(testItem.Name, "-", "-", "-", "-", "-", testItem.Result, testItem.Duration.ToString("F2"));
-                dataGridView.Rows[rowIndex].Cells[6].Value = testItem.Result;
-                dataGridView.Rows[rowIndex].Cells[7].Value = testItem.Duration.ToString("F2");
+                dataGridView.Rows[rowIndex].Cells[7].Value = testItem.Result;
+                dataGridView.Rows[rowIndex].Cells[8].Value = testItem.Duration.ToString("F2");
                 return testItem;
             }
             catch (Exception ee)
@@ -2584,8 +2584,8 @@ namespace XDC01Action1
                 }
                 testItem.Duration = (Environment.TickCount - start_time) / 1000.00f;
                 //dataGridView.Rows.Add(testItem.Name, "-", "-", "-", "-", "-", testItem.Result, testItem.Duration.ToString("F2"));
-                dataGridView.Rows[rowIndex].Cells[6].Value = testItem.Result;
-                dataGridView.Rows[rowIndex].Cells[7].Value = testItem.Duration.ToString("F2");
+                dataGridView.Rows[rowIndex].Cells[7].Value = testItem.Result;
+                dataGridView.Rows[rowIndex].Cells[8].Value = testItem.Duration.ToString("F2");
                 return testItem;
             }
             catch (Exception e)
@@ -2623,9 +2623,9 @@ namespace XDC01Action1
                 }
                 float Duration = (Environment.TickCount - start_time) / 1000.00f;
                 //dataGridView.Rows.Add(testItem.Name, "-", "-", "-", "-", $"{testParam.next_wifi_ssid}-{testParam.next_wifi_pwd}", testItem.Result, Duration.ToString("F2"));
-                dataGridView.Rows[rowIndex].Cells[5].Value = $"{testParam.next_wifi_ssid}-{testParam.next_wifi_pwd}";
-                dataGridView.Rows[rowIndex].Cells[6].Value = testItem.Result;
-                dataGridView.Rows[rowIndex].Cells[7].Value = Duration.ToString("F2");
+                dataGridView.Rows[rowIndex].Cells[6].Value = $"{testParam.next_wifi_ssid}-{testParam.next_wifi_pwd}";
+                dataGridView.Rows[rowIndex].Cells[7].Value = testItem.Result;
+                dataGridView.Rows[rowIndex].Cells[8].Value = Duration.ToString("F2");
                 return testItem;
             }
             catch (Exception e)
@@ -2663,9 +2663,9 @@ namespace XDC01Action1
                 }
                 float Duration = (Environment.TickCount - start_time) / 1000.00f;
                 //dataGridView.Rows.Add(testItem.Name, "-", "-", "-", "-", testParam.next_tagnumber, testItem.Result, Duration.ToString("F2"));
-                dataGridView.Rows[rowIndex].Cells[5].Value = testParam.next_tagnumber;
-                dataGridView.Rows[rowIndex].Cells[6].Value = testItem.Result;
-                dataGridView.Rows[rowIndex].Cells[7].Value = Duration.ToString("F2");
+                dataGridView.Rows[rowIndex].Cells[6].Value = testParam.next_tagnumber;
+                dataGridView.Rows[rowIndex].Cells[7].Value = testItem.Result;
+                dataGridView.Rows[rowIndex].Cells[8].Value = Duration.ToString("F2");
                 return testItem;
             }
             catch (Exception e)
@@ -2689,7 +2689,7 @@ namespace XDC01Action1
             {
                 int start_time = Environment.TickCount;
                 Font font = new Font("宋体", 9);
-                dataGridView.Rows[rowIndex].Cells[5].Style.Font = font;
+                dataGridView.Rows[rowIndex].Cells[6].Style.Font = font;
                 TestItem testItem = new TestItem(){ 
                     Name = "申请SN/UID/MAC", 
                     NgItem = "apply_sn_uid_mac" 
@@ -2742,9 +2742,9 @@ namespace XDC01Action1
 
                 testItem.Duration = (Environment.TickCount - start_time) / 1000.00f;
                 //dataGridView.Rows.Add(testItem.Name, "-", "-", "-", "-", "-", testItem.Result, testItem.Duration.ToString("F2"));
-                dataGridView.Rows[rowIndex].Cells[5].Value = testItem.StrVal;
-                dataGridView.Rows[rowIndex].Cells[6].Value = testItem.Result;
-                dataGridView.Rows[rowIndex].Cells[7].Value = testItem.Duration.ToString("F2");
+                dataGridView.Rows[rowIndex].Cells[6].Value = testItem.StrVal;
+                dataGridView.Rows[rowIndex].Cells[7].Value = testItem.Result;
+                dataGridView.Rows[rowIndex].Cells[8].Value = testItem.Duration.ToString("F2");
                 return testItem;
             }
             catch (Exception ee)
@@ -2768,7 +2768,7 @@ namespace XDC01Action1
             {
                 int start_time = Environment.TickCount;
                 Font font = new Font("宋体", 9);
-                dataGridView.Rows[rowIndex].Cells[5].Style.Font = font;
+                dataGridView.Rows[rowIndex].Cells[6].Style.Font = font;
                 TestItem testItem = new TestItem()
                 {
                     Name = "申请替换SN/UID/MAC",
@@ -2822,9 +2822,9 @@ namespace XDC01Action1
 
                 testItem.Duration = (Environment.TickCount - start_time) / 1000.00f;
                 //dataGridView.Rows.Add(testItem.Name, "-", "-", "-", "-", "-", testItem.Result, testItem.Duration.ToString("F2"));
-                dataGridView.Rows[rowIndex].Cells[5].Value = testItem.StrVal;
-                dataGridView.Rows[rowIndex].Cells[6].Value = testItem.Result;
-                dataGridView.Rows[rowIndex].Cells[7].Value = testItem.Duration.ToString("F2");
+                dataGridView.Rows[rowIndex].Cells[6].Value = testItem.StrVal;
+                dataGridView.Rows[rowIndex].Cells[7].Value = testItem.Result;
+                dataGridView.Rows[rowIndex].Cells[8].Value = testItem.Duration.ToString("F2");
                 return testItem;
             }
             catch (Exception ee)
@@ -2867,9 +2867,9 @@ namespace XDC01Action1
                     writeSN.Result = "PASS";
                     writeSN.StrVal = str_write_sn;
                     writeSN.Duration = 0.00f;
-                    dataGridView.Rows[rowIndex].Cells[5].Value = writeSN.StrVal;
-                    dataGridView.Rows[rowIndex].Cells[6].Value = writeSN.Result;
-                    dataGridView.Rows[rowIndex].Cells[7].Value = writeSN.Duration.ToString("F2");
+                    dataGridView.Rows[rowIndex].Cells[6].Value = writeSN.StrVal;
+                    dataGridView.Rows[rowIndex].Cells[7].Value = writeSN.Result;
+                    dataGridView.Rows[rowIndex].Cells[8].Value = writeSN.Duration.ToString("F2");
                     testItems.Add(writeSN);
                     if (string.Equals(str_cur_uid.ToUpper(), str_write_uid.ToUpper()))
                     {
@@ -2878,9 +2878,9 @@ namespace XDC01Action1
                         writeUID.Result = "PASS";
                         writeUID.StrVal = str_write_uid;
                         writeUID.Duration = (Environment.TickCount - start_time) / 1000.00f;
-                        dataGridView.Rows[rowIndex].Cells[5].Value = writeUID.StrVal;
-                        dataGridView.Rows[rowIndex].Cells[6].Value = writeUID.Result;
-                        dataGridView.Rows[rowIndex].Cells[7].Value = writeUID.Duration.ToString("F2");
+                        dataGridView.Rows[rowIndex].Cells[6].Value = writeUID.StrVal;
+                        dataGridView.Rows[rowIndex].Cells[7].Value = writeUID.Result;
+                        dataGridView.Rows[rowIndex].Cells[8].Value = writeUID.Duration.ToString("F2");
                         testItems.Add(writeUID);
                     }
                     else
@@ -2890,9 +2890,9 @@ namespace XDC01Action1
                         writeUID.Result = "FAIL";
                         writeUID.StrVal = str_write_uid;
                         writeUID.Duration = (Environment.TickCount - start_time) / 1000.00f;
-                        dataGridView.Rows[rowIndex].Cells[5].Value = writeUID.StrVal;
-                        dataGridView.Rows[rowIndex].Cells[6].Value = writeUID.Result;
-                        dataGridView.Rows[rowIndex].Cells[7].Value = writeUID.Duration.ToString("F2");
+                        dataGridView.Rows[rowIndex].Cells[6].Value = writeUID.StrVal;
+                        dataGridView.Rows[rowIndex].Cells[7].Value = writeUID.Result;
+                        dataGridView.Rows[rowIndex].Cells[8].Value = writeUID.Duration.ToString("F2");
                         testItems.Add(writeUID);
                     }
                 }
@@ -2906,18 +2906,18 @@ namespace XDC01Action1
                         writeSN.StrVal = "写SN和UID失败"; ;
                         writeSN.Result = "FAIL";
                         writeSN.Duration = 0.00f;
-                        dataGridView.Rows[rowIndex].Cells[5].Value = writeSN.StrVal;
-                        dataGridView.Rows[rowIndex].Cells[6].Value = writeSN.Result;
-                        dataGridView.Rows[rowIndex].Cells[7].Value = writeSN.Duration.ToString("F2");
+                        dataGridView.Rows[rowIndex].Cells[6].Value = writeSN.StrVal;
+                        dataGridView.Rows[rowIndex].Cells[7].Value = writeSN.Result;
+                        dataGridView.Rows[rowIndex].Cells[8].Value = writeSN.Duration.ToString("F2");
                         testItems.Add(writeSN);
 
                         rowIndex++;
                         writeUID.StrVal = "写SN和UID失败";
                         writeUID.Result = "FAIL";
                         writeUID.Duration = (Environment.TickCount - start_time) / 1000.00f;
-                        dataGridView.Rows[rowIndex].Cells[5].Value = writeUID.StrVal;
-                        dataGridView.Rows[rowIndex].Cells[6].Value = writeUID.Result;
-                        dataGridView.Rows[rowIndex].Cells[7].Value = writeUID.Duration.ToString("F2");
+                        dataGridView.Rows[rowIndex].Cells[6].Value = writeUID.StrVal;
+                        dataGridView.Rows[rowIndex].Cells[7].Value = writeUID.Result;
+                        dataGridView.Rows[rowIndex].Cells[8].Value = writeUID.Duration.ToString("F2");
                         testItems.Add(writeUID);
 
                         return null;
@@ -2928,18 +2928,18 @@ namespace XDC01Action1
                         writeSN.StrVal = str_write_sn;
                         writeSN.Result = "PASS";
                         writeSN.Duration = 0.00f;
-                        dataGridView.Rows[rowIndex].Cells[5].Value = writeSN.StrVal;
-                        dataGridView.Rows[rowIndex].Cells[6].Value = writeSN.Result;
-                        dataGridView.Rows[rowIndex].Cells[7].Value = writeSN.Duration.ToString("F2");
+                        dataGridView.Rows[rowIndex].Cells[6].Value = writeSN.StrVal;
+                        dataGridView.Rows[rowIndex].Cells[7].Value = writeSN.Result;
+                        dataGridView.Rows[rowIndex].Cells[8].Value = writeSN.Duration.ToString("F2");
                         testItems.Add(writeSN);
 
                         rowIndex++;
                         writeUID.StrVal = str_write_uid;
                         writeUID.Result = "PASS";
                         writeUID.Duration = (Environment.TickCount - start_time) / 1000.00f;
-                        dataGridView.Rows[rowIndex].Cells[5].Value = writeUID.StrVal;
-                        dataGridView.Rows[rowIndex].Cells[6].Value = writeUID.Result;
-                        dataGridView.Rows[rowIndex].Cells[7].Value = writeUID.Duration.ToString("F2");
+                        dataGridView.Rows[rowIndex].Cells[6].Value = writeUID.StrVal;
+                        dataGridView.Rows[rowIndex].Cells[7].Value = writeUID.Result;
+                        dataGridView.Rows[rowIndex].Cells[8].Value = writeUID.Duration.ToString("F2");
                         testItems.Add(writeUID);
                     }
                 }
@@ -2961,9 +2961,9 @@ namespace XDC01Action1
                     writeMAC.Result = "PASS";
                     writeMAC.StrVal = str_write_mac;
                     writeMAC.Duration = (Environment.TickCount - start_time) / 1000.00f;
-                    dataGridView.Rows[rowIndex].Cells[5].Value = writeMAC.StrVal;
-                    dataGridView.Rows[rowIndex].Cells[6].Value = writeMAC.Result;
-                    dataGridView.Rows[rowIndex].Cells[7].Value = writeMAC.Duration.ToString("F2");
+                    dataGridView.Rows[rowIndex].Cells[6].Value = writeMAC.StrVal;
+                    dataGridView.Rows[rowIndex].Cells[7].Value = writeMAC.Result;
+                    dataGridView.Rows[rowIndex].Cells[8].Value = writeMAC.Duration.ToString("F2");
                     testItems.Add(writeMAC);
                 }
                 else
@@ -2974,9 +2974,9 @@ namespace XDC01Action1
                         writeMAC.Result = "FAIL";
                         writeMAC.StrVal = "写MAC地址失败";
                         writeMAC.Duration = (Environment.TickCount - start_time) / 1000.00f;
-                        dataGridView.Rows[rowIndex].Cells[5].Value = writeMAC.StrVal;
-                        dataGridView.Rows[rowIndex].Cells[6].Value = writeMAC.Result;
-                        dataGridView.Rows[rowIndex].Cells[7].Value = writeMAC.Duration.ToString("F2");
+                        dataGridView.Rows[rowIndex].Cells[6].Value = writeMAC.StrVal;
+                        dataGridView.Rows[rowIndex].Cells[7].Value = writeMAC.Result;
+                        dataGridView.Rows[rowIndex].Cells[8].Value = writeMAC.Duration.ToString("F2");
                         testItems.Add(writeMAC);
                     }
                     else
@@ -3009,9 +3009,9 @@ namespace XDC01Action1
                             writeMAC.Result = "FAIL";
                             writeMAC.StrVal = "读MAC地址失败";
                             writeMAC.Duration = (Environment.TickCount - start_time) / 1000.00f;
-                            dataGridView.Rows[rowIndex].Cells[5].Value = writeMAC.StrVal;
-                            dataGridView.Rows[rowIndex].Cells[6].Value = writeMAC.Result;
-                            dataGridView.Rows[rowIndex].Cells[7].Value = writeMAC.Duration.ToString("F2");
+                            dataGridView.Rows[rowIndex].Cells[6].Value = writeMAC.StrVal;
+                            dataGridView.Rows[rowIndex].Cells[7].Value = writeMAC.Result;
+                            dataGridView.Rows[rowIndex].Cells[8].Value = writeMAC.Duration.ToString("F2");
                             testItems.Add(writeMAC);
                         }
                         else
@@ -3029,9 +3029,9 @@ namespace XDC01Action1
                                 writeMAC.StrVal = str_read_mac;
                             }
                             writeMAC.Duration = (Environment.TickCount - start_time) / 1000.00f;
-                            dataGridView.Rows[rowIndex].Cells[5].Value = writeMAC.StrVal;
-                            dataGridView.Rows[rowIndex].Cells[6].Value = writeMAC.Result;
-                            dataGridView.Rows[rowIndex].Cells[7].Value = writeMAC.Duration.ToString("F2");
+                            dataGridView.Rows[rowIndex].Cells[6].Value = writeMAC.StrVal;
+                            dataGridView.Rows[rowIndex].Cells[7].Value = writeMAC.Result;
+                            dataGridView.Rows[rowIndex].Cells[8].Value = writeMAC.Duration.ToString("F2");
                             testItems.Add(writeMAC);
                         }
                     }
@@ -3099,8 +3099,8 @@ namespace XDC01Action1
 
                 testItem.Duration = (Environment.TickCount - start_time) / 1000.00f;
                 //dataGridView.Rows.Add(testItem.Name, "-", "-", "-", "-", "-", testItem.Result, testItem.Duration.ToString("F2"));
-                dataGridView.Rows[rowIndex].Cells[6].Value = testItem.Result;
-                dataGridView.Rows[rowIndex].Cells[7].Value = testItem.Duration.ToString("F2");
+                dataGridView.Rows[rowIndex].Cells[7].Value = testItem.Result;
+                dataGridView.Rows[rowIndex].Cells[8].Value = testItem.Duration.ToString("F2");
                 return testItem;
             }
             catch (Exception ee)
@@ -3161,8 +3161,8 @@ namespace XDC01Action1
 
                 SNtestItem.Duration = (Environment.TickCount - start_time) / 1000.00f;
                 //dataGridView.Rows.Add(SNtestItem.Name, "-", "-", "-", "-", "-", SNtestItem.Result, SNtestItem.Duration.ToString("F2"));
-                dataGridView.Rows[rowIndex].Cells[6].Value = SNtestItem.Result;
-                dataGridView.Rows[rowIndex].Cells[7].Value = SNtestItem.Duration.ToString("F2");
+                dataGridView.Rows[rowIndex].Cells[7].Value = SNtestItem.Result;
+                dataGridView.Rows[rowIndex].Cells[8].Value = SNtestItem.Duration.ToString("F2");
                 testItems.Add(SNtestItem);
 
                 rowIndex++;
@@ -3185,8 +3185,8 @@ namespace XDC01Action1
 
                 MACtestItem.Duration = (Environment.TickCount - start_time) / 1000.00f;
                 //dataGridView.Rows.Add(MACtestItem.Name, "-", "-", "-", "-", "-", MACtestItem.Result, MACtestItem.Duration.ToString("F2"));
-                dataGridView.Rows[rowIndex].Cells[6].Value = MACtestItem.Result;
-                dataGridView.Rows[rowIndex].Cells[7].Value = MACtestItem.Duration.ToString("F2");
+                dataGridView.Rows[rowIndex].Cells[7].Value = MACtestItem.Result;
+                dataGridView.Rows[rowIndex].Cells[8].Value = MACtestItem.Duration.ToString("F2");
                 testItems.Add(MACtestItem);
 
                 return testItems;
@@ -3227,9 +3227,9 @@ namespace XDC01Action1
                 }
                 float Duration = (Environment.TickCount - start_time) / 1000.00f;
                 //dataGridView.Rows.Add(testItem.Name, "-", "-", "-", "-", testParam.next_tagnumber, testItem.Result, Duration.ToString("F2"));
-                dataGridView.Rows[rowIndex].Cells[5].Value = testParam.next_tagnumber;
-                dataGridView.Rows[rowIndex].Cells[6].Value = testItem.Result;
-                dataGridView.Rows[rowIndex].Cells[7].Value = Duration.ToString("F2");
+                dataGridView.Rows[rowIndex].Cells[6].Value = testParam.next_tagnumber;
+                dataGridView.Rows[rowIndex].Cells[7].Value = testItem.Result;
+                dataGridView.Rows[rowIndex].Cells[8].Value = Duration.ToString("F2");
                 return testItem;
             }
             catch (Exception e)
@@ -3255,9 +3255,9 @@ namespace XDC01Action1
                     logger.ShowLog($"--- 读RN失败：{str_error_log}");
                     float Duration = (Environment.TickCount - start_time) / 1000.00f;
                     //dataGridView.Rows.Add("读取RN号", "-", "-", "-", "-", "串口指令发送异常", "FAIL", Duration.ToString("F2"));
-                    dataGridView.Rows[rowIndex].Cells[5].Value = "串口指令发送异常";
-                    dataGridView.Rows[rowIndex].Cells[6].Value = "FAIL";
-                    dataGridView.Rows[rowIndex].Cells[7].Value = Duration.ToString("F2");
+                    dataGridView.Rows[rowIndex].Cells[6].Value = "串口指令发送异常";
+                    dataGridView.Rows[rowIndex].Cells[7].Value = "FAIL";
+                    dataGridView.Rows[rowIndex].Cells[8].Value = Duration.ToString("F2");
                     return null;
                 }
                 else
@@ -3282,9 +3282,9 @@ namespace XDC01Action1
                     }
                     RNtestItem.Duration = (Environment.TickCount - start_time) / 1000.00f;
                     //dataGridView.Rows.Add(RNtestItem.Name, RNtestItem.Standard, "-", "-", "-", RNtestItem.StrVal, RNtestItem.Result, RNtestItem.Duration.ToString("F2"));
-                    dataGridView.Rows[rowIndex].Cells[5].Value = RNtestItem.StrVal;
-                    dataGridView.Rows[rowIndex].Cells[6].Value = RNtestItem.Result;
-                    dataGridView.Rows[rowIndex].Cells[7].Value = RNtestItem.Duration.ToString("F2");
+                    dataGridView.Rows[rowIndex].Cells[6].Value = RNtestItem.StrVal;
+                    dataGridView.Rows[rowIndex].Cells[7].Value = RNtestItem.Result;
+                    dataGridView.Rows[rowIndex].Cells[8].Value = RNtestItem.Duration.ToString("F2");
                     testItems.Add(RNtestItem);
                 }
 
@@ -3299,9 +3299,9 @@ namespace XDC01Action1
                         logger.ShowLog($"--- 读工序号失败：{str_error_log}");
                         float Duration = (Environment.TickCount - start_time) / 1000.00f;
                         //dataGridView.Rows.Add("读取工序号", "-", "-", "-", "-", "串口指令发送异常", "FAIL", Duration.ToString("F2"));
-                        dataGridView.Rows[rowIndex].Cells[5].Value = "串口指令发送异常";
-                        dataGridView.Rows[rowIndex].Cells[6].Value = "FAIL";
-                        dataGridView.Rows[rowIndex].Cells[7].Value = Duration.ToString("F2");
+                        dataGridView.Rows[rowIndex].Cells[6].Value = "串口指令发送异常";
+                        dataGridView.Rows[rowIndex].Cells[7].Value = "FAIL";
+                        dataGridView.Rows[rowIndex].Cells[8].Value = Duration.ToString("F2");
                         return null;
                     }
                     else
@@ -3326,9 +3326,9 @@ namespace XDC01Action1
                         }
                         tagNumbertestItem.Duration = (Environment.TickCount - start_time) / 1000.00f;
                         //dataGridView.Rows.Add(tagNumbertestItem.Name, tagNumbertestItem.Standard, "-", "-", "-", tagNumbertestItem.StrVal, tagNumbertestItem.Result, tagNumbertestItem.Duration.ToString("F2"));
-                        dataGridView.Rows[rowIndex].Cells[5].Value = tagNumbertestItem.StrVal;
-                        dataGridView.Rows[rowIndex].Cells[6].Value = tagNumbertestItem.Result;
-                        dataGridView.Rows[rowIndex].Cells[7].Value = tagNumbertestItem.Duration.ToString("F2");
+                        dataGridView.Rows[rowIndex].Cells[6].Value = tagNumbertestItem.StrVal;
+                        dataGridView.Rows[rowIndex].Cells[7].Value = tagNumbertestItem.Result;
+                        dataGridView.Rows[rowIndex].Cells[8].Value = tagNumbertestItem.Duration.ToString("F2");
                         testItems.Add(tagNumbertestItem);
                     }
                 }
@@ -3377,8 +3377,8 @@ namespace XDC01Action1
                 }
                 testItem.Duration = (Environment.TickCount - start_time) / 1000.00f;
                 //dataGridView.Rows.Add(testItem.Name, "-", "-", "-", "-", "-", testItem.Result, testItem.Duration.ToString("F2"));
-                dataGridView.Rows[rowIndex].Cells[6].Value = testItem.Result;
-                dataGridView.Rows[rowIndex].Cells[7].Value = testItem.Duration.ToString("F2");
+                dataGridView.Rows[rowIndex].Cells[7].Value = testItem.Result;
+                dataGridView.Rows[rowIndex].Cells[8].Value = testItem.Duration.ToString("F2");
                 return testItem;
             }
             catch (Exception ee)
@@ -3419,8 +3419,8 @@ namespace XDC01Action1
                 }
                 testItem.Duration = (Environment.TickCount - start_time) / 1000.00f;
                 //dataGridView.Rows.Add(testItem.Name, "-", "-", "-", "-", "-", testItem.Result, testItem.Duration.ToString("F2"));
-                dataGridView.Rows[rowIndex].Cells[6].Value = testItem.Result;
-                dataGridView.Rows[rowIndex].Cells[7].Value = testItem.Duration.ToString("F2");
+                dataGridView.Rows[rowIndex].Cells[7].Value = testItem.Result;
+                dataGridView.Rows[rowIndex].Cells[8].Value = testItem.Duration.ToString("F2");
                 return testItem;
             }
             catch (Exception ee)
@@ -3452,9 +3452,9 @@ namespace XDC01Action1
                     //dataGridView.Rows.Add("切换夜视检查", "-", "-", "-", "-", "串口指令发送异常", "FAIL", Duration.ToString("F2"));
                     for (int i = 0; i < 2; i++)
                     {
-                        dataGridView.Rows[rowIndex+i].Cells[5].Value = "串口指令发送异常";
-                        dataGridView.Rows[rowIndex+i].Cells[6].Value = "FAIL";
-                        dataGridView.Rows[rowIndex+i].Cells[7].Value = Duration.ToString("F2");
+                        dataGridView.Rows[rowIndex+i].Cells[6].Value = "串口指令发送异常";
+                        dataGridView.Rows[rowIndex+i].Cells[7].Value = "FAIL";
+                        dataGridView.Rows[rowIndex+i].Cells[8].Value = Duration.ToString("F2");
                     }
 
                     return null;
@@ -3483,8 +3483,8 @@ namespace XDC01Action1
                     }
                     IRCutTestItem.Duration = (Environment.TickCount - start_time) / 1000.00f;
                     //dataGridView.Rows.Add(IRCutTestItem.Name, "-", "-", "-", "-", "-", IRCutTestItem.Result, IRCutTestItem.Duration.ToString("F2"));
-                    dataGridView.Rows[rowIndex].Cells[6].Value = IRCutTestItem.Result;
-                    dataGridView.Rows[rowIndex].Cells[7].Value = IRCutTestItem.Duration.ToString("F2");
+                    dataGridView.Rows[rowIndex].Cells[7].Value = IRCutTestItem.Result;
+                    dataGridView.Rows[rowIndex].Cells[8].Value = IRCutTestItem.Duration.ToString("F2");
                     testItems.Add(IRCutTestItem);
 
                     rowIndex++;
@@ -3510,8 +3510,8 @@ namespace XDC01Action1
                     }
                     IRLedTestItem.Duration = (Environment.TickCount - start_time) / 1000.00f;
                     //dataGridView.Rows.Add(IRLedTestItem.Name, "-", "-", "-", "-", "-", IRLedTestItem.Result, IRLedTestItem.Duration.ToString("F2"));
-                    dataGridView.Rows[rowIndex].Cells[6].Value = IRLedTestItem.Result;
-                    dataGridView.Rows[rowIndex].Cells[7].Value = IRLedTestItem.Duration.ToString("F2");
+                    dataGridView.Rows[rowIndex].Cells[7].Value = IRLedTestItem.Result;
+                    dataGridView.Rows[rowIndex].Cells[8].Value = IRLedTestItem.Duration.ToString("F2");
                     testItems.Add(IRLedTestItem);
 
                     return testItems;
@@ -3555,8 +3555,8 @@ namespace XDC01Action1
                 }
                 testItem.Duration = (Environment.TickCount - start_time) / 1000.00f;
                 //dataGridView.Rows.Add(testItem.Name, "-", "-", "-", "-", "-", testItem.Result, testItem.Duration.ToString("F2"));
-                dataGridView.Rows[rowIndex].Cells[6].Value = testItem.Result;
-                dataGridView.Rows[rowIndex].Cells[7].Value = testItem.Duration.ToString("F2");
+                dataGridView.Rows[rowIndex].Cells[7].Value = testItem.Result;
+                dataGridView.Rows[rowIndex].Cells[8].Value = testItem.Duration.ToString("F2");
                 return testItem;
             }
             catch (Exception ee)
