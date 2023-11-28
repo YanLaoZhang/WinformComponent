@@ -94,6 +94,8 @@ namespace XDC01Action
                             testSpecMax.charge_current = reader.GetFloat("charge_current");
                             testSpecMax.standby_current = reader.GetFloat("standby_current");
                             testSpecMax.ping_rtt = reader.GetFloat("ping_rtt");
+                            testSpecMax.pcba_battery_voltage = reader.GetFloat("pcba_battery_voltage");
+                            testSpecMax.pcba_light_val = reader.GetFloat("pcba_light_val");
                             testSpecMax.light_val = reader.GetFloat("light");
                             testSpecMax.battery_voltage = reader.GetFloat("battery_voltage");
                             testSpecMax.cpu_temperature = reader.GetFloat("cpu_temperature");
@@ -103,6 +105,7 @@ namespace XDC01Action
                             testSpecMax.wifi_down_loss = reader.GetFloat("wifi_down_loss");
                             testSpecMax.rf_frequency = reader.GetFloat("rf_tx_frenquency");
                             testSpecMax.rf_power = reader.GetFloat("rf_tx_power");
+                            testSpecMax.final_battery_voltage = reader.GetFloat("final_battery_voltage");
                         }
                     }
                     MySqlCommand cmdMin = connection.CreateCommand();
@@ -124,6 +127,8 @@ namespace XDC01Action
                             testSpecMin.charge_current = reader.GetFloat("charge_current");
                             testSpecMin.standby_current = reader.GetFloat("standby_current");
                             testSpecMin.ping_rtt = reader.GetFloat("ping_rtt");
+                            testSpecMin.pcba_battery_voltage = reader.GetFloat("pcba_battery_voltage");
+                            testSpecMin.pcba_light_val = reader.GetFloat("pcba_light_val");
                             testSpecMin.light_val = reader.GetFloat("light");
                             testSpecMin.battery_voltage = reader.GetFloat("battery_voltage");
                             testSpecMin.wifi_up_rate = reader.GetFloat("wifi_up_rate");
@@ -132,6 +137,7 @@ namespace XDC01Action
                             testSpecMin.wifi_down_loss = reader.GetFloat("wifi_down_loss");
                             testSpecMin.rf_frequency = reader.GetFloat("rf_tx_frenquency");
                             testSpecMin.rf_power = reader.GetFloat("rf_tx_power");
+                            testSpecMin.final_battery_voltage = reader.GetFloat("final_battery_voltage");
                         }
                     }
                 }
@@ -208,6 +214,8 @@ namespace XDC01Action
         public float charge_current;
         public float standby_current;
         public float ping_rtt;
+        public float pcba_light_val;
+        public float pcba_battery_voltage;
         public float light_val;
         public float battery_voltage;
         public float cpu_temperature;
@@ -217,6 +225,7 @@ namespace XDC01Action
         public float wifi_down_loss;
         public float rf_frequency;
         public float rf_power;
+        public float final_battery_voltage;
     }
 
     public class TestSpecMax
@@ -233,6 +242,8 @@ namespace XDC01Action
         public float charge_current;
         public float standby_current;
         public float ping_rtt;
+        public float pcba_light_val;
+        public float pcba_battery_voltage;
         public float light_val;
         public float battery_voltage;
         public float cpu_temperature;
@@ -242,6 +253,7 @@ namespace XDC01Action
         public float wifi_down_loss;
         public float rf_frequency;
         public float rf_power;
+        public float final_battery_voltage;
     }
 
     public class TestStandard
