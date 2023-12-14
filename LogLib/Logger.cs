@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -12,6 +13,25 @@ namespace LogLib
     {
         System.Windows.Forms.RichTextBox _richTextBox;
         string _LogPath;
+
+        public static bool SaveRichTextBoxToFile(string log, string logPath)
+        {
+            try
+            {
+                Console.WriteLine($"上传内容到文件[{logPath}]");
+                using (StreamWriter streamWriter = new StreamWriter(logPath))
+                {
+                    streamWriter.Write(log);
+                }
+                Console.WriteLine($"上传成功");
+                return true;
+            }
+            catch (Exception ee)
+            {
+                Console.WriteLine($"保存RichTextBox的内容到文件发生异常：[{ee.Message}]");
+                return false;
+            }
+        }
 
         public Logger(ref System.Windows.Forms.RichTextBox richTextBox, ref string LogPath) {
             _richTextBox = richTextBox;
