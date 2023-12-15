@@ -1,6 +1,6 @@
 ﻿namespace emguCV
 {
-    partial class Form1
+    partial class EmguCVForm
     {
         /// <summary>
         /// 必需的设计器变量。
@@ -42,13 +42,13 @@
             this.imageBox1.TabIndex = 2;
             this.imageBox1.TabStop = false;
             // 
-            // Form1
+            // EmguCVForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
             this.Controls.Add(this.imageBox1);
-            this.Name = "Form1";
+            this.Name = "EmguCVForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Form1";
             this.WindowState = System.Windows.Forms.FormWindowState.Maximized;

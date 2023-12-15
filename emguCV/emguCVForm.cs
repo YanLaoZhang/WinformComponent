@@ -7,16 +7,23 @@ using Emgu.CV.Structure;
 using ZedGraph;
 using Emgu.CV.Ocl;
 using DirectShowLib;
+using System.Drawing;
 
 namespace emguCV
 {
-    public partial class Form1 : Form
+    public partial class EmguCVForm : Form
     {
         private VideoCapture capture;
         private int cameraIndex = 1; // 摄像头索引，默认为 0
-        public Form1()
+
+        private int width;
+        private int height;
+
+        public EmguCVForm(int width, int height)
         {
             InitializeComponent();
+            this.width = width;
+            this.height = height;
         }
 
         public int CameraIndex(string CameraName)
@@ -40,7 +47,7 @@ namespace emguCV
                         {
                             Console.WriteLine("已找到指定摄像头");
                             cameraIndex =  index;
-                            break;
+                            //break;
                         }
                     }
                 }
@@ -72,6 +79,8 @@ namespace emguCV
 
                 // 打开指定索引的摄像头
                 capture = new VideoCapture(index);
+                // 设置摄像头的编解码器为H.264
+                capture.SetCaptureProperty(CapProp.FourCC, VideoWriter.Fourcc('H', '2', '6', '4'));
 
                 // 获取摄像头实际的分辨率
                 double frameWidth = capture.GetCaptureProperty(CapProp.FrameWidth);
@@ -79,13 +88,21 @@ namespace emguCV
                 double FPS = capture.GetCaptureProperty(CapProp.Fps);
                 double GFWM = capture.GetCaptureProperty(CapProp.GigaFrameWidthMax);
                 double GFHM = capture.GetCaptureProperty(CapProp.GigaFrameHeighMax);
+                double FourCC = capture.GetCaptureProperty(CapProp.FourCC);
 
-                MessageBox.Show($"摄像头实际分辨率：{frameWidth} x {frameHeight},帧率：{FPS},{GFWM}-{GFHM}", "信息", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                Console.WriteLine($"摄像头实际分辨率：{frameWidth} x {frameHeight},帧率：{FPS},FourCC:{FourCC}", "信息", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
-                // 设置摄像头画面大小（宽度和高度）
-                capture.SetCaptureProperty(CapProp.FrameWidth, 1920); // 替换为希望的宽度
-                capture.SetCaptureProperty(CapProp.FrameHeight, 1080); // 替换为希望的高度
+                int screenheight = System.Windows.Forms.Screen.PrimaryScreen.WorkingArea.Height;
+                int screenwidth = System.Windows.Forms.Screen.PrimaryScreen.WorkingArea.Width;
+                Console.WriteLine($"当前屏幕的工作区域分辨率为{screenwidth} * {screenheight}");
 
+                if(width > 0 && height > 0)
+                {
+                    // 设置摄像头画面大小（宽度和高度）
+                    capture.SetCaptureProperty(CapProp.FrameWidth, width); // 替换为希望的宽度
+                    capture.SetCaptureProperty(CapProp.FrameHeight, height); // 替换为希望的高度
+                    Console.WriteLine($"设置摄像头分辨率{width}*{height}");
+                }
                 // 设置 ImageBox 控件为摄像头画面显示容器
                 imageBox1.Image = capture.QueryFrame();
                 Application.Idle += ProcessFrame;
@@ -111,12 +128,40 @@ namespace emguCV
             else
             {
                 Console.WriteLine("无画面");
-                MessageBox.Show($"摄像头连接异常，请检查！");
+                Console.WriteLine($"摄像头连接异常，请检查！");
                 Application.Idle -= ProcessFrame;
                 capture?.Dispose();
             }
 
             GC.Collect();  //强制GC来恢复
+        }
+
+        public Bitmap SaveScreenshot(string filename)
+        {
+            try
+            {
+                // 获取摄像头画面帧
+                Mat frame = capture.QueryFrame();
+                // 捕获当前画面并保存为截图
+                if (!frame.IsEmpty)
+                {
+                    Bitmap bitmap = frame.ToImage<Bgr, byte>().ToBitmap();
+                    // 保存截图
+                    bitmap.Save(filename, System.Drawing.Imaging.ImageFormat.Jpeg);
+                    Console.WriteLine("Screenshot saved to: " + filename);
+                    return bitmap;
+                }
+                else
+                {
+                    Console.WriteLine("Screenshot is empty");
+                    return null;
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error saving screenshot: " + ex.Message);
+                return null;
+            }
         }
 
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
