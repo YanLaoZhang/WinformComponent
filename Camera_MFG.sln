@@ -37,6 +37,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FLUKE8808ALib", "FLUKE8808A
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "emguCV", "emguCV\emguCV.csproj", "{CA496CB7-6F45-46C6-BAEB-525EBB6A2ECE}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AForge", "AForge\AForge.csproj", "{93645880-7D9B-499C-8E0E-70A6C51822E5}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -111,6 +113,10 @@ Global
 		{CA496CB7-6F45-46C6-BAEB-525EBB6A2ECE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CA496CB7-6F45-46C6-BAEB-525EBB6A2ECE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CA496CB7-6F45-46C6-BAEB-525EBB6A2ECE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{93645880-7D9B-499C-8E0E-70A6C51822E5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{93645880-7D9B-499C-8E0E-70A6C51822E5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{93645880-7D9B-499C-8E0E-70A6C51822E5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{93645880-7D9B-499C-8E0E-70A6C51822E5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

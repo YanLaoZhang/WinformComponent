@@ -25,6 +25,7 @@
 /CloudAPILib/obj
 /CameraRTOSLib/obj
 /FLUKE8808ALib/obj
+/*/obj
 *.log
 *.txt
 
