@@ -16,7 +16,7 @@ namespace VLCForm
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new FormVLC(""));
+            Application.Run(new FormVLC("rtsp://172.16.2.123/stream0"));
         }
     }
 }
