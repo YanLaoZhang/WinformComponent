@@ -60,26 +60,43 @@ namespace AForge
                     // Register event handler for new frames
                     videoSource.NewFrame += VideoSource_NewFrame;
 
+                    int startNuma = Environment.TickCount;
+
+                    Console.WriteLine($"{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")} 准备启动");
                     // Start capturing
                     videoSource.Start();
+                    Console.WriteLine($"{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")} 完成启动");
+
+                    timer1.Interval = 1000;
+                    timer1.Start();
+                    panel1.Enabled = true;
+                    CenterPanel();
+                    progressBar1.Value = 0;
                 }
                 else
                 {
                     MessageBox.Show("No supported resolutions found.");
+                    this.Close();
                 }
             }
             catch (Exception ee)
             {
                 MessageBox.Show($"开启摄像头，发生异常:{ee.Message}");
+                this.Close();
             }
         }
 
         private void VideoSource_NewFrame(object sender, NewFrameEventArgs eventArgs)
         {
+            timer1.Stop();
+            progressBar1.Value = 100;
+            panel1.Visible = false;
             var height = eventArgs.Frame.Height;
             var width = eventArgs.Frame.Width;
-            Console.WriteLine($"分辨率：w[{width}]-h[{height}]");
+            //Console.WriteLine($"分辨率：w[{width}]-h[{height}]");
+            Console.WriteLine($"{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")} 准备显示图片");
             pictureBox1.Image = (System.Drawing.Image)eventArgs.Frame.Clone();
+            Console.WriteLine($"{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")} 完成显示");
 
             GC.Collect();  //强制GC来恢复
         }
@@ -124,6 +141,27 @@ namespace AForge
                 videoSource.NewFrame -= VideoSource_NewFrame;
                 Console.WriteLine($"已释放资源");
             }
+        }
+
+        private void timer1_Tick(object sender, EventArgs e)
+        {
+            progressBar1.Increment(18);
+        }
+
+        private void CenterPanel()
+        {
+            // 计算Panel应该居中的位置
+            int x = (this.Width - panel1.Width) / 2;
+            int y = (this.Height - panel1.Height) / 2;
+
+            // 设置Panel的Location属性
+            panel1.Location = new Point(x, y);
+        }
+
+        private void pictureBox1_Resize(object sender, EventArgs e)
+        {
+            // 在Form的Resize事件中重新计算并设置Panel的位置
+            CenterPanel();
         }
     }
 }
