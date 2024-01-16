@@ -112,7 +112,7 @@ namespace RelaySerialLib
                 }
 
                 rTBRelayStatus.Text += DateTime.Now.ToString() + ": \r\n";
-                for (int i = 0; i < 12; i++)
+                for (int i = 0; i < 16; i++)
                 {
                     if (int_relay_status[i] == 1)
                     {

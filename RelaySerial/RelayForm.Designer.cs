@@ -30,6 +30,9 @@
         {
             this.components = new System.ComponentModel.Container();
             this.groupBox8 = new System.Windows.Forms.GroupBox();
+            this.BtnOpenPort = new System.Windows.Forms.Button();
+            this.labelRefreshPort = new System.Windows.Forms.Label();
+            this.comboBoxCurPort = new System.Windows.Forms.ComboBox();
             this.rTBRelayStatus = new System.Windows.Forms.RichTextBox();
             this.btn_12_off = new System.Windows.Forms.Button();
             this.btn_12_on = new System.Windows.Forms.Button();
@@ -57,15 +60,28 @@
             this.btn_relay_all_off = new System.Windows.Forms.Button();
             this.btn_2_on = new System.Windows.Forms.Button();
             this.btn_1_on = new System.Windows.Forms.Button();
-            this.BtnOpenPort = new System.Windows.Forms.Button();
-            this.labelRefreshPort = new System.Windows.Forms.Label();
-            this.comboBoxCurPort = new System.Windows.Forms.ComboBox();
             this.serialPortRelay = new System.IO.Ports.SerialPort(this.components);
+            this.button1 = new System.Windows.Forms.Button();
+            this.button2 = new System.Windows.Forms.Button();
+            this.button3 = new System.Windows.Forms.Button();
+            this.button4 = new System.Windows.Forms.Button();
+            this.button5 = new System.Windows.Forms.Button();
+            this.button6 = new System.Windows.Forms.Button();
+            this.button7 = new System.Windows.Forms.Button();
+            this.button8 = new System.Windows.Forms.Button();
             this.groupBox8.SuspendLayout();
             this.SuspendLayout();
             // 
             // groupBox8
             // 
+            this.groupBox8.Controls.Add(this.button7);
+            this.groupBox8.Controls.Add(this.button8);
+            this.groupBox8.Controls.Add(this.button5);
+            this.groupBox8.Controls.Add(this.button6);
+            this.groupBox8.Controls.Add(this.button3);
+            this.groupBox8.Controls.Add(this.button4);
+            this.groupBox8.Controls.Add(this.button1);
+            this.groupBox8.Controls.Add(this.button2);
             this.groupBox8.Controls.Add(this.BtnOpenPort);
             this.groupBox8.Controls.Add(this.labelRefreshPort);
             this.groupBox8.Controls.Add(this.comboBoxCurPort);
@@ -104,6 +120,37 @@
             this.groupBox8.TabIndex = 1;
             this.groupBox8.TabStop = false;
             this.groupBox8.Text = "继电器调试";
+            // 
+            // BtnOpenPort
+            // 
+            this.BtnOpenPort.Location = new System.Drawing.Point(224, 36);
+            this.BtnOpenPort.Margin = new System.Windows.Forms.Padding(4);
+            this.BtnOpenPort.Name = "BtnOpenPort";
+            this.BtnOpenPort.Size = new System.Drawing.Size(135, 32);
+            this.BtnOpenPort.TabIndex = 72;
+            this.BtnOpenPort.Text = "打开串口";
+            this.BtnOpenPort.UseVisualStyleBackColor = true;
+            this.BtnOpenPort.Click += new System.EventHandler(this.BtnOpenPort_Click);
+            // 
+            // labelRefreshPort
+            // 
+            this.labelRefreshPort.AutoSize = true;
+            this.labelRefreshPort.Location = new System.Drawing.Point(7, 43);
+            this.labelRefreshPort.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.labelRefreshPort.Name = "labelRefreshPort";
+            this.labelRefreshPort.Size = new System.Drawing.Size(47, 19);
+            this.labelRefreshPort.TabIndex = 71;
+            this.labelRefreshPort.Text = "串口";
+            this.labelRefreshPort.Click += new System.EventHandler(this.labelRefreshPort_Click);
+            // 
+            // comboBoxCurPort
+            // 
+            this.comboBoxCurPort.FormattingEnabled = true;
+            this.comboBoxCurPort.Location = new System.Drawing.Point(62, 40);
+            this.comboBoxCurPort.Margin = new System.Windows.Forms.Padding(4);
+            this.comboBoxCurPort.Name = "comboBoxCurPort";
+            this.comboBoxCurPort.Size = new System.Drawing.Size(154, 27);
+            this.comboBoxCurPort.TabIndex = 70;
             // 
             // rTBRelayStatus
             // 
@@ -220,7 +267,7 @@
             // btn_read_state
             // 
             this.btn_read_state.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btn_read_state.Location = new System.Drawing.Point(180, 354);
+            this.btn_read_state.Location = new System.Drawing.Point(180, 415);
             this.btn_read_state.Name = "btn_read_state";
             this.btn_read_state.Size = new System.Drawing.Size(98, 31);
             this.btn_read_state.TabIndex = 59;
@@ -407,7 +454,7 @@
             // btn_relay_all_off
             // 
             this.btn_relay_all_off.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btn_relay_all_off.Location = new System.Drawing.Point(60, 354);
+            this.btn_relay_all_off.Location = new System.Drawing.Point(60, 415);
             this.btn_relay_all_off.Name = "btn_relay_all_off";
             this.btn_relay_all_off.Size = new System.Drawing.Size(101, 31);
             this.btn_relay_all_off.TabIndex = 44;
@@ -439,36 +486,105 @@
             this.btn_1_on.UseVisualStyleBackColor = true;
             this.btn_1_on.Click += new System.EventHandler(this.btn_on_click);
             // 
-            // BtnOpenPort
+            // button1
             // 
-            this.BtnOpenPort.Location = new System.Drawing.Point(224, 36);
-            this.BtnOpenPort.Margin = new System.Windows.Forms.Padding(4);
-            this.BtnOpenPort.Name = "BtnOpenPort";
-            this.BtnOpenPort.Size = new System.Drawing.Size(135, 32);
-            this.BtnOpenPort.TabIndex = 72;
-            this.BtnOpenPort.Text = "打开串口";
-            this.BtnOpenPort.UseVisualStyleBackColor = true;
-            this.BtnOpenPort.Click += new System.EventHandler(this.BtnOpenPort_Click);
+            this.button1.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.button1.Font = new System.Drawing.Font("宋体", 10F);
+            this.button1.ForeColor = System.Drawing.Color.Blue;
+            this.button1.Location = new System.Drawing.Point(271, 284);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(75, 23);
+            this.button1.TabIndex = 74;
+            this.button1.Text = "13_断开";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.btn_off_click);
             // 
-            // labelRefreshPort
+            // button2
             // 
-            this.labelRefreshPort.AutoSize = true;
-            this.labelRefreshPort.Location = new System.Drawing.Point(7, 43);
-            this.labelRefreshPort.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.labelRefreshPort.Name = "labelRefreshPort";
-            this.labelRefreshPort.Size = new System.Drawing.Size(47, 19);
-            this.labelRefreshPort.TabIndex = 71;
-            this.labelRefreshPort.Text = "串口";
-            this.labelRefreshPort.Click += new System.EventHandler(this.labelRefreshPort_Click);
+            this.button2.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.button2.Font = new System.Drawing.Font("宋体", 10F);
+            this.button2.Location = new System.Drawing.Point(190, 284);
+            this.button2.Name = "button2";
+            this.button2.Size = new System.Drawing.Size(75, 23);
+            this.button2.TabIndex = 73;
+            this.button2.Text = "13_吸合";
+            this.button2.UseVisualStyleBackColor = true;
+            this.button2.Click += new System.EventHandler(this.btn_on_click);
             // 
-            // comboBoxCurPort
+            // button3
             // 
-            this.comboBoxCurPort.FormattingEnabled = true;
-            this.comboBoxCurPort.Location = new System.Drawing.Point(62, 40);
-            this.comboBoxCurPort.Margin = new System.Windows.Forms.Padding(4);
-            this.comboBoxCurPort.Name = "comboBoxCurPort";
-            this.comboBoxCurPort.Size = new System.Drawing.Size(154, 27);
-            this.comboBoxCurPort.TabIndex = 70;
+            this.button3.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.button3.Font = new System.Drawing.Font("宋体", 10F);
+            this.button3.ForeColor = System.Drawing.Color.Blue;
+            this.button3.Location = new System.Drawing.Point(271, 313);
+            this.button3.Name = "button3";
+            this.button3.Size = new System.Drawing.Size(75, 23);
+            this.button3.TabIndex = 76;
+            this.button3.Text = "14_断开";
+            this.button3.UseVisualStyleBackColor = true;
+            this.button3.Click += new System.EventHandler(this.btn_off_click);
+            // 
+            // button4
+            // 
+            this.button4.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.button4.Font = new System.Drawing.Font("宋体", 10F);
+            this.button4.Location = new System.Drawing.Point(190, 313);
+            this.button4.Name = "button4";
+            this.button4.Size = new System.Drawing.Size(75, 23);
+            this.button4.TabIndex = 75;
+            this.button4.Text = "14_吸合";
+            this.button4.UseVisualStyleBackColor = true;
+            this.button4.Click += new System.EventHandler(this.btn_on_click);
+            // 
+            // button5
+            // 
+            this.button5.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.button5.Font = new System.Drawing.Font("宋体", 10F);
+            this.button5.ForeColor = System.Drawing.Color.Blue;
+            this.button5.Location = new System.Drawing.Point(271, 342);
+            this.button5.Name = "button5";
+            this.button5.Size = new System.Drawing.Size(75, 23);
+            this.button5.TabIndex = 78;
+            this.button5.Text = "15_断开";
+            this.button5.UseVisualStyleBackColor = true;
+            this.button5.Click += new System.EventHandler(this.btn_off_click);
+            // 
+            // button6
+            // 
+            this.button6.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.button6.Font = new System.Drawing.Font("宋体", 10F);
+            this.button6.Location = new System.Drawing.Point(190, 342);
+            this.button6.Name = "button6";
+            this.button6.Size = new System.Drawing.Size(75, 23);
+            this.button6.TabIndex = 77;
+            this.button6.Text = "15_吸合";
+            this.button6.UseVisualStyleBackColor = true;
+            this.button6.Click += new System.EventHandler(this.btn_on_click);
+            // 
+            // button7
+            // 
+            this.button7.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.button7.Font = new System.Drawing.Font("宋体", 10F);
+            this.button7.ForeColor = System.Drawing.Color.Blue;
+            this.button7.Location = new System.Drawing.Point(271, 371);
+            this.button7.Name = "button7";
+            this.button7.Size = new System.Drawing.Size(75, 23);
+            this.button7.TabIndex = 80;
+            this.button7.Text = "16_断开";
+            this.button7.UseVisualStyleBackColor = true;
+            this.button7.Click += new System.EventHandler(this.btn_off_click);
+            // 
+            // button8
+            // 
+            this.button8.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.button8.Font = new System.Drawing.Font("宋体", 10F);
+            this.button8.Location = new System.Drawing.Point(190, 371);
+            this.button8.Name = "button8";
+            this.button8.Size = new System.Drawing.Size(75, 23);
+            this.button8.TabIndex = 79;
+            this.button8.Text = "16_吸合";
+            this.button8.UseVisualStyleBackColor = true;
+            this.button8.Click += new System.EventHandler(this.btn_on_click);
             // 
             // RelayForm
             // 
@@ -520,5 +636,13 @@
         private System.Windows.Forms.Label labelRefreshPort;
         private System.Windows.Forms.ComboBox comboBoxCurPort;
         private System.IO.Ports.SerialPort serialPortRelay;
+        private System.Windows.Forms.Button button3;
+        private System.Windows.Forms.Button button4;
+        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Button button2;
+        private System.Windows.Forms.Button button5;
+        private System.Windows.Forms.Button button6;
+        private System.Windows.Forms.Button button7;
+        private System.Windows.Forms.Button button8;
     }
 }
