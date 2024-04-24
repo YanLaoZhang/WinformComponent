@@ -192,6 +192,7 @@ namespace RelaySerialLib
                     return true;
                 }
                 int numa = Environment.TickCount;
+                int startIndex = -1;
                 // 条件是真的时执行循环，条件是假的时候跳出循环
                 while (true)
                 {
@@ -203,15 +204,31 @@ namespace RelaySerialLib
                     {
                         break;
                     }
-                    if (Recive_buffer.Count >= byte_ret_value.Length)
-                    {
-                        // 数据接收完整
-                        Recive_buffer.CopyTo(0, byte_Receive, 0, Recive_buffer.Count);
-                        Recive_buffer.Clear();
-                        break;
+                    
+                    // 有些继电器会有多余信息干扰，添加AA起始标识位检查来消除干扰
+                    if (Recive_buffer.Contains(0xAA) && Recive_buffer.Contains(0x5A)){
+                        startIndex = Recive_buffer.IndexOf(0xAA);
+                        Console.WriteLine($"startIndex:{startIndex}");
+                        if(startIndex < 0)
+                        {
+                            continue;
+                        }
+                        else
+                        {
+                            if (Recive_buffer.Count >= byte_ret_value.Length+startIndex)
+                            {
+                                // 数据接收完整
+                                Console.WriteLine($"Recive_buffer.Count:[{Recive_buffer.Count}]");
+                                Console.WriteLine($"copy count:[{byte_ret_value.Length}]");
+                                Recive_buffer.CopyTo(startIndex, byte_Receive, 0, byte_ret_value.Length);
+                                Recive_buffer.Clear();
+                                break;
+                            }
+                        }
                     }
+                    
                 }
-                for (int i = 0; i < 6; i++)
+                for (int i = 0; i < byte_ret_value.Length; i++)
                 {
                     byte_ret_value[i] = byte_Receive[i];
                 }

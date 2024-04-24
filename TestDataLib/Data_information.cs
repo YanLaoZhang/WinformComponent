@@ -13,11 +13,13 @@ namespace TestDataLib
     public partial class Data_information : Form
     {
         private string _table_name = string.Empty;
+        private string _id = string.Empty;
 
-        public Data_information(string table_name)
+        public Data_information(string table_name, string id="rn")
         {
             InitializeComponent();
             _table_name = table_name;
+            _id = id;
         }
 
         private void data_information_Load(object sender, EventArgs e)
@@ -50,9 +52,9 @@ namespace TestDataLib
                 LocalMachineDB localMachineDB = new LocalMachineDB();
                 DataTable dt = new DataTable();
                 string str_sql = $"SELECT * FROM `{_table_name}` WHERE `start_test_time` between '{Start_Time}' and '{End_Time}'";
-                if (str_rn.Length == 15)
+                if (str_rn.Length > 0)
                 {
-                    str_sql += $" and `rn`='{str_rn}'";
+                    str_sql += $" and `{_id}`='{str_rn}'";
                 }
                 if(cbx_test_result.Checked && cbo_test_result.SelectedItem != null)
                 {

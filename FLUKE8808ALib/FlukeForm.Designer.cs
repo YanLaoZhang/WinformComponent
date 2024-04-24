@@ -406,6 +406,7 @@
             this.Name = "FlukeForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Form1";
+            this.TopMost = true;
             this.Load += new System.EventHandler(this.FlukeForm_Load);
             this.groupBox3.ResumeLayout(false);
             this.groupBox3.PerformLayout();
