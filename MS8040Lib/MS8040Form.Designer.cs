@@ -136,7 +136,9 @@
             this.Controls.Add(this.labelRefreshPort);
             this.Controls.Add(this.comboBoxCurPort);
             this.Name = "MS8040Form";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "MS8040电流表";
+            this.TopMost = true;
             this.Load += new System.EventHandler(this.MS8040Form_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
