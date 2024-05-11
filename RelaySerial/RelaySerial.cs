@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO.Ports;
+using System.Linq;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
 
@@ -191,6 +192,7 @@ namespace RelaySerialLib
                 {
                     return true;
                 }
+                System.Threading.Thread.Sleep(500);
                 int numa = Environment.TickCount;
                 int startIndex = -1;
                 // 条件是真的时执行循环，条件是假的时候跳出循环
@@ -220,6 +222,11 @@ namespace RelaySerialLib
                                 // 数据接收完整
                                 Console.WriteLine($"Recive_buffer.Count:[{Recive_buffer.Count}]");
                                 Console.WriteLine($"copy count:[{byte_ret_value.Length}]");
+                                if(Recive_buffer.Count == byte_ret_value.Length * 2 && Recive_buffer.Take(byte_send.Length).SequenceEqual(byte_send.Take(byte_send.Length)))
+                                {
+                                    Console.WriteLine($"Recive_buffer contain byte_send");
+                                    startIndex += byte_send.Length;
+                                }
                                 Recive_buffer.CopyTo(startIndex, byte_Receive, 0, byte_ret_value.Length);
                                 Recive_buffer.Clear();
                                 break;
