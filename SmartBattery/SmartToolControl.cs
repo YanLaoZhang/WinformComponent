@@ -323,7 +323,7 @@ namespace SmartBattery
             {
                 Console.WriteLine($"Board Offset Calibrate Fail.");
             }
-            Thread.Sleep(5000);
+            Thread.Sleep(500);
             return this;
         }
 
@@ -514,6 +514,30 @@ namespace SmartBattery
             return this;
         }
 
+        /// <summary>
+        /// 选择CMD Panel
+        /// </summary>
+        /// <param name="item"></param>
+        /// <returns></returns>
+        public SmartToolControl CMDPanelHandle(string item)
+        {
+            AutomationElement comboBox_cmdPanel = GetElementByAutomationID(_mainWindow, ControlType.ComboBox, "comboBox_CMDInput");
+            if (comboBox_cmdPanel != null)
+            {
+                SelectComboBox(comboBox_cmdPanel, item);
+                Thread.Sleep(1000);
+            }
+
+            return this;
+        }
+
+        /// <summary>
+        /// 依据ID查找控件
+        /// </summary>
+        /// <param name="parentElement"></param>
+        /// <param name="obj"></param>
+        /// <param name="id"></param>
+        /// <returns></returns>
         static AutomationElement GetElementByAutomationID(AutomationElement parentElement, ControlType obj, string id)
         {
             AutomationElement element = null;
@@ -521,7 +545,7 @@ namespace SmartBattery
                 new PropertyCondition(AutomationElement.ControlTypeProperty, obj));
             foreach (AutomationElement item in allElements)
             {
-                Console.WriteLine($"Type:[{obj}], Name:[{item.Current.Name}], AutomationId:[{item.Current.AutomationId}]");
+                Console.WriteLine($"Type:[{obj.ProgrammaticName}], Name:[{item.Current.Name}], AutomationId:[{item.Current.AutomationId}]");
                 if(item.Current.AutomationId == id)
                 {
                     element = item;
@@ -639,5 +663,63 @@ namespace SmartBattery
             }
         }
 
+        /// <summary>
+        /// 选择下拉框指定元素
+        /// </summary>
+        /// <param name="comboBoxElement"></param>
+        /// <param name="item"></param>
+        static void SelectComboBox(AutomationElement comboBoxElement, string item)
+        {
+            if (comboBoxElement == null)
+            {
+                Console.WriteLine("No Found ComboBox");
+                return;
+            }
+
+            // 获取ExpandCollapsePattern
+            var expandCollapsePattern = comboBoxElement.GetCurrentPattern(ExpandCollapsePattern.Pattern) as ExpandCollapsePattern;
+
+            if (expandCollapsePattern == null)
+            {
+                Console.WriteLine("Cannot Get ExpandCollapsePattern");
+                return;
+            }
+
+            // 展开ComboBox
+            try
+            {
+                expandCollapsePattern.Expand();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Expand ComboBox Error: " + ex.Message);
+                return;
+            }
+
+            Thread.Sleep(1000);
+            AutomationElement targetItem = null;
+            AutomationElementCollection listItems = comboBoxElement.FindAll(TreeScope.Descendants, new PropertyCondition(AutomationElement.ControlTypeProperty, ControlType.ListItem));
+            foreach(AutomationElement element in listItems)
+            {
+                Console.WriteLine($"{element.Current.Name},{element.Current.ControlType.ProgrammaticName}");
+                if(element.Current.Name == item)
+                {
+                    targetItem = element;
+                    break;
+                }
+            }
+
+            if (targetItem == null)
+            {
+                Console.WriteLine("No Found Select Item");
+                return;
+            }
+
+            // 选择下拉列表项
+            var selectionItemPattern = targetItem.GetCurrentPattern(SelectionItemPattern.Pattern) as SelectionItemPattern;
+            selectionItemPattern.Select();
+
+            Console.WriteLine("Select Item OK");
+        }
     }
 }

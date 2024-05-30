@@ -83,5 +83,23 @@ namespace SmartBattery
         {
             control.KillAllSmartTool(exePath);
         }
+
+        private void BtnCMDPanel_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                BtnCMDPanel.Enabled = false;
+                string str_error_log = "";
+                string item = "0x0020(Seal Device)";
+                control
+                    .StartUp(exePath, ref str_error_log)
+                    .CMDPanelHandle(item);
+                this.Activate();
+            }
+            finally
+            {
+                BtnCMDPanel.Enabled = true;
+            }
+        }
     }
 }

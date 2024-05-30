@@ -31,6 +31,7 @@
             this.BtnOffsetCalibrate = new System.Windows.Forms.Button();
             this.BtnVoltageCalibrate = new System.Windows.Forms.Button();
             this.BtnCurrentCalibrate = new System.Windows.Forms.Button();
+            this.BtnCMDPanel = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // BtnOffsetCalibrate
@@ -63,11 +64,22 @@
             this.BtnCurrentCalibrate.UseVisualStyleBackColor = true;
             this.BtnCurrentCalibrate.Click += new System.EventHandler(this.BtnCurrentCalibrate_Click);
             // 
+            // BtnCMDPanel
+            // 
+            this.BtnCMDPanel.Location = new System.Drawing.Point(12, 191);
+            this.BtnCMDPanel.Name = "BtnCMDPanel";
+            this.BtnCMDPanel.Size = new System.Drawing.Size(118, 31);
+            this.BtnCMDPanel.TabIndex = 3;
+            this.BtnCMDPanel.Text = "CMD Panel";
+            this.BtnCMDPanel.UseVisualStyleBackColor = true;
+            this.BtnCMDPanel.Click += new System.EventHandler(this.BtnCMDPanel_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
+            this.Controls.Add(this.BtnCMDPanel);
             this.Controls.Add(this.BtnCurrentCalibrate);
             this.Controls.Add(this.BtnVoltageCalibrate);
             this.Controls.Add(this.BtnOffsetCalibrate);
@@ -85,6 +97,7 @@
         private System.Windows.Forms.Button BtnOffsetCalibrate;
         private System.Windows.Forms.Button BtnVoltageCalibrate;
         private System.Windows.Forms.Button BtnCurrentCalibrate;
+        private System.Windows.Forms.Button BtnCMDPanel;
     }
 }
 
