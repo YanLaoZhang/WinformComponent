@@ -203,52 +203,89 @@ namespace SmartBattery
         /// </summary>
         /// <param name="filePath"></param>
         /// <returns></returns>
-        public SmartToolControl SetAFIFile(string filePath)
+        public SmartToolControl SetAFIFile(string filePath, out bool result, out string str_error_log)
         {
+            Thread.Sleep(1000);
+            // 点击菜单栏
+            ClickMenuItem("File");
+            Thread.Sleep(1000);
+            ClickMenuItem("Open AFI File(*.afi)");
+            Thread.Sleep(1000);
             // 查找文件选择框
             AutomationElement fileDialog = _mainWindow.FindFirst(TreeScope.Children,
                 new PropertyCondition(AutomationElement.NameProperty, "Select AFI file: Channel 0")
                 );
-            if (fileDialog != null)
+            if (fileDialog == null)
             {
-                // 查找文件名编辑框
-                AutomationElement fileNameEdit = null;
-                AutomationElementCollection allComboBoxItems = fileDialog.FindAll(TreeScope.Descendants, new PropertyCondition(AutomationElement.ControlTypeProperty, ControlType.ComboBox));
-                foreach (AutomationElement ele in allComboBoxItems)
+                str_error_log = $"fileDialog is Null";
+                Console.WriteLine(str_error_log);
+                result = false;
+                return this;
+            }
+            // 查找文件名编辑框
+            AutomationElement fileNameEdit = null;
+            AutomationElementCollection allComboBoxItems = fileDialog.FindAll(TreeScope.Descendants, new PropertyCondition(AutomationElement.ControlTypeProperty, ControlType.ComboBox));
+            foreach (AutomationElement ele in allComboBoxItems)
+            {
+                Console.WriteLine($"{ele.Current.Name}");
+                if (ele.Current.Name.Contains("文件名"))
                 {
-                    Console.WriteLine($"{ele.Current.Name}");
-                    if (ele.Current.Name.Contains("文件名"))
-                    {
-                        fileNameEdit = ele;
-                        break;
-                    }
-                }
-                if (fileNameEdit != null)
-                {
-                    // 设置文件路径
-                    ValuePattern valuePattern = (ValuePattern)fileNameEdit.GetCurrentPattern(ValuePattern.Pattern);
-                    Console.WriteLine($"{filePath}");
-                    valuePattern.SetValue(filePath);
-
-                    // 查找并点击“打开”按钮
-                    AutomationElement openButton = null;
-                    AutomationElementCollection allButtonItems = fileDialog.FindAll(TreeScope.Descendants, new PropertyCondition(AutomationElement.ControlTypeProperty, ControlType.Button));
-                    foreach (AutomationElement ele in allButtonItems)
-                    {
-                        Console.WriteLine($"{ele.Current.Name}");
-                        if (ele.Current.Name.Contains("打开") || ele.Current.Name.Contains("Open"))
-                        {
-                            openButton = ele;
-                            break;
-                        }
-                    }
-                    if (openButton != null)
-                    {
-                        InvokeClickElement(openButton);
-                    }
+                    fileNameEdit = ele;
+                    break;
                 }
             }
+            if (fileNameEdit == null)
+            {
+                str_error_log = $"fileNameEdit is Null";
+                Console.WriteLine(str_error_log);
+                result = false;
+                return this;
+            }
 
+            // 设置文件路径
+            ValuePattern valuePattern = (ValuePattern)fileNameEdit.GetCurrentPattern(ValuePattern.Pattern);
+            Console.WriteLine($"{filePath}");
+            valuePattern.SetValue(filePath);
+
+            Thread.Sleep(1000);
+            // 查找并点击“打开”按钮
+            AutomationElement openButton = null;
+            AutomationElementCollection allButtonItems = fileDialog.FindAll(TreeScope.Descendants, new PropertyCondition(AutomationElement.ControlTypeProperty, ControlType.Button));
+            foreach (AutomationElement ele in allButtonItems)
+            {
+                Console.WriteLine($"{ele.Current.Name}");
+                if (ele.Current.Name.Contains("打开") || ele.Current.Name.Contains("Open"))
+                {
+                    openButton = ele;
+                    break;
+                }
+            }
+            if (openButton == null)
+            {
+                str_error_log = $"OpenButton is Null";
+                Console.WriteLine(str_error_log);
+                result = false;
+                return this;
+            }
+
+            InvokeClickElement(openButton);
+            Thread.Sleep(6000);
+
+            str_error_log = string.Empty;
+            result = false;
+            GetDialogTip(out string content);
+            if (content.Contains($"AFI Write Success"))
+            {
+                str_error_log = $"AFI Write Success.";
+                Console.WriteLine(str_error_log);
+                result = true;
+            }
+            if (content.Contains($"AFI Write Fail"))
+            {
+                str_error_log = $"AFI Write Fail.";
+                Console.WriteLine(str_error_log);
+                result = false;
+            }
             return this;
         }
 
@@ -291,11 +328,13 @@ namespace SmartBattery
         /// Board Offset Calibrate
         /// </summary>
         /// <returns></returns>
-        public SmartToolControl OffsetCalibrate()
+        public SmartToolControl OffsetCalibrate(out bool result, out string str_error_log)
         {
             if( _mainWindow == null)
             {
-                Console.WriteLine($"mainWindow is Null");
+                str_error_log = $"mainWindow is Null";
+                Console.WriteLine(str_error_log);
+                result = false;
                 return this;
             }
             // 最上方的Menu的Calibrate按钮
@@ -314,14 +353,20 @@ namespace SmartBattery
                 Thread.Sleep(1000);
             }
 
+            str_error_log = string.Empty;
+            result = false;
             GetDialogTip(out string content);
             if (content.Contains($"Calibrate Success"))
             {
-                Console.WriteLine($"Board Offset Calibrate Success.");
+                str_error_log = $"Board Offset Calibrate Success.";
+                Console.WriteLine(str_error_log);
+                result = true;
             }
             if (content.Contains($"Calibrate Fail"))
             {
-                Console.WriteLine($"Board Offset Calibrate Fail.");
+                str_error_log = $"Board Offset Calibrate Fail.";
+                Console.WriteLine(str_error_log);
+                result = false;
             }
             Thread.Sleep(500);
             return this;
@@ -332,7 +377,7 @@ namespace SmartBattery
         /// </summary>
         /// <param name="act_vol"></param>
         /// <returns></returns>
-        public SmartToolControl VoltageCalibrate(string act_vol)
+        public SmartToolControl VoltageCalibrate(string act_vol, out bool result, out string str_error_log)
         {
             // 最上方的Menu的Calibrate按钮
             AutomationElement buttonMenu_Calibrate = GetElementByAutomationID(_mainWindow, ControlType.Button, "buttonMenu_Calibrate");
@@ -341,17 +386,25 @@ namespace SmartBattery
                 InvokeClickElement(buttonMenu_Calibrate);
                 Thread.Sleep(1000);
             }
-            bool isCalibrate = false;
-            do
+            else
             {
-                // 勾选Voltage
-                AutomationElement checkBox_Voltage = GetElementByAutomationID(_mainWindow, ControlType.CheckBox, "checkBox_Voltage");
-                if (checkBox_Voltage != null)
-                {
-                    CheckCheckBox(checkBox_Voltage);
-                    Thread.Sleep(1000);
-                }
+                str_error_log = $"buttonMenu_Calibrate is NULL.";
+                Console.WriteLine(str_error_log);
+                result = false;
+                return this;
+            }
 
+            // 勾选Voltage
+            AutomationElement checkBox_Voltage = GetElementByAutomationID(_mainWindow, ControlType.CheckBox, "checkBox_Voltage");
+            if (checkBox_Voltage != null)
+            {
+                CheckCheckBox(checkBox_Voltage);
+                Thread.Sleep(1000);
+            }
+            bool isCalibrate = false;
+            for(int i = 0; i < 3; i++)
+            {
+                str_error_log = string.Empty;
                 // Enter Actual Voltage
                 AutomationElement textBox_VoltageAct = GetElementByAutomationID(_mainWindow, ControlType.Edit, "textBox_VoltageAct");
                 if (textBox_VoltageAct != null)
@@ -375,14 +428,9 @@ namespace SmartBattery
                 }
                 if (content.Contains($"Calibrate Fail"))
                 {
-                    Console.WriteLine($"Voltage Calibrate Fail.");
-                    // 取消勾选
-                    if (checkBox_Voltage != null)
-                    {
-                        UncheckCheckBox(checkBox_Voltage);
-                        Thread.Sleep(1000);
-                    }
-                    break;
+                    str_error_log = $"Voltage Calibrate Fail.";
+                    Console.WriteLine(str_error_log);
+                    continue;
                 }
 
                 AutomationElement textBox_VoltageMes = GetElementByAutomationID(_mainWindow, ControlType.Edit, "textBox_VoltageMes");
@@ -394,29 +442,36 @@ namespace SmartBattery
                     Console.WriteLine($"Actual Voltage and Measured Voltage Difference: [{diff_vol}]");
                     if (diff_vol > 10)
                     {
-                        isCalibrate = true;
-                        // 取消勾选
-                        if (checkBox_Voltage != null)
-                        {
-                            UncheckCheckBox(checkBox_Voltage);
-                            Thread.Sleep(1000);
-                        }
+                        str_error_log = $"Voltage Calibrate Difference Fail.";
+                        Console.WriteLine(str_error_log);
                         continue;
                     }
                     else
                     {
-                        Console.WriteLine($"Voltage Calibrate OK");
-                        // 取消勾选
-                        if (checkBox_Voltage != null)
-                        {
-                            UncheckCheckBox(checkBox_Voltage);
-                            Thread.Sleep(1000);
-                        }
+                        isCalibrate = true;
+                        Console.WriteLine($"Voltage Calibrate Difference Success.");
                         break;
                     }
                 }
-            } while (isCalibrate);
-
+            }
+            // 取消勾选
+            if (checkBox_Voltage != null)
+            {
+                UncheckCheckBox(checkBox_Voltage);
+                Thread.Sleep(1000);
+            }
+            if (isCalibrate)
+            {
+                str_error_log = $"Voltage Calibrate Final Success.";
+                Console.WriteLine(str_error_log);
+                result = true;
+            }
+            else
+            {
+                str_error_log = $"Voltage Calibrate Final Fail.";
+                Console.WriteLine(str_error_log);
+                result = false;
+            }
             return this;
         }
 
@@ -425,7 +480,7 @@ namespace SmartBattery
         /// </summary>
         /// <param name="act_cur"></param>
         /// <returns></returns>
-        public SmartToolControl CurrentCalibrate(string act_cur)
+        public SmartToolControl CurrentCalibrate(string act_cur, out bool result, out string str_error_log)
         {
             // 最上方的Menu的Calibrate按钮
             AutomationElement buttonMenu_Calibrate = GetElementByAutomationID(_mainWindow, ControlType.Button, "buttonMenu_Calibrate");
@@ -434,18 +489,25 @@ namespace SmartBattery
                 InvokeClickElement(buttonMenu_Calibrate);
                 Thread.Sleep(1000);
             }
-
-            bool isCalibrate = false;
-            do
+            else
             {
-                // 勾选Voltage
-                AutomationElement checkBox_Current = GetElementByAutomationID(_mainWindow, ControlType.CheckBox, "checkBox_Current");
-                if (checkBox_Current != null)
-                {
-                    CheckCheckBox(checkBox_Current);
-                    Thread.Sleep(1000);
-                }
+                str_error_log = $"buttonMenu_Calibrate is NULL.";
+                Console.WriteLine(str_error_log);
+                result = false;
+                return this;
+            }
 
+            // 勾选Voltage
+            AutomationElement checkBox_Current = GetElementByAutomationID(_mainWindow, ControlType.CheckBox, "checkBox_Current");
+            if (checkBox_Current != null)
+            {
+                CheckCheckBox(checkBox_Current);
+                Thread.Sleep(1000);
+            }
+            bool isCalibrate = false;
+            for(int i = 0; i < 3; i++)
+            {
+                str_error_log = string.Empty;
                 // Enter Actual Current
                 AutomationElement textBox_CurrentAct = GetElementByAutomationID(_mainWindow, ControlType.Edit, "textBox_CurrentAct");
                 if (textBox_CurrentAct != null)
@@ -469,14 +531,9 @@ namespace SmartBattery
                 }
                 if (content.Contains($"Calibrate Fail"))
                 {
-                    Console.WriteLine($"Current Calibrate Fail.");
-                    // 取消勾选
-                    if (checkBox_Current != null)
-                    {
-                        UncheckCheckBox(checkBox_Current);
-                        Thread.Sleep(1000);
-                    }
-                    break;
+                    str_error_log = $"Current Calibrate Fail.";
+                    Console.WriteLine(str_error_log);
+                    continue;
                 }
 
                 AutomationElement textBox_CurrentMes = GetElementByAutomationID(_mainWindow, ControlType.Edit, "textBox_CurrentMes");
@@ -488,29 +545,36 @@ namespace SmartBattery
                     Console.WriteLine($"Actual Current and Measured Current Difference: [{diff_cur}]");
                     if (diff_cur > 10)
                     {
-                        isCalibrate = true;
-                        // 取消勾选
-                        if (checkBox_Current != null)
-                        {
-                            UncheckCheckBox(checkBox_Current);
-                            Thread.Sleep(1000);
-                        }
+                        str_error_log = $"Current Calibrate Difference Fail.";
+                        Console.WriteLine(str_error_log);
                         continue;
                     }
                     else
                     {
-                        Console.WriteLine($"Current Calibrate OK");
-                        // 取消勾选
-                        if (checkBox_Current != null)
-                        {
-                            UncheckCheckBox(checkBox_Current);
-                            Thread.Sleep(1000);
-                        }
+                        isCalibrate = true;
+                        Console.WriteLine($"Current Calibrate Difference Success.");
                         break;
                     }
                 }
-            } while (isCalibrate);
-
+            }
+            // 取消勾选
+            if (checkBox_Current != null)
+            {
+                UncheckCheckBox(checkBox_Current);
+                Thread.Sleep(1000);
+            }
+            if (isCalibrate)
+            {
+                str_error_log = $"Current Calibrate Final Success.";
+                Console.WriteLine(str_error_log);
+                result = true;
+            }
+            else
+            {
+                str_error_log = $"Current Calibrate Final Fail.";
+                Console.WriteLine(str_error_log);
+                result = false;
+            }
             return this;
         }
 
@@ -519,13 +583,21 @@ namespace SmartBattery
         /// </summary>
         /// <param name="item"></param>
         /// <returns></returns>
-        public SmartToolControl CMDPanelHandle(string item)
+        public SmartToolControl CMDPanelHandle(string item, out bool result, out string str_error_log)
         {
             AutomationElement comboBox_cmdPanel = GetElementByAutomationID(_mainWindow, ControlType.ComboBox, "comboBox_CMDInput");
             if (comboBox_cmdPanel != null)
             {
                 SelectComboBox(comboBox_cmdPanel, item);
                 Thread.Sleep(1000);
+                str_error_log = string.Empty;
+                result = true;
+            }
+            else
+            {
+                str_error_log = $"comboBox_cmdPanel is NULL.";
+                Console.WriteLine(str_error_log);
+                result = false;
             }
 
             return this;
