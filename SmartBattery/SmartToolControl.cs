@@ -273,19 +273,27 @@ namespace SmartBattery
 
             str_error_log = string.Empty;
             result = false;
-            GetDialogTip(out string content);
-            if (content.Contains($"AFI Write Success"))
+            for(int i = 0; i < 30; i++)
             {
-                str_error_log = $"AFI Write Success.";
-                Console.WriteLine(str_error_log);
-                result = true;
+                GetDialogTip(out string content);
+                if (content.Contains($"AFI Write Success"))
+                {
+                    str_error_log = $"AFI Write Success.";
+                    Console.WriteLine(str_error_log);
+                    result = true;
+                    break;
+                }
+                if (content.Contains($"AFI Write Fail"))
+                {
+                    str_error_log = $"AFI Write Fail.";
+                    Console.WriteLine(str_error_log);
+                    result = false;
+                    break;
+                }
+                Thread.Sleep(3000);
+                continue;
             }
-            if (content.Contains($"AFI Write Fail"))
-            {
-                str_error_log = $"AFI Write Fail.";
-                Console.WriteLine(str_error_log);
-                result = false;
-            }
+
             return this;
         }
 
@@ -350,24 +358,32 @@ namespace SmartBattery
             if (button_OffsetCalibration != null)
             {
                 InvokeClickElement(button_OffsetCalibration);
-                Thread.Sleep(1000);
+                Thread.Sleep(2000);
             }
 
             str_error_log = string.Empty;
             result = false;
-            GetDialogTip(out string content);
-            if (content.Contains($"Calibrate Success"))
+            for(int i= 0; i < 10; i++)
             {
-                str_error_log = $"Board Offset Calibrate Success.";
-                Console.WriteLine(str_error_log);
-                result = true;
+                GetDialogTip(out string content);
+                if (content.Contains($"Calibrate Success"))
+                {
+                    str_error_log = $"Board Offset Calibrate Success.";
+                    Console.WriteLine(str_error_log);
+                    result = true;
+                    break;
+                }
+                if (content.Contains($"Calibrate Fail"))
+                {
+                    str_error_log = $"Board Offset Calibrate Fail.";
+                    Console.WriteLine(str_error_log);
+                    result = false;
+                    break;
+                }
+                Thread.Sleep(2000);
+                continue;
             }
-            if (content.Contains($"Calibrate Fail"))
-            {
-                str_error_log = $"Board Offset Calibrate Fail.";
-                Console.WriteLine(str_error_log);
-                result = false;
-            }
+
             Thread.Sleep(500);
             return this;
         }
@@ -377,8 +393,9 @@ namespace SmartBattery
         /// </summary>
         /// <param name="act_vol"></param>
         /// <returns></returns>
-        public SmartToolControl VoltageCalibrate(string act_vol, out bool result, out string str_error_log)
+        public SmartToolControl VoltageCalibrate(string act_vol, out bool result, out string mes_vol, out string str_error_log)
         {
+            mes_vol = string.Empty;
             // 最上方的Menu的Calibrate按钮
             AutomationElement buttonMenu_Calibrate = GetElementByAutomationID(_mainWindow, ControlType.Button, "buttonMenu_Calibrate");
             if (buttonMenu_Calibrate != null)
@@ -421,7 +438,17 @@ namespace SmartBattery
                     Thread.Sleep(1000);
                 }
 
-                GetDialogTip(out string content);
+                string content = string.Empty;
+                for (int j = 0; j < 10; j++)
+                {
+                    GetDialogTip(out string content_cur);
+                    if (content_cur.Contains($"Calibrate Success")|| content_cur.Contains($"Calibrate Fail"))
+                    {
+                        break;
+                    }
+                    Thread.Sleep(2000);
+                    content = content_cur;
+                }
                 if (content.Contains($"Calibrate Success"))
                 {
                     Console.WriteLine($"Voltage Calibrate Success.");
@@ -436,11 +463,11 @@ namespace SmartBattery
                 AutomationElement textBox_VoltageMes = GetElementByAutomationID(_mainWindow, ControlType.Edit, "textBox_VoltageMes");
                 if (textBox_VoltageMes != null)
                 {
-                    string mes_vol = GetEditText(textBox_VoltageMes);
+                    mes_vol = GetEditText(textBox_VoltageMes);
                     Thread.Sleep(1000);
                     double diff_vol = Math.Abs(double.Parse(act_vol) - double.Parse(mes_vol));
                     Console.WriteLine($"Actual Voltage and Measured Voltage Difference: [{diff_vol}]");
-                    if (diff_vol > 10)
+                    if (diff_vol > 3)
                     {
                         str_error_log = $"Voltage Calibrate Difference Fail.";
                         Console.WriteLine(str_error_log);
@@ -480,8 +507,9 @@ namespace SmartBattery
         /// </summary>
         /// <param name="act_cur"></param>
         /// <returns></returns>
-        public SmartToolControl CurrentCalibrate(string act_cur, out bool result, out string str_error_log)
+        public SmartToolControl CurrentCalibrate(string act_cur, out bool result, out string mes_cur, out string str_error_log)
         {
+            mes_cur = string.Empty;
             // 最上方的Menu的Calibrate按钮
             AutomationElement buttonMenu_Calibrate = GetElementByAutomationID(_mainWindow, ControlType.Button, "buttonMenu_Calibrate");
             if (buttonMenu_Calibrate != null)
@@ -524,7 +552,17 @@ namespace SmartBattery
                     Thread.Sleep(1000);
                 }
 
-                GetDialogTip(out string content);
+                string content = string.Empty;
+                for (int j = 0; j < 10; j++)
+                {
+                    GetDialogTip(out string content_cur);
+                    if (content_cur.Contains($"Calibrate Success") || content_cur.Contains($"Calibrate Fail"))
+                    {
+                        break;
+                    }
+                    Thread.Sleep(2000);
+                    content = content_cur;
+                }
                 if (content.Contains($"Calibrate Success"))
                 {
                     Console.WriteLine($"Current Calibrate Success.");
@@ -539,11 +577,11 @@ namespace SmartBattery
                 AutomationElement textBox_CurrentMes = GetElementByAutomationID(_mainWindow, ControlType.Edit, "textBox_CurrentMes");
                 if (textBox_CurrentMes != null)
                 {
-                    string mes_cur = GetEditText(textBox_CurrentMes);
+                    mes_cur = GetEditText(textBox_CurrentMes);
                     Thread.Sleep(1000);
                     double diff_cur = Math.Abs(double.Parse(act_cur) - double.Parse(mes_cur));
                     Console.WriteLine($"Actual Current and Measured Current Difference: [{diff_cur}]");
-                    if (diff_cur > 10)
+                    if (diff_cur > 3)
                     {
                         str_error_log = $"Current Calibrate Difference Fail.";
                         Console.WriteLine(str_error_log);
