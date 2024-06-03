@@ -110,6 +110,7 @@ namespace SmartBattery
                 }
                 string str_error_log = "";
                 string act_vol = "3290";
+                control._diff_allow = (double)NUDDiffer.Value;
                 control.StartUp(exePath, ref str_error_log);
                 control.VoltageCalibrate(act_vol, out bool result, out string mes_vol, out string error_log);
                 this.Activate();
@@ -141,6 +142,7 @@ namespace SmartBattery
                 }
                 string str_error_log = "";
                 string act_cur = "3290";
+                control._diff_allow = (double)NUDDiffer.Value;
                 control.StartUp(exePath, ref str_error_log);
                 control.CurrentCalibrate(act_cur, out bool result, out string mes_cur, out string error_log);
                 this.Activate();

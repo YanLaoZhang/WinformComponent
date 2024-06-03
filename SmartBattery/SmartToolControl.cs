@@ -7,6 +7,8 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Automation;
+using System.Windows.Forms;
+using System.Xml.Linq;
 
 namespace SmartBattery
 {
@@ -20,6 +22,15 @@ namespace SmartBattery
 
         // 程序主界面控件
         private AutomationElement _mainWindow;
+
+        // 电压电流校准误差设置
+        public double _diff_allow { get; set; }
+
+        public SmartToolControl(double diff_allow=3)
+        {
+            _diff_allow = diff_allow;
+            Trace.WriteLine($"DIFF is [{_diff_allow}]");
+        }
 
         /* Calibrate界面控件ID
             Button Name:[Config],                           AutomationId:[button_ChannelConfig]
@@ -64,19 +75,19 @@ namespace SmartBattery
         public void KillAllSmartTool(string exePath)
         {
             string processName = Path.GetFileNameWithoutExtension(exePath);
-            Console.WriteLine($"ProcessName:[{processName}]");
+            Trace.WriteLine($"ProcessName:[{processName}]");
             // 仅允许同时一个程序执行
             foreach (Process process in Process.GetProcessesByName(processName))
             {
                 try
                 {
                     process.Kill();
-                    Console.WriteLine($"Successfully terminated.");
+                    Trace.WriteLine($"Successfully terminated.");
                     //break;
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine($"Failed to Terminate.[{ex.Message}]");
+                    Trace.WriteLine($"Failed to Terminate.[{ex.Message}]");
                 }
             }
         }
@@ -92,8 +103,9 @@ namespace SmartBattery
         {
             try
             {
+                Trace.WriteLine($"DIFF is [{_diff_allow}]");
                 string processName = Path.GetFileNameWithoutExtension(exePath);
-                Console.WriteLine($"ProcessName:[{processName}]");
+                Trace.WriteLine($"ProcessName:[{processName}]");
                 bool isRunning = false;
                 // 仅允许同时一个程序执行
                 foreach (Process process in Process.GetProcessesByName(processName))
@@ -102,12 +114,12 @@ namespace SmartBattery
                     {
                         isRunning = true;
                         _process = process;
-                        Console.WriteLine($"Smart Battery Is Running.");
+                        Trace.WriteLine($"Smart Battery Is Running.");
                         break;
                     }
                     catch (Exception ex)
                     {
-                        Console.WriteLine($"Failed to Terminate.[{ex.Message}]");
+                        Trace.WriteLine($"Failed to Terminate.[{ex.Message}]");
                     }
                 }
                 if (!isRunning)
@@ -121,16 +133,30 @@ namespace SmartBattery
                         }
                     };
                     _process.Start();
-                    _process.WaitForInputIdle();
-                    Thread.Sleep(1000);
+                    bool started = _process.WaitForInputIdle(5000);
+                    Trace.WriteLine($"Process already Startup");
                 }
-                _mainWindowHandle = _process.MainWindowHandle;
-                _mainWindow = AutomationElement.FromHandle(_mainWindowHandle);
+                for(int i=0; i<10; i++)
+                {
+                    try
+                    {
+                        _mainWindowHandle = _process.MainWindowHandle;
+                        _mainWindow = AutomationElement.FromHandle(_mainWindowHandle);
+                        Trace.WriteLine($"Handel OK.");
+                        break;
+                    }
+                    catch (Exception ee)
+                    {
+                        Trace.WriteLine($"Handel Error. [{ee.Message}]");
+                        Thread.Sleep(1000);
+                        continue;
+                    }
+                }
             }
             catch (Exception ex)
             {
                 str_error_log = ex.Message;
-                Console.WriteLine($"Error Starting the Program: [{ex.Message}]");
+                Trace.WriteLine($"Error Starting the Program: [{ex.Message}]");
                 _process = null;
                 _mainWindowHandle = IntPtr.Zero;
                 _mainWindow = null;
@@ -154,7 +180,7 @@ namespace SmartBattery
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Erro closing the program: [{ex.Message}]");
+                Trace.WriteLine($"Erro closing the program: [{ex.Message}]");
             }
             return this;
         }
@@ -179,21 +205,48 @@ namespace SmartBattery
 
         public SmartToolControl ClickMenuItem(string menuItemName)
         {
+            Trace.WriteLine($"Click MenuItem--");
+            bool isFound = false;
             AutomationElement menuItem = null;
-            AutomationElementCollection allMenuItems = _mainWindow.FindAll(TreeScope.Descendants, 
-                new PropertyCondition(AutomationElement.ControlTypeProperty, ControlType.MenuItem));
-            foreach (AutomationElement item in allMenuItems)
+            for (int i=0; i<4; i++)
             {
-                string EleName = item.Current.Name;
-                Console.WriteLine($"MenuItem Name:{EleName}");
-                if(EleName.Contains(menuItemName))
+                menuItem = GetElementByName(_mainWindow, ControlType.MenuItem, menuItemName);
+                /*
+                AutomationElement menuItem = null;
+                AutomationElementCollection allMenuItems = _mainWindow.FindAll(TreeScope.Descendants, 
+                    new PropertyCondition(AutomationElement.ControlTypeProperty, ControlType.MenuItem));
+                foreach (AutomationElement item in allMenuItems)
                 {
-                    menuItem = item;
+                    string EleName = item.Current.Name;
+                    Trace.WriteLine($"MenuItem Name:{EleName}");
+                    if(EleName.Contains(menuItemName))
+                    {
+                        menuItem = item;
+                        break;
+                    }
+                }*/
+                if (menuItem != null)
+                {
+                    isFound = true;
                     break;
+                }
+                else
+                {
+                    Trace.WriteLine($"[{i+1}/3]Retry find");
+                    Thread.Sleep(500);
+                    continue;
                 }
             }
 
-            InvokeClickElement(menuItem);
+            if (isFound)
+            {
+                InvokeClickElement(menuItem);
+                Trace.WriteLine($"Click MenuItem OK");
+            }
+            else
+            {
+                Trace.WriteLine($"Click MenuItem NG:[Element Null]");
+            }
 
             return this;
         }
@@ -205,55 +258,104 @@ namespace SmartBattery
         /// <returns></returns>
         public SmartToolControl SetAFIFile(string filePath, out bool result, out string str_error_log)
         {
-            Thread.Sleep(1000);
+            //Thread.Sleep(1000);
             // 点击菜单栏
             ClickMenuItem("File");
-            Thread.Sleep(1000);
+            //Thread.Sleep(100);
+
             ClickMenuItem("Open AFI File(*.afi)");
-            Thread.Sleep(1000);
+            //Thread.Sleep(100);
+
             // 查找文件选择框
-            AutomationElement fileDialog = _mainWindow.FindFirst(TreeScope.Children,
-                new PropertyCondition(AutomationElement.NameProperty, "Select AFI file: Channel 0")
-                );
-            if (fileDialog == null)
+            Trace.WriteLine($"-- To Find FileDialog.");
+            AutomationElement fileDialog = null;
+            bool isFindFileDialog = false;
+            for(int i=0; i<4; i++)
             {
-                str_error_log = $"fileDialog is Null";
-                Console.WriteLine(str_error_log);
-                result = false;
-                return this;
-            }
-            // 查找文件名编辑框
-            AutomationElement fileNameEdit = null;
-            AutomationElementCollection allComboBoxItems = fileDialog.FindAll(TreeScope.Descendants, new PropertyCondition(AutomationElement.ControlTypeProperty, ControlType.ComboBox));
-            foreach (AutomationElement ele in allComboBoxItems)
-            {
-                Console.WriteLine($"{ele.Current.Name}");
-                if (ele.Current.Name.Contains("文件名"))
+                fileDialog = _mainWindow.FindFirst(TreeScope.Children, new PropertyCondition(AutomationElement.NameProperty, "Select AFI file: Channel 0"));
+                if (fileDialog == null)
                 {
-                    fileNameEdit = ele;
+                    Trace.WriteLine($"[{i + 1}/3]fileDialog is Null");
+                    Thread.Sleep(500);
+                    continue;
+                }
+                else
+                {
+                    Trace.WriteLine($"-- [{i + 1}/3]FileDialog already Open.");
+                    isFindFileDialog = true;
                     break;
                 }
             }
-            if (fileNameEdit == null)
+            if (!isFindFileDialog)
             {
-                str_error_log = $"fileNameEdit is Null";
-                Console.WriteLine(str_error_log);
+                str_error_log = $"fileDialog is Null";
+                Trace.WriteLine(str_error_log);
                 result = false;
                 return this;
             }
 
-            // 设置文件路径
-            ValuePattern valuePattern = (ValuePattern)fileNameEdit.GetCurrentPattern(ValuePattern.Pattern);
-            Console.WriteLine($"{filePath}");
-            valuePattern.SetValue(filePath);
+            // 查找文件名编辑框
+            Trace.WriteLine($"-- To Find FileNameEdit.");
+            AutomationElement fileNameEdit = GetElementByName(fileDialog, ControlType.ComboBox, "文件名(N):"); 
+            if (fileNameEdit == null)
+            {
+                str_error_log = $"fileNameEdit no Found";
+                Trace.WriteLine(str_error_log);
+                result = false;
+                return this;
+            }
+            else
+            {
+                Trace.WriteLine($"-- FileNameEdit already Found.");
+            }
 
-            Thread.Sleep(1000);
+            // 设置文件路径
+            bool isInput = false;
+            for(int i= 0; i < 4; i++)
+            {
+                try
+                {
+                    ValuePattern valuePattern = (ValuePattern)fileNameEdit.GetCurrentPattern(ValuePattern.Pattern);
+                    valuePattern.SetValue(filePath);
+                    Trace.WriteLine($"-- [{i + 1}/3]Input {filePath}");
+                    isInput = true;
+                    break;
+                }
+                catch (Exception ee)
+                {
+                    Trace.WriteLine($"[{i + 1}/3]Input FileName Error:[{ee.Message}]");
+                    Thread.Sleep(500);
+                    continue;
+                }
+            }
+
+            if (!isInput)
+            {
+                str_error_log = $"InputFileName Error";
+                Trace.WriteLine(str_error_log);
+                result = false;
+                return this;
+            }
+
+            //Thread.Sleep(100);
+
             // 查找并点击“打开”按钮
-            AutomationElement openButton = null;
-            AutomationElementCollection allButtonItems = fileDialog.FindAll(TreeScope.Descendants, new PropertyCondition(AutomationElement.ControlTypeProperty, ControlType.Button));
+            AutomationElement openButton = GetElementByName(_mainWindow, ControlType.Button, "打开(O)");
+            if (openButton == null)
+            {
+                str_error_log = $"OpenButton is Null";
+                Trace.WriteLine(str_error_log);
+                result = false;
+                return this;
+            }
+            else
+            {
+                Trace.WriteLine($"-- openButton already Found.");
+            }
+            /*AutomationElementCollection allButtonItems = fileDialog.FindAll(TreeScope.Descendants, new PropertyCondition(AutomationElement.ControlTypeProperty, ControlType.Button));
             foreach (AutomationElement ele in allButtonItems)
             {
-                Console.WriteLine($"{ele.Current.Name}");
+                Trace.WriteLine($"{ele.Current.Name}");
                 if (ele.Current.Name.Contains("打开") || ele.Current.Name.Contains("Open"))
                 {
                     openButton = ele;
@@ -263,10 +365,10 @@ namespace SmartBattery
             if (openButton == null)
             {
                 str_error_log = $"OpenButton is Null";
-                Console.WriteLine(str_error_log);
+                Trace.WriteLine(str_error_log);
                 result = false;
                 return this;
-            }
+            }*/
 
             InvokeClickElement(openButton);
             Thread.Sleep(6000);
@@ -279,14 +381,14 @@ namespace SmartBattery
                 if (content.Contains($"AFI Write Success"))
                 {
                     str_error_log = $"AFI Write Success.";
-                    Console.WriteLine(str_error_log);
+                    Trace.WriteLine(str_error_log);
                     result = true;
                     break;
                 }
                 if (content.Contains($"AFI Write Fail"))
                 {
                     str_error_log = $"AFI Write Fail.";
-                    Console.WriteLine(str_error_log);
+                    Trace.WriteLine(str_error_log);
                     result = false;
                     break;
                 }
@@ -305,30 +407,52 @@ namespace SmartBattery
         public SmartToolControl GetDialogTip(out string content)
         {
             content = "";
-            AutomationElement tipDialog = null;
-            AutomationElementCollection dialogs = _mainWindow.FindAll(TreeScope.Children, new PropertyCondition(AutomationElement.ControlTypeProperty, ControlType.Window));
-            foreach (AutomationElement item in dialogs)
+            AutomationElement tipDialog = tipDialog = GetElementByName(_mainWindow, ControlType.Window, "");
+            if (tipDialog == null)
             {
-                string EleName = item.Current.Name;
-                Console.WriteLine($"Window Name:[{EleName}]");
-                if (EleName.Contains(""))
-                {
-                    tipDialog = item;
-                    break;
-                }
+                Trace.WriteLine($"-- tipDialog No Found.");
             }
-            if (tipDialog != null)
+            else
+            {
+                var textElements = tipDialog.FindAll(TreeScope.Descendants, new PropertyCondition(AutomationElement.ControlTypeProperty, ControlType.Text));
+                content = string.Join(Environment.NewLine, textElements.Cast<AutomationElement>().Select(te => te.Current.Name));
+                Trace.WriteLine($"content:[{content}]");
+            }
+            //AutomationElementCollection dialogs = _mainWindow.FindAll(TreeScope.Children, new PropertyCondition(AutomationElement.ControlTypeProperty, ControlType.Window));
+            //foreach (AutomationElement item in dialogs)
+            //{
+            //    string EleName = item.Current.Name;
+            //    Trace.WriteLine($"Window Name:[{EleName}]");
+            //    if (EleName.Contains(""))
+            //    {
+            //        tipDialog = item;
+            //        break;
+            //    }
+            //}
+
+            AutomationElement button = button = GetElementByName(tipDialog, ControlType.Button, "确定");
+            if (button == null)
+            {
+                Trace.WriteLine($"-- ButtonOK No Found.");
+            }
+            else
+            {
+                InvokeClickElement(button);
+                Trace.WriteLine($"Click ButtonOK Success");
+            }
+
+            /*if (tipDialog != null)
             {
                 var textElements = tipDialog.FindAll(TreeScope.Descendants, new PropertyCondition(AutomationElement.ControlTypeProperty, ControlType.Text));
 
                 content = string.Join(Environment.NewLine, textElements.Cast<AutomationElement>().Select(te => te.Current.Name));
-                Console.WriteLine($"content:[{content}]");
+                Trace.WriteLine($"content:[{content}]");
                 var button = tipDialog.FindFirst(TreeScope.Descendants, new AndCondition(
                     new PropertyCondition(AutomationElement.ControlTypeProperty, ControlType.Button),
                     new PropertyCondition(AutomationElement.NameProperty, "确定")
                     ));
                 InvokeClickElement(button);
-            }
+            }*/
             return this;
         }
 
@@ -341,7 +465,7 @@ namespace SmartBattery
             if( _mainWindow == null)
             {
                 str_error_log = $"mainWindow is Null";
-                Console.WriteLine(str_error_log);
+                Trace.WriteLine(str_error_log);
                 result = false;
                 return this;
             }
@@ -350,7 +474,7 @@ namespace SmartBattery
             if (buttonMenu_Calibrate != null)
             {
                 InvokeClickElement(buttonMenu_Calibrate);
-                Thread.Sleep(1000);
+                //Thread.Sleep(1000);
             }
 
             // Board Offset Calibrate的Calibrate按钮
@@ -363,20 +487,20 @@ namespace SmartBattery
 
             str_error_log = string.Empty;
             result = false;
-            for(int i= 0; i < 10; i++)
+            for(int i= 0; i < 30; i++)
             {
                 GetDialogTip(out string content);
                 if (content.Contains($"Calibrate Success"))
                 {
                     str_error_log = $"Board Offset Calibrate Success.";
-                    Console.WriteLine(str_error_log);
+                    Trace.WriteLine(str_error_log);
                     result = true;
                     break;
                 }
                 if (content.Contains($"Calibrate Fail"))
                 {
                     str_error_log = $"Board Offset Calibrate Fail.";
-                    Console.WriteLine(str_error_log);
+                    Trace.WriteLine(str_error_log);
                     result = false;
                     break;
                 }
@@ -401,12 +525,12 @@ namespace SmartBattery
             if (buttonMenu_Calibrate != null)
             {
                 InvokeClickElement(buttonMenu_Calibrate);
-                Thread.Sleep(1000);
+                //Thread.Sleep(1000);
             }
             else
             {
-                str_error_log = $"buttonMenu_Calibrate is NULL.";
-                Console.WriteLine(str_error_log);
+                str_error_log = $"buttonMenu_Calibrate no Found.";
+                Trace.WriteLine(str_error_log);
                 result = false;
                 return this;
             }
@@ -416,7 +540,7 @@ namespace SmartBattery
             if (checkBox_Voltage != null)
             {
                 CheckCheckBox(checkBox_Voltage);
-                Thread.Sleep(1000);
+                //Thread.Sleep(1000);
             }
             bool isCalibrate = false;
             for(int i = 0; i < 3; i++)
@@ -427,7 +551,7 @@ namespace SmartBattery
                 if (textBox_VoltageAct != null)
                 {
                     SetEditText(textBox_VoltageAct, act_vol);
-                    Thread.Sleep(1000);
+                    //Thread.Sleep(1000);
                 }
 
                 // 最下方的Calibrate按钮
@@ -435,7 +559,7 @@ namespace SmartBattery
                 if (button_DoCalibration != null)
                 {
                     InvokeClickElement(button_DoCalibration);
-                    Thread.Sleep(1000);
+                    Thread.Sleep(3000);
                 }
 
                 string content = string.Empty;
@@ -451,32 +575,41 @@ namespace SmartBattery
                 }
                 if (content.Contains($"Calibrate Success"))
                 {
-                    Console.WriteLine($"Voltage Calibrate Success.");
+                    Trace.WriteLine($"Voltage Calibrate Success.");
                 }
                 if (content.Contains($"Calibrate Fail"))
                 {
                     str_error_log = $"Voltage Calibrate Fail.";
-                    Console.WriteLine(str_error_log);
+                    Trace.WriteLine(str_error_log);
                     continue;
                 }
 
                 AutomationElement textBox_VoltageMes = GetElementByAutomationID(_mainWindow, ControlType.Edit, "textBox_VoltageMes");
                 if (textBox_VoltageMes != null)
                 {
-                    mes_vol = GetEditText(textBox_VoltageMes);
-                    Thread.Sleep(1000);
+                    string str_mes_vol = GetEditText(textBox_VoltageMes);
+                    //Thread.Sleep(1000);
+                    try
+                    {
+                        mes_vol = double.Parse(str_mes_vol).ToString();
+                    }
+                    catch (Exception ee)
+                    {
+                        Trace.WriteLine($"GetEditText({str_mes_vol}) Error:['{ee.Message}'], set '0'.");
+                        mes_vol = "0";
+                    }
                     double diff_vol = Math.Abs(double.Parse(act_vol) - double.Parse(mes_vol));
-                    Console.WriteLine($"Actual Voltage and Measured Voltage Difference: [{diff_vol}]");
-                    if (diff_vol > 3)
+                    Trace.WriteLine($"Actual Voltage and Measured Voltage Difference: [{diff_vol}]");
+                    if (diff_vol > _diff_allow)
                     {
                         str_error_log = $"Voltage Calibrate Difference Fail.";
-                        Console.WriteLine(str_error_log);
+                        Trace.WriteLine(str_error_log);
                         continue;
                     }
                     else
                     {
                         isCalibrate = true;
-                        Console.WriteLine($"Voltage Calibrate Difference Success.");
+                        Trace.WriteLine($"Voltage Calibrate Difference Success.");
                         break;
                     }
                 }
@@ -485,18 +618,18 @@ namespace SmartBattery
             if (checkBox_Voltage != null)
             {
                 UncheckCheckBox(checkBox_Voltage);
-                Thread.Sleep(1000);
+                //Thread.Sleep(1000);
             }
             if (isCalibrate)
             {
                 str_error_log = $"Voltage Calibrate Final Success.";
-                Console.WriteLine(str_error_log);
+                Trace.WriteLine(str_error_log);
                 result = true;
             }
             else
             {
                 str_error_log = $"Voltage Calibrate Final Fail.";
-                Console.WriteLine(str_error_log);
+                Trace.WriteLine(str_error_log);
                 result = false;
             }
             return this;
@@ -515,12 +648,12 @@ namespace SmartBattery
             if (buttonMenu_Calibrate != null)
             {
                 InvokeClickElement(buttonMenu_Calibrate);
-                Thread.Sleep(1000);
+                //Thread.Sleep(1000);
             }
             else
             {
                 str_error_log = $"buttonMenu_Calibrate is NULL.";
-                Console.WriteLine(str_error_log);
+                Trace.WriteLine(str_error_log);
                 result = false;
                 return this;
             }
@@ -530,7 +663,7 @@ namespace SmartBattery
             if (checkBox_Current != null)
             {
                 CheckCheckBox(checkBox_Current);
-                Thread.Sleep(1000);
+                //Thread.Sleep(1000);
             }
             bool isCalibrate = false;
             for(int i = 0; i < 3; i++)
@@ -541,7 +674,7 @@ namespace SmartBattery
                 if (textBox_CurrentAct != null)
                 {
                     SetEditText(textBox_CurrentAct, act_cur);
-                    Thread.Sleep(1000);
+                    //Thread.Sleep(1000);
                 }
 
                 // 最下方的Calibrate按钮
@@ -549,7 +682,7 @@ namespace SmartBattery
                 if (button_DoCalibration != null)
                 {
                     InvokeClickElement(button_DoCalibration);
-                    Thread.Sleep(1000);
+                    Thread.Sleep(3000);
                 }
 
                 string content = string.Empty;
@@ -565,32 +698,42 @@ namespace SmartBattery
                 }
                 if (content.Contains($"Calibrate Success"))
                 {
-                    Console.WriteLine($"Current Calibrate Success.");
+                    Trace.WriteLine($"Current Calibrate Success.");
                 }
                 if (content.Contains($"Calibrate Fail"))
                 {
                     str_error_log = $"Current Calibrate Fail.";
-                    Console.WriteLine(str_error_log);
+                    Trace.WriteLine(str_error_log);
                     continue;
                 }
 
                 AutomationElement textBox_CurrentMes = GetElementByAutomationID(_mainWindow, ControlType.Edit, "textBox_CurrentMes");
                 if (textBox_CurrentMes != null)
                 {
-                    mes_cur = GetEditText(textBox_CurrentMes);
-                    Thread.Sleep(1000);
+                    string str_mes_cur = GetEditText(textBox_CurrentMes);
+                    //Thread.Sleep(1000);
+                    try
+                    {
+                        mes_cur = double.Parse(str_mes_cur).ToString();
+                    }
+                    catch (Exception ee)
+                    {
+                        Trace.WriteLine($"GetEditText({str_mes_cur}) Error:['{ee.Message}'], set '0'.");
+                        mes_cur = "0";
+                    }
+                    //Thread.Sleep(1000);
                     double diff_cur = Math.Abs(double.Parse(act_cur) - double.Parse(mes_cur));
-                    Console.WriteLine($"Actual Current and Measured Current Difference: [{diff_cur}]");
-                    if (diff_cur > 3)
+                    Trace.WriteLine($"Actual Current and Measured Current Difference: [{diff_cur}]");
+                    if (diff_cur > _diff_allow)
                     {
                         str_error_log = $"Current Calibrate Difference Fail.";
-                        Console.WriteLine(str_error_log);
+                        Trace.WriteLine(str_error_log);
                         continue;
                     }
                     else
                     {
                         isCalibrate = true;
-                        Console.WriteLine($"Current Calibrate Difference Success.");
+                        Trace.WriteLine($"Current Calibrate Difference Success.");
                         break;
                     }
                 }
@@ -604,13 +747,13 @@ namespace SmartBattery
             if (isCalibrate)
             {
                 str_error_log = $"Current Calibrate Final Success.";
-                Console.WriteLine(str_error_log);
+                Trace.WriteLine(str_error_log);
                 result = true;
             }
             else
             {
                 str_error_log = $"Current Calibrate Final Fail.";
-                Console.WriteLine(str_error_log);
+                Trace.WriteLine(str_error_log);
                 result = false;
             }
             return this;
@@ -634,7 +777,7 @@ namespace SmartBattery
             else
             {
                 str_error_log = $"comboBox_cmdPanel is NULL.";
-                Console.WriteLine(str_error_log);
+                Trace.WriteLine(str_error_log);
                 result = false;
             }
 
@@ -650,17 +793,107 @@ namespace SmartBattery
         /// <returns></returns>
         static AutomationElement GetElementByAutomationID(AutomationElement parentElement, ControlType obj, string id)
         {
+            Trace.WriteLine($"To Find Element By ID");
+            AndCondition andCondition = new AndCondition
+            (
+                new PropertyCondition(AutomationElement.ControlTypeProperty, obj),
+                new PropertyCondition(AutomationElement.AutomationIdProperty, id)
+            );
             AutomationElement element = null;
+            for (int i = 0; i < 4; i++)
+            {
+                try
+                {
+                    element = parentElement.FindFirst(TreeScope.Descendants, andCondition);
+                    if (element != null)
+                    {
+                        Trace.WriteLine($"[{i + 1}/4] Type:[{obj.ProgrammaticName}], Name:[{element.Current.Name}], AutomationId:[{element.Current.AutomationId}]");
+                        break;
+                    }
+                    else
+                    {
+                        Trace.WriteLine($"[{i + 1}/4] No Found Element By ID");
+                        Thread.Sleep(500);
+                        continue;
+                    }
+                }
+                catch (Exception ee)
+                {
+                    Trace.WriteLine($"[{i + 1}/4] Find Element By ID Error: [{ee.Message}]");
+                    Thread.Sleep(500);
+                    continue;
+                }
+            }
+            /*AutomationElement element = null;
             AutomationElementCollection allElements = parentElement.FindAll(TreeScope.Descendants,
                 new PropertyCondition(AutomationElement.ControlTypeProperty, obj));
             foreach (AutomationElement item in allElements)
             {
-                Console.WriteLine($"Type:[{obj.ProgrammaticName}], Name:[{item.Current.Name}], AutomationId:[{item.Current.AutomationId}]");
+                Trace.WriteLine($"Type:[{obj.ProgrammaticName}], Name:[{item.Current.Name}], AutomationId:[{item.Current.AutomationId}]");
                 if(item.Current.AutomationId == id)
                 {
                     element = item;
+                    break;
                 }
             }
+            Trace.WriteLine($"Find Element OK By ID");*/
+            return element;
+        }
+
+        /// <summary>
+        /// 依据Name查找控件
+        /// </summary>
+        /// <param name="parentElement"></param>
+        /// <param name="obj"></param>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        static AutomationElement GetElementByName(AutomationElement parentElement, ControlType obj, string name)
+        {
+            Trace.WriteLine($"To Find Element By Name");
+            AndCondition andCondition = new AndCondition
+            (
+                new PropertyCondition(AutomationElement.ControlTypeProperty, obj),
+                new PropertyCondition(AutomationElement.NameProperty, name)
+            );
+            AutomationElement element = null;
+            for (int i = 0; i < 4; i++)
+            {
+                try
+                {
+                    element = parentElement.FindFirst(TreeScope.Descendants, andCondition);
+                    if (element != null)
+                    {
+                        Trace.WriteLine($"[{i + 1}/4] Type:[{obj.ProgrammaticName}], Name:[{element.Current.Name}], AutomationId:[{element.Current.AutomationId}]");
+                        break;
+                    }
+                    else
+                    {
+                        Trace.WriteLine($"[{i + 1}/4] No Found Element By Name");
+                        Thread.Sleep(500);
+                        continue;
+                    }
+                }
+                catch (Exception ee)
+                {
+                    Trace.WriteLine($"[{i + 1}/4] Find Element By Name Error: [{ee.Message}]");
+                    Thread.Sleep(500);
+                    continue;
+                }
+            }
+
+            //AutomationElement element = null;
+            //AutomationElementCollection allElements = parentElement.FindAll(TreeScope.Descendants,
+            //    new PropertyCondition(AutomationElement.ControlTypeProperty, obj));
+
+            //foreach (AutomationElement item in allElements)
+            //{
+            //    Trace.WriteLine($"Type:[{obj.ProgrammaticName}], Name:[{item.Current.Name}], AutomationId:[{item.Current.AutomationId}]");
+            //    if (item.Current.Name == name)
+            //    {
+            //        element = item;
+            //        break;
+            //    }
+            //}
             return element;
         }
 
@@ -670,10 +903,25 @@ namespace SmartBattery
         /// <param name="menuItem"></param>
         static void InvokeClickElement(AutomationElement menuItem)
         {
-            if (menuItem != null && menuItem.TryGetCurrentPattern(InvokePattern.Pattern, out object pattern))
+            Trace.WriteLine($"To Click Element");
+            for(int i = 0; i < 4; i++)
             {
-                var invokePattern = (InvokePattern)pattern;
-                invokePattern.Invoke();
+                try
+                {
+                    if (menuItem != null && menuItem.TryGetCurrentPattern(InvokePattern.Pattern, out object pattern))
+                    {
+                        var invokePattern = (InvokePattern)pattern;
+                        invokePattern.Invoke();
+                        Trace.WriteLine($"[{i + 1}/4] Click Element OK");
+                    }
+                    break;
+                }
+                catch (Exception ee)
+                {
+                    Trace.WriteLine($"[{i + 1}/4] Click Element Error: [{ee.Message}]");
+                    Thread.Sleep(500);
+                    continue;
+                }
             }
         }
 
@@ -683,22 +931,37 @@ namespace SmartBattery
         /// <param name="checkBox"></param>
         static void CheckCheckBox(AutomationElement checkBox)
         {
-            if(checkBox != null && checkBox.TryGetCurrentPattern(TogglePattern.Pattern, out object pattern))
+            for (int i = 0; i < 4; i++)
             {
-                TogglePattern togglePattern = (TogglePattern)pattern;
-                if(togglePattern.Current.ToggleState != ToggleState.On)
+                try
                 {
-                    togglePattern.Toggle();
-                    Console.WriteLine($"CheckBox is checked.");
+                    if (checkBox != null && checkBox.TryGetCurrentPattern(TogglePattern.Pattern, out object pattern))
+                    {
+                        TogglePattern togglePattern = (TogglePattern)pattern;
+                        if(togglePattern.Current.ToggleState != ToggleState.On)
+                        {
+                            togglePattern.Toggle();
+                            Trace.WriteLine($"[{i + 1}/4] CheckBox is checked.");
+                        }
+                        else
+                        {
+                            Trace.WriteLine($"[{i + 1}/4] CheckBox is already checked.");
+                        }
+                        break;
+                    }
+                    else
+                    {
+                        Trace.WriteLine($"[{i + 1}/4] TogglePattern not supported.");
+                        Thread.Sleep(500);
+                        continue;
+                    }
                 }
-                else
+                catch (Exception ee)
                 {
-                    Console.WriteLine($"CheckBox is already checked.");
+                    Trace.WriteLine($"[{i + 1}/4] Check CheckBox Error: [{ee.Message}]");
+                    Thread.Sleep(500);
+                    continue;
                 }
-            }
-            else
-            {
-                Console.WriteLine($"TogglePattern not supported.");
             }
         }
 
@@ -708,22 +971,37 @@ namespace SmartBattery
         /// <param name="checkBox"></param>
         static void UncheckCheckBox(AutomationElement checkBox)
         {
-            if (checkBox != null && checkBox.TryGetCurrentPattern(TogglePattern.Pattern, out object pattern))
+            for (int i = 0; i < 4; i++)
             {
-                TogglePattern togglePattern = (TogglePattern)pattern;
-                if (togglePattern.Current.ToggleState == ToggleState.On)
+                try
                 {
-                    togglePattern.Toggle();
-                    Console.WriteLine($"CheckBox is unchecked.");
+                    if (checkBox != null && checkBox.TryGetCurrentPattern(TogglePattern.Pattern, out object pattern))
+                    {
+                        TogglePattern togglePattern = (TogglePattern)pattern;
+                        if (togglePattern.Current.ToggleState == ToggleState.On)
+                        {
+                            togglePattern.Toggle();
+                            Trace.WriteLine($"[{i + 1}/4] CheckBox is unchecked.");
+                        }
+                        else
+                        {
+                            Trace.WriteLine($"[{i + 1}/4] CheckBox is already unchecked.");
+                        }
+                        break;
+                    }
+                    else
+                    {
+                        Trace.WriteLine($"[{i + 1}/4] TogglePattern not supported.");
+                        Thread.Sleep(500);
+                        continue;
+                    }
                 }
-                else
+                catch (Exception ee)
                 {
-                    Console.WriteLine($"CheckBox is already unchecked.");
+                    Trace.WriteLine($"[{i + 1}/4] unCheck CheckBox Error: [{ee.Message}]");
+                    Thread.Sleep(500);
+                    continue;
                 }
-            }
-            else
-            {
-                Console.WriteLine($"TogglePattern not supported.");
             }
         }
 
@@ -734,23 +1012,38 @@ namespace SmartBattery
         /// <param name="text"></param>
         static void SetEditText(AutomationElement editElement, string text)
         {
-            if(editElement!=null && editElement.TryGetCurrentPattern(ValuePattern.Pattern, out object pattern))
+            for (int i = 0; i < 4; i++)
             {
-                ValuePattern valuePattern = (ValuePattern)pattern;
+                try
+                {
+                    if (editElement != null && editElement.TryGetCurrentPattern(ValuePattern.Pattern, out object pattern))
+                    {
+                        ValuePattern valuePattern = (ValuePattern)pattern;
 
-                if (!valuePattern.Current.IsReadOnly)
-                {
-                    valuePattern.SetValue(text);
-                    Console.WriteLine($"Text input successful.");
+                        if (!valuePattern.Current.IsReadOnly)
+                        {
+                            valuePattern.SetValue(text);
+                            Trace.WriteLine($"[{i + 1}/4] Text input successful.");
+                        }
+                        else
+                        {
+                            Trace.WriteLine($"[{i + 1}/4] The Edit control is read-only.");
+                        }
+                        break;
+                    }
+                    else
+                    {
+                        Trace.WriteLine($"[{i + 1}/4] ValuePattern not supported.");
+                        Thread.Sleep(500);
+                        continue;
+                    }
                 }
-                else
+                catch (Exception ee)
                 {
-                    Console.WriteLine($"The Edit control is read-only.");
+                    Trace.WriteLine($"[{i + 1}/4] SetEditText Error: [{ee.Message}]");
+                    Thread.Sleep(500);
+                    continue;
                 }
-            }
-            else
-            {
-                Console.WriteLine($"ValuePattern not supported.");
             }
         }
 
@@ -761,16 +1054,32 @@ namespace SmartBattery
         /// <returns></returns>
         static string GetEditText(AutomationElement editElement)
         {
-            if (editElement !=null && editElement.TryGetCurrentPattern(ValuePattern.Pattern, out object pattern))
+            string result = string.Empty;
+            for (int i = 0; i < 4; i++)
             {
-                ValuePattern valuePattern = (ValuePattern)pattern;
-                return valuePattern.Current.Value;
+                try
+                {
+                    if (editElement !=null && editElement.TryGetCurrentPattern(ValuePattern.Pattern, out object pattern))
+                    {
+                        ValuePattern valuePattern = (ValuePattern)pattern;
+                        result = valuePattern.Current.Value;
+                        break;
+                    }
+                    else
+                    {
+                        Trace.WriteLine($"[{i + 1}/4] ValuePattern not supported.");
+                        Thread.Sleep(500);
+                        continue;
+                    }
+                }
+                catch (Exception ee)
+                {
+                    Trace.WriteLine($"[{i + 1}/4] GetEditText Error: [{ee.Message}]");
+                    Thread.Sleep(500);
+                    continue;
+                }
             }
-            else
-            {
-                Console.WriteLine("ValuePattern not supported.");
-                return string.Empty;
-            }
+            return result;
         }
 
         /// <summary>
@@ -782,54 +1091,130 @@ namespace SmartBattery
         {
             if (comboBoxElement == null)
             {
-                Console.WriteLine("No Found ComboBox");
+                Trace.WriteLine("No Found ComboBox");
                 return;
             }
 
             // 获取ExpandCollapsePattern
-            var expandCollapsePattern = comboBoxElement.GetCurrentPattern(ExpandCollapsePattern.Pattern) as ExpandCollapsePattern;
-
-            if (expandCollapsePattern == null)
+            ExpandCollapsePattern expandCollapsePattern = null;
+            bool isPattern = false;
+            for (int i = 0; i < 4; i++)
             {
-                Console.WriteLine("Cannot Get ExpandCollapsePattern");
+                try
+                {
+                    expandCollapsePattern = comboBoxElement.GetCurrentPattern(ExpandCollapsePattern.Pattern) as ExpandCollapsePattern;
+
+                    if (expandCollapsePattern == null)
+                    {
+                        Trace.WriteLine($"[{i+1}/4]Cannot Get ExpandCollapsePattern");
+                        Thread.Sleep(500);
+                        continue;
+                    }
+                    isPattern = true;
+                    break;
+                }
+                catch (Exception ee)
+                {
+                    Trace.WriteLine($"[{i + 1}/4] SelectComboBox Error: [{ee.Message}]");
+                    Thread.Sleep(500);
+                    continue;
+                }
+            }
+            if(!isPattern)
+            {
+                Trace.WriteLine("Cannot Get ExpandCollapsePattern");
                 return;
             }
 
             // 展开ComboBox
-            try
+            bool isExpand = false;
+            for (int j = 0; j < 4; j++)
             {
-                expandCollapsePattern.Expand();
+                try
+                {
+                    expandCollapsePattern.Expand();
+                    isExpand = true;
+                    break;
+                }
+                catch (Exception ex)
+                {
+                    Trace.WriteLine($"[{j + 1}/4]Expand ComboBox Error: " + ex.Message);
+                    Thread.Sleep(500);
+                    continue;
+                }
             }
-            catch (Exception ex)
+            if(!isExpand)
             {
-                Console.WriteLine("Expand ComboBox Error: " + ex.Message);
+                Trace.WriteLine("Cannot Get ExpandCollapsePattern");
                 return;
             }
 
-            Thread.Sleep(1000);
-            AutomationElement targetItem = null;
-            AutomationElementCollection listItems = comboBoxElement.FindAll(TreeScope.Descendants, new PropertyCondition(AutomationElement.ControlTypeProperty, ControlType.ListItem));
-            foreach(AutomationElement element in listItems)
-            {
-                Console.WriteLine($"{element.Current.Name},{element.Current.ControlType.ProgrammaticName}");
-                if(element.Current.Name == item)
-                {
-                    targetItem = element;
-                    break;
-                }
-            }
+            //Thread.Sleep(1000);
+            AutomationElement targetItem = GetElementByName(comboBoxElement, ControlType.ListItem, item);
+            //AutomationElementCollection listItems = comboBoxElement.FindAll(TreeScope.Descendants, new PropertyCondition(AutomationElement.ControlTypeProperty, ControlType.ListItem));
+            //foreach (AutomationElement element in listItems)
+            //{
+            //    Trace.WriteLine($"{element.Current.Name},{element.Current.ControlType.ProgrammaticName}");
+            //    if (element.Current.Name == item)
+            //    {
+            //        targetItem = element;
+            //        break;
+            //    }
+            //}
 
             if (targetItem == null)
             {
-                Console.WriteLine("No Found Select Item");
+                Trace.WriteLine("No Found Select Item");
                 return;
             }
 
             // 选择下拉列表项
-            var selectionItemPattern = targetItem.GetCurrentPattern(SelectionItemPattern.Pattern) as SelectionItemPattern;
-            selectionItemPattern.Select();
+            SelectionItemPattern selectionItemPattern = null;
+            bool isSelectPattern = false;
+            for (int i = 0; i < 4; i++)
+            {
+                try
+                {
+                    selectionItemPattern = targetItem.GetCurrentPattern(SelectionItemPattern.Pattern) as SelectionItemPattern;
 
-            Console.WriteLine("Select Item OK");
+                    if (selectionItemPattern == null)
+                    {
+                        Trace.WriteLine($"[{i + 1}/4]Cannot Get SelectionItemPattern");
+                        Thread.Sleep(500);
+                        continue;
+                    }
+                    isSelectPattern = true;
+                    break;
+                }
+                catch (Exception ee)
+                {
+                    Trace.WriteLine($"[{i + 1}/4] Get SelectionItemPattern Error: [{ee.Message}]");
+                    Thread.Sleep(500);
+                    continue;
+                }
+            }
+            if (!isSelectPattern)
+            {
+                Trace.WriteLine("Cannot Get SelectionItemPattern");
+                return;
+            }
+
+            for (int j = 0; j < 4; j++)
+            {
+                try
+                {
+                    selectionItemPattern.Select();
+                    Trace.WriteLine($"[{j + 1}/4]Select Item OK");
+                    break;
+                }
+                catch (Exception ex)
+                {
+                    Trace.WriteLine($"[{j + 1}/4]Select ComboBox Item Error: [{ex.Message}]");
+                    Thread.Sleep(500);
+                    continue;
+                }
+            }
+
         }
     }
 }

@@ -39,6 +39,9 @@
             this.textBoxAFIPath = new System.Windows.Forms.TextBox();
             this.BtnSelectAFIPath = new System.Windows.Forms.Button();
             this.label2 = new System.Windows.Forms.Label();
+            this.label3 = new System.Windows.Forms.Label();
+            this.NUDDiffer = new System.Windows.Forms.NumericUpDown();
+            ((System.ComponentModel.ISupportInitialize)(this.NUDDiffer)).BeginInit();
             this.SuspendLayout();
             // 
             // BtnOffsetCalibrate
@@ -145,11 +148,29 @@
             this.label2.TabIndex = 8;
             this.label2.Text = "AFI文件：";
             // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(12, 93);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(41, 12);
+            this.label3.TabIndex = 11;
+            this.label3.Text = "误差：";
+            // 
+            // NUDDiffer
+            // 
+            this.NUDDiffer.Location = new System.Drawing.Point(59, 91);
+            this.NUDDiffer.Name = "NUDDiffer";
+            this.NUDDiffer.Size = new System.Drawing.Size(87, 21);
+            this.NUDDiffer.TabIndex = 12;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
+            this.Controls.Add(this.NUDDiffer);
+            this.Controls.Add(this.label3);
             this.Controls.Add(this.textBoxAFIPath);
             this.Controls.Add(this.BtnSelectAFIPath);
             this.Controls.Add(this.label2);
@@ -166,6 +187,7 @@
             this.Text = "Form1";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form1_FormClosing);
             this.Load += new System.EventHandler(this.Form1_Load);
+            ((System.ComponentModel.ISupportInitialize)(this.NUDDiffer)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -184,6 +206,8 @@
         private System.Windows.Forms.TextBox textBoxAFIPath;
         private System.Windows.Forms.Button BtnSelectAFIPath;
         private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.NumericUpDown NUDDiffer;
     }
 }
 
