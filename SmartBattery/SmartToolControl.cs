@@ -206,39 +206,22 @@ namespace SmartBattery
         public SmartToolControl ClickMenuItem(string menuItemName)
         {
             Trace.WriteLine($"Click MenuItem--");
-            bool isFound = false;
+            AutomationElement menuItem = GetElementByName(_mainWindow, ControlType.MenuItem, menuItemName);
+            /*
             AutomationElement menuItem = null;
-            for (int i=0; i<4; i++)
+            AutomationElementCollection allMenuItems = _mainWindow.FindAll(TreeScope.Descendants, 
+                new PropertyCondition(AutomationElement.ControlTypeProperty, ControlType.MenuItem));
+            foreach (AutomationElement item in allMenuItems)
             {
-                menuItem = GetElementByName(_mainWindow, ControlType.MenuItem, menuItemName);
-                /*
-                AutomationElement menuItem = null;
-                AutomationElementCollection allMenuItems = _mainWindow.FindAll(TreeScope.Descendants, 
-                    new PropertyCondition(AutomationElement.ControlTypeProperty, ControlType.MenuItem));
-                foreach (AutomationElement item in allMenuItems)
+                string EleName = item.Current.Name;
+                Trace.WriteLine($"MenuItem Name:{EleName}");
+                if(EleName.Contains(menuItemName))
                 {
-                    string EleName = item.Current.Name;
-                    Trace.WriteLine($"MenuItem Name:{EleName}");
-                    if(EleName.Contains(menuItemName))
-                    {
-                        menuItem = item;
-                        break;
-                    }
-                }*/
-                if (menuItem != null)
-                {
-                    isFound = true;
+                    menuItem = item;
                     break;
                 }
-                else
-                {
-                    Trace.WriteLine($"[{i+1}/3]Retry find");
-                    Thread.Sleep(500);
-                    continue;
-                }
-            }
-
-            if (isFound)
+            }*/
+            if (menuItem != null)
             {
                 InvokeClickElement(menuItem);
                 Trace.WriteLine($"Click MenuItem OK");
@@ -261,10 +244,10 @@ namespace SmartBattery
             //Thread.Sleep(1000);
             // 点击菜单栏
             ClickMenuItem("File");
-            //Thread.Sleep(100);
+            Thread.Sleep(1000);
 
             ClickMenuItem("Open AFI File(*.afi)");
-            //Thread.Sleep(100);
+            Thread.Sleep(1000);
 
             // 查找文件选择框
             Trace.WriteLine($"-- To Find FileDialog.");
