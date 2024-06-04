@@ -209,7 +209,7 @@ namespace SmartBattery
             AutomationElement menuItem = GetElementByName(_mainWindow, ControlType.MenuItem, menuItemName);
             /*
             AutomationElement menuItem = null;
-            AutomationElementCollection allMenuItems = _mainWindow.FindAll(TreeScope.Descendants, 
+            AutomationElementCollection allMenuItems = _mainWindow.FindAll(TreeScope.Descendants,
                 new PropertyCondition(AutomationElement.ControlTypeProperty, ControlType.MenuItem));
             foreach (AutomationElement item in allMenuItems)
             {
@@ -241,13 +241,43 @@ namespace SmartBattery
         /// <returns></returns>
         public SmartToolControl SetAFIFile(string filePath, out bool result, out string str_error_log)
         {
-            //Thread.Sleep(1000);
             // 点击菜单栏
-            ClickMenuItem("File");
-            Thread.Sleep(1000);
+            AutomationElement menuItemFile = GetElementByName(_mainWindow, ControlType.MenuItem, "File");
 
-            ClickMenuItem("Open AFI File(*.afi)");
-            Thread.Sleep(1000);
+            if (menuItemFile == null)
+            {
+                str_error_log = $"MenuFile no Found";
+                Trace.WriteLine(str_error_log);
+                result = false;
+                return this;
+            }
+            else
+            {
+                InvokeClickElement(menuItemFile);
+                Thread.Sleep(1000);
+            }
+
+            var openMenuItem = menuItemFile.FindFirst(
+                TreeScope.Children,
+                new PropertyCondition(AutomationElement.NameProperty, "Open AFI File(*.afi)")
+            );
+            if (openMenuItem == null)
+            {
+                str_error_log = $"MenuOpenFile no Found";
+                Trace.WriteLine(str_error_log);
+                result = false;
+                return this;
+            }
+            else
+            {
+                InvokeClickElement(openMenuItem);
+                Thread.Sleep(1000);
+            }
+            //ClickMenuItem("File");
+            //Thread.Sleep(1000);
+
+            //ClickMenuItem("Open AFI File(*.afi)");
+            //Thread.Sleep(1000);
 
             // 查找文件选择框
             Trace.WriteLine($"-- To Find FileDialog.");
@@ -358,7 +388,7 @@ namespace SmartBattery
 
             str_error_log = string.Empty;
             result = false;
-            for(int i = 0; i < 30; i++)
+            for(int i = 0; i < 15; i++)
             {
                 GetDialogTip(out string content);
                 if (content.Contains($"AFI Write Success"))
@@ -390,10 +420,17 @@ namespace SmartBattery
         public SmartToolControl GetDialogTip(out string content)
         {
             content = "";
-            AutomationElement tipDialog = tipDialog = GetElementByName(_mainWindow, ControlType.Window, "");
+            //AutomationElement tipDialog = GetElementByName(_mainWindow, ControlType.Window, "");
+            AndCondition andCondition = new AndCondition
+            (
+                new PropertyCondition(AutomationElement.ControlTypeProperty, ControlType.Window),
+                new PropertyCondition(AutomationElement.ClassNameProperty, "#32770")
+            );
+            AutomationElement tipDialog = _mainWindow.FindFirst(TreeScope.Descendants, andCondition);
             if (tipDialog == null)
             {
                 Trace.WriteLine($"-- tipDialog No Found.");
+                return this;
             }
             else
             {
@@ -470,7 +507,7 @@ namespace SmartBattery
 
             str_error_log = string.Empty;
             result = false;
-            for(int i= 0; i < 30; i++)
+            for(int i= 0; i < 8; i++)
             {
                 GetDialogTip(out string content);
                 if (content.Contains($"Calibrate Success"))
@@ -546,7 +583,7 @@ namespace SmartBattery
                 }
 
                 string content = string.Empty;
-                for (int j = 0; j < 10; j++)
+                for (int j = 0; j < 5; j++)
                 {
                     GetDialogTip(out string content_cur);
                     if (content_cur.Contains($"Calibrate Success")|| content_cur.Contains($"Calibrate Fail"))
@@ -669,7 +706,7 @@ namespace SmartBattery
                 }
 
                 string content = string.Empty;
-                for (int j = 0; j < 10; j++)
+                for (int j = 0; j < 5; j++)
                 {
                     GetDialogTip(out string content_cur);
                     if (content_cur.Contains($"Calibrate Success") || content_cur.Contains($"Calibrate Fail"))
