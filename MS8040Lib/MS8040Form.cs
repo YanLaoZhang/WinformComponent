@@ -20,7 +20,7 @@ namespace MS8040Lib
 
         private void MS8040Form_Load(object sender, EventArgs e)
         {
-            
+            this.Text += $"_V{System.Windows.Forms.Application.ProductVersion}";
         }
 
         private void comboBoxCurPort_DropDown(object sender, EventArgs e)

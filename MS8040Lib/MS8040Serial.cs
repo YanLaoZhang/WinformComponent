@@ -24,7 +24,7 @@ namespace MS8040Lib
             _serialPort = serialPort;
             _portName = portName;
             _serialPort.PortName = _portName;
-            _serialPort.BaudRate = 19200;
+            _serialPort.BaudRate = 19230;
             _serialPort.DataBits = 7;
             _serialPort.Parity = System.IO.Ports.Parity.None;
             _serialPort.StopBits = System.IO.Ports.StopBits.One;
@@ -96,59 +96,92 @@ namespace MS8040Lib
             }
         }
 
+        static string ReverseString(string s)
+        {
+            char[] charArray = s.ToCharArray();
+            Array.Reverse(charArray);
+            return new string(charArray);
+        }
+
         public bool GetCurrentData(ref float current, ref string errorInfo)
         {
             OpenSerialPort();
             _serialPort.DiscardInBuffer();
             _serialPort.DiscardOutBuffer();
             currentReceive = "";
-            // 定义正则表达式模式
-            string pattern = @"^\d{10}80$";
-
+            /* 当表档位在A档时，
+             * 表显示： 1.092 串口输出：029010000080
+             * 表显示：-0.736 串口输出：063700040080
+             * 当表档位在mA档时，
+             * 表显示： 0.001 串口输出：010000?000:0
+             * 表显示：-0.001 串口输出：010000?400:0
+             * 当表档位在uA档时，
+             * 表显示： 0.01 串口输出： 010000=000:0
+             * 表显示：-0.01 串口输出： 010000=400:0
+             */
             // 创建 Regex 对象
-            Regex regex = new Regex(pattern);
+            Regex regex_A = new Regex(@"^\d{6}0(000|400)80$");
+            Regex regex_mA = new Regex(@"^\d{6}\?(000|400):0$");
+            Regex regex_uA = new Regex(@"^\d{6}=(000|400):0$");
 
             int numa = Environment.TickCount;
+            bool alwaysEmpty = true;
             while (true)
             {
-                /* 表显示：1.092 串口输出：029010000080 */
-                Trace.WriteLine("电流表输出：" + currentReceive);
-                Console.WriteLine("电流表输出：" + currentReceive);
-                if (currentReceive.Contains("?") || currentReceive.Contains("=") || currentReceive.Contains(";"))
-                {
-                    errorInfo = "电流表量程设置错误";
-                    return false;
-                }
-                if (currentReceive.Contains("80"))
-                {
-                    string[] lines = currentReceive.Split('\n');
-                    foreach (string line in lines)
-                    {
-                        Trace.WriteLine($"raw:[{line}]");
-                        //if (line.Contains("80"))
-                        if (line.Contains("80"))
-                        {
-                            string temp = line.TrimEnd('\r', '\n');
-                            Trace.WriteLine($"temp:[{temp}]");
-                            if (regex.IsMatch(temp))
-                            {
-                                char[] chars = temp.Substring(0, temp.Length - 2).ToCharArray();
-                                Array.Reverse(chars);
-                                current = int.Parse(new string(chars)) / 10.0f;
-                                //current = int.Parse(line.Substring(3, 1) + line.Substring(2, 1) + line.Substring(1, 1));
-                                Trace.WriteLine("电流：" + current);
-                                break;
-                            }
-                        }
-                    }
-                    return true;
-                }
+                Trace.WriteLine("MS8040串口输出：" + currentReceive);
+                string cur = currentReceive.Trim('\r', '\n');
                 if (Environment.TickCount - numa > 3000)
                 {
-                    errorInfo = "读取电流表示数超时（3s）";
+                    if (alwaysEmpty)
+                    {
+                        errorInfo += $"未接收到串口信息，请检查PC-Link是否打开(表显示屏左下角出现RS232表示连接正常)";
+                    }
+                    errorInfo += "; 读取电流表显示数值超时（3s）";
                     return false;
                 }
-                Thread.Sleep(200);
+                if (regex_A.IsMatch(cur))
+                {
+                    Trace.WriteLine($"当前量程为A档，数据为[{cur}]");
+                    // 将前6个字符如"0637000"转换为"0637.00"格式
+                    string formattedString = cur.Substring(0, 6).Insert(4, ".");
+                    // 反转并转换为"0.7360"格式
+                    string reversedString = ReverseString(formattedString);
+                    current = float.Parse(reversedString);
+                    Trace.WriteLine($"解析后的电流值为[{current}]A");
+                    return true;
+                }
+                else if (regex_mA.IsMatch(cur))
+                {
+                    Trace.WriteLine($"当前量程为mA档，数据为[{cur}]");
+                    // 将前6个字符如"0637000"转换为"0637.00"格式
+                    string formattedString = cur.Substring(0, 6).Insert(4, ".");
+                    // 反转并转换为"0.7360"格式
+                    string reversedString = ReverseString(formattedString);
+                    current = float.Parse(reversedString);
+                    Trace.WriteLine($"解析后的电流值为[{current}]mA");
+                    return true;
+                }
+                else if (regex_uA.IsMatch(cur))
+                {
+                    Trace.WriteLine($"当前量程为uA档，数据为[{cur}]");
+                    // 将前6个字符如"0637000"转换为"063.700"格式
+                    string formattedString = cur.Substring(0, 6).Insert(3, ".");
+                    // 反转并转换为"0.7360"格式
+                    string reversedString = ReverseString(formattedString);
+                    current = float.Parse(reversedString);
+                    Trace.WriteLine($"解析后的电流值为[{current}]uA");
+                    return true;
+                }
+                else
+                {
+                    if(cur.Length != 0)
+                    {
+                        alwaysEmpty = false;
+                        errorInfo += $"串口信息[{cur}]异常";
+                    }
+                    Thread.Sleep(200);
+                    continue;
+                }
             }
         }
     }

@@ -77,9 +77,9 @@
             this.labelUnit.AutoSize = true;
             this.labelUnit.Location = new System.Drawing.Point(376, 90);
             this.labelUnit.Name = "labelUnit";
-            this.labelUnit.Size = new System.Drawing.Size(17, 12);
+            this.labelUnit.Size = new System.Drawing.Size(161, 12);
             this.labelUnit.TabIndex = 41;
-            this.labelUnit.Text = "mA";
+            this.labelUnit.Text = "A|mA|uA,单位由旋钮档位决定";
             // 
             // textBoxRead
             // 
