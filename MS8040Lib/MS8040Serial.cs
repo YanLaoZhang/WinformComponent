@@ -103,6 +103,11 @@ namespace MS8040Lib
             return new string(charArray);
         }
 
+        /// <summary>
+        /// </summary>
+        /// <param name="current">返回mA</param>
+        /// <param name="errorInfo"></param>
+        /// <returns></returns>
         public bool GetCurrentData(ref float current, ref string errorInfo)
         {
             OpenSerialPort();
@@ -146,8 +151,8 @@ namespace MS8040Lib
                     string formattedString = cur.Substring(0, 6).Insert(4, ".");
                     // 反转并转换为"0.7360"格式
                     string reversedString = ReverseString(formattedString);
-                    current = float.Parse(reversedString);
-                    Trace.WriteLine($"解析后的电流值为[{current}]A");
+                    current = float.Parse(reversedString) * 1000.0f;
+                    Trace.WriteLine($"解析后的电流值为[{current}]mA");
                     return true;
                 }
                 else if (regex_mA.IsMatch(cur))
@@ -168,8 +173,8 @@ namespace MS8040Lib
                     string formattedString = cur.Substring(0, 6).Insert(3, ".");
                     // 反转并转换为"0.7360"格式
                     string reversedString = ReverseString(formattedString);
-                    current = float.Parse(reversedString);
-                    Trace.WriteLine($"解析后的电流值为[{current}]uA");
+                    current = float.Parse(reversedString) / 1000.0f;
+                    Trace.WriteLine($"解析后的电流值为[{current}]mA");
                     return true;
                 }
                 else
