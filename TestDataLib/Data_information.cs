@@ -20,6 +20,7 @@ namespace TestDataLib
             InitializeComponent();
             _table_name = table_name;
             _id = id;
+            chk_Serial.Text = id;
         }
 
         private void data_information_Load(object sender, EventArgs e)
