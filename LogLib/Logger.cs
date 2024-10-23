@@ -43,7 +43,7 @@ namespace LogLib
             try
             {
                 string add_str = DateTime.Now.ToString("G") + $": {run_log}\r\n";
-                _richTextBox.Invoke(new Action(() =>
+                _richTextBox.BeginInvoke(new Action(() =>
                 {
                     _richTextBox.Text += add_str;
                     _richTextBox.SelectionStart = _richTextBox.TextLength;
