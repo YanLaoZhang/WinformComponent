@@ -47,6 +47,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ERPInfoLib", "ERPInfoLib\ER
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartBattery", "SmartBattery\SmartBattery.csproj", "{8713B6F9-D75B-467F-8F11-2DC493410559}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RP-C-MK06", "RP-C-MK06\RP-C-MK06.csproj", "{88D20677-2BC9-4BF3-8D2B-CCD333641D82}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -231,6 +233,14 @@ Global
 		{8713B6F9-D75B-467F-8F11-2DC493410559}.Release|Any CPU.Build.0 = Release|Any CPU
 		{8713B6F9-D75B-467F-8F11-2DC493410559}.Release|x86.ActiveCfg = Release|Any CPU
 		{8713B6F9-D75B-467F-8F11-2DC493410559}.Release|x86.Build.0 = Release|Any CPU
+		{88D20677-2BC9-4BF3-8D2B-CCD333641D82}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{88D20677-2BC9-4BF3-8D2B-CCD333641D82}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{88D20677-2BC9-4BF3-8D2B-CCD333641D82}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{88D20677-2BC9-4BF3-8D2B-CCD333641D82}.Debug|x86.Build.0 = Debug|Any CPU
+		{88D20677-2BC9-4BF3-8D2B-CCD333641D82}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{88D20677-2BC9-4BF3-8D2B-CCD333641D82}.Release|Any CPU.Build.0 = Release|Any CPU
+		{88D20677-2BC9-4BF3-8D2B-CCD333641D82}.Release|x86.ActiveCfg = Release|Any CPU
+		{88D20677-2BC9-4BF3-8D2B-CCD333641D82}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
