@@ -42,7 +42,7 @@ namespace LogLib
         {
             try
             {
-                string add_str = DateTime.Now.ToString("G") + $": {run_log}\r\n";
+                string add_str = DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss") + $": {run_log}\r\n";
                 _richTextBox.BeginInvoke(new Action(() =>
                 {
                     _richTextBox.Text += add_str;
@@ -102,7 +102,7 @@ namespace LogLib
         {
             try
             {
-                str_www = string.Format("{0:yyyy/MM/dd HH:mm:ss}", DateTime.Now) + "  " + str_www;
+                //str_www = string.Format("{0:yyyy/MM/dd HH:mm:ss}", DateTime.Now) + "  " + str_www;
                 //=============创建文件夹=========
                 if (System.IO.Directory.Exists(_LogPath) == false)
                 {
