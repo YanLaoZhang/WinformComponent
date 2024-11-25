@@ -135,5 +135,59 @@ namespace LogLib
                 //MessageBox.Show(ee.Message);
             }
         }
+
+        public bool WriteDataGridViewToFile(DataGridView dgv)
+        {
+            try
+            {
+                return WriteLogToFile($"Test Detail: \n{GetDataGridViewContent(dgv)}\n");
+            }
+            catch (Exception ee)
+            {
+                return false;
+            }
+        }
+
+        public static string GetDataGridViewContent(DataGridView dgv)
+        {
+            try
+            {
+                StringBuilder sb = new StringBuilder();
+                // Write the column headers
+                for (int i = 0; i < dgv.Columns.Count; i++)
+                {
+
+                    sb.Append(dgv.Columns[i].HeaderText);
+                    if (i < dgv.Columns.Count - 1)
+                    {
+                        sb.Append("\t"); // Tab delimited
+                    }
+                }
+                sb.AppendLine();
+
+                // Write the data rows
+                foreach (DataGridViewRow row in dgv.Rows)
+                {
+                    if (!row.IsNewRow) // Skip the last new row
+                    {
+                        for (int i = 0; i < dgv.Columns.Count; i++)
+                        {
+                            sb.Append(row.Cells[i].Value?.ToString());
+                            if (i < dgv.Columns.Count - 1)
+                            {
+                                sb.Append("\t"); // Tab delimited
+                            }
+                        }
+                        sb.AppendLine();
+                    }
+                }
+                return sb.ToString();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error:[{ex.Message}]");
+                return string.Empty;
+            }
+        }
     }
 }
