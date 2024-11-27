@@ -55,6 +55,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DS18B20_Temp_Sensor", "DS18
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BleSolution", "BleSolution\BleSolution.csproj", "{BFC20B03-5297-4E0D-A918-D86DC74A1242}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IT8500Controller", "IT8500Controller\IT8500Controller.csproj", "{E6898CE5-5EC2-43C1-BCC5-7B87B53B7E6C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -271,6 +273,14 @@ Global
 		{BFC20B03-5297-4E0D-A918-D86DC74A1242}.Release|Any CPU.Build.0 = Release|Any CPU
 		{BFC20B03-5297-4E0D-A918-D86DC74A1242}.Release|x86.ActiveCfg = Release|Any CPU
 		{BFC20B03-5297-4E0D-A918-D86DC74A1242}.Release|x86.Build.0 = Release|Any CPU
+		{E6898CE5-5EC2-43C1-BCC5-7B87B53B7E6C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E6898CE5-5EC2-43C1-BCC5-7B87B53B7E6C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E6898CE5-5EC2-43C1-BCC5-7B87B53B7E6C}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{E6898CE5-5EC2-43C1-BCC5-7B87B53B7E6C}.Debug|x86.Build.0 = Debug|Any CPU
+		{E6898CE5-5EC2-43C1-BCC5-7B87B53B7E6C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E6898CE5-5EC2-43C1-BCC5-7B87B53B7E6C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E6898CE5-5EC2-43C1-BCC5-7B87B53B7E6C}.Release|x86.ActiveCfg = Release|Any CPU
+		{E6898CE5-5EC2-43C1-BCC5-7B87B53B7E6C}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
