@@ -53,6 +53,7 @@
     <Compile Include="MS8040Form.Designer.cs">
       <DependentUpon>MS8040Form.cs</DependentUpon>
     </Compile>
+    <Compile Include="MS8040NewSerial.cs" />
     <Compile Include="MS8040Serial.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

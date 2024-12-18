@@ -26,7 +26,7 @@ namespace MS8040Lib
             _serialPort.PortName = _portName;
             _serialPort.BaudRate = 19230;
             _serialPort.DataBits = 7;
-            _serialPort.Parity = System.IO.Ports.Parity.None;
+            _serialPort.Parity = System.IO.Ports.Parity.Odd;
             _serialPort.StopBits = System.IO.Ports.StopBits.One;
             _serialPort.Encoding = Encoding.ASCII;
             _serialPort.ReadBufferSize = 4096;
@@ -114,7 +114,8 @@ namespace MS8040Lib
             _serialPort.DiscardInBuffer();
             _serialPort.DiscardOutBuffer();
             currentReceive = "";
-            /* 当表档位在A档时，
+            /* HOLD 时，最后两位变为82
+             * 当表档位在A档时，
              * 表显示： 1.092 串口输出：029010000080
              * 表显示：-0.736 串口输出：063700040080
              * 当表档位在mA档时，
@@ -123,6 +124,12 @@ namespace MS8040Lib
              * 当表档位在uA档时，
              * 表显示： 0.01 串口输出： 010000=000:0
              * 表显示：-0.01 串口输出： 010000=400:0
+             * 当表档位在V档时，
+             * 表显示： 0.0004 串口输出：040000;000:0
+             * 表显示：-0.0004 串口输出：040000;400:0
+             * 当表档位在mV档时，
+             * 表显示： 28.79 串口输出：497820;00080
+             * 表显示：-5.08  串口输出：480500;40080
              */
             // 创建 Regex 对象
             Regex regex_A = new Regex(@"^\d{6}0(000|400)80$");

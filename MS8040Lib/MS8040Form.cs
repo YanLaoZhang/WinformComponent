@@ -32,52 +32,41 @@ namespace MS8040Lib
             }
         }
 
-        private void BtnOpenPort_Click(object sender, EventArgs e)
-        {
-            if (comboBoxCurPort.SelectedItem == null)
-            {
-                MessageBox.Show("请先选择端口");
-                return;
-            }
-            else
-            {
-                string port = comboBoxCurPort.SelectedItem.ToString();
-                if (port != "" && mS8040 == null)
-                {
-                    mS8040 = new MS8040Serial(serialPortMS8040, port);
-                    mS8040.OpenSerialPort();
-                }
-            }
-        }
 
-        private void buttonRead_Click(object sender, EventArgs e)
+        private void BtnRead_Click(object sender, EventArgs e)
         {
             try
             {
-                buttonRead.Enabled = false;
-                if (mS8040 == null)
+                BtnRead.Enabled = false;
+                if (comboBoxCurPort.SelectedItem == null)
                 {
-                    MessageBox.Show("请先打开串口");
-                    comboBoxCurPort.Focus();
+                    MessageBox.Show("请先选择端口");
                     return;
                 }
+                string port = comboBoxCurPort.SelectedItem.ToString();
+                int duration = (int)numericUpDownDuration.Value;
+                // 1. 实例化串口数据处理类
+                SerialDataProcessor processor = new SerialDataProcessor(port);
+
+                // 2. 采集数据，采集时间为 10 秒
                 string str_error_log = "";
-                float current = 0.0f;
-                bool ret = mS8040.GetCurrentData(ref current, ref str_error_log);
-                if (ret)
+                DataResult dataResult = processor.GetCurrentData(duration, ref str_error_log);
+                if (dataResult != null)
                 {
-                    textBoxRead.Text = current.ToString();
-                    richTextBoxMessage.Text = $"读取成功";
+                    textBoxRead.Text = dataResult.AverageExcludingMinMax.ToString();
+                    labelUnit.Text = dataResult.Unit;
+                    richTextBoxMessage.Text = $"读取成功,\r\n{dataResult.ToString()}";
                 }
                 else
                 {
                     textBoxRead.Text = "error";
+                    labelUnit.Text = "";
                     richTextBoxMessage.Text = str_error_log;
                 }
             }
             finally
             {
-                buttonRead.Enabled = true;
+                BtnRead.Enabled = true;
             }
 
         }
