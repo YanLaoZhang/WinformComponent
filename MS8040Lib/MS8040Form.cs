@@ -44,7 +44,7 @@ namespace MS8040Lib
                     return;
                 }
                 string port = comboBoxCurPort.SelectedItem.ToString();
-                int duration = (int)numericUpDownDuration.Value;
+                double duration = (double)numericUpDownDuration.Value;
                 // 1. 实例化串口数据处理类
                 SerialDataProcessor processor = new SerialDataProcessor(port);
 

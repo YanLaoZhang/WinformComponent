@@ -210,7 +210,7 @@ namespace MS8040Lib
             }
         }
 
-        public DataResult GetCurrentData(int durationSeconds, ref string str_error_log)
+        public DataResult GetCurrentData(double durationSeconds, ref string str_error_log)
         {
             try
             {
@@ -225,7 +225,7 @@ namespace MS8040Lib
                 Console.WriteLine($"开始数据采集，持续时间：{durationSeconds} 秒");
 
                 // 在指定时间后停止采集
-                Thread.Sleep(durationSeconds * 1000);
+                Thread.Sleep((int)durationSeconds * 1000);
                 StopDataCollection();
 
                 DataResult dataResult = new DataResult();

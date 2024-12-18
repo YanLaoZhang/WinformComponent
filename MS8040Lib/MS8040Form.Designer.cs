@@ -128,6 +128,12 @@
             // 
             // numericUpDownDuration
             // 
+            this.numericUpDownDuration.DecimalPlaces = 3;
+            this.numericUpDownDuration.Increment = new decimal(new int[] {
+            5,
+            0,
+            0,
+            65536});
             this.numericUpDownDuration.Location = new System.Drawing.Point(278, 28);
             this.numericUpDownDuration.Name = "numericUpDownDuration";
             this.numericUpDownDuration.Size = new System.Drawing.Size(81, 21);
