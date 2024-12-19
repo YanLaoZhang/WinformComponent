@@ -61,6 +61,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CMW500Lib", "CMW500Lib\CMW5
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KP184Lib", "KP184Lib\KP184Lib.csproj", "{A225F0BE-CA0F-45C2-B074-FAADB23B5D8A}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VoiceLABLib", "VoiceLABLib\VoiceLABLib.csproj", "{06EA59C7-C415-4859-8E8B-C9927BF94AF2}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -301,6 +303,14 @@ Global
 		{A225F0BE-CA0F-45C2-B074-FAADB23B5D8A}.Release|Any CPU.Build.0 = Release|Any CPU
 		{A225F0BE-CA0F-45C2-B074-FAADB23B5D8A}.Release|x86.ActiveCfg = Release|Any CPU
 		{A225F0BE-CA0F-45C2-B074-FAADB23B5D8A}.Release|x86.Build.0 = Release|Any CPU
+		{06EA59C7-C415-4859-8E8B-C9927BF94AF2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{06EA59C7-C415-4859-8E8B-C9927BF94AF2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{06EA59C7-C415-4859-8E8B-C9927BF94AF2}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{06EA59C7-C415-4859-8E8B-C9927BF94AF2}.Debug|x86.Build.0 = Debug|Any CPU
+		{06EA59C7-C415-4859-8E8B-C9927BF94AF2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{06EA59C7-C415-4859-8E8B-C9927BF94AF2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{06EA59C7-C415-4859-8E8B-C9927BF94AF2}.Release|x86.ActiveCfg = Release|Any CPU
+		{06EA59C7-C415-4859-8E8B-C9927BF94AF2}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
