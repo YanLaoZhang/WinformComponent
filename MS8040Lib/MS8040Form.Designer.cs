@@ -40,6 +40,8 @@
             this.label1 = new System.Windows.Forms.Label();
             this.numericUpDownDuration = new System.Windows.Forms.NumericUpDown();
             this.label2 = new System.Windows.Forms.Label();
+            this.BtnStart = new System.Windows.Forms.Button();
+            this.BtnStop = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownDuration)).BeginInit();
             this.SuspendLayout();
             // 
@@ -153,11 +155,37 @@
             this.label2.TabIndex = 46;
             this.label2.Text = "s";
             // 
+            // BtnStart
+            // 
+            this.BtnStart.AccessibleRole = System.Windows.Forms.AccessibleRole.SplitButton;
+            this.BtnStart.Font = new System.Drawing.Font("宋体", 10F);
+            this.BtnStart.Location = new System.Drawing.Point(12, 102);
+            this.BtnStart.Name = "BtnStart";
+            this.BtnStart.Size = new System.Drawing.Size(121, 35);
+            this.BtnStart.TabIndex = 47;
+            this.BtnStart.Text = "开始采集";
+            this.BtnStart.UseVisualStyleBackColor = true;
+            this.BtnStart.Click += new System.EventHandler(this.BtnStart_Click);
+            // 
+            // BtnStop
+            // 
+            this.BtnStop.AccessibleRole = System.Windows.Forms.AccessibleRole.SplitButton;
+            this.BtnStop.Font = new System.Drawing.Font("宋体", 10F);
+            this.BtnStop.Location = new System.Drawing.Point(12, 143);
+            this.BtnStop.Name = "BtnStop";
+            this.BtnStop.Size = new System.Drawing.Size(121, 35);
+            this.BtnStop.TabIndex = 48;
+            this.BtnStop.Text = "结束采集";
+            this.BtnStop.UseVisualStyleBackColor = true;
+            this.BtnStop.Click += new System.EventHandler(this.BtnStop_Click);
+            // 
             // MS8040Form
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(759, 286);
+            this.Controls.Add(this.BtnStop);
+            this.Controls.Add(this.BtnStart);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.numericUpDownDuration);
             this.Controls.Add(this.label1);
@@ -191,6 +219,8 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.NumericUpDown numericUpDownDuration;
         private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Button BtnStart;
+        private System.Windows.Forms.Button BtnStop;
     }
 }
 

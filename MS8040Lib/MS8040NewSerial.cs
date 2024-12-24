@@ -257,6 +257,66 @@ namespace MS8040Lib
             }
         }
 
+        public bool StartCollection(ref string str_error_log)
+        {
+            try
+            {
+                if (!serialPort.IsOpen)
+                {
+                    serialPort.Open();
+                }
+
+                isCollecting = true;
+                dataList.Clear();
+                unit = string.Empty;
+                Console.WriteLine($"开始数据采集...");
+                return true;
+            }
+            catch (Exception ee)
+            {
+                str_error_log = $"{ee.Message}";
+                return false;
+            }
+        }
+
+        public DataResult StopAndGetData(ref string str_error_log)
+        {
+            try
+            {
+                Console.WriteLine($"停止数据采集，计算数据...");
+
+                // 停止采集
+                StopDataCollection();
+
+                DataResult dataResult = new DataResult();
+                // 打印数据和统计信息
+                lock (dataList)
+                {
+                    if (dataList.Count == 0)
+                    {
+                        Console.WriteLine("没有接收到任何数据。");
+                        str_error_log = $"No Recevie Data";
+                        return null;
+                    }
+
+                    dataResult.DataList = dataList;
+                    dataResult.Count = dataList.Count;
+                    dataResult.Max = GetMaxValue();
+                    dataResult.Min = GetMinValue();
+                    dataResult.AverageExcludingMinMax = GetAverageExcludingMinMax();
+                    dataResult.Unit = unit;
+
+                    Console.WriteLine(dataResult.ToString());
+                    return dataResult;
+                }
+            }
+            catch (Exception ee)
+            {
+                str_error_log = $"{ee.Message}";
+                return null;
+            }
+        }
+
     }
 
     public class DataResult

@@ -13,6 +13,7 @@ namespace MS8040Lib
     public partial class MS8040Form : Form
     {
         private MS8040Serial mS8040;
+        SerialDataProcessor processor;
         public MS8040Form()
         {
             InitializeComponent();
@@ -69,6 +70,82 @@ namespace MS8040Lib
                 BtnRead.Enabled = true;
             }
 
+        }
+
+        private void BtnStart_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                BtnStart.Enabled = false;
+                if (processor == null)
+                {
+                    if (comboBoxCurPort.SelectedItem == null)
+                    {
+                        MessageBox.Show("请先选择端口");
+                        return;
+                    }
+                    string port = comboBoxCurPort.SelectedItem.ToString();
+                    double duration = (double)numericUpDownDuration.Value;
+                    // 1.实例化串口数据处理类
+                    processor = new SerialDataProcessor(port);
+                }
+
+                // 2. 采集数据，采集时间为 10 秒
+                string str_error_log = "";
+                bool dataResult = processor.StartCollection(ref str_error_log);
+                if (!dataResult)
+                {
+                    richTextBoxMessage.Text = $"开始采集成功,\r\n{dataResult.ToString()}";
+                }
+                else
+                {
+                    richTextBoxMessage.Text = str_error_log;
+                }
+            }
+            finally
+            {
+                BtnStart.Enabled = true;
+            }
+        }
+
+        private void BtnStop_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                BtnStop.Enabled = false;
+                if (processor == null)
+                {
+                    if (comboBoxCurPort.SelectedItem == null)
+                    {
+                        MessageBox.Show("请先选择端口");
+                        return;
+                    }
+                    string port = comboBoxCurPort.SelectedItem.ToString();
+                    double duration = (double)numericUpDownDuration.Value;
+                    // 1.实例化串口数据处理类
+                    processor = new SerialDataProcessor(port);
+                }
+
+                // 2. 采集数据
+                string str_error_log = "";
+                DataResult dataResult = processor.StopAndGetData(ref str_error_log);
+                if (dataResult != null)
+                {
+                    textBoxRead.Text = dataResult.AverageExcludingMinMax.ToString();
+                    labelUnit.Text = dataResult.Unit;
+                    richTextBoxMessage.Text = $"读取成功,\r\n{dataResult.ToString()}";
+                }
+                else
+                {
+                    textBoxRead.Text = "error";
+                    labelUnit.Text = "";
+                    richTextBoxMessage.Text = str_error_log;
+                }
+            }
+            finally
+            {
+                BtnStop.Enabled = true;
+            }
         }
     }
 }
