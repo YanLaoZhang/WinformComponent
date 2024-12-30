@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO.Ports;
 using System.Linq;
+using System.Text;
 
 namespace KP184Lib
 {
@@ -47,17 +49,15 @@ namespace KP184Lib
      return(crc);
     }
     常用寄存器列表：
-    寄存器 地址 字节数 读写属性 取值范围 说明
-    LOAD ONOFF 0x010E 4 R/W 0,1
-    加载开关 1为加载ON, 0为加载 OFF
-    LOAD MODE 0x0110 4 R/W 0-3
-    加载模式 0-CV,1-CC,2-CR,3-CW,加载为ON时不能切换加载模式
-    CV SETTING 0x0112 4 R/W 0-150000 电压加载值， 单位mV
-    CC SETTING 0x0116 4 R/W 0-30000 加载加载值, 单位mA
-    CR SETTING 0x011A 4 R/W 0-80000 电阻加载值, 单位欧姆
-    CW SETTING 0x011E 4 R/W 0-2500 功率加载值, 单位0.1W
-    U MEASURE 0x0122 4 R 0-150000 电压测量值, 单位mV
-    I MEASURE 0x0126 4 R 0-30000 电流测量值, 单位mA
+    寄存器     地址   字节数 读写属性 取值范围    说明
+    LOAD ONOFF 0x010E 4      R/W      0,1         加载开关 1为加载ON, 0为加载 OFF
+    LOAD MODE  0x0110 4      R/W      0-3         加载模式 0-CV,1-CC,2-CR,3-CW,加载为ON时不能切换加载模式
+    CV SETTING 0x0112 4      R/W      0-150000    电压加载值， 单位mV
+    CC SETTING 0x0116 4      R/W      0-30000     加载加载值, 单位mA
+    CR SETTING 0x011A 4      R/W      0-80000     电阻加载值, 单位欧姆
+    CW SETTING 0x011E 4      R/W      0-2500      功率加载值, 单位0.1W
+    U MEASURE  0x0122 4      R        0-150000    电压测量值, 单位mV
+    I MEASURE  0x0126 4      R        0-30000     电流测量值, 单位mA
     指令举例：
     以下举例均假定负载的通讯地址为01， 数据均为16进制格式。
     1. 设置拉载电流：
@@ -134,6 +134,7 @@ namespace KP184Lib
 
             _deviceAddress = deviceAddress;
             _serialPort = new SerialPort(portName, baudRate, Parity.None, 8, StopBits.One);
+            _serialPort.ReadTimeout = 100;
             _serialPort.Open();
         }
 
@@ -210,12 +211,23 @@ namespace KP184Lib
         /// <exception cref="InvalidOperationException"></exception>
         public bool ReadVoltageAndCurrent(out int voltage, out int current)
         {
-            var response = SendCommand(new byte[] { _deviceAddress, 0x03, 0x03, 0x00, 0x00, 0x00 });
-            if (response.Length < 14)
-                throw new InvalidOperationException("Invalid response length.");
+            /*
+             » 01 03 03 00 00 00 45 8E
+             « 01 03 1E 01 00 00 00 00 00 00 00 00 14 B4 0F A0 0F A0 00 00 00 D4 09
+             */
+            /*var response = SendCommand(new byte[] { _deviceAddress, 0x03, 0x03, 0x00, 0x00, 0x00 }, 23);
+            Console.WriteLine(response.Length);
+            if (response.Length < 23)
+            {
+                Console.WriteLine("Invalid response length.");
+                voltage = -1;
+                current = -1;
+                return false;
+            }*/
+            var response = ReadSingleRegister(0x0300);
 
-            voltage = (response[3] << 16) | (response[4] << 8) | response[5];
-            current = (response[6] << 16) | (response[7] << 8) | response[8];
+            voltage = (response[5] << 16) | (response[6] << 8) | response[7];
+            current = (response[8] << 16) | (response[9] << 8) | response[10];
             return true;
         }
 
@@ -223,16 +235,36 @@ namespace KP184Lib
         {
             byte[] data = new byte[]
             {
-                _deviceAddress,
-                0x06,
-                (byte)(registerAddress >> 8),
-                (byte)(registerAddress & 0xFF),
-                (byte)(value >> 24),
-                (byte)((value >> 16) & 0xFF),
-                (byte)((value >> 8) & 0xFF),
-                (byte)(value & 0xFF)
+                _deviceAddress,                     // 设备地址
+                0x06,                               // 功能码：0x03-读取寄存器；0x06-写入单个寄存器；0x10-写入多个连续寄存器
+                (byte)(registerAddress >> 8),       // 写入目标寄存器的地址
+                (byte)(registerAddress & 0xFF),     // 写入目标寄存器的地址
+                0x00, 0x01,                         // 写入目标寄存器的个数
+                0x04,                               // 要写入目标寄存器的数据的字节数，目标寄存器为4字节寄存器，所以为4
+                (byte)(value >> 24),                // 数据
+                (byte)((value >> 16) & 0xFF),       // 数据
+                (byte)((value >> 8) & 0xFF),        // 数据
+                (byte)(value & 0xFF)                // 数据
             };
             SendCommand(data);
+        }
+
+        public void ReadVoltageMeasure()
+        {
+            ReadSingleRegister(0x0122);
+        }
+
+        private byte[] ReadSingleRegister(ushort registerAddress)
+        {
+            byte[] data = new byte[]
+            {
+                _deviceAddress,                     // 设备地址
+                0x03,                               // 功能码：0x03-读取寄存器；0x06-写入单个寄存器；0x10-写入多个连续寄存器
+                (byte)(registerAddress >> 8),       // 读取目标寄存器的地址
+                (byte)(registerAddress & 0xFF),     // 读取目标寄存器的地址
+                0x00, 0x00,                         // 无意义，任意值
+            };
+            return SendCommand(data);
         }
 
         /// <summary>
@@ -240,17 +272,57 @@ namespace KP184Lib
         /// </summary>
         /// <param name="command"></param>
         /// <returns></returns>
-        private byte[] SendCommand(byte[] command)
+        private byte[] SendCommand(byte[] command, int expectedLength = 8)
         {
-            byte[] crc = CalculateCRC(command);
-            byte[] fullCommand = command.Concat(crc).ToArray();
+            try
+            {
+                // 计算CRC并拼接指令
+                byte[] crc = CalculateCRC(command);
+                byte[] fullCommand = command.Concat(crc).ToArray();
+                Console.WriteLine("Send: " + BitConverter.ToString(fullCommand));
 
-            _serialPort.Write(fullCommand, 0, fullCommand.Length);
-            byte[] buffer = new byte[256];
-            int bytesRead = _serialPort.Read(buffer, 0, buffer.Length);
+                // 清空接收缓冲区，防止读取到之前的数据
+                _serialPort.DiscardInBuffer();
 
-            return buffer.Take(bytesRead).ToArray();
+                // 发送指令
+                _serialPort.Write(fullCommand, 0, fullCommand.Length);
+
+                // 接收返回数据
+                List<byte> receivedData = new List<byte>();
+                DateTime startTime = DateTime.Now;
+
+                while ((DateTime.Now - startTime).TotalMilliseconds < _serialPort.ReadTimeout)
+                {
+                    if (_serialPort.BytesToRead > 0)
+                    {
+                        receivedData.Add((byte)_serialPort.ReadByte());
+                    }
+
+                    // 假设设备响应以 0x0D (CR) 作为结束标志
+                    if (receivedData.Count >= expectedLength && receivedData.Last() == 0x0D)
+                    {
+                        break;
+                    }
+                }
+
+                // 返回完整的接收数据
+                byte[] response = receivedData.ToArray();
+                Console.WriteLine("Recv: " + BitConverter.ToString(response));
+                return response;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error: " + ex.Message);
+                return Array.Empty<byte>();
+            }
         }
+
+        private bool IsCompleteResponse(int expectedLength, List<byte> receivedData)
+        {
+            //int expectedLength = 16; // 根据协议定义的固定长度
+            return receivedData.Count >= expectedLength;
+        }
+
 
         /// <summary>
         /// 生成校验码

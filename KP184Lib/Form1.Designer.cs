@@ -63,6 +63,8 @@
             this.label16 = new System.Windows.Forms.Label();
             this.numericUpDownADD = new System.Windows.Forms.NumericUpDown();
             this.label17 = new System.Windows.Forms.Label();
+            this.BtnReadVol = new System.Windows.Forms.Button();
+            this.BtnReadCur = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownVol)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownCur)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownResis)).BeginInit();
@@ -384,7 +386,7 @@
             this.comboBoxBaudRate.Name = "comboBoxBaudRate";
             this.comboBoxBaudRate.Size = new System.Drawing.Size(121, 20);
             this.comboBoxBaudRate.TabIndex = 32;
-            this.comboBoxBaudRate.Text = "9600";
+            this.comboBoxBaudRate.Text = "115200";
             // 
             // label16
             // 
@@ -426,11 +428,34 @@
             this.label17.TabIndex = 33;
             this.label17.Text = "设备地址：";
             // 
+            // BtnReadVol
+            // 
+            this.BtnReadVol.Location = new System.Drawing.Point(452, 339);
+            this.BtnReadVol.Name = "BtnReadVol";
+            this.BtnReadVol.Size = new System.Drawing.Size(124, 38);
+            this.BtnReadVol.TabIndex = 35;
+            this.BtnReadVol.Text = "读取电压";
+            this.BtnReadVol.UseVisualStyleBackColor = true;
+            this.BtnReadVol.Visible = false;
+            this.BtnReadVol.Click += new System.EventHandler(this.BtnReadVol_Click);
+            // 
+            // BtnReadCur
+            // 
+            this.BtnReadCur.Location = new System.Drawing.Point(582, 339);
+            this.BtnReadCur.Name = "BtnReadCur";
+            this.BtnReadCur.Size = new System.Drawing.Size(124, 38);
+            this.BtnReadCur.TabIndex = 36;
+            this.BtnReadCur.Text = "读取电流";
+            this.BtnReadCur.UseVisualStyleBackColor = true;
+            this.BtnReadCur.Visible = false;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(784, 427);
+            this.Controls.Add(this.BtnReadCur);
+            this.Controls.Add(this.BtnReadVol);
             this.Controls.Add(this.numericUpDownADD);
             this.Controls.Add(this.label17);
             this.Controls.Add(this.comboBoxBaudRate);
@@ -517,6 +542,8 @@
         private System.Windows.Forms.Label label16;
         private System.Windows.Forms.NumericUpDown numericUpDownADD;
         private System.Windows.Forms.Label label17;
+        private System.Windows.Forms.Button BtnReadVol;
+        private System.Windows.Forms.Button BtnReadCur;
     }
 }
 

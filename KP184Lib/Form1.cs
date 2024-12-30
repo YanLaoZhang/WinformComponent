@@ -208,7 +208,7 @@ namespace KP184Lib
                 int.TryParse(numericUpDownPower.Value.ToString(), out int power);
                 using (KP184 kP184 = new KP184(portName, baudRate, deviceaAddress))
                 {
-                    kP184.SetResistanceLoad(power);
+                    kP184.SetPowerLoad(power);
                     MessageBox.Show($"设置CW的功率[{power}]已完成");
                 }
             }
@@ -246,6 +246,37 @@ namespace KP184Lib
             finally
             {
                 BtnReadVolAndCur.Enabled = true;
+
+            }
+        }
+
+        private void BtnReadVol_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                BtnReadVol.Enabled = false;
+                string portName = comboBoxSerialPort.Text;
+                if (portName.Length == 0)
+                {
+                    MessageBox.Show("请先选择串口", "错误");
+                    comboBoxSerialPort.Focus();
+                    return;
+                }
+                int.TryParse(comboBoxBaudRate.Text, out int baudRate);
+                byte.TryParse(numericUpDownADD.Value.ToString(), out byte deviceaAddress);
+
+                //textBoxCur.Clear();
+                textBoxVol.Clear();
+                using (KP184 kP184 = new KP184(portName, baudRate, deviceaAddress))
+                {
+                    kP184.ReadVoltageMeasure();
+                    //textBoxVol.Text = voltage.ToString();
+                    //textBoxCur.Text = current.ToString();
+                }
+            }
+            finally
+            {
+                BtnReadVol.Enabled = true;
 
             }
         }
