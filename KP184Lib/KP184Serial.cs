@@ -224,11 +224,20 @@ namespace KP184Lib
                 current = -1;
                 return false;
             }*/
-            var response = ReadSingleRegister(0x0300);
+            try
+            {
+                var response = ReadSingleRegister(0x0300);
 
-            voltage = (response[5] << 16) | (response[6] << 8) | response[7];
-            current = (response[8] << 16) | (response[9] << 8) | response[10];
-            return true;
+                voltage = (response[5] << 16) | (response[6] << 8) | response[7];
+                current = (response[8] << 16) | (response[9] << 8) | response[10];
+                return true;
+
+            }
+            catch (Exception ee)
+            {
+                voltage = 0; current = 0;   
+                return false;
+            }
         }
 
         private void WriteSingleRegister(ushort registerAddress, int value)
