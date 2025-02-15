@@ -45,6 +45,7 @@
             this.BtnAFIFlashVD12D = new System.Windows.Forms.Button();
             this.BtnScanAll = new System.Windows.Forms.Button();
             this.BtnVoltageCalibrateVD12D = new System.Windows.Forms.Button();
+            this.BtnActive = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.NUDDiffer)).BeginInit();
             this.SuspendLayout();
             // 
@@ -208,11 +209,22 @@
             this.BtnVoltageCalibrateVD12D.UseVisualStyleBackColor = true;
             this.BtnVoltageCalibrateVD12D.Click += new System.EventHandler(this.BtnVoltageCalibrateVD12D_Click);
             // 
+            // BtnActive
+            // 
+            this.BtnActive.Location = new System.Drawing.Point(12, 208);
+            this.BtnActive.Name = "BtnActive";
+            this.BtnActive.Size = new System.Drawing.Size(118, 31);
+            this.BtnActive.TabIndex = 17;
+            this.BtnActive.Text = "Active";
+            this.BtnActive.UseVisualStyleBackColor = true;
+            this.BtnActive.Click += new System.EventHandler(this.BtnActive_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
+            this.Controls.Add(this.BtnActive);
             this.Controls.Add(this.BtnVoltageCalibrateVD12D);
             this.Controls.Add(this.BtnScanAll);
             this.Controls.Add(this.BtnAFIFlashVD12D);
@@ -260,6 +272,7 @@
         private System.Windows.Forms.Button BtnAFIFlashVD12D;
         private System.Windows.Forms.Button BtnScanAll;
         private System.Windows.Forms.Button BtnVoltageCalibrateVD12D;
+        private System.Windows.Forms.Button BtnActive;
     }
 }
 

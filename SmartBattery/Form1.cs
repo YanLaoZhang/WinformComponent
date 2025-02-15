@@ -120,8 +120,11 @@ namespace SmartBattery
                 }
 
                 string str_error_log = "";
+                Console.WriteLine(DateTime.Now + "--- 1---");
                 control.StartUp(exePath, ref str_error_log);
+                Console.WriteLine(DateTime.Now + "--- 2---");
                 control.ScanAll(out bool result, out string error_log);
+                Console.WriteLine(DateTime.Now + "--- 3---");
                 this.Activate();
                 if (result)
                 {
@@ -135,6 +138,32 @@ namespace SmartBattery
             finally
             {
                 BtnScanAll.Enabled = true;
+            }
+        }
+
+        private void BtnActive_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                BtnActive.Enabled = false;
+
+                string exePath = textBoxExePath.Text;
+                if (exePath == "")
+                {
+                    MessageBox.Show($"请先选择烧录工具路径");
+                    return;
+                }
+
+                string str_error_log = "";
+                Console.WriteLine(DateTime.Now + "--- 1---");
+                control.StartUp(exePath, ref str_error_log);
+                Console.WriteLine(DateTime.Now + "--- 2---");
+                control.ActivateProcess();
+                MessageBox.Show("Success");
+            }
+            finally
+            {
+                BtnActive.Enabled = true;
             }
         }
 

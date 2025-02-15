@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -14,6 +15,13 @@ namespace SmartBattery
 {
     public class SmartToolControl
     {
+        [DllImport("user32.dll")]
+        private static extern bool SetForegroundWindow(IntPtr hWnd);
+
+        [DllImport("user32.dll")]
+        private static extern bool ShowWindow(IntPtr hWnd, int nCmdShow); 
+        private const int SW_RESTORE = 9; // 还原最小化窗口
+
         // 程序进程
         private Process _process;
 
@@ -162,6 +170,31 @@ namespace SmartBattery
                 _mainWindow = null;
             }
             return this;
+        }
+
+        /// <summary>
+        /// 激活已打开的程序窗口
+        /// </summary>
+        public void ActivateProcess()
+        {
+            if (_process == null || _process.HasExited)
+            {
+                Trace.WriteLine("Process is not running or has exited.");
+                return;
+            }
+
+            if (_mainWindowHandle == IntPtr.Zero)
+            {
+                Trace.WriteLine("Main window handle is not available.");
+                return;
+            }
+
+            // 先尝试恢复窗口（如果最小化）
+            ShowWindow(_mainWindowHandle, SW_RESTORE);
+            // 将窗口置于前台
+            bool success = SetForegroundWindow(_mainWindowHandle);
+
+            Trace.WriteLine(success ? "Window activated successfully." : "Failed to activate window.");
         }
 
         /// <summary>
@@ -680,6 +713,7 @@ namespace SmartBattery
                 result = false;
                 return this;
             }
+            ActivateProcess();
             /*
              Type:[ControlType.Button], Name:[Config], AutomationId:[button_ChannelConfig]
             Type:[ControlType.Button], Name:[LOG All], AutomationId:[button_SetLog]
@@ -710,15 +744,14 @@ namespace SmartBattery
             if (button_ScanALL != null)
             {
                 InvokeClickElement(button_ScanALL);
-                Thread.Sleep(2000);
+                //Thread.Sleep(2000);
             }
 
-            Thread.Sleep(500);
+            Thread.Sleep(100);
             result = true;
             str_error_log = string.Empty;
             return this;
         }
-
 
         /// <summary>
         /// Board Offset Calibrate
@@ -1330,51 +1363,68 @@ namespace SmartBattery
         /// <returns></returns>
         static AutomationElement GetElementByAutomationID(AutomationElement parentElement, ControlType obj, string id)
         {
-            Trace.WriteLine($"To Find Element By ID");
-            AndCondition andCondition = new AndCondition
-            (
-                new PropertyCondition(AutomationElement.ControlTypeProperty, obj),
-                new PropertyCondition(AutomationElement.AutomationIdProperty, id)
-            );
-            AutomationElement element = null;
-            for (int i = 0; i < 4; i++)
+            try
             {
-                try
+                Trace.WriteLine($"[{DateTime.Now}]:To Find Element By ID Start");
+                if (parentElement == null && parentElement.Current.IsEnabled)
                 {
-                    element = parentElement.FindFirst(TreeScope.Descendants, andCondition);
-                    if (element != null)
+                    return null;
+                }
+                AndCondition andCondition = new AndCondition
+                (
+                    new PropertyCondition(AutomationElement.ControlTypeProperty, obj),
+                    new PropertyCondition(AutomationElement.AutomationIdProperty, id)
+                );
+                AutomationElement element = null;
+                for (int i = 0; i < 4; i++)
+                {
+                    try
                     {
-                        Trace.WriteLine($"[{i + 1}/4] Type:[{obj.ProgrammaticName}], Name:[{element.Current.Name}], AutomationId:[{element.Current.AutomationId}]");
-                        break;
+                        element = parentElement.FindFirst(TreeScope.Descendants, andCondition);
+                        if (element != null)
+                        {
+                            Trace.WriteLine($"[{i + 1}/4] Type:[{obj.ProgrammaticName}], Name:[{element.Current.Name}], AutomationId:[{element.Current.AutomationId}]");
+                            break;
+                        }
+                        else
+                        {
+                            Trace.WriteLine($"[{i + 1}/4] No Found Element By ID");
+                            Thread.Sleep(500);
+                            continue;
+                        }
                     }
-                    else
+                    catch (Exception ee)
                     {
-                        Trace.WriteLine($"[{i + 1}/4] No Found Element By ID");
+                        Trace.WriteLine($"[{i + 1}/4] Find Element By ID Error: [{ee.Message}]");
                         Thread.Sleep(500);
                         continue;
                     }
                 }
-                catch (Exception ee)
+                /*AutomationElement element = null;
+                AutomationElementCollection allElements = parentElement.FindAll(TreeScope.Descendants,
+                    new PropertyCondition(AutomationElement.ControlTypeProperty, obj));
+                foreach (AutomationElement item in allElements)
                 {
-                    Trace.WriteLine($"[{i + 1}/4] Find Element By ID Error: [{ee.Message}]");
-                    Thread.Sleep(500);
-                    continue;
+                    Trace.WriteLine($"Type:[{obj.ProgrammaticName}], Name:[{item.Current.Name}], AutomationId:[{item.Current.AutomationId}]");
+                    if(item.Current.AutomationId == id)
+                    {
+                        element = item;
+                        break;
+                    }
                 }
+                Trace.WriteLine($"Find Element OK By ID");*/
+
+                return element;
             }
-            /*AutomationElement element = null;
-            AutomationElementCollection allElements = parentElement.FindAll(TreeScope.Descendants,
-                new PropertyCondition(AutomationElement.ControlTypeProperty, obj));
-            foreach (AutomationElement item in allElements)
+            catch (Exception ee)
             {
-                Trace.WriteLine($"Type:[{obj.ProgrammaticName}], Name:[{item.Current.Name}], AutomationId:[{item.Current.AutomationId}]");
-                if(item.Current.AutomationId == id)
-                {
-                    element = item;
-                    break;
-                }
+                Trace.WriteLine($"[{DateTime.Now}]:Find Element By ID Error: {ee.Message}");
+                return null;
             }
-            Trace.WriteLine($"Find Element OK By ID");*/
-            return element;
+            finally
+            {
+                Trace.WriteLine($"[{DateTime.Now}]:Find Element By ID End");
+            }
         }
 
         /// <summary>
@@ -1456,7 +1506,7 @@ namespace SmartBattery
                 catch (Exception ee)
                 {
                     Trace.WriteLine($"[{i + 1}/4] Click Element Error: [{ee.Message}]");
-                    Thread.Sleep(500);
+                    Thread.Sleep(300);
                     continue;
                 }
             }
