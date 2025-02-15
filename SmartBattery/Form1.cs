@@ -47,6 +47,7 @@ namespace SmartBattery
                 }
 
                 string str_error_log = "";
+                control.KillAllSmartTool(exePath);
                 control.StartUp(exePath, ref str_error_log);
                 control.SetAFIFile(AFIPath, out bool result, out string error_log);
                 this.Activate();
@@ -62,6 +63,78 @@ namespace SmartBattery
             finally
             {
                 BtnAFIFlash.Enabled = true;
+            }
+        }
+
+        private void BtnAFIFlashVD12D_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                BtnAFIFlashVD12D.Enabled = false;
+
+                string exePath = textBoxExePath.Text;
+                if (exePath == "")
+                {
+                    MessageBox.Show($"请先选择烧录工具路径");
+                    return;
+                }
+
+                string AFIPath = textBoxAFIPath.Text;
+                if (AFIPath == "")
+                {
+                    MessageBox.Show($"请先选择AFI文件");
+                    return;
+                }
+
+                string str_error_log = "";
+                control.KillAllSmartTool(exePath);
+                control.StartUp(exePath, ref str_error_log);
+                control.SetAFIFileVD12D(AFIPath, out bool result, out string error_log);
+                this.Activate();
+                if (result)
+                {
+                    MessageBox.Show("Success");
+                }
+                else
+                {
+                    MessageBox.Show($"Error：[{error_log}]");
+                }
+            }
+            finally
+            {
+                BtnAFIFlashVD12D.Enabled = true;
+            }
+        }
+
+        private void BtnScanAll_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                BtnScanAll.Enabled = false;
+
+                string exePath = textBoxExePath.Text;
+                if (exePath == "")
+                {
+                    MessageBox.Show($"请先选择烧录工具路径");
+                    return;
+                }
+
+                string str_error_log = "";
+                control.StartUp(exePath, ref str_error_log);
+                control.ScanAll(out bool result, out string error_log);
+                this.Activate();
+                if (result)
+                {
+                    MessageBox.Show("Success");
+                }
+                else
+                {
+                    MessageBox.Show($"Error：[{error_log}]");
+                }
+            }
+            finally
+            {
+                BtnScanAll.Enabled = true;
             }
         }
 
@@ -126,6 +199,40 @@ namespace SmartBattery
             finally
             {
                 BtnVoltageCalibrate.Enabled = true;
+            }
+        }
+
+        private void BtnVoltageCalibrateVD12D_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                BtnVoltageCalibrateVD12D.Enabled = false;
+                string exePath = textBoxExePath.Text;
+                if (exePath == "")
+                {
+                    MessageBox.Show($"请先选择烧录工具路径");
+                    return;
+                }
+                string str_error_log = "";
+                string act_vol_cell = "3577";
+                string act_vol_bat = "7244";
+                string act_vol_pack = "7255";
+                control._diff_allow = (double)NUDDiffer.Value;
+                control.StartUp(exePath, ref str_error_log);
+                control.VoltageCalibrateVD12D(act_vol_cell, act_vol_bat, act_vol_pack, out bool result, out string mes_vol_cell, out string mes_vol_bat, out string mes_vol_pack, out string error_log);
+                this.Activate();
+                if (result)
+                {
+                    MessageBox.Show("Success");
+                }
+                else
+                {
+                    MessageBox.Show($"Error：[{error_log}]");
+                }
+            }
+            finally
+            {
+                BtnVoltageCalibrateVD12D.Enabled = true;
             }
         }
 
@@ -220,5 +327,36 @@ namespace SmartBattery
                 textBoxAFIPath.Text = openFileDialog.FileName;
             }
         }
+
+        private void BtnCheckUI_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                BtnCheckUI.Enabled = false;
+                string exePath = textBoxExePath.Text;
+                if (exePath == "")
+                {
+                    MessageBox.Show($"请先选择烧录工具路径");
+                    return;
+                }
+                string str_error_log = "";
+                control.StartUp(exePath, ref str_error_log);
+                control.CheckUI(out bool result, out string error_log);
+                this.Activate();
+                if (result)
+                {
+                    MessageBox.Show("Success");
+                }
+                else
+                {
+                    MessageBox.Show($"Error：[{error_log}]");
+                }
+            }
+            finally
+            {
+                BtnCheckUI.Enabled = true;
+            }
+        }
+
     }
 }

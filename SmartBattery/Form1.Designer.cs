@@ -41,12 +41,16 @@
             this.label2 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
             this.NUDDiffer = new System.Windows.Forms.NumericUpDown();
+            this.BtnCheckUI = new System.Windows.Forms.Button();
+            this.BtnAFIFlashVD12D = new System.Windows.Forms.Button();
+            this.BtnScanAll = new System.Windows.Forms.Button();
+            this.BtnVoltageCalibrateVD12D = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.NUDDiffer)).BeginInit();
             this.SuspendLayout();
             // 
             // BtnOffsetCalibrate
             // 
-            this.BtnOffsetCalibrate.Location = new System.Drawing.Point(12, 160);
+            this.BtnOffsetCalibrate.Location = new System.Drawing.Point(166, 160);
             this.BtnOffsetCalibrate.Name = "BtnOffsetCalibrate";
             this.BtnOffsetCalibrate.Size = new System.Drawing.Size(118, 31);
             this.BtnOffsetCalibrate.TabIndex = 0;
@@ -56,17 +60,17 @@
             // 
             // BtnVoltageCalibrate
             // 
-            this.BtnVoltageCalibrate.Location = new System.Drawing.Point(172, 160);
+            this.BtnVoltageCalibrate.Location = new System.Drawing.Point(316, 160);
             this.BtnVoltageCalibrate.Name = "BtnVoltageCalibrate";
-            this.BtnVoltageCalibrate.Size = new System.Drawing.Size(118, 31);
+            this.BtnVoltageCalibrate.Size = new System.Drawing.Size(148, 31);
             this.BtnVoltageCalibrate.TabIndex = 1;
-            this.BtnVoltageCalibrate.Text = "VoltageCalibrate";
+            this.BtnVoltageCalibrate.Text = "VoltageCalibrateEone";
             this.BtnVoltageCalibrate.UseVisualStyleBackColor = true;
             this.BtnVoltageCalibrate.Click += new System.EventHandler(this.BtnVoltageCalibrate_Click);
             // 
             // BtnCurrentCalibrate
             // 
-            this.BtnCurrentCalibrate.Location = new System.Drawing.Point(342, 160);
+            this.BtnCurrentCalibrate.Location = new System.Drawing.Point(502, 160);
             this.BtnCurrentCalibrate.Name = "BtnCurrentCalibrate";
             this.BtnCurrentCalibrate.Size = new System.Drawing.Size(118, 31);
             this.BtnCurrentCalibrate.TabIndex = 2;
@@ -76,7 +80,7 @@
             // 
             // BtnCMDPanel
             // 
-            this.BtnCMDPanel.Location = new System.Drawing.Point(505, 160);
+            this.BtnCMDPanel.Location = new System.Drawing.Point(658, 160);
             this.BtnCMDPanel.Name = "BtnCMDPanel";
             this.BtnCMDPanel.Size = new System.Drawing.Size(118, 31);
             this.BtnCMDPanel.TabIndex = 3;
@@ -90,7 +94,7 @@
             this.BtnAFIFlash.Name = "BtnAFIFlash";
             this.BtnAFIFlash.Size = new System.Drawing.Size(118, 31);
             this.BtnAFIFlash.TabIndex = 4;
-            this.BtnAFIFlash.Text = "AFI Flash";
+            this.BtnAFIFlash.Text = "AFI Flash Eone";
             this.BtnAFIFlash.UseVisualStyleBackColor = true;
             this.BtnAFIFlash.Click += new System.EventHandler(this.BtnAFIFlash_Click);
             // 
@@ -164,11 +168,55 @@
             this.NUDDiffer.Size = new System.Drawing.Size(87, 21);
             this.NUDDiffer.TabIndex = 12;
             // 
+            // BtnCheckUI
+            // 
+            this.BtnCheckUI.Location = new System.Drawing.Point(12, 407);
+            this.BtnCheckUI.Name = "BtnCheckUI";
+            this.BtnCheckUI.Size = new System.Drawing.Size(118, 31);
+            this.BtnCheckUI.TabIndex = 13;
+            this.BtnCheckUI.Text = "CheckUI";
+            this.BtnCheckUI.UseVisualStyleBackColor = true;
+            this.BtnCheckUI.Click += new System.EventHandler(this.BtnCheckUI_Click);
+            // 
+            // BtnAFIFlashVD12D
+            // 
+            this.BtnAFIFlashVD12D.Location = new System.Drawing.Point(373, 93);
+            this.BtnAFIFlashVD12D.Name = "BtnAFIFlashVD12D";
+            this.BtnAFIFlashVD12D.Size = new System.Drawing.Size(118, 31);
+            this.BtnAFIFlashVD12D.TabIndex = 14;
+            this.BtnAFIFlashVD12D.Text = "AFI Flash VD12D";
+            this.BtnAFIFlashVD12D.UseVisualStyleBackColor = true;
+            this.BtnAFIFlashVD12D.Click += new System.EventHandler(this.BtnAFIFlashVD12D_Click);
+            // 
+            // BtnScanAll
+            // 
+            this.BtnScanAll.Location = new System.Drawing.Point(12, 160);
+            this.BtnScanAll.Name = "BtnScanAll";
+            this.BtnScanAll.Size = new System.Drawing.Size(118, 31);
+            this.BtnScanAll.TabIndex = 15;
+            this.BtnScanAll.Text = "ScanAll";
+            this.BtnScanAll.UseVisualStyleBackColor = true;
+            this.BtnScanAll.Click += new System.EventHandler(this.BtnScanAll_Click);
+            // 
+            // BtnVoltageCalibrateVD12D
+            // 
+            this.BtnVoltageCalibrateVD12D.Location = new System.Drawing.Point(316, 208);
+            this.BtnVoltageCalibrateVD12D.Name = "BtnVoltageCalibrateVD12D";
+            this.BtnVoltageCalibrateVD12D.Size = new System.Drawing.Size(148, 31);
+            this.BtnVoltageCalibrateVD12D.TabIndex = 16;
+            this.BtnVoltageCalibrateVD12D.Text = "VoltageCalibrateVD12D";
+            this.BtnVoltageCalibrateVD12D.UseVisualStyleBackColor = true;
+            this.BtnVoltageCalibrateVD12D.Click += new System.EventHandler(this.BtnVoltageCalibrateVD12D_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
+            this.Controls.Add(this.BtnVoltageCalibrateVD12D);
+            this.Controls.Add(this.BtnScanAll);
+            this.Controls.Add(this.BtnAFIFlashVD12D);
+            this.Controls.Add(this.BtnCheckUI);
             this.Controls.Add(this.NUDDiffer);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.textBoxAFIPath);
@@ -208,6 +256,10 @@
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.NumericUpDown NUDDiffer;
+        private System.Windows.Forms.Button BtnCheckUI;
+        private System.Windows.Forms.Button BtnAFIFlashVD12D;
+        private System.Windows.Forms.Button BtnScanAll;
+        private System.Windows.Forms.Button BtnVoltageCalibrateVD12D;
     }
 }
 

@@ -36,7 +36,7 @@ namespace FLUKE8808ALib
             }
         }
 
-        public FlukeSerial(System.IO.Ports.SerialPort serialPort, string portName, System.Windows.Forms.RichTextBox richTextBox)
+        public FlukeSerial(System.IO.Ports.SerialPort serialPort, string portName, System.Windows.Forms.RichTextBox richTextBox=null)
         {
             _serialPort = serialPort;
             _portName = portName;
@@ -46,7 +46,10 @@ namespace FLUKE8808ALib
             _serialPort.Parity = System.IO.Ports.Parity.None;
             _serialPort.StopBits = System.IO.Ports.StopBits.One;
             _richTextBox = richTextBox;
-            _richTextBox.Text = "";
+            if (richTextBox != null) 
+            {
+                _richTextBox.Text = "";
+            }
             str_Receive_current = "";
             // 绑定 DataReceived 事件处理程序
             _serialPort.DataReceived += SerialPort_DataReceived;
@@ -56,12 +59,15 @@ namespace FLUKE8808ALib
         {
             string indata = _serialPort.ReadExisting();
             str_Receive_current += indata;
-            _richTextBox.Invoke((Action)(() =>
+            if(_richTextBox != null)
             {
-                _richTextBox.Text += indata;
-                _richTextBox.SelectionStart = _richTextBox.TextLength;
-                _richTextBox.ScrollToCaret();
-            }));
+                _richTextBox.Invoke((Action)(() =>
+                {
+                    _richTextBox.Text += indata;
+                    _richTextBox.SelectionStart = _richTextBox.TextLength;
+                    _richTextBox.ScrollToCaret();
+                }));
+            }
         }
 
         public bool CheckStatus()
@@ -87,7 +93,10 @@ namespace FLUKE8808ALib
 
                 // 打开串口
                 _serialPort.Open();
-                _richTextBox.Text = string.Empty;
+                if (_richTextBox != null)
+                {
+                    _richTextBox.Text = string.Empty;
+                }
                 _serialPort.DataReceived += SerialPort_DataReceived;
 
                 return true;

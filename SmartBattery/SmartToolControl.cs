@@ -413,68 +413,312 @@ namespace SmartBattery
         }
 
         /// <summary>
+        /// 打开AFI操作 VD12D
+        /// </summary>
+        /// <param name="filePath"></param>
+        /// <returns></returns>
+        public SmartToolControl SetAFIFileVD12D(string filePath, out bool result, out string str_error_log)
+        {
+            // 点击菜单栏
+            AutomationElement menuItemFile = GetElementByName(_mainWindow, ControlType.MenuItem, "File");
+
+            if (menuItemFile == null)
+            {
+                str_error_log = $"MenuFile no Found";
+                Trace.WriteLine(str_error_log);
+                result = false;
+                return this;
+            }
+            else
+            {
+                InvokeClickElement(menuItemFile);
+                Thread.Sleep(1000);
+            }
+
+            var openMenuItem = menuItemFile.FindFirst(
+                TreeScope.Children,
+                new PropertyCondition(AutomationElement.NameProperty, "Open AFI File(*.afi)")
+            );
+            if (openMenuItem == null)
+            {
+                str_error_log = $"MenuOpenFile no Found";
+                Trace.WriteLine(str_error_log);
+                result = false;
+                return this;
+            }
+            else
+            {
+                InvokeClickElement(openMenuItem);
+                Thread.Sleep(1000);
+            }
+            //ClickMenuItem("File");
+            //Thread.Sleep(1000);
+
+            //ClickMenuItem("Open AFI File(*.afi)");
+            //Thread.Sleep(1000);
+
+            // 查找文件选择框
+            Trace.WriteLine($"-- To Find FileDialog.");
+            AutomationElement fileDialog = null;
+            bool isFindFileDialog = false;
+            for (int i = 0; i < 4; i++)
+            {
+                fileDialog = _mainWindow.FindFirst(TreeScope.Children, new PropertyCondition(AutomationElement.NameProperty, "Select AFI file: Channel 0"));
+                if (fileDialog == null)
+                {
+                    Trace.WriteLine($"[{i + 1}/3]fileDialog is Null");
+                    Thread.Sleep(500);
+                    continue;
+                }
+                else
+                {
+                    Trace.WriteLine($"-- [{i + 1}/3]FileDialog already Open.");
+                    isFindFileDialog = true;
+                    break;
+                }
+            }
+            if (!isFindFileDialog)
+            {
+                str_error_log = $"fileDialog is Null";
+                Trace.WriteLine(str_error_log);
+                result = false;
+                return this;
+            }
+
+            // 查找文件名编辑框
+            Trace.WriteLine($"-- To Find FileNameEdit.");
+            AutomationElement fileNameEdit = GetElementByName(fileDialog, ControlType.ComboBox, "文件名(N):");
+            if (fileNameEdit == null)
+            {
+                str_error_log = $"fileNameEdit no Found";
+                Trace.WriteLine(str_error_log);
+                result = false;
+                return this;
+            }
+            else
+            {
+                Trace.WriteLine($"-- FileNameEdit already Found.");
+            }
+
+            // 设置文件路径
+            bool isInput = false;
+            for (int i = 0; i < 4; i++)
+            {
+                try
+                {
+                    ValuePattern valuePattern = (ValuePattern)fileNameEdit.GetCurrentPattern(ValuePattern.Pattern);
+                    valuePattern.SetValue(filePath);
+                    Trace.WriteLine($"-- [{i + 1}/3]Input {filePath}");
+                    isInput = true;
+                    break;
+                }
+                catch (Exception ee)
+                {
+                    Trace.WriteLine($"[{i + 1}/3]Input FileName Error:[{ee.Message}]");
+                    Thread.Sleep(500);
+                    continue;
+                }
+            }
+
+            if (!isInput)
+            {
+                str_error_log = $"InputFileName Error";
+                Trace.WriteLine(str_error_log);
+                result = false;
+                return this;
+            }
+
+            //Thread.Sleep(100);
+
+            // 查找并点击“打开”按钮
+            AutomationElement openButton = GetElementByName(_mainWindow, ControlType.Button, "打开(O)");
+            if (openButton == null)
+            {
+                str_error_log = $"OpenButton is Null";
+                Trace.WriteLine(str_error_log);
+                result = false;
+                return this;
+            }
+            else
+            {
+                Trace.WriteLine($"-- openButton already Found.");
+            }
+            /*AutomationElementCollection allButtonItems = fileDialog.FindAll(TreeScope.Descendants, new PropertyCondition(AutomationElement.ControlTypeProperty, ControlType.Button));
+            foreach (AutomationElement ele in allButtonItems)
+            {
+                Trace.WriteLine($"{ele.Current.Name}");
+                if (ele.Current.Name.Contains("打开") || ele.Current.Name.Contains("Open"))
+                {
+                    openButton = ele;
+                    break;
+                }
+            }
+            if (openButton == null)
+            {
+                str_error_log = $"OpenButton is Null";
+                Trace.WriteLine(str_error_log);
+                result = false;
+                return this;
+            }*/
+
+            InvokeClickElement(openButton);
+            Thread.Sleep(6000);
+
+            str_error_log = string.Empty;
+            result = false;
+            for (int i = 0; i < 15; i++)
+            {
+                GetDialogTip(out string content);
+                if (content.Contains($"Write AFI Success"))
+                {
+                    str_error_log = $"AFI Write Success.";
+                    Trace.WriteLine(str_error_log);
+                    result = true;
+                    break;
+                }
+                if (content.Contains($"Write AFI Fail"))
+                {
+                    str_error_log = $"AFI Write Fail.";
+                    Trace.WriteLine(str_error_log);
+                    result = false;
+                    break;
+                }
+                Thread.Sleep(3000);
+                continue;
+            }
+
+            return this;
+        }
+
+        /// <summary>
         /// 获取模态框提示信息
         /// </summary>
         /// <param name="content"></param>
         /// <returns></returns>
         public SmartToolControl GetDialogTip(out string content)
         {
-            content = "";
-            //AutomationElement tipDialog = GetElementByName(_mainWindow, ControlType.Window, "");
-            AndCondition andCondition = new AndCondition
-            (
-                new PropertyCondition(AutomationElement.ControlTypeProperty, ControlType.Window),
-                new PropertyCondition(AutomationElement.ClassNameProperty, "#32770")
-            );
-            AutomationElement tipDialog = _mainWindow.FindFirst(TreeScope.Descendants, andCondition);
-            if (tipDialog == null)
+            try
             {
-                Trace.WriteLine($"-- tipDialog No Found.");
+                content = "";
+                //AutomationElement tipDialog = GetElementByName(_mainWindow, ControlType.Window, "");
+                AndCondition andCondition = new AndCondition
+                (
+                    new PropertyCondition(AutomationElement.ControlTypeProperty, ControlType.Window),
+                    new PropertyCondition(AutomationElement.ClassNameProperty, "#32770")
+                );
+                AutomationElement tipDialog = _mainWindow.FindFirst(TreeScope.Descendants, andCondition);
+                if (tipDialog == null)
+                {
+                    Trace.WriteLine($"-- tipDialog No Found.");
+                    return this;
+                }
+                else
+                {
+                    var textElements = tipDialog.FindAll(TreeScope.Descendants, new PropertyCondition(AutomationElement.ControlTypeProperty, ControlType.Text));
+                    content = string.Join(Environment.NewLine, textElements.Cast<AutomationElement>().Select(te => te.Current.Name));
+                    Trace.WriteLine($"content:[{content}]");
+                }
+                //AutomationElementCollection dialogs = _mainWindow.FindAll(TreeScope.Children, new PropertyCondition(AutomationElement.ControlTypeProperty, ControlType.Window));
+                //foreach (AutomationElement item in dialogs)
+                //{
+                //    string EleName = item.Current.Name;
+                //    Trace.WriteLine($"Window Name:[{EleName}]");
+                //    if (EleName.Contains(""))
+                //    {
+                //        tipDialog = item;
+                //        break;
+                //    }
+                //}
+
+                AutomationElement button = button = GetElementByName(tipDialog, ControlType.Button, "确定");
+                if (button == null)
+                {
+                    Trace.WriteLine($"-- ButtonOK No Found.");
+                }
+                else
+                {
+                    InvokeClickElement(button);
+                    Trace.WriteLine($"Click ButtonOK Success");
+                }
+
+                /*if (tipDialog != null)
+                {
+                    var textElements = tipDialog.FindAll(TreeScope.Descendants, new PropertyCondition(AutomationElement.ControlTypeProperty, ControlType.Text));
+
+                    content = string.Join(Environment.NewLine, textElements.Cast<AutomationElement>().Select(te => te.Current.Name));
+                    Trace.WriteLine($"content:[{content}]");
+                    var button = tipDialog.FindFirst(TreeScope.Descendants, new AndCondition(
+                        new PropertyCondition(AutomationElement.ControlTypeProperty, ControlType.Button),
+                        new PropertyCondition(AutomationElement.NameProperty, "确定")
+                        ));
+                    InvokeClickElement(button);
+                }*/
+                return this;
+
+            }
+            catch (Exception ee)
+            {
+                Trace.WriteLine(ee.StackTrace);
+                content = string.Empty;
                 return this;
             }
-            else
-            {
-                var textElements = tipDialog.FindAll(TreeScope.Descendants, new PropertyCondition(AutomationElement.ControlTypeProperty, ControlType.Text));
-                content = string.Join(Environment.NewLine, textElements.Cast<AutomationElement>().Select(te => te.Current.Name));
-                Trace.WriteLine($"content:[{content}]");
-            }
-            //AutomationElementCollection dialogs = _mainWindow.FindAll(TreeScope.Children, new PropertyCondition(AutomationElement.ControlTypeProperty, ControlType.Window));
-            //foreach (AutomationElement item in dialogs)
-            //{
-            //    string EleName = item.Current.Name;
-            //    Trace.WriteLine($"Window Name:[{EleName}]");
-            //    if (EleName.Contains(""))
-            //    {
-            //        tipDialog = item;
-            //        break;
-            //    }
-            //}
 
-            AutomationElement button = button = GetElementByName(tipDialog, ControlType.Button, "确定");
-            if (button == null)
+        }
+
+        /// <summary>
+        /// scan all
+        /// </summary>
+        /// <param name="result"></param>
+        /// <param name="str_error_log"></param>
+        /// <returns></returns>
+        public SmartToolControl ScanAll(out bool result, out string str_error_log)
+        {
+            if (_mainWindow == null)
             {
-                Trace.WriteLine($"-- ButtonOK No Found.");
+                str_error_log = $"mainWindow is Null";
+                Trace.WriteLine(str_error_log);
+                result = false;
+                return this;
             }
-            else
+            /*
+             Type:[ControlType.Button], Name:[Config], AutomationId:[button_ChannelConfig]
+            Type:[ControlType.Button], Name:[LOG All], AutomationId:[button_SetLog]
+            Type:[ControlType.Button], Name:[Clr Scan], AutomationId:[button_ClrScan]
+            Type:[ControlType.Button], Name:[Scan All], AutomationId:[button_SetScan]
+            Type:[ControlType.Button], Name:[Clr LOG], AutomationId:[button_ClrLog]
+            Type:[ControlType.Button], Name:[Clear Log], AutomationId:[btn_ClearCMDLog]
+            Type:[ControlType.Button], Name:[下拉按钮], AutomationId:[DropDown]
+            Type:[ControlType.Button], Name:[Register], AutomationId:[buttonMenu_Registers]
+            Type:[ControlType.Button], Name:[Memory], AutomationId:[buttonMenu_DataFlashMemory]
+            Type:[ControlType.Button], Name:[Calibrate], AutomationId:[buttonMenu_Calibrate]
+            Type:[ControlType.Button], Name:[Advaned Comm], AutomationId:[buttonMenu_Pro]
+            Type:[ControlType.Button], Name:[Chip Update], AutomationId:[buttonMenu_FWUpdate]
+            Type:[ControlType.Button], Name:[最小化], AutomationId:[Minimize]
+            Type:[ControlType.Button], Name:[最大化], AutomationId:[Maximize]
+            Type:[ControlType.Button], Name:[关闭], AutomationId:[Close]
+             */
+            // 最上方的Menu的Registers按钮
+            AutomationElement buttonMenu_Registers = GetElementByAutomationID(_mainWindow, ControlType.Button, "buttonMenu_Registers");
+            if (buttonMenu_Registers != null)
             {
-                InvokeClickElement(button);
-                Trace.WriteLine($"Click ButtonOK Success");
+                InvokeClickElement(buttonMenu_Registers);
+                //Thread.Sleep(1000);
             }
 
-            /*if (tipDialog != null)
+            // Board Offset Calibrate的ScanALL按钮
+            AutomationElement button_ScanALL = GetElementByAutomationID(_mainWindow, ControlType.Button, "button_SetScan");
+            if (button_ScanALL != null)
             {
-                var textElements = tipDialog.FindAll(TreeScope.Descendants, new PropertyCondition(AutomationElement.ControlTypeProperty, ControlType.Text));
+                InvokeClickElement(button_ScanALL);
+                Thread.Sleep(2000);
+            }
 
-                content = string.Join(Environment.NewLine, textElements.Cast<AutomationElement>().Select(te => te.Current.Name));
-                Trace.WriteLine($"content:[{content}]");
-                var button = tipDialog.FindFirst(TreeScope.Descendants, new AndCondition(
-                    new PropertyCondition(AutomationElement.ControlTypeProperty, ControlType.Button),
-                    new PropertyCondition(AutomationElement.NameProperty, "确定")
-                    ));
-                InvokeClickElement(button);
-            }*/
+            Thread.Sleep(500);
+            result = true;
+            str_error_log = string.Empty;
             return this;
         }
+
 
         /// <summary>
         /// Board Offset Calibrate
@@ -533,12 +777,20 @@ namespace SmartBattery
         }
 
         /// <summary>
-        /// Voltage Calibrate
+        /// Voltage Calibrate (Eone)
         /// </summary>
         /// <param name="act_vol"></param>
         /// <returns></returns>
         public SmartToolControl VoltageCalibrate(string act_vol, out bool result, out string mes_vol, out string str_error_log)
         {
+            if (_mainWindow == null)
+            {
+                str_error_log = $"mainWindow is Null";
+                Trace.WriteLine(str_error_log);
+                result = false;
+                mes_vol = string.Empty;
+                return this;
+            }
             mes_vol = string.Empty;
             // 最上方的Menu的Calibrate按钮
             AutomationElement buttonMenu_Calibrate = GetElementByAutomationID(_mainWindow, ControlType.Button, "buttonMenu_Calibrate");
@@ -656,12 +908,20 @@ namespace SmartBattery
         }
 
         /// <summary>
-        /// Current Calibrate
+        /// Current Calibrate (Eone)
         /// </summary>
         /// <param name="act_cur"></param>
         /// <returns></returns>
         public SmartToolControl CurrentCalibrate(string act_cur, out bool result, out string mes_cur, out string str_error_log)
         {
+            if (_mainWindow == null)
+            {
+                str_error_log = $"mainWindow is Null";
+                Trace.WriteLine(str_error_log);
+                result = false;
+                mes_cur = string.Empty;
+                return this;
+            }
             mes_cur = string.Empty;
             // 最上方的Menu的Calibrate按钮
             AutomationElement buttonMenu_Calibrate = GetElementByAutomationID(_mainWindow, ControlType.Button, "buttonMenu_Calibrate");
@@ -779,6 +1039,217 @@ namespace SmartBattery
             return this;
         }
 
+        public SmartToolControl VoltageCalibrateVD12D(string act_vol_cell, string act_vol_bat, string act_vol_pack, out bool result, out string mes_vol_cell, out string mes_vol_bat, out string mes_vol_pack, out string str_error_log)
+        {
+            if (_mainWindow == null)
+            {
+                str_error_log = $"mainWindow is Null";
+                Trace.WriteLine(str_error_log);
+                result = false;
+                mes_vol_bat = string.Empty;
+                mes_vol_cell = string.Empty;
+                mes_vol_pack = string.Empty;
+                return this;
+            }
+            mes_vol_cell = string.Empty;
+            mes_vol_bat = string.Empty;
+            mes_vol_pack = string.Empty;
+            // 最上方的Menu的Calibrate按钮
+            AutomationElement buttonMenu_Calibrate = GetElementByAutomationID(_mainWindow, ControlType.Button, "buttonMenu_Calibrate");
+            if (buttonMenu_Calibrate != null)
+            {
+                InvokeClickElement(buttonMenu_Calibrate);
+                //Thread.Sleep(1000);
+            }
+            else
+            {
+                str_error_log = $"buttonMenu_Calibrate no Found.";
+                Trace.WriteLine(str_error_log);
+                result = false;
+                return this;
+            }
+
+            // 勾选Voltage, 勾选一个即可
+            AutomationElement checkBox_Voltage = GetElementByAutomationID(_mainWindow, ControlType.CheckBox, "checkBox_Voltage");
+            if (checkBox_Voltage != null)
+            {
+                CheckCheckBox(checkBox_Voltage);
+                //Thread.Sleep(1000);
+            }
+
+            /*
+             To Find Element By Type
+                Type:[ControlType.Edit], Name:[Measured Voltage], AutomationId:[textBox_PackVoltageAct]
+                Type:[ControlType.Edit], Name:[Measured Voltage], AutomationId:[textBox_BatteryVoltageAct]
+                Type:[ControlType.Edit], Name:[Measured Voltage], AutomationId:[textBox_VoltageAct]
+                Type:[ControlType.Edit], Name:[Measured Voltage], AutomationId:[textBox_PackVoltageMes]
+                Type:[ControlType.Edit], Name:[Measured Voltage], AutomationId:[textBox_BatteryVoltageMes]
+                Type:[ControlType.Edit], Name:[Measured Voltage], AutomationId:[textBox_VoltageMes]
+                Type:[ControlType.Edit], Name:[Enter Actual Temper], AutomationId:[textBox_Temper2Act]
+                Type:[ControlType.Edit], Name:[Enter Actual Temper], AutomationId:[textBox_Temper2Mes]
+                Type:[ControlType.Edit], Name:[Measured Temper], AutomationId:[textBox_TemperAct]
+                Type:[ControlType.Edit], Name:[Measured Temper], AutomationId:[textBox_TemperMes]
+                Type:[ControlType.Edit], Name:[Measured Current], AutomationId:[textBox_CurrentAct]
+                Type:[ControlType.Edit], Name:[Measured Current], AutomationId:[textBox_CurrentMes]
+
+            To Find Element By Type
+                Type:[ControlType.CheckBox], Name:[PACK Voltage], AutomationId:[checkBox_PackVoltage]
+                Type:[ControlType.CheckBox], Name:[BAT Voltage], AutomationId:[checkBox_BatteryVoltage]
+                Type:[ControlType.CheckBox], Name:[Cell1 Voltage], AutomationId:[checkBox_Voltage]
+                Type:[ControlType.CheckBox], Name:[Int Temper], AutomationId:[checkBox_IntTemper]
+                Type:[ControlType.CheckBox], Name:[Ext Temper], AutomationId:[checkBox_ExtTemper]
+                Type:[ControlType.CheckBox], Name:[Current], AutomationId:[checkBox_Current]
+                Find Element By Type OK
+            To Find Element By Type
+                Type:[ControlType.Button], Name:[Config], AutomationId:[button_ChannelConfig]
+                Type:[ControlType.Button], Name:[Calibrate], AutomationId:[button_OffsetCalibration]
+                Type:[ControlType.Button], Name:[Calibrate], AutomationId:[button_DoCalibration]
+                Type:[ControlType.Button], Name:[Clear Log], AutomationId:[btn_ClearCMDLog]
+             */
+
+            bool isCalibrate = false;
+            for (int i = 0; i < 3; i++)
+            {
+                str_error_log = string.Empty;
+                // Enter Actual Voltage CELL
+                AutomationElement textBox_VoltageAct = GetElementByAutomationID(_mainWindow, ControlType.Edit, "textBox_VoltageAct");
+                if (textBox_VoltageAct != null)
+                {
+                    SetEditText(textBox_VoltageAct, act_vol_cell);
+                    //Thread.Sleep(1000);
+                }
+                // Enter Actual Voltage BAT
+                AutomationElement textBox_BatteryVoltageAct = GetElementByAutomationID(_mainWindow, ControlType.Edit, "textBox_BatteryVoltageAct");
+                if (textBox_BatteryVoltageAct != null)
+                {
+                    SetEditText(textBox_BatteryVoltageAct, act_vol_bat);
+                    //Thread.Sleep(1000);
+                }
+                // Enter Actual Voltage PACK
+                AutomationElement textBox_PackVoltageAct = GetElementByAutomationID(_mainWindow, ControlType.Edit, "textBox_PackVoltageAct");
+                if (textBox_PackVoltageAct != null)
+                {
+                    SetEditText(textBox_PackVoltageAct, act_vol_pack);
+                    //Thread.Sleep(1000);
+                }
+
+                // 最下方的Calibrate按钮
+                AutomationElement button_DoCalibration = GetElementByAutomationID(_mainWindow, ControlType.Button, "button_DoCalibration");
+                if (button_DoCalibration != null)
+                {
+                    InvokeClickElement(button_DoCalibration);
+                    Thread.Sleep(3000);
+                }
+
+                string content = string.Empty;
+                for (int j = 0; j < 5; j++)
+                {
+                    GetDialogTip(out string content_cur);
+                    if (content_cur.Contains($"Calibrate Success") || content_cur.Contains($"Calibrate Fail"))
+                    {
+                        break;
+                    }
+                    Thread.Sleep(2000);
+                    content = content_cur;
+                }
+                if (content.Contains($"Calibrate Success"))
+                {
+                    Trace.WriteLine($"Voltage Calibrate Success.");
+                }
+                if (content.Contains($"Calibrate Fail"))
+                {
+                    str_error_log = $"Voltage Calibrate Fail.";
+                    Trace.WriteLine(str_error_log);
+                    continue;
+                }
+
+                // 检查误差值 CELL
+                AutomationElement textBox_VoltageMes = GetElementByAutomationID(_mainWindow, ControlType.Edit, "textBox_VoltageMes");
+                AutomationElement textBox_BatteryVoltageMes = GetElementByAutomationID(_mainWindow, ControlType.Edit, "textBox_BatteryVoltageMes");
+                AutomationElement textBox_PackVoltageMes = GetElementByAutomationID(_mainWindow, ControlType.Edit, "textBox_PackVoltageMes");
+                if (textBox_VoltageMes != null && textBox_BatteryVoltageMes != null && textBox_PackVoltageMes != null)
+                {
+                    // MEAS Value Cell
+                    string str_mes_vol_cell = GetEditText(textBox_VoltageMes);
+                    //Thread.Sleep(1000);
+                    try
+                    {
+                        mes_vol_cell = double.Parse(str_mes_vol_cell).ToString();
+                    }
+                    catch (Exception ee)
+                    {
+                        Trace.WriteLine($"GetEditText({str_mes_vol_cell}) Error:['{ee.Message}'], set '0'.");
+                        mes_vol_cell = "0";
+                    }
+                    double diff_vol_cell = Math.Abs(double.Parse(act_vol_cell) - double.Parse(mes_vol_cell));
+                    Trace.WriteLine($"CELL Actual Voltage and Measured Voltage Difference: [{diff_vol_cell}]");
+
+                    // MEAS Value Bat
+                    string str_mes_vol_bat = GetEditText(textBox_BatteryVoltageMes);
+                    //Thread.Sleep(1000);
+                    try
+                    {
+                        mes_vol_bat = double.Parse(str_mes_vol_bat).ToString();
+                    }
+                    catch (Exception ee)
+                    {
+                        Trace.WriteLine($"GetEditText({str_mes_vol_bat}) Error:['{ee.Message}'], set '0'.");
+                        mes_vol_bat = "0";
+                    }
+                    double diff_vol_bat = Math.Abs(double.Parse(act_vol_bat) - double.Parse(mes_vol_bat));
+                    Trace.WriteLine($"BAT Actual Voltage and Measured Voltage Difference: [{diff_vol_bat}]");
+
+                    // MEAS Value Pack
+                    string str_mes_vol_pack = GetEditText(textBox_PackVoltageMes);
+                    //Thread.Sleep(1000);
+                    try
+                    {
+                        mes_vol_pack = double.Parse(str_mes_vol_pack).ToString();
+                    }
+                    catch (Exception ee)
+                    {
+                        Trace.WriteLine($"GetEditText({str_mes_vol_pack}) Error:['{ee.Message}'], set '0'.");
+                        mes_vol_pack = "0";
+                    }
+                    double diff_vol_pack = Math.Abs(double.Parse(act_vol_pack) - double.Parse(mes_vol_pack));
+                    Trace.WriteLine($"PACK Actual Voltage and Measured Voltage Difference: [{diff_vol_pack}]");
+
+                    if (diff_vol_cell > _diff_allow || diff_vol_bat > _diff_allow || diff_vol_pack > _diff_allow)
+                    {
+                        str_error_log = $"Voltage Calibrate Difference Fail.";
+                        Trace.WriteLine(str_error_log);
+                        continue;
+                    }
+                    else
+                    {
+                        isCalibrate = true;
+                        Trace.WriteLine($"Voltage Calibrate Difference Success.");
+                        break;
+                    }
+                }
+
+            }
+            // 取消勾选
+            if (checkBox_Voltage != null)
+            {
+                UncheckCheckBox(checkBox_Voltage);
+                //Thread.Sleep(1000);
+            }
+            if (isCalibrate)
+            {
+                str_error_log = $"Voltage Calibrate Final Success.";
+                Trace.WriteLine(str_error_log);
+                result = true;
+            }
+            else
+            {
+                str_error_log = $"Voltage Calibrate Final Fail.";
+                Trace.WriteLine(str_error_log);
+                result = false;
+            }
+            return this;
+        }
+
         /// <summary>
         /// 选择CMD Panel
         /// </summary>
@@ -802,6 +1273,52 @@ namespace SmartBattery
             }
 
             return this;
+        }
+
+        public SmartToolControl CheckUI(out bool result, out string str_error_log)
+        {
+            if (_mainWindow == null)
+            {
+                str_error_log = $"mainWindow is Null";
+                Trace.WriteLine(str_error_log);
+                result = false;
+                return this;
+            }
+            // 最上方的Menu的Calibrate按钮
+            AutomationElement buttonMenu_Calibrate = GetElementByAutomationID(_mainWindow, ControlType.Button, "buttonMenu_Calibrate");
+            if (buttonMenu_Calibrate != null)
+            {
+                InvokeClickElement(buttonMenu_Calibrate);
+                //Thread.Sleep(1000);
+            }
+
+            Thread.Sleep(500);
+
+            GetAllElementByType(_mainWindow, ControlType.Window);
+            GetAllElementByType(_mainWindow, ControlType.Edit);
+            GetAllElementByType(_mainWindow, ControlType.CheckBox);
+            GetAllElementByType(_mainWindow, ControlType.Button);
+
+            result = true;
+            str_error_log = string.Empty;
+            return this;
+        }
+
+        /// <summary>
+        /// 依据控件类型查找控件(调试用)
+        /// </summary>
+        /// <param name="parentElement"></param>
+        /// <param name="obj"></param>
+        static void GetAllElementByType(AutomationElement parentElement, ControlType obj)
+        {
+            Trace.WriteLine($"To Find Element By Type");
+            AutomationElementCollection allElements = parentElement.FindAll(TreeScope.Descendants,
+                new PropertyCondition(AutomationElement.ControlTypeProperty, obj));
+            foreach (AutomationElement item in allElements)
+            {
+                Trace.WriteLine($"Type:[{obj.ProgrammaticName}], Name:[{item.Current.Name}], AutomationId:[{item.Current.AutomationId}]");
+            }
+            Trace.WriteLine($"Find Element By Type OK");
         }
 
         /// <summary>
