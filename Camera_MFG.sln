@@ -65,6 +65,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VoiceLABLib", "VoiceLABLib\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TES136Debug", "TES136Debug\TES136Debug.csproj", "{67704421-FF4B-4B18-95D6-187E0274375F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UsbPowerMeter", "UsbPowerMeter\UsbPowerMeter.csproj", "{BAF764F3-655F-4F85-9668-615C4E0021A3}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -321,6 +323,14 @@ Global
 		{67704421-FF4B-4B18-95D6-187E0274375F}.Release|Any CPU.Build.0 = Release|Any CPU
 		{67704421-FF4B-4B18-95D6-187E0274375F}.Release|x86.ActiveCfg = Release|Any CPU
 		{67704421-FF4B-4B18-95D6-187E0274375F}.Release|x86.Build.0 = Release|Any CPU
+		{BAF764F3-655F-4F85-9668-615C4E0021A3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BAF764F3-655F-4F85-9668-615C4E0021A3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BAF764F3-655F-4F85-9668-615C4E0021A3}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{BAF764F3-655F-4F85-9668-615C4E0021A3}.Debug|x86.Build.0 = Debug|Any CPU
+		{BAF764F3-655F-4F85-9668-615C4E0021A3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BAF764F3-655F-4F85-9668-615C4E0021A3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BAF764F3-655F-4F85-9668-615C4E0021A3}.Release|x86.ActiveCfg = Release|Any CPU
+		{BAF764F3-655F-4F85-9668-615C4E0021A3}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
