@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -387,5 +388,38 @@ namespace SmartBattery
             }
         }
 
+        private void BtnTest_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                BtnTest.Enabled = false;
+                string exePath = textBoxExePath.Text;
+                if (exePath == "")
+                {
+                    MessageBox.Show($"请先选择烧录工具路径");
+                    return;
+                }
+                string processName = Path.GetFileNameWithoutExtension(exePath);
+                // 示例：点击记事本的菜单按钮（需要先打开记事本）
+                IntPtr targetExe = Win32APIController.FindMainWindowByProcessName(processName);
+                if (targetExe != IntPtr.Zero)
+                {
+                    Win32APIController.GetAllButton(targetExe);
+                    Win32APIController.GetAllControl(targetExe);
+                    /*Win32APIController.ClickButton(targetExe, "Register");
+                    Console.WriteLine("点击成功！");
+                    Win32APIController.ClickButton(targetExe, "Calibrate");
+                    Console.WriteLine("点击成功！");*/
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"操作失败: {ex.Message}");
+            }
+            finally
+            {
+                BtnTest.Enabled = true;
+            }
+        }
     }
 }

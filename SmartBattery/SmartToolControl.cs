@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
@@ -303,6 +304,7 @@ namespace SmartBattery
             }
             else
             {
+                Trace.WriteLine($"");
                 InvokeClickElement(openMenuItem);
                 Thread.Sleep(1000);
             }
@@ -732,7 +734,9 @@ namespace SmartBattery
             Type:[ControlType.Button], Name:[关闭], AutomationId:[Close]
              */
             // 最上方的Menu的Registers按钮
-            AutomationElement buttonMenu_Registers = GetElementByAutomationID(_mainWindow, ControlType.Button, "buttonMenu_Registers");
+            AutomationElement flowLayoutPanel1 = GetChildElementByID(_mainWindow, ControlType.Pane, "flowLayoutPanel1");
+            AutomationElement buttonMenu_Registers = GetChildElementByID(flowLayoutPanel1, ControlType.Button, "buttonMenu_Registers");
+            //AutomationElement buttonMenu_Registers = GetElementByAutomationID(_mainWindow, ControlType.Button, "buttonMenu_Registers");
             if (buttonMenu_Registers != null)
             {
                 InvokeClickElement(buttonMenu_Registers);
@@ -740,10 +744,17 @@ namespace SmartBattery
             }
 
             // Board Offset Calibrate的ScanALL按钮
-            AutomationElement button_ScanALL = GetElementByAutomationID(_mainWindow, ControlType.Button, "button_SetScan");
-            if (button_ScanALL != null)
+            AutomationElement splitContainer1 = GetChildElementByID(_mainWindow, ControlType.Pane, "splitContainer1");
+            AutomationElement pane_398840 = GetChildElementByID(splitContainer1, ControlType.Pane, "398840");
+            AutomationElement splitContainer2 = GetChildElementByID(pane_398840, ControlType.Pane, "splitContainer2");
+            AutomationElement pane_595454 = GetChildElementByID(splitContainer2, ControlType.Pane, "595454");
+            AutomationElement panel_Main = GetChildElementByID(pane_595454, ControlType.Pane, "panel_Main");
+            AutomationElement Form_SBS = GetChildElementByID(panel_Main, ControlType.Pane, "Form_SBS");
+            AutomationElement button_SetScan = GetChildElementByID(Form_SBS, ControlType.Button, "button_SetScan");
+            //AutomationElement button_SetScan = GetElementByAutomationID(_mainWindow, ControlType.Button, "button_SetScan");
+            if (button_SetScan != null)
             {
-                InvokeClickElement(button_ScanALL);
+                InvokeClickElement(button_SetScan);
                 //Thread.Sleep(2000);
             }
 
@@ -1482,6 +1493,168 @@ namespace SmartBattery
             //    }
             //}
             return element;
+        }
+
+        static AutomationElement GetChildElementByID(AutomationElement parentElement, ControlType obj, string id)
+        {
+            foreach (AutomationElement item in parentElement.FindAll(TreeScope.Children, new PropertyCondition(AutomationElement.ControlTypeProperty, obj)))
+            {
+                Trace.WriteLine($"Type:[{obj.ProgrammaticName}], Name:[{item.Current.Name}], AutomationId:[{item.Current.AutomationId}]");
+                if (item.Current.AutomationId.Equals(id))
+                {
+                    return item;
+                }
+            }
+            return null;
+        }
+
+        /// <summary>
+        /// 获取界面数据
+        /// </summary>
+        /// <param name="parentElement"></param>
+        /// <param name="obj"></param>
+        static void GetAllChildElement(AutomationElement parentElement, ControlType obj)
+        {
+            foreach (AutomationElement item in parentElement.FindAll(TreeScope.Children, new PropertyCondition(AutomationElement.ControlTypeProperty, obj)))
+            {
+                Trace.WriteLine($"Type:[{obj.ProgrammaticName}], Name:[{item.Current.Name}], AutomationId:[{item.Current.AutomationId}]");
+                if (item.Current.AutomationId.Equals("flowLayoutPanel1"))
+                {
+                    GetAllChildElement(item, ControlType.Button);
+                    GetAllChildElement(item, ControlType.Group);
+                    GetAllChildElement(item, ControlType.Edit);
+                }
+                if (item.Current.AutomationId.Equals("splitContainer1"))
+                {
+                    GetAllChildElement(item, ControlType.Button);
+                    GetAllChildElement(item, ControlType.Pane);
+                    GetAllChildElement(item, ControlType.Group);
+                }
+                if (item.Current.AutomationId.Equals("529422"))
+                {
+                    GetAllChildElement(item, ControlType.Button);
+                    GetAllChildElement(item, ControlType.Pane);
+                    GetAllChildElement(item, ControlType.Group);
+                }
+                if (item.Current.AutomationId.Equals("panel_Left"))
+                {
+                    GetAllChildElement(item, ControlType.Button);
+                    GetAllChildElement(item, ControlType.Pane);
+                    GetAllChildElement(item, ControlType.Group);
+                }
+                if (item.Current.AutomationId.Equals("398840"))
+                {
+                    GetAllChildElement(item, ControlType.Button);
+                    GetAllChildElement(item, ControlType.Pane);
+                    GetAllChildElement(item, ControlType.Group);
+                }
+                if (item.Current.AutomationId.Equals("splitContainer2"))
+                {
+                    GetAllChildElement(item, ControlType.Button);
+                    GetAllChildElement(item, ControlType.Pane);
+                    GetAllChildElement(item, ControlType.Group);
+                }
+                if (item.Current.AutomationId.Equals("595454"))
+                {
+                    GetAllChildElement(item, ControlType.Button);
+                    GetAllChildElement(item, ControlType.Pane);
+                    GetAllChildElement(item, ControlType.Group);
+                }
+                if (item.Current.AutomationId.Equals("panel_Main"))
+                {
+                    GetAllChildElement(item, ControlType.Pane);
+                    GetAllChildElement(item, ControlType.Window);
+                    GetAllChildElement(item, ControlType.Button);
+                    GetAllChildElement(item, ControlType.Group);
+                }
+                if (item.Current.AutomationId.Equals("Form_SBS"))
+                {
+                    GetAllChildElement(item, ControlType.Button);
+                    GetAllChildElement(item, ControlType.Pane);
+                    GetAllChildElement(item, ControlType.Group);
+                }
+                if (item.Current.AutomationId.Equals("Form_Calibrate"))
+                {
+                    GetAllChildElement(item, ControlType.Button);
+                    GetAllChildElement(item, ControlType.Pane);
+                    GetAllChildElement(item, ControlType.Group);
+                    GetAllChildElement(item, ControlType.Edit);
+                }
+                if (item.Current.AutomationId.Equals("groupBox_BoardOffsetCalibration"))
+                {
+                    GetAllChildElement(item, ControlType.Button);
+                    GetAllChildElement(item, ControlType.Pane);
+                    GetAllChildElement(item, ControlType.Group);
+                    GetAllChildElement(item, ControlType.Edit);
+                    GetAllChildElement(item, ControlType.CheckBox);
+                }
+                if (item.Current.AutomationId.Equals("groupBox_VoltageCalibration"))
+                {
+                    GetAllChildElement(item, ControlType.Button);
+                    GetAllChildElement(item, ControlType.Pane);
+                    GetAllChildElement(item, ControlType.Group);
+                    GetAllChildElement(item, ControlType.Edit);
+                    GetAllChildElement(item, ControlType.CheckBox);
+                }
+                if (item.Current.AutomationId.Equals("groupBox_TemperCalibration"))
+                {
+                    GetAllChildElement(item, ControlType.Button);
+                    GetAllChildElement(item, ControlType.Pane);
+                    GetAllChildElement(item, ControlType.Group);
+                    GetAllChildElement(item, ControlType.Edit);
+                    GetAllChildElement(item, ControlType.CheckBox);
+                }
+                if (item.Current.AutomationId.Equals("groupBox_CurrentCalibration"))
+                {
+                    GetAllChildElement(item, ControlType.Button);
+                    GetAllChildElement(item, ControlType.Pane);
+                    GetAllChildElement(item, ControlType.Group);
+                    GetAllChildElement(item, ControlType.Edit);
+                    GetAllChildElement(item, ControlType.CheckBox);
+                }
+                if (item.Current.AutomationId.Equals("2429002"))
+                {
+                    GetAllChildElement(item, ControlType.Button);
+                    GetAllChildElement(item, ControlType.Pane);
+                    GetAllChildElement(item, ControlType.Group);
+                }
+                if (item.Current.AutomationId.Equals("1578920"))
+                {
+                    GetAllChildElement(item, ControlType.Button);
+                    GetAllChildElement(item, ControlType.Pane);
+                    GetAllChildElement(item, ControlType.Group);
+                }
+                if (item.Current.AutomationId.Equals("267840"))
+                {
+                    GetAllChildElement(item, ControlType.Button);
+                    GetAllChildElement(item, ControlType.Pane);
+                    GetAllChildElement(item, ControlType.Group);
+                }
+                if (item.Current.AutomationId.Equals("menuStrip1"))
+                {
+                    GetAllChildElement(item, ControlType.Menu);
+                    GetAllChildElement(item, ControlType.MenuBar);
+                    GetAllChildElement(item, ControlType.Button);
+                    GetAllChildElement(item, ControlType.Custom);
+                    GetAllChildElement(item, ControlType.MenuItem);
+                    GetAllChildElement(item, ControlType.Tab);
+                    GetAllChildElement(item, ControlType.Tree);
+                    GetAllChildElement(item, ControlType.TreeItem);
+                }
+                if (item.Current.Name.Equals("File"))
+                {
+                    InvokeClickElement(item);
+                    Thread.Sleep(500);
+                    GetAllChildElement(item, ControlType.Menu);
+                    GetAllChildElement(item, ControlType.MenuBar);
+                    GetAllChildElement(item, ControlType.Button);
+                    GetAllChildElement(item, ControlType.Custom);
+                    GetAllChildElement(item, ControlType.MenuItem);
+                    GetAllChildElement(item, ControlType.Tab);
+                    GetAllChildElement(item, ControlType.Tree);
+                    GetAllChildElement(item, ControlType.TreeItem);
+                }
+            }
         }
 
         /// <summary>

@@ -46,7 +46,10 @@
             this.BtnScanAll = new System.Windows.Forms.Button();
             this.BtnVoltageCalibrateVD12D = new System.Windows.Forms.Button();
             this.BtnActive = new System.Windows.Forms.Button();
+            this.BtnTest = new System.Windows.Forms.Button();
+            this.groupBox1 = new System.Windows.Forms.GroupBox();
             ((System.ComponentModel.ISupportInitialize)(this.NUDDiffer)).BeginInit();
+            this.groupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
             // BtnOffsetCalibrate
@@ -219,11 +222,32 @@
             this.BtnActive.UseVisualStyleBackColor = true;
             this.BtnActive.Click += new System.EventHandler(this.BtnActive_Click);
             // 
+            // BtnTest
+            // 
+            this.BtnTest.Location = new System.Drawing.Point(16, 35);
+            this.BtnTest.Name = "BtnTest";
+            this.BtnTest.Size = new System.Drawing.Size(118, 31);
+            this.BtnTest.TabIndex = 18;
+            this.BtnTest.Text = "Test";
+            this.BtnTest.UseVisualStyleBackColor = true;
+            this.BtnTest.Click += new System.EventHandler(this.BtnTest_Click);
+            // 
+            // groupBox1
+            // 
+            this.groupBox1.Controls.Add(this.BtnTest);
+            this.groupBox1.Location = new System.Drawing.Point(12, 245);
+            this.groupBox1.Name = "groupBox1";
+            this.groupBox1.Size = new System.Drawing.Size(776, 156);
+            this.groupBox1.TabIndex = 19;
+            this.groupBox1.TabStop = false;
+            this.groupBox1.Text = "Win32API";
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
+            this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.BtnActive);
             this.Controls.Add(this.BtnVoltageCalibrateVD12D);
             this.Controls.Add(this.BtnScanAll);
@@ -248,6 +272,7 @@
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form1_FormClosing);
             this.Load += new System.EventHandler(this.Form1_Load);
             ((System.ComponentModel.ISupportInitialize)(this.NUDDiffer)).EndInit();
+            this.groupBox1.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -273,6 +298,8 @@
         private System.Windows.Forms.Button BtnScanAll;
         private System.Windows.Forms.Button BtnVoltageCalibrateVD12D;
         private System.Windows.Forms.Button BtnActive;
+        private System.Windows.Forms.Button BtnTest;
+        private System.Windows.Forms.GroupBox groupBox1;
     }
 }
 
