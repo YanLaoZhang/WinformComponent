@@ -744,13 +744,25 @@ namespace SmartBattery
             }
 
             // Board Offset Calibrate的ScanALL按钮
-            AutomationElement splitContainer1 = GetChildElementByID(_mainWindow, ControlType.Pane, "splitContainer1");
+            /*AutomationElement splitContainer1 = GetChildElementByID(_mainWindow, ControlType.Pane, "splitContainer1");
             AutomationElement pane_398840 = GetChildElementByID(splitContainer1, ControlType.Pane, "398840");
             AutomationElement splitContainer2 = GetChildElementByID(pane_398840, ControlType.Pane, "splitContainer2");
             AutomationElement pane_595454 = GetChildElementByID(splitContainer2, ControlType.Pane, "595454");
             AutomationElement panel_Main = GetChildElementByID(pane_595454, ControlType.Pane, "panel_Main");
             AutomationElement Form_SBS = GetChildElementByID(panel_Main, ControlType.Pane, "Form_SBS");
-            AutomationElement button_SetScan = GetChildElementByID(Form_SBS, ControlType.Button, "button_SetScan");
+            AutomationElement button_SetScan = GetChildElementByID(Form_SBS, ControlType.Button, "button_SetScan");*/
+
+            // 链式调用
+            AutomationPathStep[] automationPathStep = new AutomationPathStep[] {
+                new AutomationPathStep(ControlType.Pane, "splitContainer1"),
+                new AutomationPathStep(ControlType.Pane, "398840"),
+                new AutomationPathStep(ControlType.Pane, "splitContainer2"),
+                new AutomationPathStep(ControlType.Pane, "595454"),
+                new AutomationPathStep(ControlType.Pane, "panel_Main"),
+                new AutomationPathStep(ControlType.Pane, "Form_SBS"),
+                new AutomationPathStep(ControlType.Button, "button_SetScan"),
+            };
+            AutomationElement button_SetScan = FindDescendant(_mainWindow, automationPathStep);
             //AutomationElement button_SetScan = GetElementByAutomationID(_mainWindow, ControlType.Button, "button_SetScan");
             if (button_SetScan != null)
             {
@@ -1506,6 +1518,48 @@ namespace SmartBattery
                 }
             }
             return null;
+        }
+
+        public static AutomationElement FindChild(AutomationElement parent, ControlType controlType, string automationId)
+        {
+            var condition = new AndCondition(
+                new PropertyCondition(AutomationElement.ControlTypeProperty, controlType),
+                new PropertyCondition(AutomationElement.AutomationIdProperty, automationId)
+            );
+
+            var element = parent.FindFirst(TreeScope.Children, condition);
+
+            if (element == null)
+            {
+                throw new InvalidOperationException(
+                    $"元素查找失败: ControlType={controlType.LocalizedControlType}, AutomationId={automationId}\n" +
+                    $"父元素信息: Name={parent.Current.Name}, AutomationId={parent.Current.AutomationId}");
+            }
+
+            return element;
+        }
+
+        // 定义路径结构体
+        public struct AutomationPathStep
+        {
+            public ControlType Type { get; }
+            public string Id { get; }
+
+            public AutomationPathStep(ControlType type, string id)
+            {
+                Type = type;
+                Id = id;
+            }
+        }
+        // 修改方法签名
+        public static AutomationElement FindDescendant(AutomationElement parent, params AutomationPathStep[] path)
+        {
+            var current = parent;
+            foreach (var step in path)
+            {
+                current = FindChild(current, step.Type, step.Id);
+            }
+            return current;
         }
 
         /// <summary>
