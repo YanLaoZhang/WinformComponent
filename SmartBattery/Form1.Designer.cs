@@ -46,10 +46,8 @@
             this.BtnScanAll = new System.Windows.Forms.Button();
             this.BtnVoltageCalibrateVD12D = new System.Windows.Forms.Button();
             this.BtnActive = new System.Windows.Forms.Button();
-            this.BtnTest = new System.Windows.Forms.Button();
-            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.BtnCMDPanelVD12D = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.NUDDiffer)).BeginInit();
-            this.groupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
             // BtnOffsetCalibrate
@@ -88,7 +86,7 @@
             this.BtnCMDPanel.Name = "BtnCMDPanel";
             this.BtnCMDPanel.Size = new System.Drawing.Size(118, 31);
             this.BtnCMDPanel.TabIndex = 3;
-            this.BtnCMDPanel.Text = "CMD Panel";
+            this.BtnCMDPanel.Text = "CMD Panel Eone";
             this.BtnCMDPanel.UseVisualStyleBackColor = true;
             this.BtnCMDPanel.Click += new System.EventHandler(this.BtnCMDPanel_Click);
             // 
@@ -222,32 +220,22 @@
             this.BtnActive.UseVisualStyleBackColor = true;
             this.BtnActive.Click += new System.EventHandler(this.BtnActive_Click);
             // 
-            // BtnTest
+            // BtnCMDPanelVD12D
             // 
-            this.BtnTest.Location = new System.Drawing.Point(16, 35);
-            this.BtnTest.Name = "BtnTest";
-            this.BtnTest.Size = new System.Drawing.Size(118, 31);
-            this.BtnTest.TabIndex = 18;
-            this.BtnTest.Text = "Test";
-            this.BtnTest.UseVisualStyleBackColor = true;
-            this.BtnTest.Click += new System.EventHandler(this.BtnTest_Click);
-            // 
-            // groupBox1
-            // 
-            this.groupBox1.Controls.Add(this.BtnTest);
-            this.groupBox1.Location = new System.Drawing.Point(12, 245);
-            this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(776, 156);
-            this.groupBox1.TabIndex = 19;
-            this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "Win32API";
+            this.BtnCMDPanelVD12D.Location = new System.Drawing.Point(658, 208);
+            this.BtnCMDPanelVD12D.Name = "BtnCMDPanelVD12D";
+            this.BtnCMDPanelVD12D.Size = new System.Drawing.Size(118, 31);
+            this.BtnCMDPanelVD12D.TabIndex = 18;
+            this.BtnCMDPanelVD12D.Text = "CMD Panel VD12D";
+            this.BtnCMDPanelVD12D.UseVisualStyleBackColor = true;
+            this.BtnCMDPanelVD12D.Click += new System.EventHandler(this.BtnCMDPanelVD12D_Click);
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
-            this.Controls.Add(this.groupBox1);
+            this.Controls.Add(this.BtnCMDPanelVD12D);
             this.Controls.Add(this.BtnActive);
             this.Controls.Add(this.BtnVoltageCalibrateVD12D);
             this.Controls.Add(this.BtnScanAll);
@@ -272,7 +260,6 @@
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form1_FormClosing);
             this.Load += new System.EventHandler(this.Form1_Load);
             ((System.ComponentModel.ISupportInitialize)(this.NUDDiffer)).EndInit();
-            this.groupBox1.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -298,8 +285,7 @@
         private System.Windows.Forms.Button BtnScanAll;
         private System.Windows.Forms.Button BtnVoltageCalibrateVD12D;
         private System.Windows.Forms.Button BtnActive;
-        private System.Windows.Forms.Button BtnTest;
-        private System.Windows.Forms.GroupBox groupBox1;
+        private System.Windows.Forms.Button BtnCMDPanelVD12D;
     }
 }
 

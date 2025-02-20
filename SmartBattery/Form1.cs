@@ -88,7 +88,7 @@ namespace SmartBattery
                 }
 
                 string str_error_log = "";
-                control.KillAllSmartTool(exePath);
+                //control.KillAllSmartTool(exePath);
                 control.StartUp(exePath, ref str_error_log);
                 control.SetAFIFileVD12D(AFIPath, out bool result, out string error_log);
                 this.Activate();
@@ -388,37 +388,34 @@ namespace SmartBattery
             }
         }
 
-        private void BtnTest_Click(object sender, EventArgs e)
+        private void BtnCMDPanelVD12D_Click(object sender, EventArgs e)
         {
             try
             {
-                BtnTest.Enabled = false;
+                BtnCMDPanel.Enabled = false;
                 string exePath = textBoxExePath.Text;
                 if (exePath == "")
                 {
                     MessageBox.Show($"请先选择烧录工具路径");
                     return;
                 }
-                string processName = Path.GetFileNameWithoutExtension(exePath);
-                // 示例：点击记事本的菜单按钮（需要先打开记事本）
-                IntPtr targetExe = Win32APIController.FindMainWindowByProcessName(processName);
-                if (targetExe != IntPtr.Zero)
+                string str_error_log = "";
+                string item = "0x0020(DSGFET_Toggle)";
+                control.StartUp(exePath, ref str_error_log);
+                control.CMDPanelHandle(item, out bool result, out string error_log);
+                this.Activate();
+                if (result)
                 {
-                    Win32APIController.GetAllButton(targetExe);
-                    Win32APIController.GetAllControl(targetExe);
-                    /*Win32APIController.ClickButton(targetExe, "Register");
-                    Console.WriteLine("点击成功！");
-                    Win32APIController.ClickButton(targetExe, "Calibrate");
-                    Console.WriteLine("点击成功！");*/
+                    MessageBox.Show("Success");
                 }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"操作失败: {ex.Message}");
+                else
+                {
+                    MessageBox.Show($"Error：[{error_log}]");
+                }
             }
             finally
             {
-                BtnTest.Enabled = true;
+                BtnCMDPanel.Enabled = true;
             }
         }
     }

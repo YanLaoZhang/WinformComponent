@@ -1,16 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 using System.Windows.Automation;
-using System.Windows.Forms;
-using System.Xml.Linq;
 
 namespace SmartBattery
 {
@@ -275,8 +269,18 @@ namespace SmartBattery
         /// <returns></returns>
         public SmartToolControl SetAFIFile(string filePath, out bool result, out string str_error_log)
         {
+            if (_mainWindow == null)
+            {
+                str_error_log = $"mainWindow is Null";
+                Trace.WriteLine(str_error_log);
+                result = false;
+                return this;
+            }
+            ActivateProcess();
             // 点击菜单栏
-            AutomationElement menuItemFile = GetElementByName(_mainWindow, ControlType.MenuItem, "File");
+            AutomationElement menustrip1 = FindChildByAutomationID(_mainWindow, ControlType.MenuBar, "menuStrip1")[0];
+            AutomationElement menuItemFile = FindChildByName(menustrip1, ControlType.MenuItem, "File")[0];
+            //AutomationElement menuItemFile = GetElementByName(_mainWindow, ControlType.MenuItem, "File");
 
             if (menuItemFile == null)
             {
@@ -288,14 +292,16 @@ namespace SmartBattery
             else
             {
                 InvokeClickElement(menuItemFile);
-                Thread.Sleep(1000);
+                Thread.Sleep(500);
             }
 
-            var openMenuItem = menuItemFile.FindFirst(
+            AutomationElement menuItemOpenFile = FindChildByName(menuItemFile, ControlType.MenuItem, "Open AFI File(*.afi)")[0];
+
+            /*var openMenuItem = menuItemFile.FindFirst(
                 TreeScope.Children,
                 new PropertyCondition(AutomationElement.NameProperty, "Open AFI File(*.afi)")
-            );
-            if (openMenuItem == null)
+            );*/
+            if (menuItemOpenFile == null)
             {
                 str_error_log = $"MenuOpenFile no Found";
                 Trace.WriteLine(str_error_log);
@@ -305,15 +311,9 @@ namespace SmartBattery
             else
             {
                 Trace.WriteLine($"");
-                InvokeClickElement(openMenuItem);
-                Thread.Sleep(1000);
+                InvokeClickElement(menuItemOpenFile);
+                Thread.Sleep(500);
             }
-            //ClickMenuItem("File");
-            //Thread.Sleep(1000);
-
-            //ClickMenuItem("Open AFI File(*.afi)");
-            //Thread.Sleep(1000);
-
             // 查找文件选择框
             Trace.WriteLine($"-- To Find FileDialog.");
             AutomationElement fileDialog = null;
@@ -454,8 +454,19 @@ namespace SmartBattery
         /// <returns></returns>
         public SmartToolControl SetAFIFileVD12D(string filePath, out bool result, out string str_error_log)
         {
+            if (_mainWindow == null)
+            {
+                str_error_log = $"mainWindow is Null";
+                Trace.WriteLine(str_error_log);
+                result = false;
+                return this;
+            }
+            ActivateProcess();
+
             // 点击菜单栏
-            AutomationElement menuItemFile = GetElementByName(_mainWindow, ControlType.MenuItem, "File");
+            AutomationElement menustrip1 = FindChildByAutomationID(_mainWindow, ControlType.MenuBar, "menuStrip1")[0];
+            AutomationElement menuItemFile = FindChildByName(menustrip1, ControlType.MenuItem, "File")[0];
+            //AutomationElement menuItemFile = GetElementByName(_mainWindow, ControlType.MenuItem, "File");
 
             if (menuItemFile == null)
             {
@@ -470,11 +481,13 @@ namespace SmartBattery
                 Thread.Sleep(1000);
             }
 
-            var openMenuItem = menuItemFile.FindFirst(
+            AutomationElement menuItemOpenFile = FindChildByName(menuItemFile, ControlType.MenuItem, "Open AFI File(*.afi)")[0];
+
+            /*var openMenuItem = menuItemFile.FindFirst(
                 TreeScope.Children,
                 new PropertyCondition(AutomationElement.NameProperty, "Open AFI File(*.afi)")
-            );
-            if (openMenuItem == null)
+            );*/
+            if (menuItemOpenFile == null)
             {
                 str_error_log = $"MenuOpenFile no Found";
                 Trace.WriteLine(str_error_log);
@@ -483,14 +496,10 @@ namespace SmartBattery
             }
             else
             {
-                InvokeClickElement(openMenuItem);
-                Thread.Sleep(1000);
+                Trace.WriteLine($"");
+                InvokeClickElement(menuItemOpenFile);
+                Thread.Sleep(500);
             }
-            //ClickMenuItem("File");
-            //Thread.Sleep(1000);
-
-            //ClickMenuItem("Open AFI File(*.afi)");
-            //Thread.Sleep(1000);
 
             // 查找文件选择框
             Trace.WriteLine($"-- To Find FileDialog.");
@@ -597,8 +606,8 @@ namespace SmartBattery
             }*/
 
             InvokeClickElement(openButton);
-            Thread.Sleep(6000);
-
+            Thread.Sleep(1000);
+            Trace.WriteLine($"-{DateTime.Now}- wait write...");
             str_error_log = string.Empty;
             result = false;
             for (int i = 0; i < 15; i++)
@@ -618,9 +627,10 @@ namespace SmartBattery
                     result = false;
                     break;
                 }
-                Thread.Sleep(3000);
+                Thread.Sleep(2000);
                 continue;
             }
+            Trace.WriteLine($"-{DateTime.Now}- write finished[{result}]");
 
             return this;
         }
@@ -641,17 +651,18 @@ namespace SmartBattery
                     new PropertyCondition(AutomationElement.ControlTypeProperty, ControlType.Window),
                     new PropertyCondition(AutomationElement.ClassNameProperty, "#32770")
                 );
-                AutomationElement tipDialog = _mainWindow.FindFirst(TreeScope.Descendants, andCondition);
+                Trace.WriteLine($"-{DateTime.Now}- To Find tipDialog.");
+                AutomationElement tipDialog = _mainWindow.FindFirst(TreeScope.Children, andCondition);
                 if (tipDialog == null)
                 {
-                    Trace.WriteLine($"-- tipDialog No Found.");
+                    Trace.WriteLine($"-{DateTime.Now}- tipDialog No Found.");
                     return this;
                 }
                 else
                 {
+                    Trace.WriteLine($"-{DateTime.Now}- content:[{content}]");
                     var textElements = tipDialog.FindAll(TreeScope.Descendants, new PropertyCondition(AutomationElement.ControlTypeProperty, ControlType.Text));
                     content = string.Join(Environment.NewLine, textElements.Cast<AutomationElement>().Select(te => te.Current.Name));
-                    Trace.WriteLine($"content:[{content}]");
                 }
                 //AutomationElementCollection dialogs = _mainWindow.FindAll(TreeScope.Children, new PropertyCondition(AutomationElement.ControlTypeProperty, ControlType.Window));
                 //foreach (AutomationElement item in dialogs)
@@ -665,7 +676,8 @@ namespace SmartBattery
                 //    }
                 //}
 
-                AutomationElement button = button = GetElementByName(tipDialog, ControlType.Button, "确定");
+                //AutomationElement button = GetElementByName(tipDialog, ControlType.Button, "确定");
+                AutomationElement button = FindChildByName(tipDialog, ControlType.Button, "确定")[0];
                 if (button == null)
                 {
                     Trace.WriteLine($"-- ButtonOK No Found.");
@@ -734,35 +746,34 @@ namespace SmartBattery
             Type:[ControlType.Button], Name:[关闭], AutomationId:[Close]
              */
             // 最上方的Menu的Registers按钮
-            AutomationElement flowLayoutPanel1 = GetChildElementByID(_mainWindow, ControlType.Pane, "flowLayoutPanel1");
-            AutomationElement buttonMenu_Registers = GetChildElementByID(flowLayoutPanel1, ControlType.Button, "buttonMenu_Registers");
+            AutomationElement flowLayoutPanel1 = FindChildByAutomationID(_mainWindow, ControlType.Pane, "flowLayoutPanel1")[0];
+            AutomationElement buttonMenu_Registers = FindChildByAutomationID(flowLayoutPanel1, ControlType.Button, "buttonMenu_Registers")[0];
             //AutomationElement buttonMenu_Registers = GetElementByAutomationID(_mainWindow, ControlType.Button, "buttonMenu_Registers");
             if (buttonMenu_Registers != null)
             {
                 InvokeClickElement(buttonMenu_Registers);
-                //Thread.Sleep(1000);
+                Thread.Sleep(500);
             }
 
             // Board Offset Calibrate的ScanALL按钮
-            /*AutomationElement splitContainer1 = GetChildElementByID(_mainWindow, ControlType.Pane, "splitContainer1");
-            AutomationElement pane_398840 = GetChildElementByID(splitContainer1, ControlType.Pane, "398840");
-            AutomationElement splitContainer2 = GetChildElementByID(pane_398840, ControlType.Pane, "splitContainer2");
-            AutomationElement pane_595454 = GetChildElementByID(splitContainer2, ControlType.Pane, "595454");
-            AutomationElement panel_Main = GetChildElementByID(pane_595454, ControlType.Pane, "panel_Main");
-            AutomationElement Form_SBS = GetChildElementByID(panel_Main, ControlType.Pane, "Form_SBS");
-            AutomationElement button_SetScan = GetChildElementByID(Form_SBS, ControlType.Button, "button_SetScan");*/
+            AutomationElement splitContainer1 = FindChildByAutomationID(_mainWindow, ControlType.Pane, "splitContainer1")[0];
+            //AutomationElement splitContainer1_child = FindChildByName(splitContainer1, ControlType.Pane, "Status")[0];
+            AutomationElement splitContainer1_child;
+            AutomationElementCollection elementCollection = FindChildByName(splitContainer1, ControlType.Pane, "Status");
+            if (elementCollection == null)
+            {
+                splitContainer1_child = FindChildByName(splitContainer1, ControlType.Pane, "")[1];
+            }
+            else
+            {
+                splitContainer1_child = elementCollection[0];
+            }
+            AutomationElement splitContainer2 = FindChildByAutomationID(splitContainer1_child, ControlType.Pane, "splitContainer2")[0];
+            AutomationElement splitContainer2_child = FindChildByName(splitContainer2, ControlType.Pane, "")[0];
+            AutomationElement panel_Main = FindChildByAutomationID(splitContainer2_child, ControlType.Pane, "panel_Main")[0];
+            AutomationElement Form_SBS = FindChildByAutomationID(panel_Main, ControlType.Pane, "Form_SBS")[0];
+            AutomationElement button_SetScan = FindChildByAutomationID(Form_SBS, ControlType.Button, "button_SetScan")[0];
 
-            // 链式调用
-            AutomationPathStep[] automationPathStep = new AutomationPathStep[] {
-                new AutomationPathStep(ControlType.Pane, "splitContainer1"),
-                new AutomationPathStep(ControlType.Pane, "398840"),
-                new AutomationPathStep(ControlType.Pane, "splitContainer2"),
-                new AutomationPathStep(ControlType.Pane, "595454"),
-                new AutomationPathStep(ControlType.Pane, "panel_Main"),
-                new AutomationPathStep(ControlType.Pane, "Form_SBS"),
-                new AutomationPathStep(ControlType.Button, "button_SetScan"),
-            };
-            AutomationElement button_SetScan = FindDescendant(_mainWindow, automationPathStep);
             //AutomationElement button_SetScan = GetElementByAutomationID(_mainWindow, ControlType.Button, "button_SetScan");
             if (button_SetScan != null)
             {
@@ -790,24 +801,47 @@ namespace SmartBattery
                 return this;
             }
             // 最上方的Menu的Calibrate按钮
-            AutomationElement buttonMenu_Calibrate = GetElementByAutomationID(_mainWindow, ControlType.Button, "buttonMenu_Calibrate");
+            AutomationElement flowLayoutPanel1 = FindChildByAutomationID(_mainWindow, ControlType.Pane, "flowLayoutPanel1")[0];
+            AutomationElement buttonMenu_Calibrate = FindChildByAutomationID(flowLayoutPanel1, ControlType.Button, "buttonMenu_Calibrate")[0];
+            //AutomationElement buttonMenu_Calibrate = GetElementByAutomationID(_mainWindow, ControlType.Button, "buttonMenu_Calibrate");
             if (buttonMenu_Calibrate != null)
             {
                 InvokeClickElement(buttonMenu_Calibrate);
-                //Thread.Sleep(1000);
+                Thread.Sleep(500);
             }
 
+            AutomationElement splitContainer1 = FindChildByAutomationID(_mainWindow, ControlType.Pane, "splitContainer1")[0];
+            //AutomationElement splitContainer1_child = FindChildByName(splitContainer1, ControlType.Pane, "Status")[0];
+            AutomationElement splitContainer1_child;
+            AutomationElementCollection elementCollection = FindChildByName(splitContainer1, ControlType.Pane, "Status");
+            if (elementCollection == null)
+            {
+                splitContainer1_child = FindChildByName(splitContainer1, ControlType.Pane, "")[1];
+            }
+            else
+            {
+                splitContainer1_child = elementCollection[0];
+            }
+            AutomationElement splitContainer2 = FindChildByAutomationID(splitContainer1_child, ControlType.Pane, "splitContainer2")[0];
+            AutomationElement splitContainer2_child = FindChildByName(splitContainer2, ControlType.Pane, "")[0];
+            AutomationElement panel_Main = FindChildByAutomationID(splitContainer2_child, ControlType.Pane, "panel_Main")[0];
+            AutomationElement Form_Calibrate = FindChildByAutomationID(panel_Main, ControlType.Window, "Form_Calibrate")[0];
+            AutomationElement splitContainer1_Calibrate = FindChildByAutomationID(Form_Calibrate, ControlType.Pane, "splitContainer1")[0];
+            AutomationElement splitContainer1_Calibrate_child = FindChildByName(splitContainer1_Calibrate, ControlType.Pane, "")[0];
+            AutomationElement pane_flowLayoutPanel1 = FindChildByAutomationID(splitContainer1_Calibrate_child, ControlType.Pane, "flowLayoutPanel1")[0];
+            AutomationElement groupBox_BoardOffsetCalibration = FindChildByAutomationID(pane_flowLayoutPanel1, ControlType.Group, "groupBox_BoardOffsetCalibration")[0];
             // Board Offset Calibrate的Calibrate按钮
-            AutomationElement button_OffsetCalibration = GetElementByAutomationID(_mainWindow, ControlType.Button, "button_OffsetCalibration");
+            AutomationElement button_OffsetCalibration = FindChildByAutomationID(groupBox_BoardOffsetCalibration, ControlType.Button, "button_OffsetCalibration")[0];
+            //AutomationElement button_OffsetCalibration = GetElementByAutomationID(_mainWindow, ControlType.Button, "button_OffsetCalibration");
             if (button_OffsetCalibration != null)
             {
                 InvokeClickElement(button_OffsetCalibration);
-                Thread.Sleep(2000);
+                Thread.Sleep(500);
             }
 
             str_error_log = string.Empty;
             result = false;
-            for(int i= 0; i < 8; i++)
+            for(int i= 0; i < 15; i++)
             {
                 GetDialogTip(out string content);
                 if (content.Contains($"Calibrate Success"))
@@ -828,7 +862,6 @@ namespace SmartBattery
                 continue;
             }
 
-            Thread.Sleep(500);
             return this;
         }
 
@@ -849,11 +882,13 @@ namespace SmartBattery
             }
             mes_vol = string.Empty;
             // 最上方的Menu的Calibrate按钮
-            AutomationElement buttonMenu_Calibrate = GetElementByAutomationID(_mainWindow, ControlType.Button, "buttonMenu_Calibrate");
+            AutomationElement flowLayoutPanel1 = FindChildByAutomationID(_mainWindow, ControlType.Pane, "flowLayoutPanel1")[0];
+            AutomationElement buttonMenu_Calibrate = FindChildByAutomationID(flowLayoutPanel1, ControlType.Button, "buttonMenu_Calibrate")[0];
+            //AutomationElement buttonMenu_Calibrate = GetElementByAutomationID(_mainWindow, ControlType.Button, "buttonMenu_Calibrate");
             if (buttonMenu_Calibrate != null)
             {
                 InvokeClickElement(buttonMenu_Calibrate);
-                //Thread.Sleep(1000);
+                Thread.Sleep(500);
             }
             else
             {
@@ -863,19 +898,45 @@ namespace SmartBattery
                 return this;
             }
 
+            AutomationElement splitContainer1 = FindChildByAutomationID(_mainWindow, ControlType.Pane, "splitContainer1")[0];
+            //AutomationElement splitContainer1_child = FindChildByName(splitContainer1, ControlType.Pane, "Status")[0];
+            AutomationElement splitContainer1_child;
+            AutomationElementCollection elementCollection = FindChildByName(splitContainer1, ControlType.Pane, "Status");
+            if (elementCollection == null)
+            {
+                splitContainer1_child = FindChildByName(splitContainer1, ControlType.Pane, "")[1];
+            }
+            else
+            {
+                splitContainer1_child = elementCollection[0];
+            }
+            AutomationElement splitContainer2 = FindChildByAutomationID(splitContainer1_child, ControlType.Pane, "splitContainer2")[0];
+            AutomationElement splitContainer2_child = FindChildByName(splitContainer2, ControlType.Pane, "")[0];
+            AutomationElement panel_Main = FindChildByAutomationID(splitContainer2_child, ControlType.Pane, "panel_Main")[0];
+            AutomationElement Form_Calibrate = FindChildByAutomationID(panel_Main, ControlType.Window, "Form_Calibrate")[0];
+            AutomationElement splitContainer1_Calibrate = FindChildByAutomationID(Form_Calibrate, ControlType.Pane, "splitContainer1")[0];
+            
+            AutomationElement splitContainer1_Calibrate_child = FindChildByName(splitContainer1_Calibrate, ControlType.Pane, "")[0];
+            AutomationElement pane_flowLayoutPanel1 = FindChildByAutomationID(splitContainer1_Calibrate_child, ControlType.Pane, "flowLayoutPanel1")[0];
+            AutomationElement groupBox_VoltageCalibration = FindChildByAutomationID(pane_flowLayoutPanel1, ControlType.Group, "groupBox_VoltageCalibration")[0];
+
             // 勾选Voltage
-            AutomationElement checkBox_Voltage = GetElementByAutomationID(_mainWindow, ControlType.CheckBox, "checkBox_Voltage");
+            AutomationElement checkBox_Voltage = FindChildByAutomationID(groupBox_VoltageCalibration, ControlType.CheckBox, "checkBox_Voltage")[0];
+            //AutomationElement checkBox_Voltage = GetElementByAutomationID(_mainWindow, ControlType.CheckBox, "checkBox_Voltage");
             if (checkBox_Voltage != null)
             {
                 CheckCheckBox(checkBox_Voltage);
-                //Thread.Sleep(1000);
+                Thread.Sleep(500);
             }
+
+            AutomationElement splitContainer1_Calibrate_child1 = FindChildByName(splitContainer1_Calibrate, ControlType.Pane, "")[1];
             bool isCalibrate = false;
             for(int i = 0; i < 3; i++)
             {
                 str_error_log = string.Empty;
                 // Enter Actual Voltage
-                AutomationElement textBox_VoltageAct = GetElementByAutomationID(_mainWindow, ControlType.Edit, "textBox_VoltageAct");
+                AutomationElement textBox_VoltageAct = FindChildByAutomationID(groupBox_VoltageCalibration, ControlType.Edit, "textBox_VoltageAct")[0];
+                //AutomationElement textBox_VoltageAct = GetElementByAutomationID(_mainWindow, ControlType.Edit, "textBox_VoltageAct");
                 if (textBox_VoltageAct != null)
                 {
                     SetEditText(textBox_VoltageAct, act_vol);
@@ -883,22 +944,23 @@ namespace SmartBattery
                 }
 
                 // 最下方的Calibrate按钮
-                AutomationElement button_DoCalibration = GetElementByAutomationID(_mainWindow, ControlType.Button, "button_DoCalibration");
+                AutomationElement button_DoCalibration = FindChildByAutomationID(splitContainer1_Calibrate_child1, ControlType.Button, "button_DoCalibration")[0];
+                //AutomationElement button_DoCalibration = GetElementByAutomationID(_mainWindow, ControlType.Button, "button_DoCalibration");
                 if (button_DoCalibration != null)
                 {
                     InvokeClickElement(button_DoCalibration);
-                    Thread.Sleep(3000);
+                    Thread.Sleep(1000);
                 }
 
                 string content = string.Empty;
-                for (int j = 0; j < 5; j++)
+                for (int j = 0; j < 10; j++)
                 {
                     GetDialogTip(out string content_cur);
                     if (content_cur.Contains($"Calibrate Success")|| content_cur.Contains($"Calibrate Fail"))
                     {
                         break;
                     }
-                    Thread.Sleep(2000);
+                    Thread.Sleep(1000);
                     content = content_cur;
                 }
                 if (content.Contains($"Calibrate Success"))
@@ -912,7 +974,8 @@ namespace SmartBattery
                     continue;
                 }
 
-                AutomationElement textBox_VoltageMes = GetElementByAutomationID(_mainWindow, ControlType.Edit, "textBox_VoltageMes");
+                AutomationElement textBox_VoltageMes = FindChildByAutomationID(groupBox_VoltageCalibration, ControlType.Edit, "textBox_VoltageMes")[0];
+                //AutomationElement textBox_VoltageMes = GetElementByAutomationID(_mainWindow, ControlType.Edit, "textBox_VoltageMes");
                 if (textBox_VoltageMes != null)
                 {
                     string str_mes_vol = GetEditText(textBox_VoltageMes);
@@ -980,11 +1043,13 @@ namespace SmartBattery
             }
             mes_cur = string.Empty;
             // 最上方的Menu的Calibrate按钮
-            AutomationElement buttonMenu_Calibrate = GetElementByAutomationID(_mainWindow, ControlType.Button, "buttonMenu_Calibrate");
+            AutomationElement flowLayoutPanel1 = FindChildByAutomationID(_mainWindow, ControlType.Pane, "flowLayoutPanel1")[0];
+            AutomationElement buttonMenu_Calibrate = FindChildByAutomationID(flowLayoutPanel1, ControlType.Button, "buttonMenu_Calibrate")[0];
+            //AutomationElement buttonMenu_Calibrate = GetElementByAutomationID(_mainWindow, ControlType.Button, "buttonMenu_Calibrate");
             if (buttonMenu_Calibrate != null)
             {
                 InvokeClickElement(buttonMenu_Calibrate);
-                //Thread.Sleep(1000);
+                Thread.Sleep(500);
             }
             else
             {
@@ -994,42 +1059,69 @@ namespace SmartBattery
                 return this;
             }
 
-            // 勾选Voltage
-            AutomationElement checkBox_Current = GetElementByAutomationID(_mainWindow, ControlType.CheckBox, "checkBox_Current");
+            AutomationElement splitContainer1 = FindChildByAutomationID(_mainWindow, ControlType.Pane, "splitContainer1")[0];
+            //AutomationElement splitContainer1_child = FindChildByName(splitContainer1, ControlType.Pane, "Status")[0];
+            AutomationElement splitContainer1_child;
+            AutomationElementCollection elementCollection = FindChildByName(splitContainer1, ControlType.Pane, "Status");
+            if (elementCollection == null)
+            {
+                splitContainer1_child = FindChildByName(splitContainer1, ControlType.Pane, "")[1];
+            }
+            else
+            {
+                splitContainer1_child = elementCollection[0];
+            }
+            AutomationElement splitContainer2 = FindChildByAutomationID(splitContainer1_child, ControlType.Pane, "splitContainer2")[0];
+            AutomationElement splitContainer2_child = FindChildByName(splitContainer2, ControlType.Pane, "")[0];
+            AutomationElement panel_Main = FindChildByAutomationID(splitContainer2_child, ControlType.Pane, "panel_Main")[0];
+            AutomationElement Form_Calibrate = FindChildByAutomationID(panel_Main, ControlType.Window, "Form_Calibrate")[0];
+            AutomationElement splitContainer1_Calibrate = FindChildByAutomationID(Form_Calibrate, ControlType.Pane, "splitContainer1")[0];
+
+            AutomationElement splitContainer1_Calibrate_child = FindChildByName(splitContainer1_Calibrate, ControlType.Pane, "")[0];
+            AutomationElement pane_flowLayoutPanel1 = FindChildByAutomationID(splitContainer1_Calibrate_child, ControlType.Pane, "flowLayoutPanel1")[0];
+            AutomationElement groupBox_CurrentCalibration = FindChildByAutomationID(pane_flowLayoutPanel1, ControlType.Group, "groupBox_CurrentCalibration")[0];
+
+            // 勾选Current
+            AutomationElement checkBox_Current = FindChildByAutomationID(groupBox_CurrentCalibration, ControlType.CheckBox, "checkBox_Current")[0];
+            //AutomationElement checkBox_Current = GetElementByAutomationID(_mainWindow, ControlType.CheckBox, "checkBox_Current");
             if (checkBox_Current != null)
             {
                 CheckCheckBox(checkBox_Current);
-                //Thread.Sleep(1000);
+                Thread.Sleep(500);
             }
+
+            AutomationElement splitContainer1_Calibrate_child1 = FindChildByName(splitContainer1_Calibrate, ControlType.Pane, "")[1];
             bool isCalibrate = false;
             for(int i = 0; i < 3; i++)
             {
                 str_error_log = string.Empty;
                 // Enter Actual Current
-                AutomationElement textBox_CurrentAct = GetElementByAutomationID(_mainWindow, ControlType.Edit, "textBox_CurrentAct");
+                AutomationElement textBox_CurrentAct = FindChildByAutomationID(groupBox_CurrentCalibration, ControlType.Edit, "textBox_CurrentAct")[0];
+                //AutomationElement textBox_CurrentAct = GetElementByAutomationID(_mainWindow, ControlType.Edit, "textBox_CurrentAct");
                 if (textBox_CurrentAct != null)
                 {
                     SetEditText(textBox_CurrentAct, act_cur);
-                    //Thread.Sleep(1000);
+                    Thread.Sleep(100);
                 }
 
                 // 最下方的Calibrate按钮
-                AutomationElement button_DoCalibration = GetElementByAutomationID(_mainWindow, ControlType.Button, "button_DoCalibration");
+                AutomationElement button_DoCalibration = FindChildByAutomationID(splitContainer1_Calibrate_child1, ControlType.Button, "button_DoCalibration")[0];
+                //AutomationElement button_DoCalibration = GetElementByAutomationID(_mainWindow, ControlType.Button, "button_DoCalibration");
                 if (button_DoCalibration != null)
                 {
                     InvokeClickElement(button_DoCalibration);
-                    Thread.Sleep(3000);
+                    Thread.Sleep(1000);
                 }
 
                 string content = string.Empty;
-                for (int j = 0; j < 5; j++)
+                for (int j = 0; j < 10; j++)
                 {
                     GetDialogTip(out string content_cur);
                     if (content_cur.Contains($"Calibrate Success") || content_cur.Contains($"Calibrate Fail"))
                     {
                         break;
                     }
-                    Thread.Sleep(2000);
+                    Thread.Sleep(1000);
                     content = content_cur;
                 }
                 if (content.Contains($"Calibrate Success"))
@@ -1043,7 +1135,8 @@ namespace SmartBattery
                     continue;
                 }
 
-                AutomationElement textBox_CurrentMes = GetElementByAutomationID(_mainWindow, ControlType.Edit, "textBox_CurrentMes");
+                AutomationElement textBox_CurrentMes = FindChildByAutomationID(groupBox_CurrentCalibration, ControlType.Edit, "textBox_CurrentMes")[0];
+                //AutomationElement textBox_CurrentMes = GetElementByAutomationID(_mainWindow, ControlType.Edit, "textBox_CurrentMes");
                 if (textBox_CurrentMes != null)
                 {
                     string str_mes_cur = GetEditText(textBox_CurrentMes);
@@ -1078,7 +1171,7 @@ namespace SmartBattery
             if (checkBox_Current != null)
             {
                 UncheckCheckBox(checkBox_Current);
-                Thread.Sleep(1000);
+                Thread.Sleep(500);
             }
             if (isCalibrate)
             {
@@ -1111,11 +1204,13 @@ namespace SmartBattery
             mes_vol_bat = string.Empty;
             mes_vol_pack = string.Empty;
             // 最上方的Menu的Calibrate按钮
-            AutomationElement buttonMenu_Calibrate = GetElementByAutomationID(_mainWindow, ControlType.Button, "buttonMenu_Calibrate");
+            AutomationElement flowLayoutPanel1 = FindChildByAutomationID(_mainWindow, ControlType.Pane, "flowLayoutPanel1")[0];
+            AutomationElement buttonMenu_Calibrate = FindChildByAutomationID(flowLayoutPanel1, ControlType.Button, "buttonMenu_Calibrate")[0];
+            //AutomationElement buttonMenu_Calibrate = GetElementByAutomationID(_mainWindow, ControlType.Button, "buttonMenu_Calibrate");
             if (buttonMenu_Calibrate != null)
             {
                 InvokeClickElement(buttonMenu_Calibrate);
-                //Thread.Sleep(1000);
+                Thread.Sleep(500);
             }
             else
             {
@@ -1125,12 +1220,34 @@ namespace SmartBattery
                 return this;
             }
 
+            AutomationElement splitContainer1 = FindChildByAutomationID(_mainWindow, ControlType.Pane, "splitContainer1")[0];
+            //AutomationElement splitContainer1_child = FindChildByName(splitContainer1, ControlType.Pane, "Status")[0];
+            AutomationElement splitContainer1_child;
+            AutomationElementCollection elementCollection = FindChildByName(splitContainer1, ControlType.Pane, "Status");
+            if (elementCollection == null)
+            {
+                splitContainer1_child = FindChildByName(splitContainer1, ControlType.Pane, "")[1];
+            }
+            else
+            {
+                splitContainer1_child = elementCollection[0];
+            }
+            AutomationElement splitContainer2 = FindChildByAutomationID(splitContainer1_child, ControlType.Pane, "splitContainer2")[0];
+            AutomationElement splitContainer2_child = FindChildByName(splitContainer2, ControlType.Pane, "")[0];
+            AutomationElement panel_Main = FindChildByAutomationID(splitContainer2_child, ControlType.Pane, "panel_Main")[0];
+            AutomationElement Form_Calibrate = FindChildByAutomationID(panel_Main, ControlType.Window, "Form_Calibrate")[0];
+            AutomationElement splitContainer1_Calibrate = FindChildByAutomationID(Form_Calibrate, ControlType.Pane, "splitContainer1")[0];
+
+            AutomationElement splitContainer1_Calibrate_child = FindChildByName(splitContainer1_Calibrate, ControlType.Pane, "")[0];
+            AutomationElement pane_flowLayoutPanel1 = FindChildByAutomationID(splitContainer1_Calibrate_child, ControlType.Pane, "flowLayoutPanel1")[0];
+            AutomationElement groupBox_VoltageCalibration = FindChildByAutomationID(pane_flowLayoutPanel1, ControlType.Group, "groupBox_VoltageCalibration")[0];
             // 勾选Voltage, 勾选一个即可
-            AutomationElement checkBox_Voltage = GetElementByAutomationID(_mainWindow, ControlType.CheckBox, "checkBox_Voltage");
+            AutomationElement checkBox_Voltage = FindChildByAutomationID(groupBox_VoltageCalibration, ControlType.CheckBox, "checkBox_Voltage")[0];
+            //AutomationElement checkBox_Voltage = GetElementByAutomationID(_mainWindow, ControlType.CheckBox, "checkBox_Voltage");
             if (checkBox_Voltage != null)
             {
                 CheckCheckBox(checkBox_Voltage);
-                //Thread.Sleep(1000);
+                Thread.Sleep(500);
             }
 
             /*
@@ -1163,26 +1280,30 @@ namespace SmartBattery
                 Type:[ControlType.Button], Name:[Clear Log], AutomationId:[btn_ClearCMDLog]
              */
 
+            AutomationElement splitContainer1_Calibrate_child1 = FindChildByName(splitContainer1_Calibrate, ControlType.Pane, "")[1];
             bool isCalibrate = false;
             for (int i = 0; i < 3; i++)
             {
                 str_error_log = string.Empty;
                 // Enter Actual Voltage CELL
-                AutomationElement textBox_VoltageAct = GetElementByAutomationID(_mainWindow, ControlType.Edit, "textBox_VoltageAct");
+                AutomationElement textBox_VoltageAct = FindChildByAutomationID(groupBox_VoltageCalibration, ControlType.Edit, "textBox_VoltageAct")[0];
+                //AutomationElement textBox_VoltageAct = GetElementByAutomationID(_mainWindow, ControlType.Edit, "textBox_VoltageAct");
                 if (textBox_VoltageAct != null)
                 {
                     SetEditText(textBox_VoltageAct, act_vol_cell);
-                    //Thread.Sleep(1000);
+                    Thread.Sleep(100);
                 }
                 // Enter Actual Voltage BAT
-                AutomationElement textBox_BatteryVoltageAct = GetElementByAutomationID(_mainWindow, ControlType.Edit, "textBox_BatteryVoltageAct");
+                AutomationElement textBox_BatteryVoltageAct = FindChildByAutomationID(groupBox_VoltageCalibration, ControlType.Edit, "textBox_BatteryVoltageAct")[0];
+                //AutomationElement textBox_BatteryVoltageAct = GetElementByAutomationID(_mainWindow, ControlType.Edit, "textBox_BatteryVoltageAct");
                 if (textBox_BatteryVoltageAct != null)
                 {
                     SetEditText(textBox_BatteryVoltageAct, act_vol_bat);
-                    //Thread.Sleep(1000);
+                    Thread.Sleep(100);
                 }
                 // Enter Actual Voltage PACK
-                AutomationElement textBox_PackVoltageAct = GetElementByAutomationID(_mainWindow, ControlType.Edit, "textBox_PackVoltageAct");
+                AutomationElement textBox_PackVoltageAct = FindChildByAutomationID(groupBox_VoltageCalibration, ControlType.Edit, "textBox_PackVoltageAct")[0];
+                //AutomationElement textBox_PackVoltageAct = GetElementByAutomationID(_mainWindow, ControlType.Edit, "textBox_PackVoltageAct");
                 if (textBox_PackVoltageAct != null)
                 {
                     SetEditText(textBox_PackVoltageAct, act_vol_pack);
@@ -1190,22 +1311,23 @@ namespace SmartBattery
                 }
 
                 // 最下方的Calibrate按钮
-                AutomationElement button_DoCalibration = GetElementByAutomationID(_mainWindow, ControlType.Button, "button_DoCalibration");
+                AutomationElement button_DoCalibration = FindChildByAutomationID(splitContainer1_Calibrate_child1, ControlType.Button, "button_DoCalibration")[0];
+                //AutomationElement button_DoCalibration = GetElementByAutomationID(_mainWindow, ControlType.Button, "button_DoCalibration");
                 if (button_DoCalibration != null)
                 {
                     InvokeClickElement(button_DoCalibration);
-                    Thread.Sleep(3000);
+                    Thread.Sleep(1000);
                 }
 
                 string content = string.Empty;
-                for (int j = 0; j < 5; j++)
+                for (int j = 0; j < 10; j++)
                 {
                     GetDialogTip(out string content_cur);
                     if (content_cur.Contains($"Calibrate Success") || content_cur.Contains($"Calibrate Fail"))
                     {
                         break;
                     }
-                    Thread.Sleep(2000);
+                    Thread.Sleep(1000);
                     content = content_cur;
                 }
                 if (content.Contains($"Calibrate Success"))
@@ -1220,9 +1342,12 @@ namespace SmartBattery
                 }
 
                 // 检查误差值 CELL
-                AutomationElement textBox_VoltageMes = GetElementByAutomationID(_mainWindow, ControlType.Edit, "textBox_VoltageMes");
-                AutomationElement textBox_BatteryVoltageMes = GetElementByAutomationID(_mainWindow, ControlType.Edit, "textBox_BatteryVoltageMes");
-                AutomationElement textBox_PackVoltageMes = GetElementByAutomationID(_mainWindow, ControlType.Edit, "textBox_PackVoltageMes");
+                AutomationElement textBox_VoltageMes = FindChildByAutomationID(groupBox_VoltageCalibration, ControlType.Edit, "textBox_VoltageMes")[0];
+                //AutomationElement textBox_VoltageMes = GetElementByAutomationID(_mainWindow, ControlType.Edit, "textBox_VoltageMes");
+                AutomationElement textBox_BatteryVoltageMes = FindChildByAutomationID(groupBox_VoltageCalibration, ControlType.Edit, "textBox_BatteryVoltageMes")[0];
+                //AutomationElement textBox_BatteryVoltageMes = GetElementByAutomationID(_mainWindow, ControlType.Edit, "textBox_BatteryVoltageMes");
+                AutomationElement textBox_PackVoltageMes = FindChildByAutomationID(groupBox_VoltageCalibration, ControlType.Edit, "textBox_PackVoltageMes")[0];
+                //AutomationElement textBox_PackVoltageMes = GetElementByAutomationID(_mainWindow, ControlType.Edit, "textBox_PackVoltageMes");
                 if (textBox_VoltageMes != null && textBox_BatteryVoltageMes != null && textBox_PackVoltageMes != null)
                 {
                     // MEAS Value Cell
@@ -1289,7 +1414,7 @@ namespace SmartBattery
             if (checkBox_Voltage != null)
             {
                 UncheckCheckBox(checkBox_Voltage);
-                //Thread.Sleep(1000);
+                Thread.Sleep(500);
             }
             if (isCalibrate)
             {
@@ -1313,7 +1438,50 @@ namespace SmartBattery
         /// <returns></returns>
         public SmartToolControl CMDPanelHandle(string item, out bool result, out string str_error_log)
         {
-            AutomationElement comboBox_cmdPanel = GetElementByAutomationID(_mainWindow, ControlType.ComboBox, "comboBox_CMDInput");
+            if (_mainWindow == null)
+            {
+                str_error_log = $"mainWindow is Null";
+                Trace.WriteLine(str_error_log);
+                result = false;
+                return this;
+            }
+
+            ActivateProcess();
+            /*// 最上方的Menu的Calibrate按钮
+            AutomationElement flowLayoutPanel1 = FindChildByAutomationID(_mainWindow, ControlType.Pane, "flowLayoutPanel1")[0];
+            AutomationElement buttonMenu_Calibrate = FindChildByAutomationID(flowLayoutPanel1, ControlType.Button, "buttonMenu_Calibrate")[0];
+            //AutomationElement buttonMenu_Calibrate = GetElementByAutomationID(_mainWindow, ControlType.Button, "buttonMenu_Calibrate");
+            if (buttonMenu_Calibrate != null)
+            {
+                InvokeClickElement(buttonMenu_Calibrate);
+                Thread.Sleep(500);
+            }
+            else
+            {
+                str_error_log = $"buttonMenu_Calibrate no Found.";
+                Trace.WriteLine(str_error_log);
+                result = false;
+                return this;
+            }
+*/
+            AutomationElement splitContainer1 = FindChildByAutomationID(_mainWindow, ControlType.Pane, "splitContainer1")[0];
+            //AutomationElement splitContainer1_child = FindChildByName(splitContainer1, ControlType.Pane, "Status")[0];
+            AutomationElement splitContainer1_child;
+            AutomationElementCollection elementCollection = FindChildByName(splitContainer1, ControlType.Pane, "Status");
+            if (elementCollection == null)
+            {
+                splitContainer1_child = FindChildByName(splitContainer1, ControlType.Pane, "")[1];
+            }
+            else
+            {
+                splitContainer1_child = elementCollection[0];
+            }
+            AutomationElement splitContainer2 = FindChildByAutomationID(splitContainer1_child, ControlType.Pane, "splitContainer2")[0];
+            AutomationElement splitContainer2_child1 = FindChildByName(splitContainer2, ControlType.Pane, "")[1];
+            AutomationElement groupBox_VoltageCalibration = FindChildByAutomationID(splitContainer2_child1, ControlType.Group, "groupBox_CMDPanel")[0];
+
+            AutomationElement comboBox_cmdPanel = FindChildByAutomationID(groupBox_VoltageCalibration, ControlType.ComboBox, "comboBox_CMDInput")[0];
+            //AutomationElement comboBox_cmdPanel = GetElementByAutomationID(_mainWindow, ControlType.ComboBox, "comboBox_CMDInput");
             if (comboBox_cmdPanel != null)
             {
                 SelectComboBox(comboBox_cmdPanel, item);
@@ -1340,20 +1508,9 @@ namespace SmartBattery
                 result = false;
                 return this;
             }
-            // 最上方的Menu的Calibrate按钮
-            AutomationElement buttonMenu_Calibrate = GetElementByAutomationID(_mainWindow, ControlType.Button, "buttonMenu_Calibrate");
-            if (buttonMenu_Calibrate != null)
-            {
-                InvokeClickElement(buttonMenu_Calibrate);
-                //Thread.Sleep(1000);
-            }
-
-            Thread.Sleep(500);
-
-            GetAllElementByType(_mainWindow, ControlType.Window);
-            GetAllElementByType(_mainWindow, ControlType.Edit);
-            GetAllElementByType(_mainWindow, ControlType.CheckBox);
-            GetAllElementByType(_mainWindow, ControlType.Button);
+            GetAllChildElement(_mainWindow, ControlType.Pane);
+            GetAllChildElement(_mainWindow, ControlType.Button);
+            GetAllChildElement(_mainWindow, ControlType.MenuBar);
 
             result = true;
             str_error_log = string.Empty;
@@ -1507,207 +1664,91 @@ namespace SmartBattery
             return element;
         }
 
-        static AutomationElement GetChildElementByID(AutomationElement parentElement, ControlType obj, string id)
-        {
-            foreach (AutomationElement item in parentElement.FindAll(TreeScope.Children, new PropertyCondition(AutomationElement.ControlTypeProperty, obj)))
-            {
-                Trace.WriteLine($"Type:[{obj.ProgrammaticName}], Name:[{item.Current.Name}], AutomationId:[{item.Current.AutomationId}]");
-                if (item.Current.AutomationId.Equals(id))
-                {
-                    return item;
-                }
-            }
-            return null;
-        }
-
-        public static AutomationElement FindChild(AutomationElement parent, ControlType controlType, string automationId)
-        {
-            var condition = new AndCondition(
-                new PropertyCondition(AutomationElement.ControlTypeProperty, controlType),
-                new PropertyCondition(AutomationElement.AutomationIdProperty, automationId)
-            );
-
-            var element = parent.FindFirst(TreeScope.Children, condition);
-
-            if (element == null)
-            {
-                throw new InvalidOperationException(
-                    $"元素查找失败: ControlType={controlType.LocalizedControlType}, AutomationId={automationId}\n" +
-                    $"父元素信息: Name={parent.Current.Name}, AutomationId={parent.Current.AutomationId}");
-            }
-
-            return element;
-        }
-
-        // 定义路径结构体
-        public struct AutomationPathStep
-        {
-            public ControlType Type { get; }
-            public string Id { get; }
-
-            public AutomationPathStep(ControlType type, string id)
-            {
-                Type = type;
-                Id = id;
-            }
-        }
-        // 修改方法签名
-        public static AutomationElement FindDescendant(AutomationElement parent, params AutomationPathStep[] path)
-        {
-            var current = parent;
-            foreach (var step in path)
-            {
-                current = FindChild(current, step.Type, step.Id);
-            }
-            return current;
-        }
-
         /// <summary>
         /// 获取界面数据
         /// </summary>
         /// <param name="parentElement"></param>
         /// <param name="obj"></param>
-        static void GetAllChildElement(AutomationElement parentElement, ControlType obj)
+        public static void GetAllChildElement(AutomationElement parentElement, ControlType obj)
         {
-            foreach (AutomationElement item in parentElement.FindAll(TreeScope.Children, new PropertyCondition(AutomationElement.ControlTypeProperty, obj)))
+            
+        }
+
+        /// <summary>
+        /// 查找指定控件parent的指定控件类型controlType、控件标识AutomationID的直接子控件
+        /// </summary>
+        /// <param name="parent"></param>
+        /// <param name="controlType"></param>
+        /// <param name="automationId"></param>
+        /// <returns></returns>
+        public static AutomationElementCollection FindChildByAutomationID(AutomationElement parent, ControlType controlType, string automationId)
+        {
+            var condition = new AndCondition(
+                new PropertyCondition(AutomationElement.ControlTypeProperty, controlType),
+                new PropertyCondition(AutomationElement.AutomationIdProperty, automationId)
+            );
+            Trace.WriteLine($"-{DateTime.Now}- To Find Child By AutomationID");
+            AutomationElementCollection element = parent.FindAll(TreeScope.Children, condition);
+            if (element == null) {
+                Trace.WriteLine(
+                    $"元素查找失败: ControlType={controlType.ProgrammaticName}, AutomationId={automationId}\n" +
+                    $"父元素信息: Name={parent.Current.Name}, AutomationId={parent.Current.AutomationId}");
+                Trace.WriteLine($"-{DateTime.Now}- End Find Child By AutomationID");
+                return null;
+            }
+            else
             {
-                Trace.WriteLine($"Type:[{obj.ProgrammaticName}], Name:[{item.Current.Name}], AutomationId:[{item.Current.AutomationId}]");
-                if (item.Current.AutomationId.Equals("flowLayoutPanel1"))
+                Trace.WriteLine($"父元素信息: Type:[{parent.Current.ControlType.ProgrammaticName}], " + 
+                    $"Name:[{parent.Current.Name}], " +
+                    $"AutomationId:[{parent.Current.AutomationId}]");
+                foreach (AutomationElement child in element) 
                 {
-                    GetAllChildElement(item, ControlType.Button);
-                    GetAllChildElement(item, ControlType.Group);
-                    GetAllChildElement(item, ControlType.Edit);
+                    Trace.WriteLine($"子元素信息: Type:[{controlType.ProgrammaticName}], " +
+                        $"Name:[{child.Current.Name}], " +
+                        $"AutomationId:[{child.Current.AutomationId}]");
                 }
-                if (item.Current.AutomationId.Equals("splitContainer1"))
+                Trace.WriteLine($"-{DateTime.Now}- End Find Child By AutomationID");
+                return element;
+            }
+        }
+
+        /// <summary>
+        /// 查找指定控件parent的指定控件类型controlType、控件名称name的直接子控件
+        /// </summary>
+        /// <param name="parent"></param>
+        /// <param name="controlType"></param>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        public static AutomationElementCollection FindChildByName(AutomationElement parent, ControlType controlType, string name)
+        {
+            var condition = new AndCondition(
+                new PropertyCondition(AutomationElement.ControlTypeProperty, controlType),
+                new PropertyCondition(AutomationElement.NameProperty, name)
+            );
+            Trace.WriteLine($"-{DateTime.Now}- To Find Child By Name");
+            AutomationElementCollection element = parent.FindAll(TreeScope.Children, condition);
+            if (element == null)
+            {
+                Trace.WriteLine(
+                    $"元素查找失败: ControlType={controlType.LocalizedControlType}, Name={name}\n" +
+                    $"父元素信息: Name={parent.Current.Name}, AutomationId={parent.Current.AutomationId}");
+                Trace.WriteLine($"-{DateTime.Now}- End Find Child By Name");
+                return null;
+            }
+            else
+            {
+                Trace.WriteLine($"父元素信息: Type:[{parent.Current.ControlType}], " +
+                    $"Name:[{parent.Current.Name}], " +
+                    $"AutomationId:[{parent.Current.AutomationId}]");
+                foreach (AutomationElement child in element)
                 {
-                    GetAllChildElement(item, ControlType.Button);
-                    GetAllChildElement(item, ControlType.Pane);
-                    GetAllChildElement(item, ControlType.Group);
+                    Trace.WriteLine($"子元素信息: Type:[{controlType.ProgrammaticName}], " +
+                        $"Name:[{child.Current.Name}], " +
+                        $"AutomationId:[{child.Current.AutomationId}]");
                 }
-                if (item.Current.AutomationId.Equals("529422"))
-                {
-                    GetAllChildElement(item, ControlType.Button);
-                    GetAllChildElement(item, ControlType.Pane);
-                    GetAllChildElement(item, ControlType.Group);
-                }
-                if (item.Current.AutomationId.Equals("panel_Left"))
-                {
-                    GetAllChildElement(item, ControlType.Button);
-                    GetAllChildElement(item, ControlType.Pane);
-                    GetAllChildElement(item, ControlType.Group);
-                }
-                if (item.Current.AutomationId.Equals("398840"))
-                {
-                    GetAllChildElement(item, ControlType.Button);
-                    GetAllChildElement(item, ControlType.Pane);
-                    GetAllChildElement(item, ControlType.Group);
-                }
-                if (item.Current.AutomationId.Equals("splitContainer2"))
-                {
-                    GetAllChildElement(item, ControlType.Button);
-                    GetAllChildElement(item, ControlType.Pane);
-                    GetAllChildElement(item, ControlType.Group);
-                }
-                if (item.Current.AutomationId.Equals("595454"))
-                {
-                    GetAllChildElement(item, ControlType.Button);
-                    GetAllChildElement(item, ControlType.Pane);
-                    GetAllChildElement(item, ControlType.Group);
-                }
-                if (item.Current.AutomationId.Equals("panel_Main"))
-                {
-                    GetAllChildElement(item, ControlType.Pane);
-                    GetAllChildElement(item, ControlType.Window);
-                    GetAllChildElement(item, ControlType.Button);
-                    GetAllChildElement(item, ControlType.Group);
-                }
-                if (item.Current.AutomationId.Equals("Form_SBS"))
-                {
-                    GetAllChildElement(item, ControlType.Button);
-                    GetAllChildElement(item, ControlType.Pane);
-                    GetAllChildElement(item, ControlType.Group);
-                }
-                if (item.Current.AutomationId.Equals("Form_Calibrate"))
-                {
-                    GetAllChildElement(item, ControlType.Button);
-                    GetAllChildElement(item, ControlType.Pane);
-                    GetAllChildElement(item, ControlType.Group);
-                    GetAllChildElement(item, ControlType.Edit);
-                }
-                if (item.Current.AutomationId.Equals("groupBox_BoardOffsetCalibration"))
-                {
-                    GetAllChildElement(item, ControlType.Button);
-                    GetAllChildElement(item, ControlType.Pane);
-                    GetAllChildElement(item, ControlType.Group);
-                    GetAllChildElement(item, ControlType.Edit);
-                    GetAllChildElement(item, ControlType.CheckBox);
-                }
-                if (item.Current.AutomationId.Equals("groupBox_VoltageCalibration"))
-                {
-                    GetAllChildElement(item, ControlType.Button);
-                    GetAllChildElement(item, ControlType.Pane);
-                    GetAllChildElement(item, ControlType.Group);
-                    GetAllChildElement(item, ControlType.Edit);
-                    GetAllChildElement(item, ControlType.CheckBox);
-                }
-                if (item.Current.AutomationId.Equals("groupBox_TemperCalibration"))
-                {
-                    GetAllChildElement(item, ControlType.Button);
-                    GetAllChildElement(item, ControlType.Pane);
-                    GetAllChildElement(item, ControlType.Group);
-                    GetAllChildElement(item, ControlType.Edit);
-                    GetAllChildElement(item, ControlType.CheckBox);
-                }
-                if (item.Current.AutomationId.Equals("groupBox_CurrentCalibration"))
-                {
-                    GetAllChildElement(item, ControlType.Button);
-                    GetAllChildElement(item, ControlType.Pane);
-                    GetAllChildElement(item, ControlType.Group);
-                    GetAllChildElement(item, ControlType.Edit);
-                    GetAllChildElement(item, ControlType.CheckBox);
-                }
-                if (item.Current.AutomationId.Equals("2429002"))
-                {
-                    GetAllChildElement(item, ControlType.Button);
-                    GetAllChildElement(item, ControlType.Pane);
-                    GetAllChildElement(item, ControlType.Group);
-                }
-                if (item.Current.AutomationId.Equals("1578920"))
-                {
-                    GetAllChildElement(item, ControlType.Button);
-                    GetAllChildElement(item, ControlType.Pane);
-                    GetAllChildElement(item, ControlType.Group);
-                }
-                if (item.Current.AutomationId.Equals("267840"))
-                {
-                    GetAllChildElement(item, ControlType.Button);
-                    GetAllChildElement(item, ControlType.Pane);
-                    GetAllChildElement(item, ControlType.Group);
-                }
-                if (item.Current.AutomationId.Equals("menuStrip1"))
-                {
-                    GetAllChildElement(item, ControlType.Menu);
-                    GetAllChildElement(item, ControlType.MenuBar);
-                    GetAllChildElement(item, ControlType.Button);
-                    GetAllChildElement(item, ControlType.Custom);
-                    GetAllChildElement(item, ControlType.MenuItem);
-                    GetAllChildElement(item, ControlType.Tab);
-                    GetAllChildElement(item, ControlType.Tree);
-                    GetAllChildElement(item, ControlType.TreeItem);
-                }
-                if (item.Current.Name.Equals("File"))
-                {
-                    InvokeClickElement(item);
-                    Thread.Sleep(500);
-                    GetAllChildElement(item, ControlType.Menu);
-                    GetAllChildElement(item, ControlType.MenuBar);
-                    GetAllChildElement(item, ControlType.Button);
-                    GetAllChildElement(item, ControlType.Custom);
-                    GetAllChildElement(item, ControlType.MenuItem);
-                    GetAllChildElement(item, ControlType.Tab);
-                    GetAllChildElement(item, ControlType.Tree);
-                    GetAllChildElement(item, ControlType.TreeItem);
-                }
+                Trace.WriteLine($"-{DateTime.Now}- End Find Child By Name");
+                if (element.Count == 0) { return null; }
+                return element;
             }
         }
 
@@ -1964,6 +2005,7 @@ namespace SmartBattery
             }
 
             //Thread.Sleep(1000);
+            //AutomationElement targetItem = FindChildByName(comboBoxElement, ControlType.ListItem, item)[0];
             AutomationElement targetItem = GetElementByName(comboBoxElement, ControlType.ListItem, item);
             //AutomationElementCollection listItems = comboBoxElement.FindAll(TreeScope.Descendants, new PropertyCondition(AutomationElement.ControlTypeProperty, ControlType.ListItem));
             //foreach (AutomationElement element in listItems)
