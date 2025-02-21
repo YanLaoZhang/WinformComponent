@@ -392,7 +392,7 @@ namespace SmartBattery
         {
             try
             {
-                BtnCMDPanel.Enabled = false;
+                BtnCMDPanelVD12D.Enabled = false;
                 string exePath = textBoxExePath.Text;
                 if (exePath == "")
                 {
@@ -415,7 +415,145 @@ namespace SmartBattery
             }
             finally
             {
-                BtnCMDPanel.Enabled = true;
+                BtnCMDPanelVD12D.Enabled = true;
+            }
+        }
+
+        private void BtnAFIFlashFlaUI_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                BtnAFIFlashFlaUI.Enabled = false;
+                string exePath = textBoxExePath.Text;
+                if (exePath == "")
+                {
+                    MessageBox.Show($"请先选择烧录工具路径");
+                    return;
+                }
+                string AFIPath = textBoxAFIPath.Text;
+                if (AFIPath == "")
+                {
+                    MessageBox.Show($"请先选择AFI文件");
+                    return;
+                }
+
+                string str_error_log = "";
+                SmartToolControlFlaUI smartToolControlFlatUI = new SmartToolControlFlaUI();
+                smartToolControlFlatUI.StartUp(exePath, ref str_error_log);
+                smartToolControlFlatUI.SetAFIFile(AFIPath, out bool result, out string error_log);
+                this.Activate();
+                if (result)
+                {
+                    MessageBox.Show("Success");
+                }
+                else
+                {
+                    MessageBox.Show($"Error：[{error_log}]");
+                }
+                this.Activate();
+            }
+            finally
+            {
+                BtnAFIFlashFlaUI.Enabled = true;
+            }
+        }
+
+        private void BtnScanAllFlaUI_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                BtnScanAllFlaUI.Enabled = false;
+
+                string exePath = textBoxExePath.Text;
+                if (exePath == "")
+                {
+                    MessageBox.Show($"请先选择烧录工具路径");
+                    return;
+                }
+
+                string str_error_log = "";
+                SmartToolControlFlaUI smartToolControlFlatUI = new SmartToolControlFlaUI();
+                smartToolControlFlatUI.StartUp(exePath, ref str_error_log);
+                smartToolControlFlatUI.ScanAll(out bool result, out string error_log);
+                this.Activate();
+                if (result)
+                {
+                    MessageBox.Show("Success");
+                }
+                else
+                {
+                    MessageBox.Show($"Error：[{error_log}]");
+                }
+            }
+            finally
+            {
+                BtnScanAllFlaUI.Enabled = true;
+            }
+        }
+
+        private void BtnOffsetCalibrateFlaUI_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                BtnOffsetCalibrateFlaUI.Enabled = false;
+
+                string exePath = textBoxExePath.Text;
+                if (exePath == "")
+                {
+                    MessageBox.Show($"请先选择烧录工具路径");
+                    return;
+                }
+
+                string str_error_log = ""; 
+                SmartToolControlFlaUI smartToolControlFlatUI = new SmartToolControlFlaUI();
+                smartToolControlFlatUI.StartUp(exePath, ref str_error_log);
+                smartToolControlFlatUI.OffsetCalibrate(out bool result, out string error_log);
+                this.Activate();
+                if (result)
+                {
+                    MessageBox.Show("Success");
+                }
+                else
+                {
+                    MessageBox.Show($"Error：[{error_log}]");
+                }
+            }
+            finally
+            {
+                BtnOffsetCalibrateFlaUI.Enabled = true;
+            }
+        }
+
+        private void BtnVoltageCalibrateFlaUI_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                BtnVoltageCalibrateFlaUI.Enabled = false;
+                string exePath = textBoxExePath.Text;
+                if (exePath == "")
+                {
+                    MessageBox.Show($"请先选择烧录工具路径");
+                    return;
+                }
+                string str_error_log = "";
+                string act_vol = "3290";
+                control._diff_allow = (double)NUDDiffer.Value;
+                SmartToolControlFlaUI smartToolControlFlatUI = new SmartToolControlFlaUI();
+                smartToolControlFlatUI.StartUp(exePath, ref str_error_log);
+                smartToolControlFlatUI.VoltageCalibrateEone(act_vol, out bool result, out string mes_vol, out string error_log);
+                this.Activate();
+                if (result)
+                {
+                    MessageBox.Show("Success");
+                }
+                else
+                {
+                    MessageBox.Show($"Error：[{error_log}]");
+                }
+            }
+            finally
+            {
+                BtnVoltageCalibrateFlaUI.Enabled = true;
             }
         }
     }
