@@ -54,6 +54,8 @@
             this.BtnVoltageCalibrateFlaUI = new System.Windows.Forms.Button();
             this.BtnVoltageCalibrateVD12DFlaUI = new System.Windows.Forms.Button();
             this.BtnCurrentCalibrateFlaUI = new System.Windows.Forms.Button();
+            this.BtnCMDPanelFlaUI = new System.Windows.Forms.Button();
+            this.BtnCMDPanelVD12DFlaUI = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.NUDDiffer)).BeginInit();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
@@ -250,6 +252,8 @@
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.BtnCMDPanelVD12DFlaUI);
+            this.groupBox1.Controls.Add(this.BtnCMDPanelFlaUI);
             this.groupBox1.Controls.Add(this.BtnCurrentCalibrateFlaUI);
             this.groupBox1.Controls.Add(this.BtnVoltageCalibrateVD12DFlaUI);
             this.groupBox1.Controls.Add(this.BtnVoltageCalibrateFlaUI);
@@ -312,6 +316,26 @@
             this.BtnCurrentCalibrateFlaUI.Text = "CurrentCalibrate";
             this.BtnCurrentCalibrateFlaUI.UseVisualStyleBackColor = true;
             this.BtnCurrentCalibrateFlaUI.Click += new System.EventHandler(this.BtnCurrentCalibrateFlaUI_Click);
+            // 
+            // BtnCMDPanelFlaUI
+            // 
+            this.BtnCMDPanelFlaUI.Location = new System.Drawing.Point(656, 20);
+            this.BtnCMDPanelFlaUI.Name = "BtnCMDPanelFlaUI";
+            this.BtnCMDPanelFlaUI.Size = new System.Drawing.Size(114, 31);
+            this.BtnCMDPanelFlaUI.TabIndex = 23;
+            this.BtnCMDPanelFlaUI.Text = "CMD Panel Eone";
+            this.BtnCMDPanelFlaUI.UseVisualStyleBackColor = true;
+            this.BtnCMDPanelFlaUI.Click += new System.EventHandler(this.BtnCMDPanelFlaUI_Click);
+            // 
+            // BtnCMDPanelVD12DFlaUI
+            // 
+            this.BtnCMDPanelVD12DFlaUI.Location = new System.Drawing.Point(656, 57);
+            this.BtnCMDPanelVD12DFlaUI.Name = "BtnCMDPanelVD12DFlaUI";
+            this.BtnCMDPanelVD12DFlaUI.Size = new System.Drawing.Size(114, 31);
+            this.BtnCMDPanelVD12DFlaUI.TabIndex = 24;
+            this.BtnCMDPanelVD12DFlaUI.Text = "CMD Panel VD12D";
+            this.BtnCMDPanelVD12DFlaUI.UseVisualStyleBackColor = true;
+            this.BtnCMDPanelVD12DFlaUI.Click += new System.EventHandler(this.BtnCMDPanelVD12DFlaUI_Click);
             // 
             // Form1
             // 
@@ -378,6 +402,8 @@
         private System.Windows.Forms.Button BtnVoltageCalibrateFlaUI;
         private System.Windows.Forms.Button BtnVoltageCalibrateVD12DFlaUI;
         private System.Windows.Forms.Button BtnCurrentCalibrateFlaUI;
+        private System.Windows.Forms.Button BtnCMDPanelFlaUI;
+        private System.Windows.Forms.Button BtnCMDPanelVD12DFlaUI;
     }
 }
 

@@ -987,6 +987,15 @@ namespace SmartBattery
             }
         }
 
+        /// <summary>
+        /// 电流校准
+        /// </summary>
+        /// <param name="act_cur"></param>
+        /// <param name="result"></param>
+        /// <param name="mes_cur"></param>
+        /// <param name="str_error_log"></param>
+        /// <param name="_diff_allow"></param>
+        /// <returns></returns>
         public SmartToolControlFlaUI CurrentCalibrate(string act_cur, out bool result, out string mes_cur, out string str_error_log, double _diff_allow = 3)
         {
             try
@@ -1201,6 +1210,108 @@ namespace SmartBattery
                 Trace.WriteLine(str_error_log);
                 result = false;
                 mes_cur = string.Empty;
+                return this;
+            }
+        }
+
+        /// <summary>
+        /// 加密
+        /// </summary>
+        /// <param name="item"></param>
+        /// <param name="result"></param>
+        /// <param name="str_error_log"></param>
+        /// <returns></returns>
+        public SmartToolControlFlaUI CMDPanelHandle(string item, out bool result, out string str_error_log)
+        {
+            try
+            {
+                if (app == null)
+                {
+                    str_error_log = $"app is not running.";
+                    Trace.WriteLine(str_error_log);
+                    result = false;
+                    return this;
+                }
+                ActivateWindow(_mainForm);
+                using (var automation = new UIA3Automation())
+                {
+                    var mainWindow = app.GetMainWindow(automation);
+
+                    //// groupBox_ClearLog
+                    //Trace.WriteLine($"[{DateTime.Now}] To Find groupBox_ClearLog.");
+                    //var groupBox_ClearLog = Retry.WhileNull(() => mainWindow.FindFirstDescendant(cf => cf.ByAutomationId("groupBox_ClearLog")), TimeSpan.FromSeconds(5)).Result;
+                    //if (groupBox_ClearLog == null)
+                    //{
+                    //    str_error_log = $"[{DateTime.Now}] groupBox_ClearLog not found.";
+                    //    Trace.WriteLine(str_error_log);
+                    //    result = false;
+                    //    return this;
+                    //}
+                    //Trace.WriteLine($"[{DateTime.Now}] groupBox_ClearLog found successfully.");
+                    //// 查找btn_ClearCMDLog
+                    //Trace.WriteLine($"[{DateTime.Now}] To Find btn_ClearCMDLog.");
+                    //var btn_ClearCMDLog = Retry.WhileNull(() => groupBox_ClearLog.FindFirstDescendant(cf => cf.ByAutomationId("btn_ClearCMDLog"))?.AsButton(), TimeSpan.FromSeconds(5)).Result;
+                    //if (btn_ClearCMDLog == null)
+                    //{
+                    //    str_error_log = $"[{DateTime.Now}] btn_ClearCMDLog not found.";
+                    //    Trace.WriteLine(str_error_log);
+                    //    result = false;
+                    //    return this;
+                    //}
+                    //Trace.WriteLine($"[{DateTime.Now}] btn_ClearCMDLog found successfully.");
+                    //Retry.WhileFalse(() => btn_ClearCMDLog.IsEnabled, TimeSpan.FromSeconds(5));
+                    //btn_ClearCMDLog?.Click();
+                    //Trace.WriteLine($"[{DateTime.Now}] Click Clear Log successfully.");
+
+                    // groupBox_CMDPanel
+                    Trace.WriteLine($"[{DateTime.Now}] To Find groupBox_CMDPanel.");
+                    var groupBox_CMDPanel = Retry.WhileNull(() => mainWindow.FindFirstDescendant(cf => cf.ByAutomationId("groupBox_CMDPanel")), TimeSpan.FromSeconds(5)).Result;
+                    if (groupBox_CMDPanel == null)
+                    {
+                        str_error_log = $"[{DateTime.Now}] groupBox_CMDPanel not found.";
+                        Trace.WriteLine(str_error_log);
+                        result = false;
+                        return this;
+                    }
+                    Trace.WriteLine($"[{DateTime.Now}] groupBox_CMDPanel found successfully.");
+
+                    // 查找按钮
+                    Trace.WriteLine($"[{DateTime.Now}] To Find comboBox_CMDInput.");
+                    var comboBox_CMDInput = Retry.WhileNull(() => groupBox_CMDPanel.FindFirstDescendant(cf => cf.ByAutomationId("comboBox_CMDInput"))?.AsComboBox(), TimeSpan.FromSeconds(5)).Result;
+                    if (comboBox_CMDInput == null)
+                    {
+                        str_error_log = $"[{DateTime.Now}] comboBox_CMDInput not found.";
+                        Trace.WriteLine(str_error_log);
+                        result = false;
+                        return this;
+                    }
+                    Trace.WriteLine($"[{DateTime.Now}] comboBox_CMDInput found successfully.");
+                    Retry.WhileFalse(() => comboBox_CMDInput.IsEnabled, TimeSpan.FromSeconds(5));
+                    // 选择指定内容
+                    comboBox_CMDInput.Select(item); // 或使用 comboBox.SelectedItem = item;
+
+                    // 验证选择的项
+                    if (comboBox_CMDInput.SelectedItem.Text == item)
+                    {
+                        str_error_log = $"[{DateTime.Now}] comboBox_CMDInput select success.";
+                        Trace.WriteLine(str_error_log);
+                        result = true;
+                        return this;
+                    }
+                    else
+                    {
+                        str_error_log = $"[{DateTime.Now}] comboBox_CMDInput select fail.";
+                        Trace.WriteLine(str_error_log);
+                        result = false;
+                        return this;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                str_error_log = ex.Message;
+                Trace.WriteLine(str_error_log);
+                result = false;
                 return this;
             }
         }

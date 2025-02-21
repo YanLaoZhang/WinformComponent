@@ -624,5 +624,69 @@ namespace SmartBattery
                 BtnCurrentCalibrateFlaUI.Enabled = true;
             }
         }
+
+        private void BtnCMDPanelFlaUI_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                BtnCMDPanelFlaUI.Enabled = false;
+                string exePath = textBoxExePath.Text;
+                if (exePath == "")
+                {
+                    MessageBox.Show($"请先选择烧录工具路径");
+                    return;
+                }
+                string str_error_log = "";
+                string item = "0x0020(Seal Device)";
+                SmartToolControlFlaUI smartToolControlFlatUI = new SmartToolControlFlaUI();
+                smartToolControlFlatUI.StartUp(exePath, ref str_error_log);
+                smartToolControlFlatUI.CMDPanelHandle(item, out bool result, out string error_log);
+                this.Activate();
+                if (result)
+                {
+                    MessageBox.Show("Success");
+                }
+                else
+                {
+                    MessageBox.Show($"Error：[{error_log}]");
+                }
+            }
+            finally
+            {
+                BtnCMDPanelFlaUI.Enabled = true;
+            }
+        }
+
+        private void BtnCMDPanelVD12DFlaUI_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                BtnCMDPanelVD12DFlaUI.Enabled = false;
+                string exePath = textBoxExePath.Text;
+                if (exePath == "")
+                {
+                    MessageBox.Show($"请先选择烧录工具路径");
+                    return;
+                }
+                string str_error_log = "";
+                string item = "0x0020(DSGFET_Toggle)";
+                SmartToolControlFlaUI smartToolControlFlatUI = new SmartToolControlFlaUI();
+                smartToolControlFlatUI.StartUp(exePath, ref str_error_log);
+                smartToolControlFlatUI.CMDPanelHandle(item, out bool result, out string error_log);
+                this.Activate();
+                if (result)
+                {
+                    MessageBox.Show("Success");
+                }
+                else
+                {
+                    MessageBox.Show($"Error：[{error_log}]");
+                }
+            }
+            finally
+            {
+                BtnCMDPanelVD12DFlaUI.Enabled = true;
+            }
+        }
     }
 }
