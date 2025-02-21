@@ -633,6 +633,19 @@ namespace SmartBattery
             }
         }
 
+        /// <summary>
+        /// VD12D电压校准
+        /// </summary>
+        /// <param name="act_vol_cell"></param>
+        /// <param name="act_vol_bat"></param>
+        /// <param name="act_vol_pack"></param>
+        /// <param name="result"></param>
+        /// <param name="mes_vol_cell"></param>
+        /// <param name="mes_vol_bat"></param>
+        /// <param name="mes_vol_pack"></param>
+        /// <param name="str_error_log"></param>
+        /// <param name="_diff_allow"></param>
+        /// <returns></returns>
         public SmartToolControlFlaUI VoltageCalibrateVD12D(string act_vol_cell, string act_vol_bat, string act_vol_pack, out bool result, out string mes_vol_cell, out string mes_vol_bat, out string mes_vol_pack, out string str_error_log, double _diff_allow = 3)
         {
             try
@@ -974,7 +987,230 @@ namespace SmartBattery
             }
         }
 
+        public SmartToolControlFlaUI CurrentCalibrate(string act_cur, out bool result, out string mes_cur, out string str_error_log, double _diff_allow = 3)
+        {
+            try
+            {
+                if (app == null)
+                {
+                    str_error_log = $"app is not running.";
+                    Trace.WriteLine(str_error_log);
+                    result = false;
+                    mes_cur = string.Empty;
+                    return this;
+                }
+                ActivateWindow(_mainForm);
+                using (var automation = new UIA3Automation())
+                {
+                    var mainWindow = app.GetMainWindow(automation);
+                    // 查找buttonMenu_Calibrate按钮
+                    Trace.WriteLine($"[{DateTime.Now}] To Find buttonMenu_Calibrate.");
+                    var buttonMenu_Calibrate = mainWindow.FindFirstDescendant(cf => cf.ByAutomationId("buttonMenu_Calibrate"))?.AsButton();
+                    if (buttonMenu_Calibrate == null)
+                    {
+                        str_error_log = $"[{DateTime.Now}] buttonMenu_Calibrate not found.";
+                        Trace.WriteLine(str_error_log);
+                        result = false;
+                        mes_cur = string.Empty;
+                        return this;
+                    }
+                    Trace.WriteLine($"[{DateTime.Now}] buttonMenu_Calibrate found successfully.");
+                    Retry.WhileFalse(() => buttonMenu_Calibrate.IsEnabled, TimeSpan.FromSeconds(5));
+                    buttonMenu_Calibrate?.Click();
+                    // 查找Form_Calibrate
+                    Trace.WriteLine($"[{DateTime.Now}] To Find Form_Calibrate.");
+                    var Form_Calibrate = Retry.WhileNull(() => mainWindow.FindFirstDescendant(cf => cf.ByAutomationId("Form_Calibrate")), TimeSpan.FromSeconds(5)).Result;
+                    if (Form_Calibrate == null)
+                    {
+                        str_error_log = $"[{DateTime.Now}] Form_Calibrate not found.";
+                        Trace.WriteLine(str_error_log);
+                        result = false;
+                        mes_cur = string.Empty;
+                        return this;
+                    }
+                    Trace.WriteLine($"[{DateTime.Now}] Form_Calibrate found successfully.");
+                    // groupBox_CurrentCalibration
+                    Trace.WriteLine($"[{DateTime.Now}] To Find groupBox_CurrentCalibration.");
+                    var groupBox_CurrentCalibration = Retry.WhileNull(() => Form_Calibrate.FindFirstDescendant(cf => cf.ByAutomationId("groupBox_CurrentCalibration")), TimeSpan.FromSeconds(5)).Result;
+                    if (groupBox_CurrentCalibration == null)
+                    {
+                        str_error_log = $"[{DateTime.Now}] groupBox_CurrentCalibration not found.";
+                        Trace.WriteLine(str_error_log);
+                        result = false;
+                        mes_cur = string.Empty;
+                        return this;
+                    }
+                    Trace.WriteLine($"[{DateTime.Now}] groupBox_CurrentCalibration found successfully.");
 
+                    // checkBox_Current
+                    Trace.WriteLine($"[{DateTime.Now}] To Find checkBox_Current.");
+                    var checkBox_Current = Retry.WhileNull(() => groupBox_CurrentCalibration.FindFirstDescendant(cf => cf.ByAutomationId("checkBox_Current"))?.AsCheckBox(), TimeSpan.FromSeconds(5)).Result;
+                    if (checkBox_Current == null)
+                    {
+                        str_error_log = $"[{DateTime.Now}] checkBox_Current not found.";
+                        Trace.WriteLine(str_error_log);
+                        result = false;
+                        mes_cur = string.Empty;
+                        return this;
+                    }
+                    // 勾选复选框checkBox_Current
+                    Retry.WhileFalse(() => checkBox_Current.IsEnabled, TimeSpan.FromSeconds(5));
+                    checkBox_Current.IsChecked = true;
+
+                    bool isCalibrate = false;
+                    mes_cur = string.Empty;
+                    for (int i = 0; i < 3; i++)
+                    {
+                        // 查找textBox_CurrentAct
+                        Trace.WriteLine($"[{DateTime.Now}] To Find textBox_CurrentAct.");
+                        var textBox_CurrentAct = Retry.WhileNull(() => groupBox_CurrentCalibration.FindFirstDescendant(c => c.ByAutomationId("textBox_CurrentAct"))?.AsTextBox(), TimeSpan.FromSeconds(5)).Result;
+                        if (textBox_CurrentAct == null)
+                        {
+                            str_error_log = $"[{DateTime.Now}] textBox_CurrentAct not found.";
+                            Trace.WriteLine(str_error_log);
+                            result = false;
+                            mes_cur = string.Empty;
+                            return this;
+                        }
+                        Trace.WriteLine($"[{DateTime.Now}] textBox_CurrentAct found successfully.");
+                        // 清空输入框并输入指定值
+                        Trace.WriteLine($"Enter content: {act_cur}");
+                        Retry.WhileFalse(() => textBox_CurrentAct.IsEnabled, TimeSpan.FromSeconds(5));
+                        textBox_CurrentAct?.Patterns.Value.Pattern.SetValue(act_cur);
+
+                        // 查找button_DoCalibration按钮
+                        Trace.WriteLine($"[{DateTime.Now}] To Find button_DoCalibration.");
+                        var button_DoCalibration = Form_Calibrate.FindFirstDescendant(cf => cf.ByAutomationId("button_DoCalibration"))?.AsButton();
+                        if (button_DoCalibration == null)
+                        {
+                            str_error_log = $"[{DateTime.Now}] button_DoCalibration not found.";
+                            Trace.WriteLine(str_error_log);
+                            result = false;
+                            mes_cur = string.Empty;
+                            return this;
+                        }
+                        Trace.WriteLine($"[{DateTime.Now}] button_DoCalibration found successfully.");
+                        Retry.WhileFalse(() => button_DoCalibration.IsEnabled, TimeSpan.FromSeconds(5));
+                        button_DoCalibration?.Click();
+                        Thread.Sleep(300);
+
+                        str_error_log = string.Empty;
+                        result = false;
+                        for (int j = 0; j < 30; j++)
+                        {
+                            GetDialogTip(mainWindow, out string content);
+                            if (content.Contains($"Calibrate Success"))
+                            {
+                                str_error_log = $"Current Calibrate Success.";
+                                Trace.WriteLine(str_error_log);
+                                result = true;
+                                break;
+                            }
+                            if (content.Contains($"Calibrate Fail"))
+                            {
+                                str_error_log = $"Current Calibrate Fail.";
+                                Trace.WriteLine(str_error_log);
+                                result = false;
+                                break;
+                            }
+                            if (content.Contains($"Err Input"))
+                            {
+                                str_error_log = $"Current Calibration Err Input.";
+                                Trace.WriteLine(str_error_log);
+                                result = false;
+                                break;
+                            }
+                            Thread.Sleep(1000);
+                            continue;
+                        }
+
+                        if (!result)
+                        {
+                            str_error_log = $"[{i + 1}/3]Current Calibrate Fail. Try Again.";
+                            Trace.WriteLine(str_error_log);
+                            result = true;
+                            mes_cur = string.Empty;
+                            continue;
+                        }
+
+                        Trace.WriteLine($"[{DateTime.Now}] [{i + 1}/3] Current Calibrate Success. Check Difference");
+
+                        // 查找textBox_CurrentMes
+                        Trace.WriteLine($"[{DateTime.Now}] [{i + 1}/3] To Find textBox_CurrentMes.");
+                        var textBox_CurrentMes = Retry.WhileNull(() => groupBox_CurrentCalibration.FindFirstDescendant(c => c.ByAutomationId("textBox_CurrentMes"))?.AsTextBox(), TimeSpan.FromSeconds(5)).Result;
+                        if (textBox_CurrentMes == null)
+                        {
+                            str_error_log = $"[{DateTime.Now}] textBox_CurrentMes not found.";
+                            Trace.WriteLine(str_error_log);
+                            result = false;
+                            mes_cur = string.Empty;
+                            return this;
+                        }
+                        Trace.WriteLine($"[{DateTime.Now}] textBox_CurrentMes found successfully.");
+                        // 获取内容
+                        string str_mes_cur = textBox_CurrentMes.Text;
+                        Trace.WriteLine($"[{DateTime.Now}] textBox_CurrentMes text: {str_mes_cur}.");
+                        try
+                        {
+                            mes_cur = double.Parse(str_mes_cur).ToString();
+                        }
+                        catch (Exception ee)
+                        {
+                            Trace.WriteLine($"GetEditText({str_mes_cur}) Error:['{ee.Message}'], set '0'.");
+                            mes_cur = "0";
+                        }
+                        double diff_vol = Math.Abs(double.Parse(act_cur) - double.Parse(mes_cur));
+                        Trace.WriteLine($"Actual Current and Measured Current Difference: [{diff_vol}]");
+                        if (diff_vol > _diff_allow)
+                        {
+                            str_error_log = $"[{i + 1}/3]Current Calibrate Difference Fail.";
+                            Trace.WriteLine(str_error_log);
+                            continue;
+                        }
+                        else
+                        {
+                            isCalibrate = true;
+                            Trace.WriteLine($"Current Calibrate Difference Success.");
+                            break;
+                        }
+                    }
+
+                    // 取消勾选
+                    if (checkBox_Current != null)
+                    {
+                        checkBox_Current.IsChecked = false;
+                    }
+                    if (isCalibrate)
+                    {
+                        str_error_log = $"Current Calibrate Final Success.";
+                        Trace.WriteLine(str_error_log);
+                        result = true;
+                    }
+                    else
+                    {
+                        str_error_log = $"Current Calibrate Final Fail.";
+                        Trace.WriteLine(str_error_log);
+                        result = false;
+                    }
+                    return this;
+                }
+            }
+            catch (Exception ex)
+            {
+                str_error_log = ex.Message;
+                Trace.WriteLine(str_error_log);
+                result = false;
+                mes_cur = string.Empty;
+                return this;
+            }
+        }
+
+        /// <summary>
+        /// 获取模态框提示内容
+        /// </summary>
+        /// <param name="mainWindow"></param>
+        /// <param name="content"></param>
+        /// <returns></returns>
         public SmartToolControlFlaUI GetDialogTip(Window mainWindow, out string content)
         {
             try

@@ -537,10 +537,10 @@ namespace SmartBattery
                 }
                 string str_error_log = "";
                 string act_vol = "3290";
-                control._diff_allow = (double)NUDDiffer.Value;
+                double _diff_allow = (double)NUDDiffer.Value;
                 SmartToolControlFlaUI smartToolControlFlatUI = new SmartToolControlFlaUI();
                 smartToolControlFlatUI.StartUp(exePath, ref str_error_log);
-                smartToolControlFlatUI.VoltageCalibrateEone(act_vol, out bool result, out string mes_vol, out string error_log);
+                smartToolControlFlatUI.VoltageCalibrateEone(act_vol, out bool result, out string mes_vol, out string error_log, _diff_allow);
                 this.Activate();
                 if (result)
                 {
@@ -572,10 +572,10 @@ namespace SmartBattery
                 string act_vol_cell = "3577";
                 string act_vol_bat = "7244";
                 string act_vol_pack = "7255";
-                control._diff_allow = (double)NUDDiffer.Value;
+                double _diff_allow = (double)NUDDiffer.Value;
                 SmartToolControlFlaUI smartToolControlFlatUI = new SmartToolControlFlaUI();
                 smartToolControlFlatUI.StartUp(exePath, ref str_error_log);
-                smartToolControlFlatUI.VoltageCalibrateVD12D(act_vol_cell, act_vol_bat, act_vol_pack, out bool result, out string mes_vol_cell, out string mes_vol_bat, out string mes_vol_pack, out string error_log);
+                smartToolControlFlatUI.VoltageCalibrateVD12D(act_vol_cell, act_vol_bat, act_vol_pack, out bool result, out string mes_vol_cell, out string mes_vol_bat, out string mes_vol_pack, out string error_log, _diff_allow);
                 this.Activate();
                 if (result)
                 {
@@ -589,6 +589,39 @@ namespace SmartBattery
             finally
             {
                 BtnVoltageCalibrateVD12DFlaUI.Enabled = true;
+            }
+        }
+
+        private void BtnCurrentCalibrateFlaUI_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                BtnCurrentCalibrateFlaUI.Enabled = false;
+                string exePath = textBoxExePath.Text;
+                if (exePath == "")
+                {
+                    MessageBox.Show($"请先选择烧录工具路径");
+                    return;
+                }
+                string str_error_log = "";
+                string act_cur = "3290";
+                double _diff_allow = (double)NUDDiffer.Value;
+                SmartToolControlFlaUI smartToolControlFlatUI = new SmartToolControlFlaUI();
+                smartToolControlFlatUI.StartUp(exePath, ref str_error_log);
+                smartToolControlFlatUI.CurrentCalibrate(act_cur, out bool result, out string mes_cur, out string error_log, _diff_allow);
+                this.Activate();
+                if (result)
+                {
+                    MessageBox.Show("Success");
+                }
+                else
+                {
+                    MessageBox.Show($"Error：[{error_log}]");
+                }
+            }
+            finally
+            {
+                BtnCurrentCalibrateFlaUI.Enabled = true;
             }
         }
     }
