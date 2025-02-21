@@ -52,6 +52,7 @@
             this.BtnScanAllFlaUI = new System.Windows.Forms.Button();
             this.BtnOffsetCalibrateFlaUI = new System.Windows.Forms.Button();
             this.BtnVoltageCalibrateFlaUI = new System.Windows.Forms.Button();
+            this.BtnVoltageCalibrateVD12DFlaUI = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.NUDDiffer)).BeginInit();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
@@ -248,6 +249,7 @@
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.BtnVoltageCalibrateVD12DFlaUI);
             this.groupBox1.Controls.Add(this.BtnVoltageCalibrateFlaUI);
             this.groupBox1.Controls.Add(this.BtnOffsetCalibrateFlaUI);
             this.groupBox1.Controls.Add(this.BtnScanAllFlaUI);
@@ -288,6 +290,16 @@
             this.BtnVoltageCalibrateFlaUI.Text = "VoltageCalibrateEone";
             this.BtnVoltageCalibrateFlaUI.UseVisualStyleBackColor = true;
             this.BtnVoltageCalibrateFlaUI.Click += new System.EventHandler(this.BtnVoltageCalibrateFlaUI_Click);
+            // 
+            // BtnVoltageCalibrateVD12DFlaUI
+            // 
+            this.BtnVoltageCalibrateVD12DFlaUI.Location = new System.Drawing.Point(378, 57);
+            this.BtnVoltageCalibrateVD12DFlaUI.Name = "BtnVoltageCalibrateVD12DFlaUI";
+            this.BtnVoltageCalibrateVD12DFlaUI.Size = new System.Drawing.Size(148, 31);
+            this.BtnVoltageCalibrateVD12DFlaUI.TabIndex = 21;
+            this.BtnVoltageCalibrateVD12DFlaUI.Text = "VoltageCalibrateVD12D";
+            this.BtnVoltageCalibrateVD12DFlaUI.UseVisualStyleBackColor = true;
+            this.BtnVoltageCalibrateVD12DFlaUI.Click += new System.EventHandler(this.BtnVoltageCalibrateVD12DFlaUI_Click);
             // 
             // Form1
             // 
@@ -352,6 +364,7 @@
         private System.Windows.Forms.Button BtnScanAllFlaUI;
         private System.Windows.Forms.Button BtnOffsetCalibrateFlaUI;
         private System.Windows.Forms.Button BtnVoltageCalibrateFlaUI;
+        private System.Windows.Forms.Button BtnVoltageCalibrateVD12DFlaUI;
     }
 }
 

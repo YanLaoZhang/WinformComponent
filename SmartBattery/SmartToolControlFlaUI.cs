@@ -486,6 +486,7 @@ namespace SmartBattery
                     checkBox_Voltage.IsChecked = true;
 
                     bool isCalibrate = false;
+                    mes_vol = string.Empty;
                     for (int i = 0; i < 3; i++)
                     {
                         // 查找textBox_VoltageAct
@@ -531,7 +532,6 @@ namespace SmartBattery
                                 str_error_log = $"Voltage  Calibrate Success.";
                                 Trace.WriteLine(str_error_log);
                                 result = true;
-                                mes_vol = string.Empty;
                                 break;
                             }
                             if (content.Contains($"Calibrate Fail"))
@@ -539,7 +539,6 @@ namespace SmartBattery
                                 str_error_log = $"Voltage Calibrate Fail.";
                                 Trace.WriteLine(str_error_log);
                                 result = false;
-                                mes_vol = string.Empty;
                                 break;
                             }
                             if (content.Contains($"Err Input"))
@@ -547,7 +546,6 @@ namespace SmartBattery
                                 str_error_log = $"Voltage Calibration Err Input.";
                                 Trace.WriteLine(str_error_log);
                                 result = false;
-                                mes_vol = string.Empty;
                                 break;
                             }
                             Thread.Sleep(1000);
@@ -622,7 +620,6 @@ namespace SmartBattery
                         Trace.WriteLine(str_error_log);
                         result = false;
                     }
-                    mes_vol = string.Empty;
                     return this;
                 }
             }
@@ -635,6 +632,348 @@ namespace SmartBattery
                 return this;
             }
         }
+
+        public SmartToolControlFlaUI VoltageCalibrateVD12D(string act_vol_cell, string act_vol_bat, string act_vol_pack, out bool result, out string mes_vol_cell, out string mes_vol_bat, out string mes_vol_pack, out string str_error_log, double _diff_allow = 3)
+        {
+            try
+            {
+                if (app == null)
+                {
+                    str_error_log = $"app is not running.";
+                    Trace.WriteLine(str_error_log);
+                    result = false;
+                    mes_vol_bat = string.Empty;
+                    mes_vol_cell = string.Empty;
+                    mes_vol_pack = string.Empty;
+                    return this;
+                }
+                ActivateWindow(_mainForm);
+                using (var automation = new UIA3Automation())
+                {
+                    var mainWindow = app.GetMainWindow(automation);
+                    // 查找buttonMenu_Calibrate按钮
+                    Trace.WriteLine($"[{DateTime.Now}] To Find buttonMenu_Calibrate.");
+                    var buttonMenu_Calibrate = mainWindow.FindFirstDescendant(cf => cf.ByAutomationId("buttonMenu_Calibrate"))?.AsButton();
+                    if (buttonMenu_Calibrate == null)
+                    {
+                        str_error_log = $"[{DateTime.Now}] buttonMenu_Calibrate not found.";
+                        Trace.WriteLine(str_error_log);
+                        result = false;
+                        mes_vol_bat = string.Empty;
+                        mes_vol_cell = string.Empty;
+                        mes_vol_pack = string.Empty;
+                        return this;
+                    }
+                    Trace.WriteLine($"[{DateTime.Now}] buttonMenu_Calibrate found successfully.");
+                    Retry.WhileFalse(() => buttonMenu_Calibrate.IsEnabled, TimeSpan.FromSeconds(5));
+                    buttonMenu_Calibrate?.Click();
+                    // 查找Form_Calibrate
+                    Trace.WriteLine($"[{DateTime.Now}] To Find Form_Calibrate.");
+                    var Form_Calibrate = Retry.WhileNull(() => mainWindow.FindFirstDescendant(cf => cf.ByAutomationId("Form_Calibrate")), TimeSpan.FromSeconds(5)).Result;
+                    if (Form_Calibrate == null)
+                    {
+                        str_error_log = $"[{DateTime.Now}] Form_Calibrate not found.";
+                        Trace.WriteLine(str_error_log);
+                        result = false;
+                        mes_vol_bat = string.Empty;
+                        mes_vol_cell = string.Empty;
+                        mes_vol_pack = string.Empty;
+                        return this;
+                    }
+                    Trace.WriteLine($"[{DateTime.Now}] Form_Calibrate found successfully.");
+                    // 查找groupBox_VoltageCalibration
+                    Trace.WriteLine($"[{DateTime.Now}] To Find groupBox_VoltageCalibration.");
+                    var groupBox_VoltageCalibration = Retry.WhileNull(() => Form_Calibrate.FindFirstDescendant(cf => cf.ByAutomationId("groupBox_VoltageCalibration")), TimeSpan.FromSeconds(5)).Result;
+                    if (groupBox_VoltageCalibration == null)
+                    {
+                        str_error_log = $"[{DateTime.Now}] groupBox_VoltageCalibration not found.";
+                        Trace.WriteLine(str_error_log);
+                        result = false;
+                        mes_vol_bat = string.Empty;
+                        mes_vol_cell = string.Empty;
+                        mes_vol_pack = string.Empty;
+                        return this;
+                    }
+                    Trace.WriteLine($"[{DateTime.Now}] groupBox_VoltageCalibration found successfully.");
+
+                    // 查找checkBox_Voltage
+                    Trace.WriteLine($"[{DateTime.Now}] To Find checkBox_Voltage.");
+                    var checkBox_Voltage = Retry.WhileNull(() => groupBox_VoltageCalibration.FindFirstDescendant(cf => cf.ByAutomationId("checkBox_Voltage"))?.AsCheckBox(), TimeSpan.FromSeconds(5)).Result;
+                    if (checkBox_Voltage == null)
+                    {
+                        str_error_log = $"[{DateTime.Now}] checkBox_Voltage not found.";
+                        Trace.WriteLine(str_error_log);
+                        result = false;
+                        mes_vol_bat = string.Empty;
+                        mes_vol_cell = string.Empty;
+                        mes_vol_pack = string.Empty;
+                        return this;
+                    }
+                    // 勾选复选框checkBox_Voltage
+                    Retry.WhileFalse(() => checkBox_Voltage.IsEnabled, TimeSpan.FromSeconds(5));
+                    checkBox_Voltage.IsChecked = true;
+
+                    bool isCalibrate = false; 
+                    mes_vol_bat = string.Empty;
+                    mes_vol_cell = string.Empty;
+                    mes_vol_pack = string.Empty;
+                    for (int i = 0; i < 3; i++)
+                    {
+                        // 查找textBox_VoltageAct
+                        Trace.WriteLine($"[{DateTime.Now}] To Find textBox_VoltageAct.");
+                        var textBox_VoltageAct = Retry.WhileNull(() => groupBox_VoltageCalibration.FindFirstDescendant(c => c.ByAutomationId("textBox_VoltageAct"))?.AsTextBox(), TimeSpan.FromSeconds(5)).Result;
+                        if (textBox_VoltageAct == null)
+                        {
+                            str_error_log = $"[{DateTime.Now}] textBox_VoltageAct not found.";
+                            Trace.WriteLine(str_error_log);
+                            result = false;
+                            mes_vol_bat = string.Empty;
+                            mes_vol_cell = string.Empty;
+                            mes_vol_pack = string.Empty;
+                            return this;
+                        }
+                        Trace.WriteLine($"[{DateTime.Now}] textBox_VoltageAct found successfully.");
+                        // 清空输入框并输入指定值
+                        Trace.WriteLine($"Enter content: {act_vol_cell}");
+                        Retry.WhileFalse(() => textBox_VoltageAct.IsEnabled, TimeSpan.FromSeconds(5));
+                        textBox_VoltageAct?.Patterns.Value.Pattern.SetValue(act_vol_cell);
+
+                        // 查找textBox_BatteryVoltageAct
+                        Trace.WriteLine($"[{DateTime.Now}] To Find textBox_BatteryVoltageAct.");
+                        var textBox_BatteryVoltageAct = Retry.WhileNull(() => groupBox_VoltageCalibration.FindFirstDescendant(c => c.ByAutomationId("textBox_BatteryVoltageAct"))?.AsTextBox(), TimeSpan.FromSeconds(5)).Result;
+                        if (textBox_BatteryVoltageAct == null)
+                        {
+                            str_error_log = $"[{DateTime.Now}] textBox_BatteryVoltageAct not found.";
+                            Trace.WriteLine(str_error_log);
+                            result = false;
+                            mes_vol_bat = string.Empty;
+                            mes_vol_cell = string.Empty;
+                            mes_vol_pack = string.Empty;
+                            return this;
+                        }
+                        Trace.WriteLine($"[{DateTime.Now}] textBox_BatteryVoltageAct found successfully.");
+                        // 清空输入框并输入指定值
+                        Trace.WriteLine($"Enter content: {act_vol_bat}");
+                        Retry.WhileFalse(() => textBox_BatteryVoltageAct.IsEnabled, TimeSpan.FromSeconds(5));
+                        textBox_BatteryVoltageAct?.Patterns.Value.Pattern.SetValue(act_vol_bat);
+
+                        // 查找textBox_PackVoltageAct
+                        Trace.WriteLine($"[{DateTime.Now}] To Find textBox_PackVoltageAct.");
+                        var textBox_PackVoltageAct = Retry.WhileNull(() => groupBox_VoltageCalibration.FindFirstDescendant(c => c.ByAutomationId("textBox_PackVoltageAct"))?.AsTextBox(), TimeSpan.FromSeconds(5)).Result;
+                        if (textBox_PackVoltageAct == null)
+                        {
+                            str_error_log = $"[{DateTime.Now}] textBox_PackVoltageAct not found.";
+                            Trace.WriteLine(str_error_log);
+                            result = false;
+                            mes_vol_bat = string.Empty;
+                            mes_vol_cell = string.Empty;
+                            mes_vol_pack = string.Empty;
+                            return this;
+                        }
+                        Trace.WriteLine($"[{DateTime.Now}] textBox_PackVoltageAct found successfully.");
+                        // 清空输入框并输入指定值
+                        Trace.WriteLine($"Enter content: {act_vol_pack}");
+                        Retry.WhileFalse(() => textBox_PackVoltageAct.IsEnabled, TimeSpan.FromSeconds(5));
+                        textBox_PackVoltageAct?.Patterns.Value.Pattern.SetValue(act_vol_pack);
+
+                        // 查找button_DoCalibration按钮
+                        Trace.WriteLine($"[{DateTime.Now}] To Find button_DoCalibration.");
+                        var button_DoCalibration = Form_Calibrate.FindFirstDescendant(cf => cf.ByAutomationId("button_DoCalibration"))?.AsButton();
+                        if (button_DoCalibration == null)
+                        {
+                            str_error_log = $"[{DateTime.Now}] button_DoCalibration not found.";
+                            Trace.WriteLine(str_error_log);
+                            result = false;
+                            mes_vol_bat = string.Empty;
+                            mes_vol_cell = string.Empty;
+                            mes_vol_pack = string.Empty;
+                            return this;
+                        }
+                        Trace.WriteLine($"[{DateTime.Now}] button_DoCalibration found successfully.");
+                        Retry.WhileFalse(() => button_DoCalibration.IsEnabled, TimeSpan.FromSeconds(5));
+                        button_DoCalibration?.Click();
+                        Thread.Sleep(300);
+
+                        str_error_log = string.Empty;
+                        result = false;
+                        for (int j = 0; j < 30; j++)
+                        {
+                            GetDialogTip(mainWindow, out string content);
+                            if (content.Contains($"Calibrate Success"))
+                            {
+                                str_error_log = $"Voltage  Calibrate Success.";
+                                Trace.WriteLine(str_error_log);
+                                result = true;
+                                break;
+                            }
+                            if (content.Contains($"Calibrate Fail"))
+                            {
+                                str_error_log = $"Voltage Calibrate Fail.";
+                                Trace.WriteLine(str_error_log);
+                                result = false;
+                                break;
+                            }
+                            if (content.Contains($"Err Input"))
+                            {
+                                str_error_log = $"Voltage Calibration Err Input.";
+                                Trace.WriteLine(str_error_log);
+                                result = false;
+                                break;
+                            }
+                            Thread.Sleep(1000);
+                            continue;
+                        }
+
+                        if (!result)
+                        {
+                            str_error_log = $"[{i + 1}/3]Voltage Calibrate Fail. Try Again.";
+                            Trace.WriteLine(str_error_log);
+                            result = true;
+                            mes_vol_bat = string.Empty;
+                            mes_vol_cell = string.Empty;
+                            mes_vol_pack = string.Empty;
+                            continue;
+                        }
+
+                        Trace.WriteLine($"[{DateTime.Now}] [{i + 1}/3] Voltage Calibrate Success. Check Difference");
+
+                        // 查找textBox_VoltageMes
+                        Trace.WriteLine($"[{DateTime.Now}] [{i + 1}/3] To Find textBox_VoltageMes.");
+                        var textBox_VoltageMes = Retry.WhileNull(() => groupBox_VoltageCalibration.FindFirstDescendant(c => c.ByAutomationId("textBox_VoltageMes"))?.AsTextBox(), TimeSpan.FromSeconds(5)).Result;
+                        if (textBox_VoltageMes == null)
+                        {
+                            str_error_log = $"[{DateTime.Now}] textBox_VoltageMes not found.";
+                            Trace.WriteLine(str_error_log);
+                            result = false;
+                            mes_vol_bat = string.Empty;
+                            mes_vol_cell = string.Empty;
+                            mes_vol_pack = string.Empty;
+                            return this;
+                        }
+                        Trace.WriteLine($"[{DateTime.Now}] textBox_VoltageMes found successfully.");
+
+                        // 查找textBox_BatteryVoltageMes
+                        Trace.WriteLine($"[{DateTime.Now}] [{i + 1}/3] To Find textBox_BatteryVoltageMes.");
+                        var textBox_BatteryVoltageMes = Retry.WhileNull(() => groupBox_VoltageCalibration.FindFirstDescendant(c => c.ByAutomationId("textBox_BatteryVoltageMes"))?.AsTextBox(), TimeSpan.FromSeconds(5)).Result;
+                        if (textBox_BatteryVoltageMes == null)
+                        {
+                            str_error_log = $"[{DateTime.Now}] textBox_BatteryVoltageMes not found.";
+                            Trace.WriteLine(str_error_log);
+                            result = false;
+                            mes_vol_bat = string.Empty;
+                            mes_vol_cell = string.Empty;
+                            mes_vol_pack = string.Empty;
+                            return this;
+                        }
+                        Trace.WriteLine($"[{DateTime.Now}] textBox_BatteryVoltageMes found successfully.");
+
+                        // 查找textBox_PackVoltageMes
+                        Trace.WriteLine($"[{DateTime.Now}] [{i + 1}/3] To Find textBox_PackVoltageMes.");
+                        var textBox_PackVoltageMes = Retry.WhileNull(() => groupBox_VoltageCalibration.FindFirstDescendant(c => c.ByAutomationId("textBox_PackVoltageMes"))?.AsTextBox(), TimeSpan.FromSeconds(5)).Result;
+                        if (textBox_PackVoltageMes == null)
+                        {
+                            str_error_log = $"[{DateTime.Now}] textBox_PackVoltageMes not found.";
+                            Trace.WriteLine(str_error_log);
+                            result = false;
+                            mes_vol_bat = string.Empty;
+                            mes_vol_cell = string.Empty;
+                            mes_vol_pack = string.Empty;
+                            return this;
+                        }
+                        Trace.WriteLine($"[{DateTime.Now}] textBox_PackVoltageMes found successfully.");
+
+                        // 获取textBox_VoltageMes内容
+                        string str_mes_vol_cell = textBox_VoltageMes.Text;
+                        Trace.WriteLine($"[{DateTime.Now}] textBox_VoltageMes text: {str_mes_vol_cell}.");
+                        try
+                        {
+                            mes_vol_cell = double.Parse(str_mes_vol_cell).ToString();
+                        }
+                        catch (Exception ee)
+                        {
+                            Trace.WriteLine($"GetEditText({str_mes_vol_cell}) Error:['{ee.Message}'], set '0'.");
+                            mes_vol_cell = "0";
+                        }
+                        double diff_vol_cell = Math.Abs(double.Parse(act_vol_cell) - double.Parse(mes_vol_cell));
+                        Trace.WriteLine($"CELL Actual Voltage and Measured Voltage Difference: [{diff_vol_cell}]");
+                        // 获取textBox_BatteryVoltageMes内容
+                        string str_mes_vol_bat = textBox_BatteryVoltageMes.Text;
+                        Trace.WriteLine($"[{DateTime.Now}] textBox_BatteryVoltageMes text: {str_mes_vol_bat}.");
+                        try
+                        {
+                            mes_vol_bat = double.Parse(str_mes_vol_bat).ToString();
+                        }
+                        catch (Exception ee)
+                        {
+                            Trace.WriteLine($"GetEditText({str_mes_vol_bat}) Error:['{ee.Message}'], set '0'.");
+                            mes_vol_bat = "0";
+                        }
+                        double diff_vol_bat = Math.Abs(double.Parse(act_vol_bat) - double.Parse(mes_vol_bat));
+                        Trace.WriteLine($"BAT Actual Voltage and Measured Voltage Difference: [{diff_vol_bat}]");
+                        // 获取textBox_PackVoltageMes内容
+                        string str_mes_vol_pack = textBox_PackVoltageMes.Text;
+                        Trace.WriteLine($"[{DateTime.Now}] textBox_PackVoltageMes text: {str_mes_vol_pack}.");
+                        try
+                        {
+                            mes_vol_pack = double.Parse(str_mes_vol_pack).ToString();
+                        }
+                        catch (Exception ee)
+                        {
+                            Trace.WriteLine($"GetEditText({str_mes_vol_pack}) Error:['{ee.Message}'], set '0'.");
+                            mes_vol_pack = "0";
+                        }
+                        double diff_vol_pack = Math.Abs(double.Parse(act_vol_pack) - double.Parse(mes_vol_pack));
+                        Trace.WriteLine($"PACK Actual Voltage and Measured Voltage Difference: [{diff_vol_pack}]");
+
+                        if (diff_vol_cell > _diff_allow || diff_vol_bat > _diff_allow || diff_vol_pack > _diff_allow)
+                        {
+                            str_error_log = $"[{i + 1}/3]Voltage Calibrate Difference Fail.";
+                            Trace.WriteLine(str_error_log); 
+                            mes_vol_bat = string.Empty;
+                            mes_vol_cell = string.Empty;
+                            mes_vol_pack = string.Empty;
+                            continue;
+                        }
+                        else
+                        {
+                            isCalibrate = true;
+                            Trace.WriteLine($"[{i + 1}/3]Voltage Calibrate Difference Success.");
+                            break;
+                        }
+                    }
+
+                    // 取消勾选
+                    if (checkBox_Voltage != null)
+                    {
+                        checkBox_Voltage.IsChecked = false;
+                    }
+                    if (isCalibrate)
+                    {
+                        str_error_log = $"Voltage Calibrate Final Success.";
+                        Trace.WriteLine(str_error_log);
+                        result = true;
+                    }
+                    else
+                    {
+                        str_error_log = $"Voltage Calibrate Final Fail.";
+                        Trace.WriteLine(str_error_log);
+                        result = false;
+                    }
+                    return this;
+                }
+            }
+            catch (Exception ex)
+            {
+                str_error_log = ex.Message;
+                Trace.WriteLine(str_error_log);
+                result = false;
+                mes_vol_bat = string.Empty;
+                mes_vol_cell = string.Empty;
+                mes_vol_pack = string.Empty;
+                return this;
+            }
+        }
+
 
         public SmartToolControlFlaUI GetDialogTip(Window mainWindow, out string content)
         {
