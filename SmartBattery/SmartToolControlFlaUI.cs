@@ -152,40 +152,34 @@ namespace SmartBattery
                     // 查找按钮
                     Trace.WriteLine($"[{DateTime.Now}] To Find buttonMenu_Registers.");
                     var buttonMenu_Registers = Retry.WhileNull(() => mainWindow.FindFirstDescendant(cf => cf.ByAutomationId("buttonMenu_Registers"))?.AsButton(), TimeSpan.FromSeconds(5)).Result;
-                    if (buttonMenu_Registers != null) 
-                    {
-                        Trace.WriteLine($"[{DateTime.Now}] buttonMenu_Registers found successfully.");
-                        Retry.WhileFalse(() => buttonMenu_Registers.IsEnabled, TimeSpan.FromSeconds(5));
-                        buttonMenu_Registers?.Click();
-                        // 查找按钮
-                        Trace.WriteLine($"[{DateTime.Now}] To Find button_SetScan.");
-                        var button_SetScan = Retry.WhileNull(() => mainWindow.FindFirstDescendant(cf => cf.ByAutomationId("button_SetScan"))?.AsButton(), TimeSpan.FromSeconds(5)).Result;
-                        if (button_SetScan != null)
-                        {
-                            Trace.WriteLine($"[{DateTime.Now}] button_SetScan found successfully.");
-                            Retry.WhileFalse(() => button_SetScan.IsEnabled, TimeSpan.FromSeconds(5));
-                            button_SetScan?.Click(); 
-                            
-                            str_error_log = $"[{DateTime.Now}] Click ScanAll successfully.";
-                            Trace.WriteLine(str_error_log);
-                            result = true;
-                            return this;
-                        }
-                        else
-                        {
-                            str_error_log = $"[{DateTime.Now}] button_SetScan not found.";
-                            Trace.WriteLine(str_error_log);
-                            result = false;
-                            return this;
-                        }
-                    }
-                    else
+                    if (buttonMenu_Registers == null) 
                     {
                         str_error_log = $"[{DateTime.Now}] buttonMenu_Registers not found.";
                         Trace.WriteLine(str_error_log);
                         result = false;
                         return this;
                     }
+                    Trace.WriteLine($"[{DateTime.Now}] buttonMenu_Registers found successfully.");
+                    Retry.WhileFalse(() => buttonMenu_Registers.IsEnabled, TimeSpan.FromSeconds(5));
+                    buttonMenu_Registers?.Click();
+                    // 查找按钮
+                    Trace.WriteLine($"[{DateTime.Now}] To Find button_SetScan.");
+                    var button_SetScan = Retry.WhileNull(() => mainWindow.FindFirstDescendant(cf => cf.ByAutomationId("button_SetScan"))?.AsButton(), TimeSpan.FromSeconds(5)).Result;
+                    if (button_SetScan == null)
+                    {
+                        str_error_log = $"[{DateTime.Now}] button_SetScan not found.";
+                        Trace.WriteLine(str_error_log);
+                        result = false;
+                        return this;
+                    }
+                    Trace.WriteLine($"[{DateTime.Now}] button_SetScan found successfully.");
+                    Retry.WhileFalse(() => button_SetScan.IsEnabled, TimeSpan.FromSeconds(5));
+                    button_SetScan?.Click();
+
+                    str_error_log = $"[{DateTime.Now}] Click ScanAll successfully.";
+                    Trace.WriteLine(str_error_log);
+                    result = true;
+                    return this;
                 }
             }
             catch (Exception ex)
@@ -279,8 +273,8 @@ namespace SmartBattery
 
                     // 点击打开按钮
                     Trace.WriteLine($"[{DateTime.Now}] To Find OpenButton.");
-                    var openButton = fileDialog.FindFirstChild(cf => cf.ByName("打开(O)")).AsButton();
-                    if (openButton != null)
+                    var openButton = Retry.WhileNull(() => fileDialog.FindFirstDescendant(c => c.ByControlType(FlaUI.Core.Definitions.ControlType.Button).And(c.ByName("打开(O)"))).AsButton(), TimeSpan.FromSeconds(5)).Result;
+                    if (openButton == null)
                     {
                         str_error_log = $"[{DateTime.Now}] OpenButton not found.";
                         Trace.WriteLine(str_error_log);
