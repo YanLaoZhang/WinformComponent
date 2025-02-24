@@ -5,7 +5,6 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Runtime.InteropServices.ComTypes;
 using System.Threading;
-using System.Windows.Automation;
 using FlaUI.Core;
 using FlaUI.Core.AutomationElements;
 using FlaUI.Core.Tools;
@@ -29,6 +28,53 @@ namespace SmartBattery
 
         public SmartToolControlFlaUI()
         {
+        }
+
+        public void ShutDown(ref string str_error_log)
+        {
+            try
+            {
+                if (app != null && !app.HasExited)
+                {
+                    using (var automation = new UIA3Automation())
+                    {
+                        var mainWindow = app.GetMainWindow(automation);
+
+                        if (mainWindow != null)
+                        {
+                            Console.WriteLine("尝试关闭窗口...");
+                            mainWindow.Close();
+
+                            // 等待窗口关闭
+                            Thread.Sleep(2000);
+
+                            // 再次检查是否关闭
+                            if (!app.HasExited)
+                            {
+                                Console.WriteLine("窗口仍然打开，尝试点击关闭按钮...");
+                                var closeButton = mainWindow.FindFirstDescendant(cf => cf.ByControlType(FlaUI.Core.Definitions.ControlType.Button).And(cf.ByName("关闭")));
+                                closeButton?.AsButton()?.Invoke();
+
+                                Thread.Sleep(2000);
+                            }
+                        }
+                    }
+
+                    // 如果窗口仍未关闭，则强制终止进程
+                    if (!app.HasExited)
+                    {
+                        Console.WriteLine("窗口未正常关闭，强制结束进程...");
+                        app.Close();  // 关闭进程
+                    }
+
+                    Console.WriteLine("应用已成功关闭");
+                }
+            }
+            catch (Exception ex)
+            {
+                str_error_log = ex.Message;
+                Trace.WriteLine($"Error Closing the Program: [{ex.Message}]");
+            }
         }
 
         /// <summary>

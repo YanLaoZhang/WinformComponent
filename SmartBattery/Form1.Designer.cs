@@ -49,13 +49,14 @@
             this.BtnCMDPanelVD12D = new System.Windows.Forms.Button();
             this.BtnAFIFlashFlaUI = new System.Windows.Forms.Button();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.BtnScanAllFlaUI = new System.Windows.Forms.Button();
-            this.BtnOffsetCalibrateFlaUI = new System.Windows.Forms.Button();
-            this.BtnVoltageCalibrateFlaUI = new System.Windows.Forms.Button();
-            this.BtnVoltageCalibrateVD12DFlaUI = new System.Windows.Forms.Button();
-            this.BtnCurrentCalibrateFlaUI = new System.Windows.Forms.Button();
-            this.BtnCMDPanelFlaUI = new System.Windows.Forms.Button();
+            this.BtnCloseFlaUI = new System.Windows.Forms.Button();
             this.BtnCMDPanelVD12DFlaUI = new System.Windows.Forms.Button();
+            this.BtnCMDPanelFlaUI = new System.Windows.Forms.Button();
+            this.BtnCurrentCalibrateFlaUI = new System.Windows.Forms.Button();
+            this.BtnVoltageCalibrateVD12DFlaUI = new System.Windows.Forms.Button();
+            this.BtnVoltageCalibrateFlaUI = new System.Windows.Forms.Button();
+            this.BtnOffsetCalibrateFlaUI = new System.Windows.Forms.Button();
+            this.BtnScanAllFlaUI = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.NUDDiffer)).BeginInit();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
@@ -252,6 +253,7 @@
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.BtnCloseFlaUI);
             this.groupBox1.Controls.Add(this.BtnCMDPanelVD12DFlaUI);
             this.groupBox1.Controls.Add(this.BtnCMDPanelFlaUI);
             this.groupBox1.Controls.Add(this.BtnCurrentCalibrateFlaUI);
@@ -267,55 +269,25 @@
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "FlaUI.UIA3";
             // 
-            // BtnScanAllFlaUI
+            // BtnCloseFlaUI
             // 
-            this.BtnScanAllFlaUI.Location = new System.Drawing.Point(130, 20);
-            this.BtnScanAllFlaUI.Name = "BtnScanAllFlaUI";
-            this.BtnScanAllFlaUI.Size = new System.Drawing.Size(118, 31);
-            this.BtnScanAllFlaUI.TabIndex = 21;
-            this.BtnScanAllFlaUI.Text = "ScanAll";
-            this.BtnScanAllFlaUI.UseVisualStyleBackColor = true;
-            this.BtnScanAllFlaUI.Click += new System.EventHandler(this.BtnScanAllFlaUI_Click);
+            this.BtnCloseFlaUI.Location = new System.Drawing.Point(6, 57);
+            this.BtnCloseFlaUI.Name = "BtnCloseFlaUI";
+            this.BtnCloseFlaUI.Size = new System.Drawing.Size(118, 31);
+            this.BtnCloseFlaUI.TabIndex = 25;
+            this.BtnCloseFlaUI.Text = "Close";
+            this.BtnCloseFlaUI.UseVisualStyleBackColor = true;
+            this.BtnCloseFlaUI.Click += new System.EventHandler(this.BtnCloseFlaUI_Click);
             // 
-            // BtnOffsetCalibrateFlaUI
+            // BtnCMDPanelVD12DFlaUI
             // 
-            this.BtnOffsetCalibrateFlaUI.Location = new System.Drawing.Point(254, 20);
-            this.BtnOffsetCalibrateFlaUI.Name = "BtnOffsetCalibrateFlaUI";
-            this.BtnOffsetCalibrateFlaUI.Size = new System.Drawing.Size(118, 31);
-            this.BtnOffsetCalibrateFlaUI.TabIndex = 21;
-            this.BtnOffsetCalibrateFlaUI.Text = "OffsetCalibrate";
-            this.BtnOffsetCalibrateFlaUI.UseVisualStyleBackColor = true;
-            this.BtnOffsetCalibrateFlaUI.Click += new System.EventHandler(this.BtnOffsetCalibrateFlaUI_Click);
-            // 
-            // BtnVoltageCalibrateFlaUI
-            // 
-            this.BtnVoltageCalibrateFlaUI.Location = new System.Drawing.Point(378, 20);
-            this.BtnVoltageCalibrateFlaUI.Name = "BtnVoltageCalibrateFlaUI";
-            this.BtnVoltageCalibrateFlaUI.Size = new System.Drawing.Size(148, 31);
-            this.BtnVoltageCalibrateFlaUI.TabIndex = 22;
-            this.BtnVoltageCalibrateFlaUI.Text = "VoltageCalibrateEone";
-            this.BtnVoltageCalibrateFlaUI.UseVisualStyleBackColor = true;
-            this.BtnVoltageCalibrateFlaUI.Click += new System.EventHandler(this.BtnVoltageCalibrateFlaUI_Click);
-            // 
-            // BtnVoltageCalibrateVD12DFlaUI
-            // 
-            this.BtnVoltageCalibrateVD12DFlaUI.Location = new System.Drawing.Point(378, 57);
-            this.BtnVoltageCalibrateVD12DFlaUI.Name = "BtnVoltageCalibrateVD12DFlaUI";
-            this.BtnVoltageCalibrateVD12DFlaUI.Size = new System.Drawing.Size(148, 31);
-            this.BtnVoltageCalibrateVD12DFlaUI.TabIndex = 21;
-            this.BtnVoltageCalibrateVD12DFlaUI.Text = "VoltageCalibrateVD12D";
-            this.BtnVoltageCalibrateVD12DFlaUI.UseVisualStyleBackColor = true;
-            this.BtnVoltageCalibrateVD12DFlaUI.Click += new System.EventHandler(this.BtnVoltageCalibrateVD12DFlaUI_Click);
-            // 
-            // BtnCurrentCalibrateFlaUI
-            // 
-            this.BtnCurrentCalibrateFlaUI.Location = new System.Drawing.Point(532, 20);
-            this.BtnCurrentCalibrateFlaUI.Name = "BtnCurrentCalibrateFlaUI";
-            this.BtnCurrentCalibrateFlaUI.Size = new System.Drawing.Size(118, 31);
-            this.BtnCurrentCalibrateFlaUI.TabIndex = 21;
-            this.BtnCurrentCalibrateFlaUI.Text = "CurrentCalibrate";
-            this.BtnCurrentCalibrateFlaUI.UseVisualStyleBackColor = true;
-            this.BtnCurrentCalibrateFlaUI.Click += new System.EventHandler(this.BtnCurrentCalibrateFlaUI_Click);
+            this.BtnCMDPanelVD12DFlaUI.Location = new System.Drawing.Point(656, 57);
+            this.BtnCMDPanelVD12DFlaUI.Name = "BtnCMDPanelVD12DFlaUI";
+            this.BtnCMDPanelVD12DFlaUI.Size = new System.Drawing.Size(114, 31);
+            this.BtnCMDPanelVD12DFlaUI.TabIndex = 24;
+            this.BtnCMDPanelVD12DFlaUI.Text = "CMD Panel VD12D";
+            this.BtnCMDPanelVD12DFlaUI.UseVisualStyleBackColor = true;
+            this.BtnCMDPanelVD12DFlaUI.Click += new System.EventHandler(this.BtnCMDPanelVD12DFlaUI_Click);
             // 
             // BtnCMDPanelFlaUI
             // 
@@ -327,15 +299,55 @@
             this.BtnCMDPanelFlaUI.UseVisualStyleBackColor = true;
             this.BtnCMDPanelFlaUI.Click += new System.EventHandler(this.BtnCMDPanelFlaUI_Click);
             // 
-            // BtnCMDPanelVD12DFlaUI
+            // BtnCurrentCalibrateFlaUI
             // 
-            this.BtnCMDPanelVD12DFlaUI.Location = new System.Drawing.Point(656, 57);
-            this.BtnCMDPanelVD12DFlaUI.Name = "BtnCMDPanelVD12DFlaUI";
-            this.BtnCMDPanelVD12DFlaUI.Size = new System.Drawing.Size(114, 31);
-            this.BtnCMDPanelVD12DFlaUI.TabIndex = 24;
-            this.BtnCMDPanelVD12DFlaUI.Text = "CMD Panel VD12D";
-            this.BtnCMDPanelVD12DFlaUI.UseVisualStyleBackColor = true;
-            this.BtnCMDPanelVD12DFlaUI.Click += new System.EventHandler(this.BtnCMDPanelVD12DFlaUI_Click);
+            this.BtnCurrentCalibrateFlaUI.Location = new System.Drawing.Point(532, 20);
+            this.BtnCurrentCalibrateFlaUI.Name = "BtnCurrentCalibrateFlaUI";
+            this.BtnCurrentCalibrateFlaUI.Size = new System.Drawing.Size(118, 31);
+            this.BtnCurrentCalibrateFlaUI.TabIndex = 21;
+            this.BtnCurrentCalibrateFlaUI.Text = "CurrentCalibrate";
+            this.BtnCurrentCalibrateFlaUI.UseVisualStyleBackColor = true;
+            this.BtnCurrentCalibrateFlaUI.Click += new System.EventHandler(this.BtnCurrentCalibrateFlaUI_Click);
+            // 
+            // BtnVoltageCalibrateVD12DFlaUI
+            // 
+            this.BtnVoltageCalibrateVD12DFlaUI.Location = new System.Drawing.Point(378, 57);
+            this.BtnVoltageCalibrateVD12DFlaUI.Name = "BtnVoltageCalibrateVD12DFlaUI";
+            this.BtnVoltageCalibrateVD12DFlaUI.Size = new System.Drawing.Size(148, 31);
+            this.BtnVoltageCalibrateVD12DFlaUI.TabIndex = 21;
+            this.BtnVoltageCalibrateVD12DFlaUI.Text = "VoltageCalibrateVD12D";
+            this.BtnVoltageCalibrateVD12DFlaUI.UseVisualStyleBackColor = true;
+            this.BtnVoltageCalibrateVD12DFlaUI.Click += new System.EventHandler(this.BtnVoltageCalibrateVD12DFlaUI_Click);
+            // 
+            // BtnVoltageCalibrateFlaUI
+            // 
+            this.BtnVoltageCalibrateFlaUI.Location = new System.Drawing.Point(378, 20);
+            this.BtnVoltageCalibrateFlaUI.Name = "BtnVoltageCalibrateFlaUI";
+            this.BtnVoltageCalibrateFlaUI.Size = new System.Drawing.Size(148, 31);
+            this.BtnVoltageCalibrateFlaUI.TabIndex = 22;
+            this.BtnVoltageCalibrateFlaUI.Text = "VoltageCalibrateEone";
+            this.BtnVoltageCalibrateFlaUI.UseVisualStyleBackColor = true;
+            this.BtnVoltageCalibrateFlaUI.Click += new System.EventHandler(this.BtnVoltageCalibrateFlaUI_Click);
+            // 
+            // BtnOffsetCalibrateFlaUI
+            // 
+            this.BtnOffsetCalibrateFlaUI.Location = new System.Drawing.Point(254, 20);
+            this.BtnOffsetCalibrateFlaUI.Name = "BtnOffsetCalibrateFlaUI";
+            this.BtnOffsetCalibrateFlaUI.Size = new System.Drawing.Size(118, 31);
+            this.BtnOffsetCalibrateFlaUI.TabIndex = 21;
+            this.BtnOffsetCalibrateFlaUI.Text = "OffsetCalibrate";
+            this.BtnOffsetCalibrateFlaUI.UseVisualStyleBackColor = true;
+            this.BtnOffsetCalibrateFlaUI.Click += new System.EventHandler(this.BtnOffsetCalibrateFlaUI_Click);
+            // 
+            // BtnScanAllFlaUI
+            // 
+            this.BtnScanAllFlaUI.Location = new System.Drawing.Point(130, 20);
+            this.BtnScanAllFlaUI.Name = "BtnScanAllFlaUI";
+            this.BtnScanAllFlaUI.Size = new System.Drawing.Size(118, 31);
+            this.BtnScanAllFlaUI.TabIndex = 21;
+            this.BtnScanAllFlaUI.Text = "ScanAll";
+            this.BtnScanAllFlaUI.UseVisualStyleBackColor = true;
+            this.BtnScanAllFlaUI.Click += new System.EventHandler(this.BtnScanAllFlaUI_Click);
             // 
             // Form1
             // 
@@ -364,7 +376,7 @@
             this.Controls.Add(this.BtnOffsetCalibrate);
             this.Name = "Form1";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "Form1";
+            this.Text = "SmartBattery Control";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form1_FormClosing);
             this.Load += new System.EventHandler(this.Form1_Load);
             ((System.ComponentModel.ISupportInitialize)(this.NUDDiffer)).EndInit();
@@ -404,6 +416,7 @@
         private System.Windows.Forms.Button BtnCurrentCalibrateFlaUI;
         private System.Windows.Forms.Button BtnCMDPanelFlaUI;
         private System.Windows.Forms.Button BtnCMDPanelVD12DFlaUI;
+        private System.Windows.Forms.Button BtnCloseFlaUI;
     }
 }
 

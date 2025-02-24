@@ -6,6 +6,7 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -686,6 +687,30 @@ namespace SmartBattery
             finally
             {
                 BtnCMDPanelVD12DFlaUI.Enabled = true;
+            }
+        }
+
+        private void BtnCloseFlaUI_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                BtnCloseFlaUI.Enabled = false;
+                string exePath = textBoxExePath.Text;
+                if (exePath == "")
+                {
+                    MessageBox.Show($"请先选择烧录工具路径");
+                    return;
+                }
+                string str_error_log = "";
+                SmartToolControlFlaUI smartToolControlFlatUI = new SmartToolControlFlaUI();
+                smartToolControlFlatUI.StartUp(exePath, ref str_error_log);
+                Thread.Sleep(5000);
+                smartToolControlFlatUI.ShutDown(ref str_error_log);
+                this.Activate();
+            }
+            finally
+            {
+                BtnCloseFlaUI.Enabled = true;
             }
         }
     }
