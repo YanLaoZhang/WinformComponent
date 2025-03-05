@@ -1,19 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.IO.Ports;
-using System.Linq;
-using System.Runtime.InteropServices;
-using System.Text;
-using System.Windows.Forms;
 
 namespace TDMSerialLib
 {
     public class TDMSerial
     {
-        [DllImport("user32.dll")]
-        private static extern int MessageBoxTimeoutA(IntPtr hWnd, string msg, string caption, int type, int id, int time);
-
         // 请求连续数据 指令
         byte[] CMD_REQUEST_CONTINUOUS_DATA = new byte[6] { 0xAA, 0x55, 0x2, 0xF1, 0x0, 0xF4 };
         // 停止连续数据 指令
