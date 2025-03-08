@@ -275,17 +275,19 @@ namespace UsbPowerMeter
             lock (_statsLock)
             {
                 if (_powerReadings.Count == 0)
-                    return new PowerStatistics(0, 0, 0, 0);
+                    return new PowerStatistics(0, 0, 0, 0, "");
 
                 var max = _powerReadings.Max();
                 var min = _powerReadings.Min();
                 var avg = _powerReadings.Average();
+                var records = string.Join(",", _powerReadings);
 
                 return new PowerStatistics(
                     max,
                     min,
                     avg,
-                    _powerReadings.Count
+                    _powerReadings.Count,
+                    records
                 );
             }
         }
@@ -338,13 +340,15 @@ namespace UsbPowerMeter
         public double Min { get; }
         public double Avg { get; }
         public int Samples { get; }
+        public string Records { get; }
 
-        public PowerStatistics(double max, double min, double avg, int samples)
+        public PowerStatistics(double max, double min, double avg, int samples, string records)
         {
             Max = max;
             Min = min;
             Avg = avg;
             Samples = samples;
+            Records = records;
         }
     }
 }
