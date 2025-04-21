@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Text;
@@ -26,9 +27,9 @@ namespace TES136Debug
             var devices = HidDevices.Enumerate().ToList();
             foreach (var device in devices)
             {
-                Console.WriteLine($"Device: {device.Description}");
-                Console.WriteLine($"Vendor ID: {device.Attributes.VendorId}");
-                Console.WriteLine($"Product ID: {device.Attributes.ProductId}");
+                Trace.WriteLine($"Device: {device.Description}");
+                Trace.WriteLine($"Vendor ID: {device.Attributes.VendorId}");
+                Trace.WriteLine($"Product ID: {device.Attributes.ProductId}");
                 richTextBox1.Text += $"Device: {device.Description}\r\n";
                 richTextBox1.Text += $"Vendor ID: {device.Attributes.VendorId}\r\n";
                 richTextBox1.Text += $"Product ID: {device.Attributes.ProductId}\r\n";
@@ -70,12 +71,12 @@ namespace TES136Debug
             if (report != null && report.Data.Length > 0)
             {
                 receive = BitConverter.ToString(report.Data);
-                Console.WriteLine("接收到的数据: " + BitConverter.ToString(report.Data));
+                Trace.WriteLine("接收到的数据: " + BitConverter.ToString(report.Data));
                 //MessageBox.Show("接收到的数据: " + BitConverter.ToString(report.Data));
             }
             else
             {
-                Console.WriteLine("读取失败或无数据返回。");
+                Trace.WriteLine("读取失败或无数据返回。");
                 //MessageBox.Show("读取失败或无数据返回");
             }
         }
@@ -92,12 +93,12 @@ namespace TES136Debug
 
             if (success)
             {
-                Console.WriteLine("指令发送成功！");
+                Trace.WriteLine("指令发送成功！");
                 //MessageBox.Show("指令发送成功！");
             }
             else
             {
-                Console.WriteLine("指令发送失败！");
+                Trace.WriteLine("指令发送失败！");
                 //MessageBox.Show("指令发送失败！");
             }
         }
@@ -113,7 +114,7 @@ namespace TES136Debug
 
             if (device != null)
             {
-                Console.WriteLine($"找到设备: {device.Description}");
+                Trace.WriteLine($"找到设备: {device.Description}");
 
                 //richTextBox1.Text += $"找到设备: {device.Description}";
                 device.OpenDevice();
@@ -130,7 +131,7 @@ namespace TES136Debug
             }
             else
             {
-                Console.WriteLine("设备未找到，请检查连接和ID配置。");
+                Trace.WriteLine("设备未找到，请检查连接和ID配置。");
 
                 richTextBox1.Text += $"设备未找到，请检查连接和ID配置";
             }

@@ -1,6 +1,7 @@
 ﻿using HidLibrary;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -8,13 +9,19 @@ namespace TES136Debug
 {
     public class HIDResult
     {
+        public float index_0_3;
+        public float index_4_7;
+        public float index_8_11;
+        public float index_12_15;
         public float ev;
+        public float ev_min;
+        public float ev_max;
         public float tcp;
         public float uv;
 
         public override string ToString()
         {
-            return $"TES136: EV-{ev};TCP-{tcp}; UV-{uv}";
+            return $"TES136: index_0_3:{index_0_3};index_4_7:{index_4_7};index_8_11:{index_8_11};index_12_15:{index_12_15};EV-{ev};EV_Min-{ev_min};EV_Max-{ev_max};TCP-{tcp}; UV-{uv}";
         }
     }
 
@@ -62,7 +69,7 @@ namespace TES136Debug
 
                 if (device != null)
                 {
-                    Console.WriteLine("HID 设备已连接。");
+                    Trace.WriteLine("HID 设备已连接。");
                     device.OpenDevice();
 
                     if (!device.IsOpen)
@@ -90,13 +97,13 @@ namespace TES136Debug
                     {
                         if (success)
                         {
-                            Console.WriteLine("指令发送成功。");
+                            //Trace.WriteLine("指令发送成功。");
                             error_log = "指令发送成功";
                             writeTaskCompletionSource.SetResult(true);  // 标记写操作成功完成
                         }
                         else
                         {
-                            Console.WriteLine("指令发送失败。");
+                            //Trace.WriteLine("指令发送失败。");
                             error_log = "指令发送失败";
                             writeTaskCompletionSource.SetResult(false);  // 标记写操作失败
                         }
@@ -118,18 +125,45 @@ namespace TES136Debug
                         if (report.Exists)
                         {
                             byte[] recv = report.Data;
-                            Console.WriteLine("返回数据: " + BitConverter.ToString(recv));
+                            Trace.WriteLine("返回数据: " + BitConverter.ToString(recv));
 
                             error_log = $"返回数据: {BitConverter.ToString(recv)}";
+
+                            // 解析第 1, 2, 3, 4位的数据
+                            byte[] index_0_3Bytes = new byte[] { recv[0], recv[1], recv[2], recv[3] }; // 0-based 索引
+                            hIDResult.index_0_3 = CombineBytesToLong(index_0_3Bytes);
+
+                            // 解析第 5, 6, 7, 8位的数据
+                            byte[] index_4_7Bytes = new byte[] { recv[4], recv[5], recv[6], recv[7] }; // 0-based 索引
+                            hIDResult.index_4_7 = CombineBytesToLong(index_4_7Bytes);
+
+                            // 解析第 9, 10, 11, 12位的数据
+                            byte[] index_8_11Bytes = new byte[] { recv[8], recv[9], recv[10], recv[11] }; // 0-based 索引
+                            hIDResult.index_8_11 = CombineBytesToLong(index_8_11Bytes);
+
+                            // 解析第 9, 10, 11, 12位的数据
+                            byte[] index_12_15Bytes = new byte[] { recv[12], recv[13], recv[14], recv[15] }; // 0-based 索引
+                            hIDResult.index_12_15 = CombineBytesToLong(index_12_15Bytes);
+
                             // 解析第 14, 15, 16 位的数据 (1-based 索引)
-                            byte[] evBytes = new byte[] { recv[13], recv[14], recv[15] }; // 0-based 索引
-                            hIDResult.ev = CombineBytesToLong(evBytes) / 10000.0f;
+                            //byte[] evBytes = new byte[] { recv[13], recv[14], recv[15] }; // 0-based 索引 错误解析
+                            //hIDResult.ev = CombineBytesToLong(evBytes);
+                            hIDResult.ev = CombineBytesToLong(index_4_7Bytes)/10000.0f;
+
+                            // 解析第 30, 31, 32, 33位的数据 (1-based 索引)
+                            byte[] evMaxBytes = new byte[] { recv[30], recv[31], recv[32], recv[33] }; // 0-based 索引 将 4 个字节组合为一个 64 位数值
+                            hIDResult.ev_max = CombineBytesToLong(evMaxBytes);
+
+                            // 解析第 30, 31, 32, 33位的数据 (1-based 索引)
+                            byte[] evMinBytes = new byte[] { recv[34], recv[35], recv[36], recv[37] }; // 0-based 索引 将 4 个字节组合为一个 64 位数值
+                            hIDResult.ev_min = CombineBytesToLong(evMinBytes);
+
                             // 解析第 41, 42 位的数据
                             byte[] tcpBytes = new byte[] { recv[40], recv[41] };
                             hIDResult.tcp = CombineBytesToLong(tcpBytes);
                             // 解析第 43, 44 位的数据
                             byte[] uvBytes = new byte[] { recv[42], recv[43] };
-                            hIDResult.uv = CombineBytesToLong(uvBytes) / 10000.0f;
+                            hIDResult.uv = CombineBytesToLong(uvBytes);
 
                             readTaskCompletionSource.SetResult(true);  // 标记读操作完成
                         }
@@ -179,7 +213,7 @@ namespace TES136Debug
 
                 if (device != null)
                 {
-                    Console.WriteLine("HID 设备已连接。");
+                    Trace.WriteLine("HID 设备已连接。");
                     //richTextBox1.Text += "HID 设备已连接\r\n";
                     device.OpenDevice();
 
@@ -195,20 +229,21 @@ namespace TES136Debug
                         return null;
                     }
                     outputData[0] = 0x00; // Report ID，一般为 0
-                    outputData[1] = 0x01; // 指令
-                    outputData[2] = 0x62; // 指令
+                    outputData[1] = 0x00; // 指令
+                    //outputData[2] = 0x62; // 指令
+                    outputData[2] = 0x00; // 指令
                     bool isSend = false;
                     device.Write(outputData, success =>
                     {
                         if (success)
                         {
-                            Console.WriteLine("指令发送成功。");
+                            Trace.WriteLine("指令发送成功。");
                             error_log = "指令发送成功";
                             isSend = true;
                         }
                         else
                         {
-                            Console.WriteLine("指令发送失败。");
+                            Trace.WriteLine("指令发送失败。");
                             error_log = $"指令发送失败";
                         }
                     });
@@ -224,27 +259,35 @@ namespace TES136Debug
                         {
                             isRecv = true;
                             byte[] recv = report.Data;
-                            Console.WriteLine("返回数据: " + BitConverter.ToString(recv));
+                            Trace.WriteLine("返回数据: " + BitConverter.ToString(recv));
 
                             error_log = $"返回数据{BitConverter.ToString(recv)}";
                             // 解析第 14, 15, 16 位的数据 (1-based 索引)
-                            byte[] evBytes = new byte[] { recv[13], recv[14], recv[15] }; // 0-based 索引
-                                                                                          // 将 3 个字节组合为一个 64 位数值
+                            byte[] evBytes = new byte[] { recv[13], recv[14], recv[15] }; // 0-based 索引 将 3 个字节组合为一个 64 位数值
                             hIDResult.ev = CombineBytesToLong(evBytes) / 10000.0f;
+
+                            // 解析第 30, 31, 32, 33位的数据 (1-based 索引)
+                            byte[] evMaxBytes = new byte[] { recv[30], recv[31], recv[32], recv[33] }; // 0-based 索引 将 4 个字节组合为一个 64 位数值
+                            hIDResult.ev_max = CombineBytesToLong(evMaxBytes);
+
+                            // 解析第 30, 31, 32, 33位的数据 (1-based 索引)
+                            byte[] evMinBytes = new byte[] { recv[34], recv[35], recv[36], recv[37] }; // 0-based 索引 将 4 个字节组合为一个 64 位数值
+                            hIDResult.ev_min = CombineBytesToLong(evMinBytes);
+
                             // 解析第 41, 42位的数据 (1-based 索引)
-                            byte[] tcpBytes = new byte[] { recv[41], recv[42] }; // 0-based 索引
-                                                                                 // 将 3 个字节组合为一个 64 位数值
+                            byte[] tcpBytes = new byte[] { recv[41], recv[42] }; // 0-based 索引 将 2 个字节组合为一个 64 位数值
                             hIDResult.tcp = CombineBytesToLong(tcpBytes);
+
                             // 解析第 43, 44位的数据 (1-based 索引)
-                            byte[] uvBytes = new byte[] { recv[41], recv[42] }; // 0-based 索引
-                                                                                // 将 3 个字节组合为一个 64 位数值
+                            byte[] uvBytes = new byte[] { recv[41], recv[42] }; // 0-based 索引 将 2 个字节组合为一个 64 位数值
                             hIDResult.uv = CombineBytesToLong(uvBytes) / 10000.0f;
-                            Console.WriteLine("清空旧数据: " + BitConverter.ToString(report.Data));
+
+                            Trace.WriteLine("清空旧数据: " + BitConverter.ToString(report.Data));
                             report = device.ReadReport();
                         }
                         else
                         {
-                            Console.WriteLine("未收到返回数据。");
+                            Trace.WriteLine("未收到返回数据。");
                             error_log = "未收到返回数据";
                         }
                     });
@@ -256,14 +299,14 @@ namespace TES136Debug
                 }
                 else
                 {
-                    Console.WriteLine("未找到 HID 设备。");
+                    Trace.WriteLine("未找到 HID 设备。");
                     str_error_log += "未找到 HID 设备";
                     return null;
                 }
             }
             catch (Exception ee)
             {
-                str_error_log += ee.Message + "--"+ ee.StackTrace;
+                str_error_log += ee.Message + "--" + ee.StackTrace;
                 return null;
             }
 
