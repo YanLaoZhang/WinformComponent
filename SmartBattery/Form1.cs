@@ -670,7 +670,7 @@ namespace SmartBattery
                     return;
                 }
                 string str_error_log = "";
-                string item = "0x0020(DSGFET_Toggle)";
+                string item = "0x0030(SealDevice)";
                 SmartToolControlFlaUI smartToolControlFlatUI = new SmartToolControlFlaUI();
                 smartToolControlFlatUI.StartUp(exePath, ref str_error_log);
                 smartToolControlFlatUI.CMDPanelHandle(item, out bool result, out string error_log);

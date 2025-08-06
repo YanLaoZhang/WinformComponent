@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace emguCV
+namespace MF
 {
     internal static class Program
     {
@@ -16,7 +16,7 @@ namespace emguCV
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new EmguCVForm(1440, 1440));
+            Application.Run(new Form1());
         }
     }
 }

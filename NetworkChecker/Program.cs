@@ -4,9 +4,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace emguCV
+namespace NetworkChecker
 {
-    internal static class Program
+    static class Program
     {
         /// <summary>
         /// 应用程序的主入口点。
@@ -16,7 +16,7 @@ namespace emguCV
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new EmguCVForm(1440, 1440));
+            Application.Run(new Form1());
         }
     }
 }

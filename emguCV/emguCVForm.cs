@@ -47,7 +47,7 @@ namespace emguCV
                         {
                             Console.WriteLine("已找到指定摄像头");
                             cameraIndex =  index;
-                            //break;
+                            break;
                         }
                     }
                 }
@@ -79,10 +79,23 @@ namespace emguCV
 
                 // 打开指定索引的摄像头
                 capture = new VideoCapture(index);
-                // 设置摄像头的编解码器为H.264
+
+                // 先设置格式（FourCC）
+                double fourcc = capture.GetCaptureProperty(CapProp.FourCC); // 先获取当前的fourcc
+                Console.WriteLine("Current FourCC: " + fourcc); // 可以打印出来看看
+
+                // 尝试设置H264
                 capture.SetCaptureProperty(CapProp.FourCC, VideoWriter.Fourcc('H', '2', '6', '4'));
 
-                // 获取摄像头实际的分辨率
+                // 然后设置分辨率
+                capture.SetCaptureProperty(CapProp.FrameWidth, 1440);
+                capture.SetCaptureProperty(CapProp.FrameHeight, 1440);
+
+                // 检查设置后的分辨率
+                double width = capture.GetCaptureProperty(CapProp.FrameWidth);
+                double height = capture.GetCaptureProperty(CapProp.FrameHeight);
+                Console.WriteLine($"Resolution set to: {width}x{height}");
+                /*// 获取摄像头实际的分辨率
                 double frameWidth = capture.GetCaptureProperty(CapProp.FrameWidth);
                 double frameHeight = capture.GetCaptureProperty(CapProp.FrameHeight);
                 double FPS = capture.GetCaptureProperty(CapProp.Fps);
@@ -102,7 +115,7 @@ namespace emguCV
                     capture.SetCaptureProperty(CapProp.FrameWidth, width); // 替换为希望的宽度
                     capture.SetCaptureProperty(CapProp.FrameHeight, height); // 替换为希望的高度
                     Console.WriteLine($"设置摄像头分辨率{width}*{height}");
-                }
+                }*/
                 // 设置 ImageBox 控件为摄像头画面显示容器
                 imageBox1.Image = capture.QueryFrame();
                 Application.Idle += ProcessFrame;
