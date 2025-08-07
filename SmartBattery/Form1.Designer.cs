@@ -57,6 +57,10 @@
             this.BtnVoltageCalibrateFlaUI = new System.Windows.Forms.Button();
             this.BtnOffsetCalibrateFlaUI = new System.Windows.Forms.Button();
             this.BtnScanAllFlaUI = new System.Windows.Forms.Button();
+            this.BtnFlashConfig = new System.Windows.Forms.Button();
+            this.BtnClearLog = new System.Windows.Forms.Button();
+            this.BtnCheckLog = new System.Windows.Forms.Button();
+            this.BtnClrScanFlatUI = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.NUDDiffer)).BeginInit();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
@@ -253,6 +257,10 @@
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.BtnClrScanFlatUI);
+            this.groupBox1.Controls.Add(this.BtnCheckLog);
+            this.groupBox1.Controls.Add(this.BtnClearLog);
+            this.groupBox1.Controls.Add(this.BtnFlashConfig);
             this.groupBox1.Controls.Add(this.BtnCloseFlaUI);
             this.groupBox1.Controls.Add(this.BtnCMDPanelVD12DFlaUI);
             this.groupBox1.Controls.Add(this.BtnCMDPanelFlaUI);
@@ -349,6 +357,46 @@
             this.BtnScanAllFlaUI.UseVisualStyleBackColor = true;
             this.BtnScanAllFlaUI.Click += new System.EventHandler(this.BtnScanAllFlaUI_Click);
             // 
+            // BtnFlashConfig
+            // 
+            this.BtnFlashConfig.Location = new System.Drawing.Point(532, 57);
+            this.BtnFlashConfig.Name = "BtnFlashConfig";
+            this.BtnFlashConfig.Size = new System.Drawing.Size(118, 31);
+            this.BtnFlashConfig.TabIndex = 26;
+            this.BtnFlashConfig.Text = "FlashConfig";
+            this.BtnFlashConfig.UseVisualStyleBackColor = true;
+            this.BtnFlashConfig.Click += new System.EventHandler(this.BtnFlashConfig_Click);
+            // 
+            // BtnClearLog
+            // 
+            this.BtnClearLog.Location = new System.Drawing.Point(378, 94);
+            this.BtnClearLog.Name = "BtnClearLog";
+            this.BtnClearLog.Size = new System.Drawing.Size(118, 31);
+            this.BtnClearLog.TabIndex = 27;
+            this.BtnClearLog.Text = "Clear Log";
+            this.BtnClearLog.UseVisualStyleBackColor = true;
+            this.BtnClearLog.Click += new System.EventHandler(this.BtnClearLog_Click);
+            // 
+            // BtnCheckLog
+            // 
+            this.BtnCheckLog.Location = new System.Drawing.Point(502, 94);
+            this.BtnCheckLog.Name = "BtnCheckLog";
+            this.BtnCheckLog.Size = new System.Drawing.Size(118, 31);
+            this.BtnCheckLog.TabIndex = 28;
+            this.BtnCheckLog.Text = "Check Log";
+            this.BtnCheckLog.UseVisualStyleBackColor = true;
+            this.BtnCheckLog.Click += new System.EventHandler(this.BtnCheckLog_Click);
+            // 
+            // BtnClrScan
+            // 
+            this.BtnClrScanFlatUI.Location = new System.Drawing.Point(130, 57);
+            this.BtnClrScanFlatUI.Name = "BtnClrScan";
+            this.BtnClrScanFlatUI.Size = new System.Drawing.Size(118, 31);
+            this.BtnClrScanFlatUI.TabIndex = 29;
+            this.BtnClrScanFlatUI.Text = "ClrScan";
+            this.BtnClrScanFlatUI.UseVisualStyleBackColor = true;
+            this.BtnClrScanFlatUI.Click += new System.EventHandler(this.BtnClrScanFlatUI_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -417,6 +465,10 @@
         private System.Windows.Forms.Button BtnCMDPanelFlaUI;
         private System.Windows.Forms.Button BtnCMDPanelVD12DFlaUI;
         private System.Windows.Forms.Button BtnCloseFlaUI;
+        private System.Windows.Forms.Button BtnFlashConfig;
+        private System.Windows.Forms.Button BtnClearLog;
+        private System.Windows.Forms.Button BtnCheckLog;
+        private System.Windows.Forms.Button BtnClrScanFlatUI;
     }
 }
 

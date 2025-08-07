@@ -492,6 +492,39 @@ namespace SmartBattery
             }
         }
 
+        private void BtnClrScanFlatUI_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                BtnClrScanFlatUI.Enabled = false;
+
+                string exePath = textBoxExePath.Text;
+                if (exePath == "")
+                {
+                    MessageBox.Show($"请先选择烧录工具路径");
+                    return;
+                }
+
+                string str_error_log = "";
+                SmartToolControlFlaUI smartToolControlFlatUI = new SmartToolControlFlaUI();
+                smartToolControlFlatUI.StartUp(exePath, ref str_error_log);
+                smartToolControlFlatUI.ClrScan(out bool result, out string error_log);
+                this.Activate();
+                if (result)
+                {
+                    MessageBox.Show("Success");
+                }
+                else
+                {
+                    MessageBox.Show($"Error：[{error_log}]");
+                }
+            }
+            finally
+            {
+                BtnClrScanFlatUI.Enabled = true;
+            }
+        }
+
         private void BtnOffsetCalibrateFlaUI_Click(object sender, EventArgs e)
         {
             try
@@ -713,5 +746,105 @@ namespace SmartBattery
                 BtnCloseFlaUI.Enabled = true;
             }
         }
+
+        private void BtnFlashConfig_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                BtnFlashConfig.Enabled = false;
+
+                string exePath = textBoxExePath.Text;
+                if (exePath == "")
+                {
+                    MessageBox.Show($"请先选择烧录工具路径");
+                    return;
+                }
+
+                string str_error_log = "";
+                SmartToolControlFlaUI smartToolControlFlatUI = new SmartToolControlFlaUI();
+                smartToolControlFlatUI.StartUp(exePath, ref str_error_log);
+                smartToolControlFlatUI.CheckCalibrationValue(out bool result, out FlashConfig flashConfig, out string error_log);
+                this.Activate();
+                if (result)
+                {
+                    MessageBox.Show($"Success: {flashConfig.ToString()}");
+                }
+                else
+                {
+                    MessageBox.Show($"Error：[{error_log}]");
+                }
+            }
+            finally
+            {
+                BtnFlashConfig.Enabled = true;
+            }
+        }
+
+        private void BtnClearLog_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                BtnClearLog.Enabled = false;
+
+                string exePath = textBoxExePath.Text;
+                if (exePath == "")
+                {
+                    MessageBox.Show($"请先选择烧录工具路径");
+                    return;
+                }
+
+                string str_error_log = "";
+                SmartToolControlFlaUI smartToolControlFlatUI = new SmartToolControlFlaUI();
+                smartToolControlFlatUI.StartUp(exePath, ref str_error_log);
+                smartToolControlFlatUI.CMDPanelClearLog(out bool result, out string error_log);
+                this.Activate();
+                if (result)
+                {
+                    MessageBox.Show($"Success.");
+                }
+                else
+                {
+                    MessageBox.Show($"Error：[{error_log}]");
+                }
+            }
+            finally
+            {
+                BtnClearLog.Enabled = true;
+            }
+        }
+
+        private void BtnCheckLog_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                BtnCheckLog.Enabled = false;
+
+                string exePath = textBoxExePath.Text;
+                if (exePath == "")
+                {
+                    MessageBox.Show($"请先选择烧录工具路径");
+                    return;
+                }
+
+                string str_error_log = "";
+                SmartToolControlFlaUI smartToolControlFlatUI = new SmartToolControlFlaUI();
+                smartToolControlFlatUI.StartUp(exePath, ref str_error_log);
+                smartToolControlFlatUI.CMDPanelCheckLog(out bool result, out string error_log);
+                this.Activate();
+                if (result)
+                {
+                    MessageBox.Show($"Success.");
+                }
+                else
+                {
+                    MessageBox.Show($"Error：[{error_log}]");
+                }
+            }
+            finally
+            {
+                BtnCheckLog.Enabled = true;
+            }
+        }
+
     }
 }

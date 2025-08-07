@@ -1,17 +1,48 @@
-﻿using System;
+﻿using FlaUI.Core;
+using FlaUI.Core.AutomationElements;
+using FlaUI.Core.Tools;
+using FlaUI.UIA3;
+using FlaUI.UIA3.Converters;
+using System;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Runtime.InteropServices.ComTypes;
 using System.Threading;
-using FlaUI.Core;
-using FlaUI.Core.AutomationElements;
-using FlaUI.Core.Tools;
-using FlaUI.UIA3;
+using System.Windows.Forms;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.Header;
+using DataGridViewRow = FlaUI.Core.AutomationElements.DataGridViewRow;
 
 namespace SmartBattery
 {
+    public class FlashConfig
+    {
+        public float CC_Gain { get; set; }
+        public float CC_Gain_CHG { get; set; }
+        public float CC_Offset { get; set; }
+        public float Board_Offset { get; set; }
+        public float CADC_Offset { get; set; }
+        public float Cell1_Voltage_Gain { get; set; }
+        public float Cell2_Voltage_Gain { get; set; }
+        public float Bat_Voltage_Gain { get; set; }
+        public float Pack_Voltage_Gain { get; set; }
+        public float Int_Temp_Offset { get; set; }
+        public float Ext1_Temp_Offset { get; set; }
+        public float Deadband { get; set; }
+        public string CC_Deadband_Reg { get; set; }
+
+        public override string ToString()
+        {
+            string baseString = $"CC_Gain: {CC_Gain}, CC_Gain_CHG: {CC_Gain_CHG}, CC_Offset: {CC_Offset}, " +
+                $"Board_Offset: {Board_Offset}, CADC_Offset: {CADC_Offset}, Cell1_Voltage_Gain: {Cell1_Voltage_Gain}, " +
+                $"Cell2_Voltage_Gain: {Cell2_Voltage_Gain}, Bat_Voltage_Gain: {Bat_Voltage_Gain}, " +
+                $"Pack_Voltage_Gain: {Pack_Voltage_Gain}, Int_Temp_Offset: {Int_Temp_Offset}, " +
+                $"Ext1_Temp_Offset: {Ext1_Temp_Offset}, Deadband: {Deadband}, CC_Deadband_Reg: {CC_Deadband_Reg}";
+            return baseString;
+        }
+    }
+
     public class SmartToolControlFlaUI
     {
         public FlaUI.Core.Application app;
@@ -190,6 +221,70 @@ namespace SmartBattery
                 return this;
             }
         }
+
+        /// <summary>
+        /// 点击Clr Scan
+        /// </summary>
+        /// <param name="result"></param>
+        /// <param name="str_error_log"></param>
+        /// <returns></returns>
+        public SmartToolControlFlaUI ClrScan(out bool result, out string str_error_log)
+        {
+            try
+            {
+                if (app == null)
+                {
+                    str_error_log = $"app is not running.";
+                    Trace.WriteLine(str_error_log);
+                    result = false;
+                    return this;
+                }
+                ActivateWindow(_mainForm);
+                using (var automation = new UIA3Automation())
+                {
+                    var mainWindow = app.GetMainWindow(automation);
+                    // 查找按钮
+                    Trace.WriteLine($"[{DateTime.Now}] To Find buttonMenu_Registers.");
+                    var buttonMenu_Registers = Retry.WhileNull(() => mainWindow.FindFirstDescendant(cf => cf.ByAutomationId("buttonMenu_Registers"))?.AsButton(), TimeSpan.FromSeconds(5)).Result;
+                    if (buttonMenu_Registers == null)
+                    {
+                        str_error_log = $"[{DateTime.Now}] buttonMenu_Registers not found.";
+                        Trace.WriteLine(str_error_log);
+                        result = false;
+                        return this;
+                    }
+                    Trace.WriteLine($"[{DateTime.Now}] buttonMenu_Registers found successfully.");
+                    Retry.WhileFalse(() => buttonMenu_Registers.IsEnabled, TimeSpan.FromSeconds(5));
+                    buttonMenu_Registers?.Click();
+                    // 查找按钮
+                    Trace.WriteLine($"[{DateTime.Now}] To Find button_ClrScan.");
+                    var button_ClrScan = Retry.WhileNull(() => mainWindow.FindFirstDescendant(cf => cf.ByAutomationId("button_ClrScan"))?.AsButton(), TimeSpan.FromSeconds(5)).Result;
+                    if (button_ClrScan == null)
+                    {
+                        str_error_log = $"[{DateTime.Now}] button_ClrScan not found.";
+                        Trace.WriteLine(str_error_log);
+                        result = false;
+                        return this;
+                    }
+                    Trace.WriteLine($"[{DateTime.Now}] button_ClrScan found successfully.");
+                    Retry.WhileFalse(() => button_ClrScan.IsEnabled, TimeSpan.FromSeconds(5));
+                    button_ClrScan?.Click();
+
+                    str_error_log = $"[{DateTime.Now}] Click Clr Scan successfully.";
+                    Trace.WriteLine(str_error_log);
+                    result = true;
+                    return this;
+                }
+            }
+            catch (Exception ex)
+            {
+                str_error_log = ex.Message;
+                Trace.WriteLine(str_error_log);
+                result = false;
+                return this;
+            }
+        }
+
 
         /// <summary>
         /// 烧录AFI文件
@@ -1255,6 +1350,166 @@ namespace SmartBattery
         }
 
         /// <summary>
+        /// 检查实际写入的校准值
+        /// </summary>
+        /// <param name="result"></param>
+        /// <param name="str_error_log"></param>
+        /// <returns></returns>
+        public SmartToolControlFlaUI CheckCalibrationValue(out bool result, out FlashConfig flashConfig, out string str_error_log)
+        {
+            try
+            {
+
+                if (app == null)
+                {
+                    str_error_log = $"app is not running.";
+                    Trace.WriteLine(str_error_log);
+                    result = false;
+                    flashConfig = null;
+                    return this;
+                }
+                ActivateWindow(_mainForm);
+                using (var automation = new UIA3Automation())
+                {
+                    var mainWindow = app.GetMainWindow(automation);
+                    // 查找buttonMenu_DataFlashMemory按钮
+                    Trace.WriteLine($"[{DateTime.Now}] To Find buttonMenu_DataFlashMemory.");
+                    var buttonMenu_DataFlashMemory = mainWindow.FindFirstDescendant(cf => cf.ByAutomationId("buttonMenu_DataFlashMemory"))?.AsButton();
+                    if (buttonMenu_DataFlashMemory == null)
+                    {
+                        str_error_log = $"[{DateTime.Now}] buttonMenu_DataFlashMemory not found.";
+                        Trace.WriteLine(str_error_log);
+                        result = false;
+                        flashConfig = null;
+                        return this;
+                    }
+                    Trace.WriteLine($"[{DateTime.Now}] buttonMenu_DataFlashMemory found successfully.");
+                    Retry.WhileFalse(() => buttonMenu_DataFlashMemory.IsEnabled, TimeSpan.FromSeconds(5));
+                    buttonMenu_DataFlashMemory?.Click();
+                    // 查找Form_Flash
+                    Trace.WriteLine($"[{DateTime.Now}] To Find Form_Flash.");
+                    var Form_Flash = Retry.WhileNull(() => mainWindow.FindFirstDescendant(cf => cf.ByAutomationId("Form_Flash")), TimeSpan.FromSeconds(5)).Result;
+                    if (Form_Flash == null)
+                    {
+                        str_error_log = $"[{DateTime.Now}] Form_Flash not found.";
+                        Trace.WriteLine(str_error_log);
+                        result = false;
+                        flashConfig = null;
+                        return this;
+                    }
+                    Trace.WriteLine($"[{DateTime.Now}] Form_Flash found successfully.");
+                    // 查找tabControl_Flash
+                    Trace.WriteLine($"[{DateTime.Now}] To Find tabControl_Flash.");
+                    var tabControl_Flash = Retry.WhileNull(() => Form_Flash.FindFirstDescendant(cf => cf.ByAutomationId("tabControl_Flash")), TimeSpan.FromSeconds(5)).Result;
+                    if (tabControl_Flash == null)
+                    {
+                        str_error_log = $"[{DateTime.Now}] tabControl_Flash not found.";
+                        Trace.WriteLine(str_error_log);
+                        result = false;
+                        flashConfig = null;
+                        return this;
+                    }
+                    Trace.WriteLine($"[{DateTime.Now}] tabControl_Flash found successfully.");
+                    // 查找TabItem
+                    Trace.WriteLine($"[{DateTime.Now}] To Find TabItem Calibration.");
+                    var TabItem_Calibration = Retry.WhileNull(() => tabControl_Flash.FindFirstDescendant(cf => cf.ByName("Calibration"))?.AsTabItem(), TimeSpan.FromSeconds(5)).Result;
+                    if (TabItem_Calibration == null)
+                    {
+                        str_error_log = $"[{DateTime.Now}] TabItem Calibration not found.";
+                        Trace.WriteLine(str_error_log);
+                        result = false;
+                        flashConfig = null;
+                        return this;
+                    }
+                    Trace.WriteLine($"[{DateTime.Now}] TabItem Calibration found successfully.");
+                    Retry.WhileFalse(() => TabItem_Calibration.IsEnabled, TimeSpan.FromSeconds(5));
+                    TabItem_Calibration?.Click();
+                    Thread.Sleep(1000);
+
+                    // 查找Table dataGrid_FlashConfiguration12
+                    Trace.WriteLine($"[{DateTime.Now}] To Find Table dataGrid_FlashConfiguration12.");
+                    var dataGrid_FlashConfiguration12 = Retry.WhileNull(() => tabControl_Flash.FindFirstDescendant(cf => cf.ByAutomationId("dataGrid_FlashConfiguration12"))?.AsDataGridView(), TimeSpan.FromSeconds(5)).Result;
+                    if (dataGrid_FlashConfiguration12 == null)
+                    {
+                        str_error_log = $"[{DateTime.Now}] Table dataGrid_FlashConfiguration12 not found.";
+                        Trace.WriteLine(str_error_log);
+                        result = false;
+                        flashConfig = null;
+                        return this;
+                    }
+                    Trace.WriteLine($"[{DateTime.Now}] Table dataGrid_FlashConfiguration12 found successfully.");
+                    /*// 遍历整个表格 (DataGridView)
+                    Console.WriteLine($"Row Index: {dataGrid_FlashConfiguration12.Rows.Length}");
+                    foreach (DataGridViewRow row in dataGrid_FlashConfiguration12.Rows)
+                    {
+                        for (int col = 0; col < row.Cells.Length; col++)
+                        {
+                            Console.Write(col + "\t");
+                            string value = row.Cells[col].Value?.ToString() ?? "";
+                            Console.Write(value + "\t");
+                        }
+                        Console.WriteLine();
+                    }*/
+
+                    // 查找Table dataGrid_FlashConfiguration13
+                    Trace.WriteLine($"[{DateTime.Now}] To Find Table dataGrid_FlashConfiguration13.");
+                    var dataGrid_FlashConfiguration13 = Retry.WhileNull(() => tabControl_Flash.FindFirstDescendant(cf => cf.ByAutomationId("dataGrid_FlashConfiguration13"))?.AsDataGridView(), TimeSpan.FromSeconds(5)).Result;
+                    if (dataGrid_FlashConfiguration13 == null)
+                    {
+                        str_error_log = $"[{DateTime.Now}] Table dataGrid_FlashConfiguration13 not found.";
+                        Trace.WriteLine(str_error_log);
+                        result = false;
+                        flashConfig = null;
+                        return this;
+                    }
+                    //Trace.WriteLine($"[{DateTime.Now}] Table dataGrid_FlashConfiguration13 found successfully.");
+                    /*// 遍历整个表格 (DataGridView)
+                    Console.WriteLine($"Row Index: {dataGrid_FlashConfiguration13.Rows.Length}");
+                    foreach (DataGridViewRow row in dataGrid_FlashConfiguration13.Rows)
+                    {
+                        for (int col = 0; col < row.Cells.Length; col++)
+                        {
+                            Console.Write(col + "\t");
+                            string value = row.Cells[col].Value?.ToString() ?? "";
+                            Console.Write(value + "\t");
+                        }
+                        Console.WriteLine();
+                    }*/
+
+                    flashConfig = new FlashConfig()
+                    {
+                        CC_Gain = dataGrid_FlashConfiguration12.Rows[1].Cells[1].Value?.ToString() == "(null)" ? float.NaN : float.Parse(dataGrid_FlashConfiguration12.Rows[1].Cells[1].Value),
+                        CC_Gain_CHG = dataGrid_FlashConfiguration12.Rows[2].Cells[1].Value?.ToString() == "(null)" ? float.NaN : float.Parse(dataGrid_FlashConfiguration12.Rows[2].Cells[1].Value),
+                        CC_Offset = dataGrid_FlashConfiguration12.Rows[3].Cells[1].Value?.ToString() == "(null)" ? float.NaN : float.Parse(dataGrid_FlashConfiguration12.Rows[3].Cells[1].Value),
+                        Board_Offset = dataGrid_FlashConfiguration12.Rows[4].Cells[1].Value?.ToString() == "(null)" ? float.NaN : float.Parse(dataGrid_FlashConfiguration12.Rows[4].Cells[1].Value),
+                        CADC_Offset = dataGrid_FlashConfiguration12.Rows[5].Cells[1].Value?.ToString() == "(null)" ? float.NaN : float.Parse(dataGrid_FlashConfiguration12.Rows[5].Cells[1].Value),
+                        Cell1_Voltage_Gain = dataGrid_FlashConfiguration12.Rows[6].Cells[1].Value?.ToString() == "(null)" ? float.NaN : float.Parse(dataGrid_FlashConfiguration12.Rows[6].Cells[1].Value),
+                        Cell2_Voltage_Gain = dataGrid_FlashConfiguration12.Rows[7].Cells[1].Value?.ToString() == "(null)" ? float.NaN : float.Parse(dataGrid_FlashConfiguration12.Rows[7].Cells[1].Value),
+
+                        Bat_Voltage_Gain = dataGrid_FlashConfiguration13.Rows[1].Cells[1].Value?.ToString() == "(null)" ? float.NaN : float.Parse(dataGrid_FlashConfiguration13.Rows[1].Cells[1].Value),
+                        Pack_Voltage_Gain = dataGrid_FlashConfiguration13.Rows[2].Cells[1].Value?.ToString() == "(null)" ? float.NaN : float.Parse(dataGrid_FlashConfiguration13.Rows[2].Cells[1].Value),
+                        Int_Temp_Offset = dataGrid_FlashConfiguration13.Rows[3].Cells[1].Value?.ToString() == "(null)" ? float.NaN : float.Parse(dataGrid_FlashConfiguration13.Rows[3].Cells[1].Value),
+                        Ext1_Temp_Offset = dataGrid_FlashConfiguration13.Rows[4].Cells[1].Value?.ToString() == "(null)" ? float.NaN : float.Parse(dataGrid_FlashConfiguration13.Rows[4].Cells[1].Value),
+                        Deadband = dataGrid_FlashConfiguration13.Rows[5].Cells[1].Value?.ToString() == "(null)" ? float.NaN : float.Parse(dataGrid_FlashConfiguration13.Rows[5].Cells[1].Value),
+                        CC_Deadband_Reg = dataGrid_FlashConfiguration13.Rows[6].Cells[1].Value?.ToString() ?? "",
+                    };
+
+                    result = true;
+                    str_error_log = "";
+                    return this;
+                }
+            }
+            catch (Exception ex)
+            {
+                str_error_log = ex.Message;
+                Trace.WriteLine(str_error_log);
+                flashConfig = null;
+                result = false;
+                return this;
+            }
+        }
+
+        /// <summary>
         /// 加密
         /// </summary>
         /// <param name="item"></param>
@@ -1276,32 +1531,6 @@ namespace SmartBattery
                 using (var automation = new UIA3Automation())
                 {
                     var mainWindow = app.GetMainWindow(automation);
-
-                    //// groupBox_ClearLog
-                    //Trace.WriteLine($"[{DateTime.Now}] To Find groupBox_ClearLog.");
-                    //var groupBox_ClearLog = Retry.WhileNull(() => mainWindow.FindFirstDescendant(cf => cf.ByAutomationId("groupBox_ClearLog")), TimeSpan.FromSeconds(5)).Result;
-                    //if (groupBox_ClearLog == null)
-                    //{
-                    //    str_error_log = $"[{DateTime.Now}] groupBox_ClearLog not found.";
-                    //    Trace.WriteLine(str_error_log);
-                    //    result = false;
-                    //    return this;
-                    //}
-                    //Trace.WriteLine($"[{DateTime.Now}] groupBox_ClearLog found successfully.");
-                    //// 查找btn_ClearCMDLog
-                    //Trace.WriteLine($"[{DateTime.Now}] To Find btn_ClearCMDLog.");
-                    //var btn_ClearCMDLog = Retry.WhileNull(() => groupBox_ClearLog.FindFirstDescendant(cf => cf.ByAutomationId("btn_ClearCMDLog"))?.AsButton(), TimeSpan.FromSeconds(5)).Result;
-                    //if (btn_ClearCMDLog == null)
-                    //{
-                    //    str_error_log = $"[{DateTime.Now}] btn_ClearCMDLog not found.";
-                    //    Trace.WriteLine(str_error_log);
-                    //    result = false;
-                    //    return this;
-                    //}
-                    //Trace.WriteLine($"[{DateTime.Now}] btn_ClearCMDLog found successfully.");
-                    //Retry.WhileFalse(() => btn_ClearCMDLog.IsEnabled, TimeSpan.FromSeconds(5));
-                    //btn_ClearCMDLog?.Click();
-                    //Trace.WriteLine($"[{DateTime.Now}] Click Clear Log successfully.");
 
                     // groupBox_CMDPanel
                     Trace.WriteLine($"[{DateTime.Now}] To Find groupBox_CMDPanel.");
@@ -1328,8 +1557,37 @@ namespace SmartBattery
                     Trace.WriteLine($"[{DateTime.Now}] comboBox_CMDInput found successfully.");
                     Retry.WhileFalse(() => comboBox_CMDInput.IsEnabled, TimeSpan.FromSeconds(5));
                     // 选择指定内容
-                    comboBox_CMDInput.Select(item); // 或使用 comboBox.SelectedItem = item;
+                    //comboBox_CMDInput.Select(item); // 或使用 comboBox.SelectedItem = item;
 
+                    // 展开下拉菜单
+                    comboBox_CMDInput.Expand();
+                    Trace.WriteLine($"[{DateTime.Now}] comboBox_CMDInput Expand successfully.");
+
+                    // 等待下拉菜单出现
+                    //comboBox_CMDInput.ExpandCollapseState.EnsureExpanded();
+
+                    // 定位下拉列表
+                    var items = comboBox_CMDInput.Items;
+                    var targetItem = items.FirstOrDefault(i => i.Text == item);
+
+                    if (targetItem != null)
+                    {
+                        // 点击目标项
+                        Trace.WriteLine($"[{DateTime.Now}] Click Target.");
+                        targetItem.Click(); 
+                        str_error_log = $"[{DateTime.Now}] comboBox_CMDInput select success.";
+                        Trace.WriteLine(str_error_log);
+                        result = true;
+                        return this;
+                    }
+                    else
+                    {
+                        str_error_log = $"[{DateTime.Now}] comboBox_CMDInput select fail.";
+                        Trace.WriteLine(str_error_log);
+                        result = false;
+                        return this;
+                    }
+                    /*Thread.Sleep(300);
                     // 验证选择的项
                     if (comboBox_CMDInput.SelectedItem.Text == item)
                     {
@@ -1344,7 +1602,205 @@ namespace SmartBattery
                         Trace.WriteLine(str_error_log);
                         result = false;
                         return this;
+                    }*/
+                }
+            }
+            catch (Exception ex)
+            {
+                str_error_log = ex.Message;
+                Trace.WriteLine(str_error_log);
+                result = false;
+                return this;
+            }
+        }
+
+        /// <summary>
+        /// CMD Panel Clear Log
+        /// </summary>
+        /// <param name="item"></param>
+        /// <param name="result"></param>
+        /// <param name="str_error_log"></param>
+        /// <returns></returns>
+        public SmartToolControlFlaUI CMDPanelClearLog( out bool result, out string str_error_log)
+        {
+            try
+            {
+                if (app == null)
+                {
+                    str_error_log = $"app is not running.";
+                    Trace.WriteLine(str_error_log);
+                    result = false;
+                    return this;
+                }
+                ActivateWindow(_mainForm);
+                using (var automation = new UIA3Automation())
+                {
+                    var mainWindow = app.GetMainWindow(automation);
+
+                    // groupBox_ClearLog
+                    Trace.WriteLine($"[{DateTime.Now}] To Find groupBox_ClearLog.");
+                    var groupBox_ClearLog = Retry.WhileNull(() => mainWindow.FindFirstDescendant(cf => cf.ByAutomationId("groupBox_ClearLog")), TimeSpan.FromSeconds(5)).Result;
+                    if (groupBox_ClearLog == null)
+                    {
+                        str_error_log = $"[{DateTime.Now}] groupBox_ClearLog not found.";
+                        Trace.WriteLine(str_error_log);
+                        result = false;
+                        return this;
                     }
+                    Trace.WriteLine($"[{DateTime.Now}] groupBox_ClearLog found successfully.");
+                    // 查找btn_ClearCMDLog
+                    Trace.WriteLine($"[{DateTime.Now}] To Find btn_ClearCMDLog.");
+                    var btn_ClearCMDLog = Retry.WhileNull(() => groupBox_ClearLog.FindFirstDescendant(cf => cf.ByAutomationId("btn_ClearCMDLog"))?.AsButton(), TimeSpan.FromSeconds(5)).Result;
+                    if (btn_ClearCMDLog == null)
+                    {
+                        str_error_log = $"[{DateTime.Now}] btn_ClearCMDLog not found.";
+                        Trace.WriteLine(str_error_log);
+                        result = false;
+                        return this;
+                    }
+                    Trace.WriteLine($"[{DateTime.Now}] btn_ClearCMDLog found successfully.");
+                    Retry.WhileFalse(() => btn_ClearCMDLog.IsEnabled, TimeSpan.FromSeconds(5));
+                    btn_ClearCMDLog?.Click();
+                    Trace.WriteLine($"[{DateTime.Now}] Click Clear Log successfully.");
+                    result = true;
+                    str_error_log = string.Empty;
+                    return this;
+                }
+            }
+            catch (Exception ex)
+            {
+                str_error_log = ex.Message;
+                Trace.WriteLine(str_error_log);
+                result = false;
+                return this;
+            }
+        }
+
+        /// <summary>
+        /// CMD Panel Clear Log
+        /// </summary>
+        /// <param name="item"></param>
+        /// <param name="result"></param>
+        /// <param name="str_error_log"></param>
+        /// <returns></returns>
+        public SmartToolControlFlaUI CMDPanelCheckLog(out bool result, out string str_error_log)
+        {
+            try
+            {
+                if (app == null)
+                {
+                    str_error_log = $"app is not running.";
+                    Trace.WriteLine(str_error_log);
+                    result = false;
+                    return this;
+                }
+                ActivateWindow(_mainForm);
+                using (var automation = new UIA3Automation())
+                {
+                    var mainWindow = app.GetMainWindow(automation);
+
+                    // groupBox_CMDPanel
+                    Trace.WriteLine($"[{DateTime.Now}] To Find groupBox_CMDPanel.");
+                    var groupBox_CMDPanel = Retry.WhileNull(() => mainWindow.FindFirstDescendant(cf => cf.ByAutomationId("groupBox_CMDPanel")), TimeSpan.FromSeconds(5)).Result;
+                    if (groupBox_CMDPanel == null)
+                    {
+                        str_error_log = $"[{DateTime.Now}] groupBox_CMDPanel not found.";
+                        Trace.WriteLine(str_error_log);
+                        result = false;
+                        return this;
+                    }
+                    Trace.WriteLine($"[{DateTime.Now}] groupBox_CMDPanel found successfully.");
+
+                    // 查找listView_CMDLOG
+                    Trace.WriteLine($"[{DateTime.Now}] To Find listView_CMDLOG.");
+                    var listView_CMDLOG = Retry.WhileNull(() => groupBox_CMDPanel.FindFirstDescendant(cf => cf.ByAutomationId("listView_CMDLOG"))?.AsListBox(), TimeSpan.FromSeconds(5)).Result;
+                    if (listView_CMDLOG == null)
+                    {
+                        str_error_log = $"[{DateTime.Now}] listView_CMDLOG not found.";
+                        Trace.WriteLine(str_error_log);
+                        result = false;
+                        return this;
+                    }
+                    Trace.WriteLine($"[{DateTime.Now}] listView_CMDLOG found successfully.");
+
+                    foreach (var item in listView_CMDLOG.Items)
+                    {
+                        string temp = item.AsListBoxItem().Text.ToString();
+                        Console.WriteLine($"ListItem: {temp}");
+                        if (temp.Contains("Fail"))
+                        {
+                            str_error_log = $"[{DateTime.Now}] Log Error:{temp}.";
+                            Trace.WriteLine(str_error_log);
+                            result = false;
+                            return this;
+                        }
+                    }
+
+                    result = true;
+                    str_error_log = string.Empty;
+                    return this;
+                }
+            }
+            catch (Exception ex)
+            {
+                str_error_log = ex.Message;
+                Trace.WriteLine(str_error_log);
+                result = false;
+                return this;
+            }
+        }
+
+        /// <summary>
+        /// 检查实际加密状态
+        /// </summary>
+        /// <param name="result"></param>
+        /// <param name="str_error_log"></param>
+        /// <returns></returns>
+        public SmartToolControlFlaUI CMDPanelCheckEncryption(out bool result, out string str_error_log)
+        {
+            try
+            {
+                if (app == null)
+                {
+                    str_error_log = $"app is not running.";
+                    Trace.WriteLine(str_error_log);
+                    result = false;
+                    return this;
+                }
+                ActivateWindow(_mainForm);
+                using (var automation = new UIA3Automation())
+                {
+                    var mainWindow = app.GetMainWindow(automation);
+
+                    // groupBox_FlagBit
+                    Trace.WriteLine($"[{DateTime.Now}] To Find groupBox_FlagBit.");
+                    var groupBox_FlagBit = Retry.WhileNull(() => mainWindow.FindFirstDescendant(cf => cf.ByAutomationId("groupBox_FlagBit")), TimeSpan.FromSeconds(5)).Result;
+                    if (groupBox_FlagBit == null)
+                    {
+                        str_error_log = $"[{DateTime.Now}] groupBox_FlagBit not found.";
+                        Trace.WriteLine(str_error_log);
+                        result = false;
+                        return this;
+                    }
+                    Trace.WriteLine($"[{DateTime.Now}] groupBox_FlagBit found successfully.");
+
+                    // 查找Table dataGridView_Flag
+                    Trace.WriteLine($"[{DateTime.Now}] To Find Table dataGridView_Flag.");
+                    var dataGridView_Flag = groupBox_FlagBit.FindFirstDescendant(cf => cf.ByAutomationId("dataGridView_Flag"))?.AsDataGridView();
+                    if (dataGridView_Flag == null)
+                    {
+                        str_error_log = $"[{DateTime.Now}] Table dataGridView_Flag not found.";
+                        Trace.WriteLine(str_error_log);
+                        result = false;
+                        return this;
+                    }
+                    Trace.WriteLine($"[{DateTime.Now}] Table dataGridView_Flag found successfully.");
+
+                    Trace.WriteLine($"Value: {dataGridView_Flag.Rows[5].Cells[9].Value}");
+
+                    result = true;
+                    str_error_log = string.Empty;
+                    return this;
                 }
             }
             catch (Exception ex)
